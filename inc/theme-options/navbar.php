@@ -31,6 +31,16 @@ $navigationFields
         'target' => '_self',
       ],
     ])
+    ->addLink('dropdown_cta_button', [
+      'label'         => 'Desktop Dropdown CTA Button',
+      'return_format' => 'array',
+      'instructions'  => 'Optional call-to-action shown in desktop mega dropdown left panel.',
+      'default_value' => [
+        'url'    => '/portal',
+        'title'  => 'Access your portal',
+        'target' => '_self',
+      ],
+    ])
 
     /*
     | Dropdown image decorator mapping (unchanged functionality)

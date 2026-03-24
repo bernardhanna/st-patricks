@@ -70,6 +70,12 @@ $footer
       'return_format' => 'array',
       'preview_size'  => 'medium',
     ])
+    ->addImage('mobile_footer_logo', [
+      'label'         => 'Mobile Footer Logo',
+      'instructions'  => 'Optional: shown on mobile footer only. Falls back to Footer Logo if empty.',
+      'return_format' => 'array',
+      'preview_size'  => 'medium',
+    ])
   ->addAccordion('footer_logo_acc_end', ['endpoint' => 1])
 
   // COLUMNS — About / Quick Links / Media / Careers / Contact

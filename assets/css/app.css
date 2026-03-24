@@ -19,13 +19,24 @@ body {
 
 
 @layer components {
-  /* ACCESSIBILITY: style every element using .btn */
-  .btn {
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-highlight-primary;
-    border-top-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+  .button,
+  .btn,
+  .nav_btn,
+  a.button,
+  a.btn,
+  .nav_btn a {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .button:hover,
+  .btn:hover,
+  .nav_btn:hover,
+  a.button:hover,
+  a.btn:hover,
+  .nav_btn:hover a {
+    background: #FF9E66 !important;
+    color: #1E244B !important;
+    border-color: #FF9E66 !important;
   }
 }
 

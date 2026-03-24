@@ -42,6 +42,18 @@ $content_safeguarding
         'tabs' => 'all',
         'toolbar' => 'full',
     ])
+    ->addLink('primary_button', [
+        'label' => 'Primary Button (Optional)',
+        'instructions' => 'Add a primary CTA button shown below the content.',
+        'return_format' => 'array',
+        'required' => 0,
+    ])
+    ->addLink('secondary_button', [
+        'label' => 'Secondary Button (Optional)',
+        'instructions' => 'Add a secondary CTA button shown next to the primary button.',
+        'return_format' => 'array',
+        'required' => 0,
+    ])
     ->addImage('image', [
         'label' => 'Featured Image',
         'instructions' => 'Upload an image to display alongside the content. Recommended size: 450x346 pixels.',

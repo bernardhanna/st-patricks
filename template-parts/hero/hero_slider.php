@@ -101,17 +101,18 @@ $is_slider = count($slides) > 1;
 
                 <!-- MOBILE IMAGE (TOP, < lg) -->
                 <?php if (!empty($sl['mobile_img']['url'])) { ?>
-                    <div class="mb-0 w-full lg:hidden">
+                    <div class="relative mb-0 w-full lg:hidden">
                         <img src="<?php echo esc_url($sl['mobile_img']['url']); ?>"
                              alt="<?php echo esc_attr($sl['mobile_img']['alt']); ?>"
                              title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
-                             class="object-cover w-full h-auto rounded-b-xl"
+                             class="object-cover w-full h-auto rounded-none max-md:object-contain"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
+                        <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none bg-gradient-to-b from-transparent via-[#C6ECF4]/70 to-[#C6ECF4]"></div>
                     </div>
                 <?php } ?>
 
                 <!-- TEXT PANEL (BOTTOM ON MOBILE, LEFT ON DESKTOP) -->
-                <div class="flex flex-col flex-1 order-2 justify-center px-4 pt-6 pb-8 lg:pt-0 lg:pb-0 lg:order-1 lg:max-w-[500px] relative lg:left-[5rem]">
+                <div class="flex flex-col flex-1 order-2 justify-center px-4 pt-6 pb-8 lg:pt-0 lg:pb-0 lg:order-1 lg:max-w-[500px] relative lg:left-[5rem] ">
 
                     <?php if ($is_slider) { ?>
                         <!-- MOBILE-ONLY CONTROLS: below image, above text -->
@@ -119,12 +120,12 @@ $is_slider = count($slides) > 1;
 
                             <!-- Mobile Prev -->
                             <button
-                                class="flex justify-center items-center w-8 h-8 rounded-full border transition-colors slider-prev hover:bg-neutral-100"
-                                style="background-color:#ffffff;border:1px solid #7ED0E0;"
+                                class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
                                 aria-label="Previous slide">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 16 16">
-                                    <path d="M12.7 8H3.3M8 3.3L3.3 8l4.7 4.7"
-                                          stroke="currentColor" stroke-width="1.5"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                    <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
+                                          class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                          stroke-width="1.5"
                                           stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </button>
@@ -147,12 +148,12 @@ $is_slider = count($slides) > 1;
 
                             <!-- Mobile Next -->
                             <button
-                                class="flex justify-center items-center w-8 h-8 rounded-full border transition-colors slider-next hover:bg-neutral-100"
-                                style="background-color:#ffffff;border:1px solid #7ED0E0;"
+                                class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
                                 aria-label="Next slide">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 16 16">
-                                    <path d="M3.3 8h9.4M8 12.7L12.7 8 8 3.3"
-                                          stroke="currentColor" stroke-width="1.5"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                    <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
+                                          class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                          stroke-width="1.5"
                                           stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </button>
@@ -161,14 +162,14 @@ $is_slider = count($slides) > 1;
 
                     <?php if (!empty($sl['text'])) { ?>
                         <<?php echo esc_attr($sl['tag']); ?>
-                            class="mb-4 font-bold leading-tight text-secondary text-h1-mobile lg:text-h1 lg:text-slate-900"
+                            class="mb-4 text-slate-900 !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
                             id="<?php echo esc_attr($heading_id); ?>">
                             <?php echo esc_html($sl['text']); ?>
                         </<?php echo esc_attr($sl['tag']); ?>>
                     <?php } ?>
 
                     <?php if (!empty($sl['desc'])) { ?>
-                        <div class="mb-6 text-large text-slate-900 md:text-lead wp_editor">
+                        <div class="mb-6 text-large text-slate-900 md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
                             <?php echo wp_kses_post($sl['desc']); ?>
                         </div>
                     <?php } ?>
@@ -185,7 +186,7 @@ $is_slider = count($slides) > 1;
                             <a href="<?php echo esc_url($sl['pbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['pbtn']['target'] ? $sl['pbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['pbtn']['title'] ? $sl['pbtn']['title'] : 'Primary action'); ?>"
-                               class="btn <?php echo esc_attr($primary_class); ?> flex h-9 items-center justify-center gap-2.5 px-3 rounded bg-primary-dark text-white text-sm font-medium leading-6 border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark">
+                               class="btn <?php echo esc_attr($primary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
                                 <?php echo esc_html($sl['pbtn']['title']); ?>
                             </a>
                             <style>
@@ -214,7 +215,7 @@ $is_slider = count($slides) > 1;
                             <a href="<?php echo esc_url($sl['sbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['sbtn']['target'] ? $sl['sbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['sbtn']['title'] ? $sl['sbtn']['title'] : 'Secondary action'); ?>"
-                               class="btn <?php echo esc_attr($secondary_class); ?> flex h-9 items-center justify-center gap-2.5 px-3 rounded border border-primary-dark text-primary-dark bg-transparent text-sm font-medium leading-6 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px]">
+                               class="btn <?php echo esc_attr($secondary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
                                 <?php echo esc_html($sl['sbtn']['title']); ?>
                             </a>
                             <style>
@@ -265,12 +266,12 @@ $is_slider = count($slides) > 1;
                 <div class="flex gap-6 items-center">
                     <!-- Desktop Prev -->
                     <button
-                        class="flex justify-center items-center w-8 h-8 rounded-full border transition-colors slider-prev hover:bg-neutral-100"
-                        style="background-color:#ffffff;border:1px solid #7ED0E0;"
+                        class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
                         aria-label="Previous slide">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 16 16">
-                            <path d="M12.7 8H3.3M8 3.3L3.3 8l4.7 4.7"
-                                  stroke="currentColor" stroke-width="1.5"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                            <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
+                                  class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                  stroke-width="1.5"
                                   stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
@@ -294,12 +295,12 @@ $is_slider = count($slides) > 1;
 
                     <!-- Desktop Next -->
                     <button
-                        class="flex justify-center items-center w-8 h-8 rounded-full border transition-colors slider-next hover:bg-neutral-100"
-                        style="background-color:#ffffff;border:1px solid #7ED0E0;"
+                        class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
                         aria-label="Next slide">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 16 16">
-                            <path d="M3.3 8h9.4M8 12.7L12.7 8 8 3.3"
-                                  stroke="currentColor" stroke-width="1.5"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                            <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
+                                  class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                  stroke-width="1.5"
                                   stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
@@ -336,17 +337,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var dots = document.querySelectorAll('#' + id + ' .slider-dot');
 
-    // Click to go to slide
-    dots.forEach(function(dot, index) {
+    // Click to go to slide (use data-slide so duplicated dot groups stay in sync)
+    dots.forEach(function(dot) {
         dot.addEventListener('click', function() {
-            $(container).slick('slickGoTo', index);
+            var target = parseInt(dot.getAttribute('data-slide') || '0', 10) || 0;
+            $(container).slick('slickGoTo', target);
         });
     });
 
     // Update indicator colors (active vs inactive)
     $(container).on('beforeChange', function(e, slick, cur, next) {
-        dots.forEach(function(d, i) {
-            if (i === next) {
+        dots.forEach(function(d) {
+            var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
+            if (dotIndex === next) {
                 d.style.backgroundColor = '#0f172a';   // active (dark)
                 d.setAttribute('aria-selected', 'true');
             } else {

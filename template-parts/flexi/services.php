@@ -75,6 +75,7 @@ $resolve_link = function($link) {
 
 ?>
 <section id="<?php echo esc_attr($section_id); ?>"
+         data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background-color: <?php echo esc_attr($bg_color); ?>;">
   <div class="flex flex-col items-center w-full mx-auto max-w-container py-32 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">

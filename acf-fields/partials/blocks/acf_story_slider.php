@@ -66,11 +66,43 @@ $story_slider
                 'ui' => 1,
                 'default_value' => 0,
             ])
-            ->addLink('video_link', [
-                'label' => 'Video Link (ACF Link array)',
-                'return_format' => 'array',
-                'instructions' => 'If provided and "Has Video" is on, clicking the center card will open this link.',
+            ->addSelect('video_source_type', [
+                'label' => 'Video Source Type',
+                'choices' => [
+                    'youtube_vimeo' => 'YouTube / Vimeo URL',
+                    'local' => 'Local Uploaded Video',
+                    'external_link' => 'External Link (fallback)',
+                ],
+                'default_value' => 'youtube_vimeo',
+                'return_format' => 'value',
                 'conditional_logic' => [[['field' => 'has_video','operator' => '==','value' => 1]]],
+            ])
+            ->addUrl('video_embed_url', [
+                'label' => 'YouTube / Vimeo URL',
+                'instructions' => 'Paste a YouTube or Vimeo URL (for inline playback in the slider).',
+                'conditional_logic' => [[
+                    ['field' => 'has_video','operator' => '==','value' => 1],
+                    ['field' => 'video_source_type','operator' => '==','value' => 'youtube_vimeo'],
+                ]],
+            ])
+            ->addFile('local_video_file', [
+                'label' => 'Local Video File',
+                'instructions' => 'Upload an MP4, WebM, or OGG file (plays inline in the slider).',
+                'return_format' => 'array',
+                'mime_types' => 'mp4,webm,ogg',
+                'conditional_logic' => [[
+                    ['field' => 'has_video','operator' => '==','value' => 1],
+                    ['field' => 'video_source_type','operator' => '==','value' => 'local'],
+                ]],
+            ])
+            ->addLink('video_link', [
+                'label' => 'External Video Link (Fallback)',
+                'return_format' => 'array',
+                'instructions' => 'Fallback link when using "External Link" source type (or for backwards compatibility with old data).',
+                'conditional_logic' => [[
+                    ['field' => 'has_video','operator' => '==','value' => 1],
+                    ['field' => 'video_source_type','operator' => '==','value' => 'external_link'],
+                ]],
                 'allow_null' => 1,
             ])
         ->endRepeater()

@@ -8,6 +8,7 @@ $hero_image = get_sub_field('hero_image');
 $hero_image_alt = get_post_meta($hero_image, '_wp_attachment_image_alt', true) ?: 'Stories and support image';
 $button = get_sub_field('button');
 $background_color = get_sub_field('background_color');
+$description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
 
 // Get padding settings
 $padding_classes = [];
@@ -26,6 +27,7 @@ if (have_rows('padding_settings')) {
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
+    data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="relative flex overflow-hidden <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
@@ -51,7 +53,7 @@ if (have_rows('padding_settings')) {
                     </header>
 
                     <?php if (!empty($description)): ?>
-                        <div class="max-w-full text-base font-medium leading-7 text-teal-950 w-[467px] max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
+                        <div class="max-w-full text-base font-medium leading-7 text-teal-950 <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
                             <?php echo wp_kses_post($description); ?>
                         </div>
                     <?php endif; ?>
