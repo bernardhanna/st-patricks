@@ -6,4 +6,4 @@ tests/lhci-report/
 tests/.lighthouseci/
 tests/link-report/
 # Vendor directory
-vendor/
+vendor/.env
