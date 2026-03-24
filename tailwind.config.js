@@ -3,48 +3,71 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   mode: 'jit',
   content: [
+    './woocommerce/**/*.php',
     './**/*.php',
     './assets/js/**/*.js',
   ],
   theme: {
     extend: {
+      /* -----------------------------------
+       * Typography – families
+       * --------------------------------- */
       fontFamily: {
-        primary: ['Poppins', 'sans-serif'],
-        secondary: ['Poppins', 'sans-serif'],
-        tertiary: ['Poppins', 'sans-serif'],
+        primary: ['Inter', 'system-ui', 'sans-serif'],
+        secondary: ['Menlo', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        lemondecourrierstd: ['"Le Monde Courrier Std"', 'serif'],
+
       },
+
+      /* -----------------------------------
+       * Colors – existing system
+       * --------------------------------- */
+      /* -------------------------------------------------
+       * Colors
+       * ----------------------------------------------- */
       colors: {
         primary: {
-          DEFAULT: '#F68D2E',
-          light: '#FFB703',
-          dark: '#c54f06',
+          DEFAULT: '#7ED0E0',
+          sky: '#C6ECF4',
+          light: '#F1F8F9',
+          dark: '#024B79',
+          darker: '#003455',
+          olive: '#5F604B',
         },
         secondary: {
-          DEFAULT: '#02485A',
-          light: '#1e1f3d',
-          dark: '#4e4f7e',
+          DEFAULT: '#FF8866',
+          light: '#FF8866',
+          dark: '#2C2C21',
+          darker: '#1E244B',
+          200: '#F0C5A5',
+          100: '#F8E2D2',
+          50: '#FBF0E8',
+        },
+        tertiary: {
+          DEFAULT: '#5F7176',
         },
         background: {
           DEFAULT: '#ffffff',
-          light: '#EFF5EC',
-          dark: '#000000',
-        },
-        accent: {
-          greenLight: '#50B847',
-          greenDark: '#00672F',
-          orange: '#F16623',
-          yellowLight: '#FFF100',
-          yellowDark: '#FDCC05',
+          light: '#5F604B',
+          dark: '#7ED0E0',
         },
         neutral: {
-          light: '#F5F5F5',
-          DEFAULT: '#E7E7E7',
-          dark: '#FFF6F1',
+          DEFAULT: '#101828',
+          800: '#1D2939',
+          700: '#344054',
+          600: '#475467',
+          500: '#667085',
+          400: '#98A2B3',
+          300: '#D0D5DD',
+          200: '#EAECF0',
+          100: '#F2F4F7',
+          50: '#F9FAFB',
+          25: '#FCFCFD',
         },
         highlight: {
+          primary: '#101828',
+          secondary: '#041227',
           light: '#FFF9E2',
-          yellow: '#FFFAE8',
-          orange: '#FDCC05',
         },
         text: {
           primary: '#1D2939',
@@ -52,48 +75,178 @@ module.exports = {
           accent: '#1D2939',
         },
         hover: {
-          bg: '#FFB703', // Using primary-light as hover background
-          text: '#fff', // Using accent-greenDark as hover text
+          bg: '#F6F6F6',
+          text: '#000000',
+        },
+
+        // Tailwind slate subset used in the Figma tokens
+        slate: {
+          200: 'rgba(226, 232, 240, 1)',
+          600: 'rgba(71, 85, 105, 1)',
+          900: 'rgba(15, 23, 42, 1)',
+        },
+
+        // St Patrick’s brand namespace (simplified)
+        stp: {
+          primaryBlue: 'rgba(126, 208, 224, 1)',      // StPatricks_Primary_Blue
+          primaryDarkOlive: 'rgba(95, 96, 75, 1)',    // StPatricks_Primary_Dark_Olive_Green
+          auxDarkBg: 'rgba(0, 0, 0, 1)',              // StPatricks_Aux_DarkBG
+
+          grey: {
+            50: 'rgba(136, 138, 117, 1)',
+            65: 'rgba(161, 161, 170, 1)',
+            94: 'rgba(229, 247, 250, 1)',
+            95: 'rgba(238, 245, 246, 1)',
+            98: 'rgba(252, 251, 248, 1)',
+          },
+          yellow: {
+            20: 'rgba(56, 57, 45, 1)',
+            33: 'rgba(93, 94, 74, 1)',
+          },
+          red: {
+            50: 'rgba(255, 1, 5, 1)',
+            66: 'rgba(222, 140, 115, 1)',
+          },
+          orange: {
+            50: 'rgba(254, 123, 2, 1)',
+            69: 'rgba(255, 142, 99, 1)',
+          },
+          rose: {
+            75: 'rgba(255, 126, 176, 1)',
+          },
+          blue: {
+            65: 'rgba(75, 115, 255, 1)',
+          },
+          magenta: {
+            70: 'rgba(255, 102, 244, 1)',
+          },
+          cyan: {
+            75: 'rgba(160, 216, 224, 1)',
+            90: 'rgba(222, 235, 237, 1)',
+          },
+          white: {
+            solid: 'rgba(255, 255, 255, 1)',
+          },
+          black: {
+            solid: 'rgba(0, 0, 0, 1)',
+          },
         },
       },
+
+      /* -------------------------------------------------
+       * Backgrounds / gradients
+       * ----------------------------------------------- */
+      backgroundImage: {
+        'st-patricks':
+          'linear-gradient(278deg, #FAFBF6 3.24%, #F1F8F9 90.88%)',
+        'stp-aux-darkbg3':
+          'linear-gradient(rgba(243, 234, 222, 1) 0%, rgba(241, 243, 222, 1) 100%)',
+        'stp-aux-darkbg4':
+          'linear-gradient(rgba(246, 237, 224, 1) 0%, rgba(244, 245, 222, 1) 100%)',
+      },
+
       backgroundColor: {
-        'hover': '#FFB703', // Now available as hover:bg-hover-bg
+        hover: '#F6F6F6',
       },
       textColor: {
-        'hover': '#fff', // Now available as hover:text-hover-text
+        hover: '#041227',
       },
+
+      /* -------------------------------------------------
+       * Semantic font sizes (design tokens)
+       * ----------------------------------------------- */
       fontSize: {
-        'xs': '14px',
+        // existing small stuff
+        xs: '14px',
         base: '16px',
+        wp_editor_p: '20px',
+
+        // Headings
+        h1: ['3rem', { letterSpacing: '-0.04rem', lineHeight: '3rem' }],
+        h2: ['1.88rem', { letterSpacing: '-0.01rem', lineHeight: '2.25rem' }],
+        h3: ['1.5rem', { letterSpacing: '-0.01rem', lineHeight: '2rem' }],
+        h4: ['1.25rem', { letterSpacing: '-0.01rem', lineHeight: '1.75rem' }],
+
+        'h1-mobile': ['1.75rem', { letterSpacing: '-0.02rem', lineHeight: '1.75rem' }],
+        'h2-mobile': ['1.5rem', { letterSpacing: '-0.01rem', lineHeight: '1.75rem' }],
+        'h3-mobile': ['1.25rem', { letterSpacing: '-0.01rem', lineHeight: '1.5rem' }],
+        'h4-mobile': ['1.12rem', { letterSpacing: '-0.01rem', lineHeight: '1.42rem' }],
+
+        display: ['3rem', { letterSpacing: '-0.04rem', lineHeight: '3.5rem' }],
+        'display-mobile': [
+          '2.25rem',
+          { letterSpacing: '-0.03rem', lineHeight: '2.5rem' },
+        ],
+
+        // Body / UI
+        large: ['1.12rem', { letterSpacing: '0rem', lineHeight: '1.75rem' }],
+        lead: ['1.25rem', { letterSpacing: '0rem', lineHeight: '1.75rem' }],
+        p: ['1rem', { letterSpacing: '0rem', lineHeight: '1.75rem' }],
+        'p-ui': ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+        'p-ui-medium': ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+        list: ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+
+        body: ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+        'body-medium': ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+
+        subtle: ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.25rem' }],
+        'subtle-medium': ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.25rem' }],
+        'subtle-semibold': ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.25rem' }],
+
+        small: ['0.88rem', { letterSpacing: '0rem', lineHeight: '0.88rem' }],
+        detail: ['0.75rem', { letterSpacing: '0rem', lineHeight: '1rem' }],
+        badge: ['0.75rem', { letterSpacing: '0rem', lineHeight: '1rem' }],
+
+        blockquote: ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+        'inline-code': ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.25rem' }],
+
+        'table-head': ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+        'table-item': ['1rem', { letterSpacing: '0rem', lineHeight: '1.5rem' }],
+
+        'kb-shortcut': ['0.75rem', {
+          letterSpacing: '0.07rem',
+          lineHeight: '1.25rem',
+        }],
+        code: ['0.88rem', { letterSpacing: '0rem', lineHeight: '1.25rem' }],
+
+        'card-title': ['1.5rem', { letterSpacing: '-0.02rem', lineHeight: '1.5rem' }],
       },
+
+      /* -------------------------------------------------
+       * Layout / misc
+       * ----------------------------------------------- */
       width: {
         'container-md': '1084px',
         'container-lg': '1280px',
-        'container': '1280px',
+        container: '1280px',
       },
       maxWidth: {
-        'container': '1280px',
-        'xxs': '320px',
-        'xs': '480px',
-        'mob': '575px',
-        'sm': '640px',
-        'md': '768px',
-        'lg': '1024px',
-        'xl': '1280px',
-        'xxl': '1440px',
-        'ultrawide': '1920px',
+        container: '1280px',
+        container_md: '1018px',
+        xxs: '320px',
+        xs: '480px',
+        mob: '575px',
+        sm: '640px',
+        md: '768px',
+        tab: '998px',
+        lg: '1200px',
+        xl: '1280px',
+        xxl: '1440px',
+        ultrawide: '1920px',
       },
+
       borderRadius: {
-        'custom': '0px',
+        custom: '0px',
         'custom-sm': '4px',
         'custom-md': '8px',
         'custom-lg': '16px',
         'custom-xl': '40px',
         'custom-full': '100%',
-        'btn': '0px',
+        btn: '0px',
       },
+
       animation: {
-        'scroll300': 'scroll 300s linear infinite',
+        scroll300: 'scroll 300s linear infinite',
       },
       keyframes: {
         scroll: {
@@ -102,13 +255,19 @@ module.exports = {
         },
       },
     },
+
+    /* ---------------------------------------------------
+     * Screens / container
+     * ------------------------------------------------- */
     screens: {
       xxs: '320px',
       xs: '480px',
       mob: '575px',
       sm: '640px',
       md: '768px',
-      lg: '1024px',
+      tab: '993px',
+      ipad: '1084px',
+      lg: '1100px',
       xl: '1280px',
       xxl: '1440px',
       ultrawide: '1920px',
@@ -124,18 +283,22 @@ module.exports = {
         md: '768px',
         lg: '1024px',
         xl: '1280px',
-        xxl: '1440px',
+        xxl: '1480px',
         ultrawide: '1920px',
       },
     },
   },
+
   variants: {
     extend: {
       backgroundColor: ['not-first'],
       display: ['before', 'after'],
     },
   },
+
   plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
     require('tailwindcss-pseudo')({
       empty: true,
       before: true,
@@ -143,6 +306,38 @@ module.exports = {
     }),
   ],
   safelist: [
+    'aspect-[4/3]',
+    'left-[-25px]',
+    'w-[calc(100%+50px)]',
+    'border-t-[6px]',
+    'border-b-[6px]',
+    'border-r-[6px]',
+    'border-l-[6px]',
+    'bg-opacity-90',
+    'group-hover:bg-[#041227]',
+    'group-focus-within:bg-[#041227]',
+    'focus-visible:bg-[#041227]',
+    'md:col-span-1',
+    'md:col-span-2',
+    'md:col-span-3',
+    'md:col-span-4',
+    'md:col-span-6',
+    'md:col-span-8',
+    'md:col-span-12',
+    'lg:col-span-1',
+    'lg:col-span-2',
+    'lg:col-span-3',
+    'lg:col-span-4',
+    'lg:col-span-6',
+    'lg:col-span-8',
+    'lg:col-span-12',
+    'col-span-1',
+    'col-span-2',
+    'col-span-3',
+    'col-span-4',
+    'col-span-6',
+    'col-span-8',
+    'col-span-12',
     'hover:bg-hover',
     'hover:text-hover',
     'bg-hover',
@@ -268,135 +463,7 @@ module.exports = {
     'max-sm:grid-cols-1',
     'max-sm:grid-cols-2',
     'max-sm:grid-cols-3',
-    // Width classes
-    ...Array.from({ length: 100 }, (_, i) => `w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `xs:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `mob:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `sm:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `md:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `lg:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `xl:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `xxl:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `ultrawide:w-[${i + 1}%]`),
-    ...Array.from({ length: 100 }, (_, i) => `md:w-[${i + 1}%]`),
-    // Dynamic gap classes
-    ...Array.from({ length: 101 }, (_, i) => `gap-[${i}px]`),
-    //gap for devices
-    ...Array.from({ length: 101 }, (_, i) => `xs:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:gap-[${i}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `rounded-[${i}px]`),
-    //height in px
-    ...Array.from({ length: 101 }, (_, i) => `h-[${i + 1}px]`),
-    //height for devices
-    ...Array.from({ length: 101 }, (_, i) => `xs:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:h-[${i + 1}px]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:h-[${i + 1}px]`),
-    //meximum height
-    ...Array.from({ length: 101 }, (_, i) => `max-h-[${i + 1}rem]`),
-    //max height for devices
-    ...Array.from({ length: 101 }, (_, i) => `xs:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:max-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:max-h-[${i + 1}rem]`),
-    // min height
-    ...Array.from({ length: 101 }, (_, i) => `min-h-[${i + 1}rem]`),
-    //min height for devices
-    ...Array.from({ length: 101 }, (_, i) => `xs:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:min-h-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:min-h-[${i + 1}rem]`),
-    // Dynamic margin classes rem
-    ...Array.from({ length: 101 }, (_, i) => `m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mr-[${i + 1}rem]`),
-    // Dynamic margin classes devices
-    ...Array.from({ length: 101 }, (_, i) => `xs:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xs:mr-[${i + 1}rem]`),
-    //mob
-    ...Array.from({ length: 101 }, (_, i) => `mob:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `mob:mr-[${i + 1}rem]`),
-    //sm
-    ...Array.from({ length: 101 }, (_, i) => `sm:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `sm:mr-[${i + 1}rem]`),
-    //md
-    ...Array.from({ length: 101 }, (_, i) => `md:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `md:mr-[${i + 1}rem]`),
-    //lg
-    ...Array.from({ length: 101 }, (_, i) => `lg:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `lg:mr-[${i + 1}rem]`),
-    //xl
-    ...Array.from({ length: 101 }, (_, i) => `xl:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xl:mr-[${i + 1}rem]`),
-    //xxl
-    ...Array.from({ length: 101 }, (_, i) => `xxl:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `xxl:mr-[${i + 1}rem]`),
-    //ultrawide
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:m-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:mx-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:my-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:mt-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:mb-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:ml-[${i + 1}rem]`),
-    ...Array.from({ length: 101 }, (_, i) => `ultrawide:mr-[${i + 1}rem]`),
-    // Dynamic padding classes rem
+   
     ...Array.from({ length: 101 }, (_, i) => `p-[${i + 1}rem]`),
     ...Array.from({ length: 101 }, (_, i) => `px-[${i + 1}rem]`),
     ...Array.from({ length: 101 }, (_, i) => `py-[${i + 1}rem]`),
