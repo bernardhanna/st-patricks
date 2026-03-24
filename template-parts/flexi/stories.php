@@ -153,7 +153,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
           $slide_index++;
         ?>
           <div class="slide" role="group" aria-label="Slide <?php echo esc_attr($slide_index); ?> of <?php echo esc_attr($total_slides); ?>" style="<?php echo $slide_index === 1 ? '' : 'display:none'; ?>">
-            <div class="flex gap-3 justify-between items-stretch w-full">
+            <div class="flex gap-3 justify-between items-stretch w-full max-w-full">
               <?php foreach ($slide_posts as $card_index => $sp):
                 setup_postdata($sp);
                 $post_date  = get_the_date('j M Y', $sp->ID);
