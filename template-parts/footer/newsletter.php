@@ -76,7 +76,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
       </svg>
     </div>
 
-    <div class="flex overflow-hidden relative justify-center items-center px-5 py-24 mx-auto max-w-container_md">
+    <div class="flex overflow-hidden relative justify-center items-center px-5 py-12 mx-auto lg:py-24 max-w-container_md">
       <!-- Newsletter Container -->
       <div class="relative z-10 py-8 w-full max-w-[578px] ">
         <div class="flex flex-col gap-8 items-center md:gap-12">
@@ -129,13 +129,13 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                 <label for="<?php echo esc_attr($section_id); ?>-email" class="text-sm font-medium leading-5 text-white">
                   <?php echo esc_html($email_label); ?>
                 </label>
-                <div class="flex gap-2 items-center w-full md:w-96">
+                <div class="flex gap-2 items-center w-full max-sm:flex-col md:w-96">
                   <input
                     id="<?php echo esc_attr($section_id); ?>-email"
                     type="email"
                     name="email"
                     placeholder="<?php echo esc_attr($email_ph); ?>"
-                    class="flex flex-1 items-center px-3 py-2 text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent"
+                    class="flex flex-1 items-center px-3 py-2 text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent max-sm:w-full"
                     required
                     <?php if ($action !== ''): ?>
                       form="<?php echo esc_attr($section_id); ?>-form"
@@ -146,7 +146,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                     <!-- Brevo AJAX submit -->
                     <button
                       type="button"
-                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary"
+                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary max-sm:w-full"
                       id="<?php echo esc_attr($section_id); ?>-submit"
                       aria-label="<?php echo esc_attr($submit_text); ?>"
                     >
@@ -157,7 +157,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                     <button
                       form="<?php echo esc_attr($section_id); ?>-form"
                       type="submit"
-                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary"
+                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary max-sm:w-full"
                       aria-label="<?php echo esc_attr($submit_text); ?>"
                       id="<?php echo esc_attr($section_id); ?>-submit"
                     >

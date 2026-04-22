@@ -3,144 +3,79 @@
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 $counters = new FieldsBuilder('counters', [
-    'label' => 'Counters (About Us)',
+    'label' => 'Counters Statistics',
 ]);
 
 $counters
     ->addTab('content_tab', ['label' => 'Content'])
 
-    // Heading Section
-    ->addSelect('heading_tag', [
-        'label' => 'Heading Tag',
-        'instructions' => 'Select the HTML tag for the heading.',
-        'choices' => [
-            'h1' => 'H1',
-            'h2' => 'H2',
-            'h3' => 'H3',
-            'h4' => 'H4',
-            'h5' => 'H5',
-            'h6' => 'H6',
-            'span' => 'Span',
-            'p' => 'Paragraph',
-        ],
-        'default_value' => 'h2',
-    ])
-    ->addText('heading_text', [
-        'label' => 'Heading Text',
-        'instructions' => 'Enter the main heading text.',
-        'default_value' => 'About us',
-    ])
-    ->addWysiwyg('description', [
-        'label' => 'Description',
-        'instructions' => 'Enter the description text below the heading.',
-        'tabs' => 'visual',
-        'media_upload' => 0,
-        'delay' => 0,
-        'default_value' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ])
-
-    // Image
-    ->addImage('image', [
-        'label' => 'Main Image',
-        'instructions' => 'Upload the main image for the section.',
-        'return_format' => 'array',
-        'preview_size' => 'medium',
-    ])
-
-    // CTA Buttons
-    ->addLink('primary_cta', [
-        'label' => 'Primary Button',
-        'instructions' => 'Configure the primary call-to-action button.',
-        'return_format' => 'array',
-        'default_value' => [
-            'url' => '#',
-            'title' => 'Careers',
-            'target' => '_self',
-        ],
-    ])
-    ->addLink('secondary_cta', [
-        'label' => 'Secondary Button',
-        'instructions' => 'Configure the secondary call-to-action button.',
-        'return_format' => 'array',
-        'default_value' => [
-            'url' => '#',
-            'title' => 'About us',
-            'target' => '_self',
-        ],
-    ])
-
-    // Key Points (Counters)
-    ->addRepeater('key_points', [
-        'label' => 'Key Points (Counters)',
-        'instructions' => 'Add animated counter statistics.',
-        'button_label' => 'Add Key Point',
+    // Counter Items Repeater
+    ->addRepeater('counter_items', [
+        'label' => 'Counter Items',
+        'instructions' => 'Add animated counter statistics with values, titles, and descriptions.',
+        'button_label' => 'Add Counter Item',
         'layout' => 'row',
         'min' => 1,
         'max' => 6,
+        'default_value' => [
+            [
+                'value' => 95,
+                'suffix' => '%',
+                'title' => 'Key point text',
+                'description' => 'Lorem ipsum dolor sit ametsed do eiusmod tempor incididunt'
+            ],
+            [
+                'value' => 75,
+                'suffix' => 'k',
+                'title' => 'Key point text',
+                'description' => 'Lorem ipsum dolor sit ametsed do eiusmod tempor incididunt'
+            ],
+            [
+                'value' => 455,
+                'suffix' => '',
+                'title' => 'Key point text',
+                'description' => 'Lorem ipsum dolor sit ametsed do eiusmod tempor incididunt'
+            ]
+        ]
     ])
         ->addNumber('value', [
             'label' => 'Counter Value',
-            'instructions' => 'The target number to count up to.',
+            'instructions' => 'The target number to count up to during animation.',
             'default_value' => 95,
             'min' => 0,
             'step' => 1,
+            'required' => 1,
         ])
         ->addText('suffix', [
             'label' => 'Suffix',
-            'instructions' => 'Text to append after the number (e.g., %, k, +).',
+            'instructions' => 'Text to append after the number (e.g., %, k, +, M).',
             'default_value' => '%',
+            'maxlength' => 10,
         ])
         ->addText('title', [
             'label' => 'Title',
-            'instructions' => 'The title text below the counter.',
+            'instructions' => 'The title text displayed below the counter.',
             'default_value' => 'Key point text',
+            'required' => 1,
+            'maxlength' => 100,
         ])
-        ->addTextarea('text', [
+        ->addTextarea('description', [
             'label' => 'Description',
             'instructions' => 'Short description text below the title.',
             'new_lines' => '',
-            'maxlength' => 160,
+            'maxlength' => 200,
+            'rows' => 3,
             'default_value' => 'Lorem ipsum dolor sit ametsed do eiusmod tempor incididunt',
         ])
     ->endRepeater()
 
     ->addTab('design_tab', ['label' => 'Design'])
 
-    // Color Controls
+    // Background Color Control
     ->addColorPicker('background_color', [
         'label' => 'Background Color',
-        'instructions' => 'Set the background color for the section.',
-        'default_value' => '#ffffff',
-    ])
-    ->addColorPicker('heading_color', [
-        'label' => 'Heading Color',
-        'instructions' => 'Set the color for the main heading.',
-        'default_value' => '#1e1b4b',
-    ])
-    ->addColorPicker('desc_color', [
-        'label' => 'Description Color',
-        'instructions' => 'Set the color for the description text.',
-        'default_value' => '#134e4a',
-    ])
-    ->addColorPicker('divider_color', [
-        'label' => 'Divider Color',
-        'instructions' => 'Set the color for dividers and underlines.',
-        'default_value' => '#ef4444',
-    ])
-    ->addColorPicker('value_color', [
-        'label' => 'Counter Value Color',
-        'instructions' => 'Set the color for counter numbers.',
+        'instructions' => 'Set the background color for the counters section.',
         'default_value' => '#0c4a6e',
-    ])
-    ->addColorPicker('title_color', [
-        'label' => 'Key Point Title Color',
-        'instructions' => 'Set the color for key point titles.',
-        'default_value' => '#1e1b4b',
-    ])
-    ->addColorPicker('text_color', [
-        'label' => 'Key Point Text Color',
-        'instructions' => 'Set the color for key point descriptions.',
-        'default_value' => '#134e4a',
     ])
 
     ->addTab('layout_tab', ['label' => 'Layout'])
@@ -150,6 +85,19 @@ $counters
         'label' => 'Padding Settings',
         'instructions' => 'Customize padding for different screen sizes.',
         'button_label' => 'Add Screen Size Padding',
+        'layout' => 'table',
+        'default_value' => [
+            [
+                'screen_size' => 'xxs',
+                'padding_top' => 5,
+                'padding_bottom' => 5,
+            ],
+            [
+                'screen_size' => 'lg',
+                'padding_top' => 8,
+                'padding_bottom' => 8,
+            ]
+        ]
     ])
         ->addSelect('screen_size', [
             'label' => 'Screen Size',
@@ -165,6 +113,7 @@ $counters
                 'xxl' => 'XXL (1440px+)',
                 'ultrawide' => 'Ultrawide (1920px+)',
             ],
+            'required' => 1,
         ])
         ->addNumber('padding_top', [
             'label' => 'Padding Top',
@@ -173,7 +122,7 @@ $counters
             'max' => 20,
             'step' => 0.1,
             'append' => 'rem',
-            'default_value' => 6,
+            'default_value' => 5,
         ])
         ->addNumber('padding_bottom', [
             'label' => 'Padding Bottom',
@@ -182,7 +131,7 @@ $counters
             'max' => 20,
             'step' => 0.1,
             'append' => 'rem',
-            'default_value' => 6,
+            'default_value' => 5,
         ])
     ->endRepeater();
 

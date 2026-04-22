@@ -42,7 +42,7 @@ $wm_alt = $wm_logo['alt'] ?? '';
 $section_min = $min_full ? 'min-h-screen' : 'min-h-[14rem]';
 ?>
 
-<section class="relative overflow-hidden <?php echo esc_attr($section_min); ?> <?php echo esc_attr($extra_classes); ?>">
+<section class="relative overflow-hidden <?php echo esc_attr($section_min); ?> <?php echo esc_attr($extra_classes); ?>" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>">
   <div class=" flex items-center max-w-container mx-auto py-16  <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
 
     <!-- Polaroid -->

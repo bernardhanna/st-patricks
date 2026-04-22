@@ -3,6 +3,8 @@
 $heading = get_sub_field('heading');
 $heading_tag = get_sub_field('heading_tag');
 $content = get_sub_field('content');
+$primary_button = get_sub_field('primary_button');
+$secondary_button = get_sub_field('secondary_button');
 $image = get_sub_field('image');
 $image_alt = get_post_meta($image, '_wp_attachment_image_alt', true) ?: 'Child safeguarding illustration';
 $background_type = get_sub_field('background_type');
@@ -11,6 +13,21 @@ $reverse_layout = get_sub_field('reverse_layout');
 
 // Generate unique section ID
 $section_id = 'child-safeguarding-' . wp_rand(1000, 9999);
+
+$resolve_link = static function ($link) {
+    if (!is_array($link) || empty($link['url'])) {
+        return null;
+    }
+
+    return [
+        'url' => esc_url($link['url']),
+        'title' => esc_html($link['title'] ?: $link['url']),
+        'target' => esc_attr($link['target'] ?: '_self'),
+    ];
+};
+
+$primary_cta = $resolve_link($primary_button);
+$secondary_cta = $resolve_link($secondary_button);
 
 // Build padding classes
 $padding_classes = [];
@@ -36,6 +53,7 @@ if ($background_type === 'gradient') {
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
+    data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative"
     style="<?php echo $background_style; ?>"
     role="region"
@@ -86,6 +104,32 @@ if ($background_type === 'gradient') {
                         <div class="text-base font-medium leading-7 text-teal-950 wp_editor max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6">
                             <?php echo wp_kses_post($content); ?>
                         </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($primary_cta || $secondary_cta): ?>
+                    <div class="flex flex-wrap gap-2.5 items-center">
+                        <?php if ($primary_cta): ?>
+                            <a
+                                href="<?php echo $primary_cta['url']; ?>"
+                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 bg-[#024B79] text-white text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] rounded"
+                                target="<?php echo $primary_cta['target']; ?>"
+                                aria-label="<?php echo esc_attr($primary_cta['title']); ?>"
+                            >
+                                <?php echo $primary_cta['title']; ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php if ($secondary_cta): ?>
+                            <a
+                                href="<?php echo $secondary_cta['url']; ?>"
+                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 border border-[#024B79] bg-white text-[#024B79] text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] rounded"
+                                target="<?php echo $secondary_cta['target']; ?>"
+                                aria-label="<?php echo esc_attr($secondary_cta['title']); ?>"
+                            >
+                                <?php echo $secondary_cta['title']; ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 

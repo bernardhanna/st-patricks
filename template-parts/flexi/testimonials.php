@@ -74,6 +74,7 @@ if ($card_shadow) $card_base[] = 'shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_
 
 ?>
 <section id="<?php echo esc_attr($section_id); ?>"
+         data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background-color: <?php echo esc_attr($bg_color); ?>;">
   <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">

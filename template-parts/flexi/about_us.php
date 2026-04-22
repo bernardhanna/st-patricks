@@ -107,10 +107,11 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
+    data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($section_bg); ?>;"
 >
-    <div class="flex flex-col items-center w-full mx-auto max-w-container pt-24 pb-24 max-lg:px-5 max-sm:px-6 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="flex flex-col items-center w-full mx-auto max-w-container py-12 lg:py-24 max-lg:px-5 max-sm:px-6 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
 
         <!-- Header Section -->
         <?php if (!empty($heading_text)) : ?>
@@ -129,10 +130,10 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
         <!-- Main Content Container -->
         <div class="flex flex-col mt-16 max-w-full w-[1018px] max-md:mt-10">
             <!-- Cards + Image -->
-            <div class="flex flex-wrap gap-4 items-start w-full max-md:max-w-full max-sm:justify-center max-sm:items-center" role="main">
+            <div class="flex flex-wrap gap-4 items-start w-full max-md:max-w-full max-sm:justify-center max-sm:items-center max-sm:w-full" role="main">
 
                 <!-- Left Column: first 3 cards -->
-                <div class="flex flex-col justify-center min-w-60 w-[315px]">
+                <div class="flex flex-col justify-center min-w-60 w-[315px] max-[1084px]:w-[calc(50%-0.5rem)] max-sm:w-full">
                     <?php for ($i = 0; $i < 3; $i++) :
                         if (!isset($cards[$i])) {
                             continue;
@@ -151,17 +152,19 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                         $card_classes = implode(' ', [
                             'mental-health-card',
                             'max-w-full',
-                            'shadow-sm',
+                            'w-full',
+                            'shadow-none',
                             'rounded-lg',
-                            'w-[315px]',
+                            'w-full',
                             $card['bg_class'],
                             'border',
                             $card['border_class'],          // border matches background
                             'transition-all',
                             'duration-300',
-                            'hover:bg-transparent',
-                            'hover:border-2',
-                            'hover:border-primary-dark',    // keep hover border colour
+                            'hover:border',
+                            'hover:border-[var(--border)]',
+                            'hover:bg-white',
+                            'hover:shadow-sm',
                             $margin_class,
                         ]);
                     ?>
@@ -170,11 +173,11 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             <a
                                 href="<?php echo esc_url($link['url']); ?>"
                                 target="<?php echo esc_attr($link['target'] ?? '_self'); ?>"
-                                class="block w-full h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark btn"
+                                class="block w-full h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                                 aria-label="<?php echo esc_attr($link['title'] ?: $card['title']); ?>"
                             >
                                 <div class="w-full rounded-lg">
-                                    <div class="p-6 w-full min-h-60 max-md:px-5">
+                                    <div class="p-6 w-full max-sm:min-h-[164px] min-h-[15rem] max-md:px-5">
                                         <?php if (!empty($card['title'])) : ?>
                                             <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
                                                 <?php echo esc_html($card['title']); ?>
@@ -198,7 +201,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             </a>
                         <?php else : ?>
                             <div class="w-full rounded-lg">
-                                <div class="p-6 w-full min-h-60 max-md:px-5">
+                                <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                     <?php if (!empty($card['title'])) : ?>
                                         <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
                                             <?php echo esc_html($card['title']); ?>
@@ -228,12 +231,12 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                 <img
                     src="<?php echo esc_url($main_image_url); ?>"
                     alt="<?php echo esc_attr($main_image_alt); ?>"
-                    class="object-contain flex-1 self-stretch w-full shrink basis-0 min-w-60 max-md:flex max-sm:hidden"
+                    class="object-contain flex-1 self-stretch w-full shrink basis-0 min-w-60 max-[1084px]:hidden"
                 />
                 <?php endif; ?>
 
                 <!-- Right Column: last 3 cards -->
-                <div class="flex flex-col justify-center min-w-60 w-[315px]">
+                <div class="flex flex-col justify-center min-w-60 w-[315px] max-[1084px]:w-[calc(50%-0.5rem)] max-sm:w-full">
                     <?php for ($i = 3; $i < 6; $i++) :
                         if (!isset($cards[$i])) {
                             continue;
@@ -252,17 +255,18 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                         $card_classes = implode(' ', [
                             'mental-health-card',
                             'max-w-full',
-                            'shadow-sm',
+                            'shadow-none',
                             'rounded-lg',
-                            'w-[315px]',
+                            'w-full',
                             $card['bg_class'],
                             'border',
                             $card['border_class'],          // border matches background
                             'transition-all',
                             'duration-300',
-                            'hover:bg-transparent',
-                            'hover:border-2',
-                            'hover:border-primary-dark',
+                            'hover:border',
+                            'hover:border-[var(--border)]',
+                            'hover:bg-white',
+                            'hover:shadow-sm',
                             $margin_class,
                         ]);
                     ?>
@@ -271,11 +275,11 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             <a
                                 href="<?php echo esc_url($link['url']); ?>"
                                 target="<?php echo esc_attr($link['target'] ?? '_self'); ?>"
-                                class="block w-full h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark btn"
+                                class="block w-full h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                                 aria-label="<?php echo esc_attr($link['title'] ?: $card['title']); ?>"
                             >
                                 <div class="w-full rounded-lg">
-                                    <div class="p-6 w-full min-h-60 max-md:px-5">
+                                    <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                         <?php if (!empty($card['title'])) : ?>
                                             <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
                                                 <?php echo esc_html($card['title']); ?>
@@ -298,7 +302,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             </a>
                         <?php else : ?>
                             <div class="w-full rounded-lg">
-                                <div class="p-6 w-full min-h-60 max-md:px-5">
+                                <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                     <?php if (!empty($card['title'])) : ?>
                                         <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
                                             <?php echo esc_html($card['title']); ?>

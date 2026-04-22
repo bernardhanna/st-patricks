@@ -72,6 +72,19 @@ Ensure you have the following installed on your system:
    - Watches and processes JS changes.
    - Starts the Webpack development server with hot reloading.
 
+### CSS to Tailwind conversion
+
+- The theme now runs `css-to-tailwindcss` automatically before each CSS build/watch command.
+- Source files remain in `assets/css/*.css`.
+- Converted intermediate files are written to `.tmp/css/*.converted.css` and then processed by PostCSS/Tailwind into `dist/*.css`.
+- You can run the converter directly with:
+
+  ```bash
+  npm run convert:css:app
+  npm run convert:css:editor
+  npm run convert:css:woo
+  ```
+
 ### Additional Steps
 
 7. **Build the Assets for Production**
