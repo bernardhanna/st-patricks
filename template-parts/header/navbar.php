@@ -169,7 +169,7 @@ document.addEventListener('alpine:init', () => {
           <div class="flex gap-1 items-center">
             <a
               href="<?php echo esc_url($item->url); ?>"
-              class="flex gap-1 items-center text-sm font-semibold leading-5 rounded text-teal-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              class="flex gap-1 items-center text-sm font-semibold leading-5 rounded text-teal-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
               role="menuitem"
               aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
               aria-expanded="false"
@@ -203,7 +203,7 @@ document.addEventListener('alpine:init', () => {
     <?php if ($enable_search) : ?>
       <button
         type="button"
-        class="flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        class="flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         @click.prevent="openSearch()"
         :aria-expanded="searchOpen ? 'true' : 'false'"
         aria-controls="navbar-search-modal"
@@ -221,7 +221,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($help_btn['url']); ?>"
         target="<?php echo esc_attr($help_btn['target'] ?: '_self'); ?>"
-        class="hidden btn gap-2 items-center px-3 h-9 bg-sky-900 text-white rounded transition-colors sm:flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        class="hidden btn gap-2 items-center px-3 h-9 bg-sky-900 text-white rounded-md transition-colors sm:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         aria-label="<?php echo esc_attr($help_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">
@@ -235,7 +235,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($referral_btn['url']); ?>"
         target="<?php echo esc_attr($referral_btn['target'] ?: '_self'); ?>"
-        class="flex btn items-center px-3 h-9 rounded border border-sky-900 text-teal-950 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        class="flex btn items-center px-3 h-9 rounded-md border border-sky-900 text-teal-950 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         role="button"
         aria-label="<?php echo esc_attr($referral_btn['title']); ?>"
       >
@@ -268,7 +268,7 @@ document.addEventListener('alpine:init', () => {
       <div class="flex justify-end px-3 pt-3 bg-white">
         <button
           type="button"
-          class="flex justify-center items-center w-8 h-8 rounded hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+          class="flex justify-center items-center w-8 h-8 rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
           aria-label="Close search"
           @click="closeSearch()"
         >
@@ -287,12 +287,12 @@ document.addEventListener('alpine:init', () => {
           @input="handleQueryChange()"
           type="text"
           placeholder="Search by keyword, symptom, or page"
-          class="pr-28 pl-5 w-full h-14 text-base text-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+          class="pr-28 pl-5 w-full h-14 text-base text-gray-500 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         />
 
         <button
           type="submit"
-          class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white rounded -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary whitespace-nowrap"
+          class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary whitespace-nowrap"
           aria-label="Search"
         >
           <span class="sr-only">Search</span>
@@ -306,7 +306,7 @@ document.addEventListener('alpine:init', () => {
         <button
           x-show="query.length > 0"
           type="button"
-          class="flex absolute top-1/2 justify-center items-center w-6 h-6 -translate-y-1/2 right-[116px] rounded hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+          class="flex absolute top-1/2 justify-center items-center w-6 h-6 -translate-y-1/2 right-[116px] rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
           aria-label="Clear search"
           @click="clearSearch(true)"
         >
@@ -326,7 +326,7 @@ document.addEventListener('alpine:init', () => {
                 <li>
                   <a
                     :href="item.url"
-                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus:bg-slate-100 focus:outline-none"
+                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
                   >
                     <span class="text-base font-medium text-slate-900" x-text="item.title"></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -349,7 +349,7 @@ document.addEventListener('alpine:init', () => {
                 <li>
                   <a
                     :href="faq.url"
-                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus:bg-slate-100 focus:outline-none"
+                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
                   >
                     <span class="text-base font-medium text-slate-900" x-text="faq.title"></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
