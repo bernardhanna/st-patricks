@@ -7,3 +7,5 @@ tests/.lighthouseci/
 tests/link-report/
 # Vendor directory
 vendor/.env
+# Mac junk
+.DS_Store
