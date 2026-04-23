@@ -41,7 +41,7 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
         ?>
           <a
             href="<?php echo esc_url($link['url']); ?>"
-            class="text-sm font-medium leading-5 text-white transition-opacity cursor-pointer hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white max-md:text-sm"
+            class="text-sm font-medium leading-5 text-white transition-opacity cursor-pointer hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white max-md:text-sm"
             target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
             aria-label="<?php echo esc_attr($link['title']); ?>"
           >
