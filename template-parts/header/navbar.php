@@ -178,7 +178,7 @@ document.addEventListener('alpine:init', () => {
 
               <?php if ($item->children) : ?>
                 <!-- Chevron icon (style-only change) -->
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="mt-0.5">
                   <path d="M2 4L6 8L10 4" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               <?php endif; ?>
