@@ -194,9 +194,9 @@ $is_slider = count($slides) > 1;
                                 .<?php echo esc_attr($primary_class); ?>:focus {
                                     background-color: <?php echo esc_attr($primary_hover_bg); ?> !important;
                                     color: <?php echo esc_attr($primary_hover_text); ?> !important;
-                                    border-color: <?php echo esc_attr($primary_hover_border); ?> !important;
-                                    outline: 2px solid <?php echo esc_attr($primary_hover_border); ?>;
-                                    outline-offset: 2px;
+                                    border-color: <?php // echo esc_attr($primary_hover_border); ?> !important;
+                                    /* outline: 2px solid <?php //echo esc_attr($primary_hover_border); ?>; */
+                                    /* outline-offset: 2px; */
                                 }
                                 .<?php echo esc_attr($primary_class); ?>:hover svg path,
                                 .<?php echo esc_attr($primary_class); ?>:focus svg path {
@@ -223,9 +223,9 @@ $is_slider = count($slides) > 1;
                                 .<?php echo esc_attr($secondary_class); ?>:focus {
                                     background-color: <?php echo esc_attr($secondary_hover_bg); ?> !important;
                                     color: <?php echo esc_attr($secondary_hover_text); ?> !important;
-                                    border-color: <?php echo esc_attr($secondary_hover_border); ?> !important;
-                                    outline: 2px solid <?php echo esc_attr($secondary_hover_border); ?>;
-                                    outline-offset: 2px;
+                                    border-color: <?php //echo esc_attr($secondary_hover_border); ?> !important;
+                                    /* outline: 2px solid <?php echo esc_attr($secondary_hover_border); ?>; */
+                                    /* outline-offset: 2px; */
                                 }
                                 .<?php echo esc_attr($secondary_class); ?>:hover svg path,
                                 .<?php echo esc_attr($secondary_class); ?>:focus svg path {
