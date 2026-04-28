@@ -102,7 +102,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
         <?php endif; ?>
 
         <!-- Main Content Grid -->
-        <div class="flex flex-wrap justify-between items-start mt-16 w-full  max-w-[1018px] max-md:mt-10">
+        <div class="flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
 
           <!-- Services Container -->
           <?php if (!empty($services) && is_array($services)) : ?>
