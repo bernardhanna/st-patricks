@@ -137,14 +137,14 @@ $padding_str = implode(' ', $padding_classes);
         <div class="flex flex-col gap-8 items-start w-full lg:w-80 xl:w-96 lg:flex-shrink-0">
           <div class="flex flex-col gap-8 w-full">
             <?php if ($show_heading): ?>
-              <<?php echo tag_escape($heading_tag); ?> class="text-[24px] font-semibold not-italic leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] lg:max-w-[312px]">
+              <<?php echo tag_escape($heading_tag); ?> class="text-[24px] text-[#1E244B] font-semibold not-italic leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] lg:max-w-[312px]">
                 <?php echo esc_html($heading_text); ?>
               </<?php echo tag_escape($heading_tag); ?>>
               <div class="w-10 h-1 rounded-sm" style="background-color: <?php echo esc_attr($accent_bar_color); ?>;"></div>
             <?php endif; ?>
 
             <?php if (!empty($intro_text)): ?>
-              <div class="text-[16px] font-medium not-italic leading-[28px] wp_editor">
+              <div class="text-[16px] text-[#08284B] font-medium not-italic leading-[28px] wp_editor">
                 <?php echo wp_kses_post($intro_text); ?>
               </div>
             <?php endif; ?>
