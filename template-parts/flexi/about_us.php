@@ -116,7 +116,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
         <!-- Header Section -->
         <?php if (!empty($heading_text)) : ?>
         <div class="flex flex-col justify-center max-w-full text-3xl font-semibold tracking-tight leading-tight text-indigo-950 w-[1018px] max-sm:justify-center max-sm:items-start max-sm:px-4">
-            <<?php echo esc_attr($heading_tag); ?> class="text-indigo-950">
+            <<?php echo esc_attr($heading_tag); ?> class="text-[#1E244B]">
                 <?php echo esc_html($heading_text); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
@@ -162,7 +162,8 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             'transition-all',
                             'duration-300',
                             'hover:border',
-                            'hover:border-[var(--border)]',
+                            // 'hover:border-[var(--border)]',
+                            'hover:border-[#E2E8F0]',
                             'hover:bg-white',
                             'hover:shadow-sm',
                             $margin_class,
@@ -179,13 +180,13 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                                 <div class="w-full rounded-lg">
                                     <div class="p-6 w-full max-sm:min-h-[164px] min-h-[15rem] max-md:px-5">
                                         <?php if (!empty($card['title'])) : ?>
-                                            <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
+                                            <h3 class="text-2xl font-semibold tracking-normal leading-8 text-[#1E244B]">
                                                 <?php echo esc_html($card['title']); ?>
                                             </h3>
                                         <?php endif; ?>
 
                                         <?php if (!empty($card['text'])) : ?>
-                                            <p class="mt-4 text-base font-medium leading-7 text-indigo-950">
+                                            <p class="mt-4 text-base font-medium leading-7 text-[#1E244B]">
                                                 <?php echo esc_html($card['text']); ?>
                                             </p>
                                         <?php endif; ?>
@@ -203,13 +204,13 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             <div class="w-full rounded-lg">
                                 <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                     <?php if (!empty($card['title'])) : ?>
-                                        <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
+                                        <h3 class="text-2xl font-semibold tracking-normal leading-8 text-[#1E244B]">
                                             <?php echo esc_html($card['title']); ?>
                                         </h3>
                                     <?php endif; ?>
 
                                     <?php if (!empty($card['text'])) : ?>
-                                        <p class="mt-4 text-base font-medium leading-7 text-indigo-950">
+                                        <p class="mt-4 text-base font-medium leading-7 text-[#1E244B]">
                                             <?php echo esc_html($card['text']); ?>
                                         </p>
                                     <?php endif; ?>
@@ -264,7 +265,8 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             'transition-all',
                             'duration-300',
                             'hover:border',
-                            'hover:border-[var(--border)]',
+                            // 'hover:border-[var(--border)]',
+                            'hover:border-[#E2E8F0]',
                             'hover:bg-white',
                             'hover:shadow-sm',
                             $margin_class,
@@ -281,13 +283,13 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                                 <div class="w-full rounded-lg">
                                     <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                         <?php if (!empty($card['title'])) : ?>
-                                            <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
+                                            <h3 class="text-2xl font-semibold tracking-normal leading-8 text-[#1E244B]">
                                                 <?php echo esc_html($card['title']); ?>
                                             </h3>
                                         <?php endif; ?>
 
                                         <?php if (!empty($card['text'])) : ?>
-                                            <p class="mt-4 text-base font-medium leading-7 text-indigo-950">
+                                            <p class="mt-4 text-base font-medium leading-7 text-[#1E244B]">
                                                 <?php echo esc_html($card['text']); ?>
                                             </p>
                                         <?php endif; ?>
@@ -304,13 +306,13 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                             <div class="w-full rounded-lg">
                                 <div class="p-6 w-full min-h-[15rem] max-md:px-5">
                                     <?php if (!empty($card['title'])) : ?>
-                                        <h3 class="text-2xl font-semibold tracking-normal leading-8 text-indigo-950">
+                                        <h3 class="text-2xl font-semibold tracking-normal leading-8 text-[#1E244B]">
                                             <?php echo esc_html($card['title']); ?>
                                         </h3>
                                     <?php endif; ?>
 
                                     <?php if (!empty($card['text'])) : ?>
-                                        <p class="mt-4 text-base font-medium leading-7 text-indigo-950">
+                                        <p class="mt-4 text-base font-medium leading-7 text-[#1E244B]">
                                             <?php echo esc_html($card['text']); ?>
                                         </p>
                                     <?php endif; ?>
@@ -336,7 +338,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                     class="flex gap-2.5 justify-center items-center self-start px-3 mt-9 text-sm font-medium leading-6 whitespace-nowrap rounded-lg border transition-colors duration-200 btn border-primary-dark min-h-9 text-teal-950 w-fit hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                     aria-label="<?php echo esc_attr($view_more_link['title'] ?: 'View more mental health conditions'); ?>"
                 >
-                    <span class="self-stretch my-auto text-teal-950">
+                    <span class="self-stretch my-auto text-[#08284B]">
                         <?php echo esc_html($view_more_link['title'] ?: 'View more'); ?>
                     </span>
                 </a>
