@@ -11,9 +11,9 @@ $card_background_color = get_sub_field('card_background_color');
 if (empty($card_background_color) || strtolower((string) $card_background_color) === '#fafaf9') {
   $card_background_color = 'var(--StPatricks_Aux_DarkBG2, #FBF8F3)';
 }
-$divider_color = get_sub_field('divider_color') ?: '#c7d2fe';
-$text_color = get_sub_field('text_color') ?: '#0f2419';
-$date_color = get_sub_field('date_color') ?: '#0f2419';
+$divider_color = get_sub_field('divider_color') ?: '#F9F1D1';
+$text_color = get_sub_field('text_color') ?: '#08284B';
+$date_color = get_sub_field('date_color') ?: '#08284B';
 
 // Padding classes
 $padding_classes = [];
