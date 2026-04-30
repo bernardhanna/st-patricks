@@ -169,7 +169,7 @@ document.addEventListener('alpine:init', () => {
           <div class="flex gap-1 items-center">
             <a
               href="<?php echo esc_url($item->url); ?>"
-              class="flex gap-1 items-center text-sm font-semibold leading-5 rounded text-teal-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+              class="flex gap-1 items-center text-sm font-semibold leading-5 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
               role="menuitem"
               aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
               aria-expanded="false"
