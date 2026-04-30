@@ -44,7 +44,7 @@ if (have_rows('padding_settings')) {
                         <?php if (!empty($heading)): ?>
                             <<?php echo esc_attr($heading_tag); ?>
                                 id="<?php echo esc_attr($section_id); ?>-heading"
-                                class="text-3xl font-semibold tracking-tight leading-9 text-indigo-950 max-md:text-2xl max-md:leading-8 max-sm:text-2xl max-sm:leading-8"
+                                class="text-3xl font-semibold tracking-tight leading-9 text-[#1E244B] max-md:text-2xl max-md:leading-8 max-sm:text-2xl max-sm:leading-8"
                             >
                                 <?php echo esc_html($heading); ?>
                             </<?php echo esc_attr($heading_tag); ?>>
@@ -53,7 +53,7 @@ if (have_rows('padding_settings')) {
                     </header>
 
                     <?php if (!empty($description)): ?>
-                        <div class="max-w-full text-base font-medium leading-7 text-teal-950 <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
+                        <div class="max-w-full text-base font-medium leading-7 text-[#08284B] <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
                             <?php echo wp_kses_post($description); ?>
                         </div>
                     <?php endif; ?>
@@ -62,7 +62,7 @@ if (have_rows('padding_settings')) {
                         <div class="flex gap-4 items-center">
                             <a
                                 href="<?php echo esc_url($button['url']); ?>"
-                                class="flex gap-2.5 justify-center items-center px-4 py-2 whitespace-nowrap rounded border border-sky-900 border-solid transition-colors duration-300 cursor-pointer btn w-fit hover:bg-sky-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-900"
+                                class="flex gap-2.5 justify-center items-center px-4 py-2 whitespace-nowrap rounded border border-sky-900 border-solid transition-colors duration-300 cursor-pointer btn w-fit hover:bg-sky-900 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-900"
                                 target="<?php echo esc_attr($button['target'] ?? '_self'); ?>"
                                 aria-label="<?php echo esc_attr($button['title']); ?>"
                             >

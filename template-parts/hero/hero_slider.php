@@ -162,14 +162,15 @@ $is_slider = count($slides) > 1;
 
                     <?php if (!empty($sl['text'])) { ?>
                         <<?php echo esc_attr($sl['tag']); ?>
-                            class="mb-4 text-slate-900 !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
+                            class="mb-4 text-[#08284B] !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
+                            style="color: #08284B;"
                             id="<?php echo esc_attr($heading_id); ?>">
                             <?php echo esc_html($sl['text']); ?>
                         </<?php echo esc_attr($sl['tag']); ?>>
                     <?php } ?>
 
                     <?php if (!empty($sl['desc'])) { ?>
-                        <div class="mb-6 text-large text-slate-900 md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
+                        <div class="mb-6 text-large text-[#08284B] md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
                             <?php echo wp_kses_post($sl['desc']); ?>
                         </div>
                     <?php } ?>
@@ -186,7 +187,7 @@ $is_slider = count($slides) > 1;
                             <a href="<?php echo esc_url($sl['pbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['pbtn']['target'] ? $sl['pbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['pbtn']['title'] ? $sl['pbtn']['title'] : 'Primary action'); ?>"
-                               class="btn <?php echo esc_attr($primary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
+                               class="btn <?php echo esc_attr($primary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
                                 <?php echo esc_html($sl['pbtn']['title']); ?>
                             </a>
                             <style>
@@ -194,9 +195,9 @@ $is_slider = count($slides) > 1;
                                 .<?php echo esc_attr($primary_class); ?>:focus {
                                     background-color: <?php echo esc_attr($primary_hover_bg); ?> !important;
                                     color: <?php echo esc_attr($primary_hover_text); ?> !important;
-                                    border-color: <?php echo esc_attr($primary_hover_border); ?> !important;
-                                    outline: 2px solid <?php echo esc_attr($primary_hover_border); ?>;
-                                    outline-offset: 2px;
+                                    border-color: <?php // echo esc_attr($primary_hover_border); ?> !important;
+                                    /* outline: 2px solid <?php //echo esc_attr($primary_hover_border); ?>; */
+                                    /* outline-offset: 2px; */
                                 }
                                 .<?php echo esc_attr($primary_class); ?>:hover svg path,
                                 .<?php echo esc_attr($primary_class); ?>:focus svg path {
@@ -215,7 +216,7 @@ $is_slider = count($slides) > 1;
                             <a href="<?php echo esc_url($sl['sbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['sbtn']['target'] ? $sl['sbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['sbtn']['title'] ? $sl['sbtn']['title'] : 'Secondary action'); ?>"
-                               class="btn <?php echo esc_attr($secondary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
+                               class="btn <?php echo esc_attr($secondary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
                                 <?php echo esc_html($sl['sbtn']['title']); ?>
                             </a>
                             <style>
@@ -223,9 +224,9 @@ $is_slider = count($slides) > 1;
                                 .<?php echo esc_attr($secondary_class); ?>:focus {
                                     background-color: <?php echo esc_attr($secondary_hover_bg); ?> !important;
                                     color: <?php echo esc_attr($secondary_hover_text); ?> !important;
-                                    border-color: <?php echo esc_attr($secondary_hover_border); ?> !important;
-                                    outline: 2px solid <?php echo esc_attr($secondary_hover_border); ?>;
-                                    outline-offset: 2px;
+                                    border-color: <?php //echo esc_attr($secondary_hover_border); ?> !important;
+                                    /* outline: 2px solid <?php echo esc_attr($secondary_hover_border); ?>; */
+                                    /* outline-offset: 2px; */
                                 }
                                 .<?php echo esc_attr($secondary_class); ?>:hover svg path,
                                 .<?php echo esc_attr($secondary_class); ?>:focus svg path {
@@ -281,7 +282,7 @@ $is_slider = count($slides) > 1;
                         <?php
                         for ($d = 0; $d < count($slides); $d++) {
                             $is_active = $d === 0;
-                            $dot_color = $is_active ? '#0f172a' : '#7ED0E0';
+                            $dot_color = $is_active ? '#80CCD9' : '#7ED0E0';
                             ?>
                             <button
                                 class="w-3 h-3 rounded-full transition-colors slider-dot"

@@ -84,7 +84,7 @@ if ($background_type === 'gradient') {
                         <div class="flex flex-col gap-8">
                             <<?php echo esc_attr($heading_tag); ?>
                                 id="<?php echo esc_attr($section_id); ?>-heading"
-                                class="text-3xl font-semibold tracking-tight leading-9 text-indigo-950 max-md:text-2xl max-md:leading-8 max-sm:text-2xl max-sm:leading-8"
+                                class="text-3xl font-semibold tracking-tight leading-9 text-[#1E244B] max-md:text-2xl max-md:leading-8 max-sm:text-2xl max-sm:leading-8"
                             >
                                 <?php echo esc_html($heading); ?>
                             </<?php echo esc_attr($heading_tag); ?>>
@@ -101,7 +101,7 @@ if ($background_type === 'gradient') {
                 <!-- Content Section -->
                 <?php if (!empty($content)): ?>
                     <div class="w-full">
-                        <div class="text-base font-medium leading-7 text-teal-950 wp_editor max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6">
+                        <div class="text-base font-medium leading-7 text-[#08284B] wp_editor max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6">
                             <?php echo wp_kses_post($content); ?>
                         </div>
                     </div>
@@ -112,7 +112,7 @@ if ($background_type === 'gradient') {
                         <?php if ($primary_cta): ?>
                             <a
                                 href="<?php echo $primary_cta['url']; ?>"
-                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 bg-[#024B79] text-white text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] rounded"
+                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 bg-[#024B79] text-white text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79] rounded"
                                 target="<?php echo $primary_cta['target']; ?>"
                                 aria-label="<?php echo esc_attr($primary_cta['title']); ?>"
                             >
@@ -123,7 +123,7 @@ if ($background_type === 'gradient') {
                         <?php if ($secondary_cta): ?>
                             <a
                                 href="<?php echo $secondary_cta['url']; ?>"
-                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 border border-[#024B79] bg-white text-[#024B79] text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] rounded"
+                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 border border-[#024B79] bg-white text-[#024B79] text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79] rounded"
                                 target="<?php echo $secondary_cta['target']; ?>"
                                 aria-label="<?php echo esc_attr($secondary_cta['title']); ?>"
                             >

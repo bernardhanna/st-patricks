@@ -22,7 +22,7 @@ if ($main_image) {
 // Background gradient (new)
 $background_gradient = get_sub_field('background_gradient');
 if ($background_gradient === '' || $background_gradient === null) {
-    $background_gradient = 'var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #F6EDE0 3.24%, #F4F5DE 90.88%))';
+    $background_gradient = 'var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #F8F6F3 3.24%, #F5F6ED 90.88%))';
 }
 
 // Padding settings
@@ -90,7 +90,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
                     <?php endif; ?>
                 </a>
             <?php else : ?>
-                <<?php echo esc_attr($heading_tag); ?> class="text-3xl font-semibold tracking-tight leading-tight text-indigo-950 max-sm:text-2xl">
+                <<?php echo esc_attr($heading_tag); ?> class="text-3xl font-semibold tracking-tight leading-tight text-[#1E244B] max-sm:text-2xl">
                     <?php echo esc_html($heading); ?>
                 </<?php echo esc_attr($heading_tag); ?>>
             <?php endif; ?>
@@ -102,7 +102,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
         <?php endif; ?>
 
         <!-- Main Content Grid -->
-        <div class="flex flex-wrap justify-between items-start mt-16 w-full  max-w-[1018px] max-md:mt-10">
+        <div class="flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
 
           <!-- Services Container -->
           <?php if (!empty($services) && is_array($services)) : ?>
@@ -137,18 +137,18 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
                       <?php endif; ?>
 
                           <?php if ($service_icon_url) : ?>
-                              <div class="relative shrink-0">
+                              <div class="relative shrink-0 overflow-hidden rounded">
                                   <img
                                       src="<?php echo esc_url($service_icon_url); ?>"
                                       alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                      class="object-contain transition-opacity duration-200 group-hover:opacity-0"
+                                      class="object-contain transition-transform duration-300 group-hover:-translate-y-full"
                                       decoding="async"
                                       loading="lazy"
                                   />
                                   <img
                                       src="<?php echo esc_url($service_hover_icon_url); ?>"
                                       alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                      class="object-contain absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                      class="object-contain absolute inset-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0"
                                       decoding="async"
                                       loading="lazy"
                                   />
@@ -158,7 +158,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
                           <div class="flex flex-col w-full min-w-0">
                               <?php if (!empty($service_title)) : ?>
                                   <div class="flex gap-2 items-center self-start text-2xl font-semibold tracking-normal leading-none min-h-[33px] text-indigo-950 max-sm:text-xl">
-                                      <h3 class="self-stretch my-auto text-indigo-950 transition-colors duration-200 group-hover:text-[#024B79]">
+                                      <h3 class="self-stretch my-auto text-[#1E244B] transition-colors duration-200 group-hover:text-[#024B79]">
                                           <?php echo esc_html($service_title); ?>
                                       </h3>
 
@@ -182,7 +182,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
                               <?php endif; ?>
 
                               <?php if (!empty($service_description)) : ?>
-                                  <div class="mt-4 text-base font-medium leading-7 text-teal-950 wp_editor">
+                                  <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
                                       <?php echo wp_kses_post($service_description); ?>
                                   </div>
                               <?php endif; ?>

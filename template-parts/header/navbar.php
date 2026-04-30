@@ -178,7 +178,7 @@ document.addEventListener('alpine:init', () => {
 
               <?php if ($item->children) : ?>
                 <!-- Chevron icon (style-only change) -->
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="mt-0.5">
                   <path d="M2 4L6 8L10 4" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               <?php endif; ?>
@@ -221,7 +221,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($help_btn['url']); ?>"
         target="<?php echo esc_attr($help_btn['target'] ?: '_self'); ?>"
-        class="hidden btn gap-2 items-center px-3 h-9 bg-sky-900 text-white rounded-md transition-colors sm:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden btn gap-2 items-center px-3 h-9 bg-[#024B79] text-white rounded-md transition-colors sm:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         aria-label="<?php echo esc_attr($help_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">
@@ -235,7 +235,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($referral_btn['url']); ?>"
         target="<?php echo esc_attr($referral_btn['target'] ?: '_self'); ?>"
-        class="flex btn items-center px-3 h-9 rounded-md border border-sky-900 text-teal-950 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="flex btn items-center px-3 h-9 rounded-md border border-[#024B79] text-[#08284B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         role="button"
         aria-label="<?php echo esc_attr($referral_btn['title']); ?>"
       >
