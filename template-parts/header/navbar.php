@@ -258,7 +258,7 @@ document.addEventListener('alpine:init', () => {
     x-transition.opacity
     @click.self="closeSearch()"
     @keydown.escape.window="closeSearch()"
-    class="fixed inset-0 z-[120] flex justify-center items-start p-4 pt-20 bg-black/40"
+    class="inset-0 z-[120] flex justify-center items-start p-4 pt-20 bg-black/40"
     role="dialog"
     aria-modal="true"
     aria-labelledby="navbar-search-title"
