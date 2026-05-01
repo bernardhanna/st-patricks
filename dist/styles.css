@@ -1,3 +1,6 @@
+/*!****************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./assets/css/app.css ***!
+  \****************************************************************************************************************/
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -4016,6 +4019,10 @@ input:where([type='file']):focus {
 .bg-\[\#024B79\] {
   --tw-bg-opacity: 1;
   background-color: rgb(2 75 121 / var(--tw-bg-opacity, 1));
+}
+.bg-\[\#6FC9C0\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(111 201 192 / var(--tw-bg-opacity, 1));
 }
 .bg-\[\#7ED0E0\] {
   --tw-bg-opacity: 1;
@@ -26419,10 +26426,6 @@ input:where([type='file']):focus {
 
   .lg\:mt-16 {
     margin-top: 4rem;
-  }
-
-  .lg\:mt-\[9rem\] {
-    margin-top: 9rem;
   }
 
   .lg\:block {

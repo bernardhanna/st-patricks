@@ -95,7 +95,7 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
                 </<?php echo esc_attr($heading_tag); ?>>
             <?php endif; ?>
 
-            <div class="mt-4 w-10  bg-[#F86] h-[4px]"
+            <div class="mt-4 w-10  bg-[#6FC9C0] h-[4px]"
                  role="presentation"
                  aria-hidden="true"></div>
             </div>

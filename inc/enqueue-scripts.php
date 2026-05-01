@@ -105,11 +105,39 @@ function matrix_starter_enqueue_scripts()
         document.addEventListener('DOMContentLoaded', function() {
           var header = document.querySelector('#site-nav');
           if (!header || typeof Headroom === 'undefined') return;
-          header.classList.add('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0');
-          var headroom = new Headroom(header, { tolerance: 5, offset: 100 });
-          headroom.onPin   = function(){ header.classList.remove('-translate-y-full'); header.classList.add('translate-y-0'); };
-          headroom.onUnpin = function(){ header.classList.remove('translate-y-0'); header.classList.add('-translate-y-full'); };
-          headroom.init();
+
+          var headroomStarted = false;
+          var headroom = null;
+          var stickyThreshold = 100;
+
+          function removeFixedHeaderState() {
+            if (headroom && typeof headroom.destroy === 'function') {
+              headroom.destroy();
+            }
+            headroom = null;
+            headroomStarted = false;
+            header.classList.remove('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0','-translate-y-full');
+          }
+
+          function syncHeaderWithScroll() {
+            if (window.scrollY < stickyThreshold) {
+              removeFixedHeaderState();
+              return;
+            }
+
+            if (headroomStarted) return;
+            headroomStarted = true;
+
+            header.classList.add('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0');
+
+            headroom = new Headroom(header, { tolerance: 5, offset: 100 });
+            headroom.onPin   = function(){ header.classList.remove('-translate-y-full'); header.classList.add('translate-y-0'); };
+            headroom.onUnpin = function(){ header.classList.remove('translate-y-0'); header.classList.add('-translate-y-full'); };
+            headroom.init();
+          }
+
+          window.addEventListener('scroll', syncHeaderWithScroll, { passive: true });
+          syncHeaderWithScroll();
         });
       ");
     }
