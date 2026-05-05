@@ -46,7 +46,7 @@ $stories
     ->addColorPicker('divider_color', [
         'label' => 'Divider Color',
         'instructions' => 'Color for the decorative divider line in each card.',
-        'default_value' => '#c7d2fe',
+        'default_value' => '#6FC9C0',
     ])
     ->addColorPicker('text_color', [
         'label' => 'Text Color',

@@ -45,7 +45,7 @@ if (have_rows('padding_settings')) {
 // Determine background style
 $background_style = '';
 if ($background_type === 'gradient') {
-    $background_style = 'background: linear-gradient(278deg, #F6EDE0 3.24%, #F4F5DE 90.88%);';
+    $background_style = 'background: linear-gradient(278deg, #F8F6F3 3.24%, #F5F6ED 90.88%);';
 } elseif ($background_type === 'color' && $background_color) {
     $background_style = 'background-color: ' . esc_attr($background_color) . ';';
 }
@@ -90,7 +90,7 @@ if ($background_type === 'gradient') {
                             </<?php echo esc_attr($heading_tag); ?>>
 
                             <div
-                                class="w-10 h-1 bg-red-400"
+                                class="w-10 h-1 bg-[#6FC9C0]"
                                 role="presentation"
                                 aria-hidden="true"
                             ></div>

@@ -140,7 +140,7 @@ $padding_str = implode(' ', $padding_classes);
               <<?php echo tag_escape($heading_tag); ?> class="text-[24px] text-[#1E244B] font-semibold not-italic leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] lg:max-w-[312px]">
                 <?php echo esc_html($heading_text); ?>
               </<?php echo tag_escape($heading_tag); ?>>
-              <div class="w-10 h-1 rounded-sm" style="background-color: <?php echo esc_attr($accent_bar_color); ?>;"></div>
+              <div class="w-10 h-1 rounded-sm !bg-[#6FC9C0]" style="background-color: <?php echo esc_attr($accent_bar_color); ?>;"></div>
             <?php endif; ?>
 
             <?php if (!empty($intro_text)): ?>
@@ -164,10 +164,10 @@ $padding_str = implode(' ', $padding_classes);
               if ($count):
               ?>
                 <!-- Prev card (desktop only) -->
-                <div class="absolute left-0 top-1/2 -translate-x-10 sm:-translate-x-8 md:-translate-x-6 xl:-translate-x-4 -translate-y-1/2" data-prev-card>
+                <div class="absolute left-0 top-1/2 -translate-x-10 -translate-y-1/2 sm:-translate-x-8 md:-translate-x-6 xl:-translate-x-4" data-prev-card>
                   <div class="relative w-[130px] sm:w-[150px] md:w-[170px] xl:w-[240px] xxl:w-[320px] h-[190px] sm:h-[210px] md:h-[240px] xl:h-[320px] xxl:h-[400px] opacity-60">
-                    <div class="relative z-10 p-2 h-full rounded-[10px] bg-[#F6B27A] shadow-sm">
-                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[8px] border-b-[8px] border-t-[20px] border-[#F6B27A]">
+                    <div class="relative z-10 p-2 h-full rounded-[10px] bg-[#B4A8CE] shadow-sm">
+                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[8px] border-b-[8px] border-t-[20px] border-[#B4A8CE]">
                         <img src="<?php echo esc_url($slides[$prev]['img']['url']); ?>" alt="<?php echo esc_attr($slides[$prev]['img']['alt']); ?>" title="<?php echo esc_attr($slides[$prev]['img']['title']); ?>" class="object-cover absolute inset-0 w-full h-full" loading="lazy" decoding="async" />
                       </div>
                     </div>
@@ -177,8 +177,8 @@ $padding_str = implode(' ', $padding_classes);
                 <!-- Active card -->
                 <div class="relative z-10" data-active-card>
                   <div class="relative w-[340px] sm:w-[400px] md:w-[500px] lg:w-[480px] xl:w-[560px] xxl:w-[640px] h-[380px] md:h-[420px] lg:h-[460px]">
-                    <div class="relative z-10 p-3 w-full h-full rounded-[10px] bg-[#F6B27A] shadow-md">
-                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[10px] border-b-[10px] border-t-[30px] border-[#F6B27A]">
+                    <div class="relative z-10 p-3 w-full h-full rounded-[10px] bg-[#B4A8CE] shadow-md">
+                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[10px] border-b-[10px] border-t-[30px] border-[#B4A8CE]">
                     <?php
                       $active_slide = $slides[$active];
                       $has_video = !empty($active_slide['has_video']);
@@ -189,7 +189,7 @@ $padding_str = implode(' ', $padding_classes);
                       $video_type = $active_slide['video_type'] ?? 'none';
                       $has_inline_video = in_array($video_type, ['local', 'youtube', 'vimeo'], true);
                     ?>
-                    <a href="<?php echo $a_href ?: '#'; ?>" target="<?php echo $a_target; ?>" class="absolute inset-0 z-20 hidden" aria-label="<?php echo $a_title; ?>" data-active-link></a>
+                    <a href="<?php echo $a_href ?: '#'; ?>" target="<?php echo $a_target; ?>" class="hidden absolute inset-0 z-20" aria-label="<?php echo $a_title; ?>" data-active-link></a>
                     <img src="<?php echo esc_url($active_slide['img']['url']); ?>" alt="<?php echo esc_attr($active_slide['img']['alt']); ?>" title="<?php echo esc_attr($active_slide['img']['title']); ?>" class="object-cover absolute inset-0 w-full h-full" loading="eager" data-active-image />
                     <video
                       class="hidden object-cover absolute inset-0 z-10 w-full h-full"
@@ -223,10 +223,10 @@ $padding_str = implode(' ', $padding_classes);
                 </div>
 
                 <!-- Next card (desktop only) -->
-                <div class="absolute right-0 top-1/2 translate-x-10 sm:translate-x-8 md:translate-x-6 xl:translate-x-4 -translate-y-1/2" data-next-card>
+                <div class="absolute right-0 top-1/2 translate-x-10 -translate-y-1/2 sm:translate-x-8 md:translate-x-6 xl:translate-x-4" data-next-card>
                   <div class="relative w-[130px] sm:w-[150px] md:w-[170px] xl:w-[240px] xxl:w-[320px] h-[190px] sm:h-[210px] md:h-[240px] xl:h-[320px] xxl:h-[400px] opacity-60">
-                    <div class="relative z-10 p-2 h-full rounded-[10px] bg-[#F6B27A] shadow-sm">
-                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[8px] border-b-[8px] border-t-[20px] border-[#F6B27A]">
+                    <div class="relative z-10 p-2 h-full rounded-[10px] bg-[#B4A8CE] shadow-sm">
+                      <div class="relative overflow-hidden w-full h-full rounded-[8px] bg-white border-x-[8px] border-b-[8px] border-t-[20px] border-[#B4A8CE]">
                         <img src="<?php echo esc_url($slides[$next]['img']['url']); ?>" alt="<?php echo esc_attr($slides[$next]['img']['alt']); ?>" title="<?php echo esc_attr($slides[$next]['img']['title']); ?>" class="object-cover absolute inset-0 w-full h-full" loading="lazy" decoding="async" />
                       </div>
                     </div>
