@@ -68,6 +68,12 @@ function matrix_starter_enqueue_scripts()
     [],
     null
   );
+  wp_enqueue_style(
+    'inter-font',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap',
+    [],
+    null
+  );
 
   // ---- Register optional third-parties once (CSS/JS) ----
   // We keep everything registered; only enqueue when enabled.

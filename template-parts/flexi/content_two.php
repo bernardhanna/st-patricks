@@ -49,7 +49,7 @@ if (have_rows('padding_settings')) {
                                 <?php echo esc_html($heading); ?>
                             </<?php echo esc_attr($heading_tag); ?>>
                         <?php endif; ?>
-                        <div class="w-10 h-1 bg-red-400" role="presentation" aria-hidden="true"></div>
+                        <div class="w-10 h-1 bg-[#6FC9C0]" role="presentation" aria-hidden="true"></div>
                     </header>
 
                     <?php if (!empty($description)): ?>

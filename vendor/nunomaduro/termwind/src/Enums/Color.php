@@ -360,7 +360,7 @@ final class Color
 
     public const INDIGO_100 = '#e0e7ff';
 
-    public const INDIGO_200 = '#c7d2fe';
+    public const INDIGO_200 = '#6FC9C0';
 
     public const INDIGO_300 = '#a5b4fc';
 

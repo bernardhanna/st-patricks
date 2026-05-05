@@ -12,7 +12,8 @@ const baseConfig = {
   theme: {
     extend: {
       fontFamily: {
-        primary: ['Ubuntu', 'sans-serif'],
+        primary: ['Ubuntu', 'Inter', 'sans-serif'],
+        secondary: ['Inter', 'sans-serif'],
         heading: ['Great Vibes', 'cursive'],
         decorative: ['Great Vibes', 'cursive'],
       },
