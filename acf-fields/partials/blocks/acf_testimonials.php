@@ -6,133 +6,222 @@ $testimonials = new FieldsBuilder('testimonials', [
 ]);
 
 $testimonials
-  ->addTab('content_tab', ['label' => 'Content'])
-    ->addImage('left_logo', [
-      'label'         => 'Left Logo (faded)',
-      'return_format' => 'array',
-      'preview_size'  => 'medium',
-    ])
-    ->addSelect('heading_tag', [
-      'label'   => 'Heading Tag',
-      'choices' => [
-        'h1'=>'h1','h2'=>'h2','h3'=>'h3','h4'=>'h4','h5'=>'h5','h6'=>'h6','span'=>'span','p'=>'p',
-      ],
-      'default_value' => 'h2',
-    ])
-    ->addText('heading_text', [
-      'label'         => 'Heading',
-      'default_value' => "Voices of hope\nand healing",
-    ])
-    ->addWysiwyg('description', [
-      'label'         => 'Description',
-      'tabs'          => 'all',
-      'media_upload'  => 0,
-      'delay'         => 0,
-      'default_value' => 'Every journey is unique. These stories reflect the courage, progress, and renewed well-being of individuals who trusted us to walk alongside them.',
-    ])
+    ->addTab('Content', ['label' => 'Content'])
+        ->addSelect('heading_tag', [
+            'label' => 'Heading Tag',
+            'choices' => [
+                'h1' => 'H1',
+                'h2' => 'H2',
+                'h3' => 'H3',
+                'h4' => 'H4',
+                'h5' => 'H5',
+                'h6' => 'H6',
+                'span' => 'Span',
+                'p' => 'Paragraph',
+            ],
+            'default_value' => 'h2',
+        ])
+        ->addText('heading_text', [
+            'label' => 'Heading',
+            'instructions' => 'Section heading shown above the testimonial grid.',
+            'default_value' => 'Testimonials',
+        ])
+        ->addSelect('layout_style', [
+            'label' => 'Layout Style',
+            'instructions' => 'Choose how the testimonial cards are arranged.',
+            'choices' => [
+                'grid_standard' => 'Standard Grid',
+                'editorial_featured' => 'Editorial Featured',
+            ],
+            'default_value' => 'grid_standard',
+        ])
+        ->addSelect('source_mode', [
+            'label' => 'Source Mode',
+            'instructions' => 'Choose whether testimonials come from manual entries, selected testimonial posts, or all testimonial posts.',
+            'choices' => [
+                'manual' => 'Manual',
+                'selected' => 'Selected Testimonials',
+                'all' => 'All Testimonials',
+            ],
+            'default_value' => 'manual',
+        ])
+        ->addRepeater('manual_items', [
+            'label' => 'Manual Testimonials',
+            'instructions' => 'Use manual items when you want exact control over the quotes shown in this block.',
+            'button_label' => 'Add Testimonial',
+            'layout' => 'row',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'source_mode',
+                        'operator' => '==',
+                        'value' => 'manual',
+                    ],
+                ],
+            ],
+        ])
+            ->addWysiwyg('quote', [
+                'label' => 'Quote',
+                'tabs' => 'all',
+                'media_upload' => 0,
+                'toolbar' => 'basic',
+                'default_value' => '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>',
+            ])
+            ->addText('author_name', [
+                'label' => 'Author Name',
+                'default_value' => 'Tom',
+            ])
+            ->addText('author_title', [
+                'label' => 'Author Title',
+                'default_value' => 'Service User',
+            ])
+            ->addSelect('card_tone', [
+                'label' => 'Card Tone',
+                'choices' => [
+                    'lavender' => 'Lavender',
+                    'mauve' => 'Mauve',
+                ],
+                'default_value' => 'lavender',
+            ])
+        ->endRepeater()
+        ->addRelationship('selected_testimonials', [
+            'label' => 'Selected Testimonials',
+            'instructions' => 'Choose the testimonial posts to show in this block. The selected order will be preserved.',
+            'post_type' => ['testimonials'],
+            'filters' => ['search'],
+            'return_format' => 'object',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'source_mode',
+                        'operator' => '==',
+                        'value' => 'selected',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('footer_action_mode', [
+            'label' => 'Footer Action',
+            'instructions' => 'Show a load-more control, a linked button, or no footer action.',
+            'choices' => [
+                'load_more' => 'Load More',
+                'link_button' => 'Link Button',
+                'none' => 'None',
+            ],
+            'default_value' => 'load_more',
+        ])
+        ->addText('load_more_button_text', [
+            'label' => 'Load More Button Text',
+            'default_value' => 'Load more testimonials',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'footer_action_mode',
+                        'operator' => '==',
+                        'value' => 'load_more',
+                    ],
+                ],
+            ],
+        ])
+        ->addLink('footer_button_link', [
+            'label' => 'Footer Button Link',
+            'instructions' => 'Used when the footer action is a linked CTA button.',
+            'return_format' => 'array',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'footer_action_mode',
+                        'operator' => '==',
+                        'value' => 'link_button',
+                    ],
+                ],
+            ],
+        ])
 
-    ->addRepeater('items', [
-      'label'        => 'Testimonials',
-      'instructions' => 'Add one or more testimonial cards.',
-      'button_label' => 'Add Testimonial',
-      'layout'       => 'row',
-      'min'          => 1,
-    ])
-      ->addImage('photo', [
-        'label'         => 'Person Image',
-        'return_format' => 'array',
-        'preview_size'  => 'medium',
-      ])
-      ->addWysiwyg('quote', [
-        'label'         => 'Quote',
-        'tabs'          => 'visual',
-        'media_upload'  => 0,
-        'delay'         => 0,
-        'default_value' => '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do lorem upsum dolor sit amet sinlis morris!"',
-      ])
-      ->addText('author_name', [
-        'label'         => 'Author Name',
-        'default_value' => 'Stephanie Green',
-      ])
-      ->addText('author_title', [
-        'label'         => 'Author Title',
-        'default_value' => 'Accountant',
-      ])
-    ->endRepeater()
+    ->addTab('Design', ['label' => 'Design'])
+        ->addImage('background_image', [
+            'label' => 'Background Image',
+            'instructions' => 'Optional decorative background image for the testimonials section.',
+            'return_format' => 'id',
+            'preview_size' => 'medium',
+        ])
+        ->addColorPicker('background_color', [
+            'label' => 'Background Color',
+            'default_value' => '#F6EDE0',
+        ])
+        ->addColorPicker('heading_color', [
+            'label' => 'Heading Color',
+            'default_value' => '#1E244B',
+        ])
+        ->addColorPicker('accent_color', [
+            'label' => 'Heading Underline Color',
+            'default_value' => '#6FC9C0',
+        ])
+        ->addColorPicker('quote_color', [
+            'label' => 'Quote Text Color',
+            'default_value' => '#08284B',
+        ])
+        ->addColorPicker('author_color', [
+            'label' => 'Author Text Color',
+            'default_value' => '#08284B',
+        ])
+        ->addColorPicker('card_lavender_color', [
+            'label' => 'Lavender Card Color',
+            'default_value' => '#B4A8CE',
+        ])
+        ->addColorPicker('card_mauve_color', [
+            'label' => 'Mauve Card Color',
+            'default_value' => '#E4B8D6',
+        ])
+        ->addColorPicker('card_inner_color', [
+            'label' => 'Inner Card Color',
+            'default_value' => '#FFFFFF',
+        ])
+        ->addColorPicker('button_border_color', [
+            'label' => 'Button Border Color',
+            'default_value' => '#024B79',
+        ])
+        ->addColorPicker('button_text_color', [
+            'label' => 'Button Text Color',
+            'default_value' => '#08284B',
+        ])
 
-  ->addTab('design_tab', ['label' => 'Design'])
-    ->addColorPicker('background_color', [
-      'label'         => 'Section Background',
-      'default_value' => '#ffffff',
-    ])
-    ->addColorPicker('heading_color', [
-      'label'         => 'Heading Color',
-      'default_value' => '#0B0B08', // st-patricks-dark-bg
-    ])
-    ->addColorPicker('desc_color', [
-      'label'         => 'Description Color',
-      'default_value' => '#5F604B', // dark-olive
-    ])
-    ->addColorPicker('quote_color', [
-      'label'         => 'Quote Text Color',
-      'default_value' => '#4A4B37',
-    ])
-    ->addColorPicker('accent_color', [
-      'label'         => 'Accent (divider/quote square)',
-      'default_value' => '#7ED0E0', // st-patricks-accent-ish
-    ])
-    ->addColorPicker('gradient_from', [
-      'label'         => 'Gradient From',
-      'default_value' => '#7ED0E0',
-    ])
-    ->addColorPicker('gradient_to', [
-      'label'         => 'Gradient To',
-      'default_value' => '#3CA7B6',
-    ])
-    ->addSelect('card_radius', [
-      'label'   => 'Card Border Radius',
-      'choices' => [
-        'rounded-none' => 'None',
-        'rounded'      => 'rounded',
-        'rounded-md'   => 'rounded-md',
-        'rounded-lg'   => 'rounded-lg',
-        'rounded-xl'   => 'rounded-xl',
-      ],
-      'default_value' => 'rounded-none', // per requirement
-    ])
-    ->addTrueFalse('card_shadow', [
-      'label'         => 'Enable Card Shadow',
-      'ui'            => 1,
-      'default_value' => 1,
-    ])
-    ->addNumber('logo_opacity', [
-      'label' => 'Left Logo Opacity (0–1)',
-      'min' => 0, 'max' => 1, 'step' => 0.05, 'default_value' => 0.2,
-    ])
-    ->addTrueFalse('show_stack_backgrounds', [
-      'label'         => 'Show Stacked Gradient Background Cards',
-      'ui'            => 1,
-      'default_value' => 1,
-    ])
-
-  ->addTab('layout_tab', ['label' => 'Layout'])
-    ->addRepeater('padding_settings', [
-      'label'        => 'Padding Settings',
-      'instructions' => 'Customize padding for different screen sizes.',
-      'button_label' => 'Add Screen Size Padding',
-    ])
-      ->addSelect('screen_size', [
-        'label'   => 'Screen Size',
-        'choices' => [
-          'xxs'=>'xxs','xs'=>'xs','mob'=>'mob','sm'=>'sm','md'=>'md','lg'=>'lg','xl'=>'xl','xxl'=>'xxl','ultrawide'=>'ultrawide',
-        ],
-      ])
-      ->addNumber('padding_top', [
-        'label' => 'Padding Top', 'min'=>0,'max'=>20,'step'=>0.1,'append'=>'rem',
-      ])
-      ->addNumber('padding_bottom', [
-        'label' => 'Padding Bottom', 'min'=>0,'max'=>20,'step'=>0.1,'append'=>'rem',
-      ])
-    ->endRepeater();
+    ->addTab('Layout', ['label' => 'Layout'])
+        ->addRepeater('padding_settings', [
+            'label' => 'Padding Settings',
+            'instructions' => 'Customize padding for different screen sizes.',
+            'button_label' => 'Add Screen Size Padding',
+        ])
+            ->addSelect('screen_size', [
+                'label' => 'Screen Size',
+                'choices' => [
+                    'xxs' => 'xxs',
+                    'xs' => 'xs',
+                    'mob' => 'mob',
+                    'sm' => 'sm',
+                    'md' => 'md',
+                    'lg' => 'lg',
+                    'xl' => 'xl',
+                    'xxl' => 'xxl',
+                    'ultrawide' => 'ultrawide',
+                ],
+            ])
+            ->addNumber('padding_top', [
+                'label' => 'Padding Top',
+                'instructions' => 'Set the top padding in rem.',
+                'min' => 0,
+                'max' => 20,
+                'step' => 0.1,
+                'append' => 'rem',
+            ])
+            ->addNumber('padding_bottom', [
+                'label' => 'Padding Bottom',
+                'instructions' => 'Set the bottom padding in rem.',
+                'min' => 0,
+                'max' => 20,
+                'step' => 0.1,
+                'append' => 'rem',
+            ])
+        ->endRepeater();
 
 return $testimonials;
