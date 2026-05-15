@@ -284,7 +284,7 @@ $mob_icons = [
         <?php endif; ?>
 
         <div class="flex flex-col items-center w-full mx-auto max-w-[1300px] pt-12 pb-5 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
-            <div class="w-full max-xl:px-5">
+            <div class="w-full max-xxl:px-5">
 
                 <!-- Top navigation area as GRID -->
                 <nav class="grid grid-cols-1 gap-10 items-start w-full max-md:max-w-full md:gap-8 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6"

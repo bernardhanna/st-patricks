@@ -1,0 +1,21 @@
+---
+description: Frontend conventions for flexi block PHP templates
+globs: template-parts/flexi/*.php
+alwaysApply: false
+---
+
+# Flexi Block Frontend
+
+- Match existing site code style before introducing new patterns; use nearby home-page flexi blocks as the first reference.
+- Begin blocks with `<section>` using `class="relative flex overflow-hidden"` and give the section a random ID.
+- The first inner wrapper should default to `flex flex-col items-center w-full mx-auto pt-5 pb-5 max-xl:px-5`, then append `padding_settings` classes.
+- Prefer an explicit Figma-matched width such as `max-w-[1018px]` over `max-w-container` when the design provides a concrete frame width.
+- Prefer grid over flex when either works cleanly.
+- Avoid `self-stretch`, `min-w-[240px]`, and aspect-ratio utilities.
+- Keep PHP flat and explicit: define `get_sub_field()` variables at the top, never use shorthand PHP, and escape all output.
+- Match existing typography and token usage from `tailwind.config.js`; prefer project font classes and tokens over ad hoc font declarations.
+- Match the existing heading underline treatment when needed: `mt-4 w-10 bg-[#6FC9C0] h-[4px]`.
+- Do not add bounce, lift, or decorative hover effects unless the current design already uses them.
+- Use ACF link arrays for all links. Button-style links should include `.btn`, `w-fit`, and `whitespace-nowrap`.
+- Add the `wp_editor` class to WYSIWYG output wrappers.
+- Add comments only when logic or assumptions are not obvious.

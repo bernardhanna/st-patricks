@@ -12,7 +12,6 @@ $about_us
             'label' => 'Section Heading',
             'instructions' => 'Main heading, e.g. "About Mental Health".',
             'default_value' => 'About Mental Health',
-            'required' => 1,
         ])
         ->addSelect('heading_tag', [
             'label' => 'Heading Tag',
@@ -27,7 +26,6 @@ $about_us
                 'span'=> 'Span',
             ],
             'default_value' => 'h2',
-            'required' => 1,
         ])
         ->addImage('main_image', [
             'label' => 'Center Illustration Image',

@@ -12,7 +12,6 @@ $content_two
         'label' => 'Section Heading',
         'instructions' => 'Enter the main heading for the stories section.',
         'default_value' => 'Stories and Support',
-        'required' => 1,
     ])
     ->addSelect('heading_tag', [
         'label' => 'Heading Tag',
@@ -28,7 +27,6 @@ $content_two
             'span' => 'Span',
         ],
         'default_value' => 'h2',
-        'required' => 1,
     ])
     ->addWysiwyg('description', [
         'label' => 'Description',
@@ -79,7 +77,6 @@ $content_two
                 'xxl' => 'XXL (1440px+)',
                 'ultrawide' => 'Ultra Wide (1920px+)',
             ],
-            'required' => 1,
         ])
         ->addNumber('padding_top', [
             'label' => 'Padding Top',

@@ -59,7 +59,8 @@
               const ok = typeof body === 'object' ? !!body.success : false;
 
               if (ok) {
-                showBanner(form, 'Thanks! Your message has been sent.', true);
+                const successMessage = form.getAttribute('data-success-message') || 'Thanks! Your message has been sent.';
+                showBanner(form, successMessage, true);
                 form.reset();
                 // Reset Turnstile invisible widget if one was rendered
                 if (window.turnstile && form._tsWidgetId) {

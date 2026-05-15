@@ -1,4 +1,14 @@
-<?php get_header(); ?>
+<?php
+if (is_home() || is_category()) {
+    get_header();
+    get_template_part('template-parts/blog/index');
+    get_footer();
+
+    return;
+}
+
+get_header();
+?>
 <?php
 $settings = get_field( 'Blog_settings', 'option' ) ?: [];
 

@@ -12,7 +12,6 @@ $what_we_offer
             'label' => 'Section Heading',
             'instructions' => 'Enter the main heading for this section.',
             'default_value' => 'What we offer',
-            'required' => 1,
         ])
         ->addSelect('heading_tag', [
             'label' => 'Heading Tag',
@@ -28,7 +27,6 @@ $what_we_offer
                 'span' => 'Span',
             ],
             'default_value' => 'h2',
-            'required' => 1,
         ])
         ->addLink('heading_link', [
             'label' => 'Heading Link (Optional)',
@@ -48,6 +46,31 @@ $what_we_offer
                 ],
             ],
         ])
+        ->addSelect('layout_style', [
+            'label' => 'Layout Style',
+            'instructions' => 'Choose whether this section uses the image-led layout or the intro-led two-column layout.',
+            'choices' => [
+                'image_feature' => 'Image Feature',
+                'intro_two_column' => 'Intro + Two Column',
+            ],
+            'default_value' => 'image_feature',
+            'ui' => 1,
+        ])
+        ->addTextarea('intro_text', [
+            'label' => 'Intro Text',
+            'instructions' => 'Optional introductory copy shown above the services list in the Intro + Two Column layout.',
+            'rows' => 3,
+            'new_lines' => '',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'intro_two_column',
+                    ],
+                ],
+            ],
+        ])
         ->addRepeater('services', [
             'label' => 'Services',
             'instructions' => 'Add the services or offerings to display.',
@@ -58,15 +81,22 @@ $what_we_offer
         ])
             ->addImage('service_icon', [
                 'label' => 'Service Icon',
-                'instructions' => 'Upload an icon for this service.',
+                'instructions' => 'Upload an icon for this service in the Image Feature layout.',
                 'return_format' => 'id',
                 'preview_size' => 'thumbnail',
-                'required' => 1,
+                'conditional_logic' => [
+                    [
+                        [
+                            'field' => 'layout_style',
+                            'operator' => '==',
+                            'value' => 'image_feature',
+                        ],
+                    ],
+                ],
             ])
             ->addText('service_title', [
                 'label' => 'Service Title',
                 'instructions' => 'Enter the title for this service.',
-                'required' => 1,
             ])
             ->addWysiwyg('service_description', [
                 'label' => 'Service Description',
@@ -74,12 +104,24 @@ $what_we_offer
                 'media_upload' => 0,
                 'tabs' => 'visual,text',
                 'toolbar' => 'basic',
-                'required' => 1,
             ])
             ->addLink('service_link', [
                 'label' => 'Service Link (Optional)',
                 'instructions' => 'If provided, the service title will become a clickable link.',
                 'return_format' => 'array',
+            ])
+            ->addColorPicker('accent_color', [
+                'label' => 'Accent Color',
+                'instructions' => 'Used for the left accent rail in the Intro + Two Column layout.',
+                'conditional_logic' => [
+                    [
+                        [
+                            'field' => 'layout_style',
+                            'operator' => '==',
+                            'value' => 'intro_two_column',
+                        ],
+                    ],
+                ],
             ])
             ->addTrueFalse('show_service_icon', [
                 'label' => 'Show Service Icon',
@@ -92,6 +134,15 @@ $what_we_offer
             'instructions' => 'Upload the main image to display alongside the services.',
             'return_format' => 'id',
             'preview_size' => 'medium',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_feature',
+                    ],
+                ],
+            ],
         ])
 
     ->addTab('Design', ['label' => 'Design'])
@@ -122,7 +173,6 @@ $what_we_offer
                     'xxl'       => 'XXL (1440px+)',
                     'ultrawide' => 'Ultrawide (1920px+)',
                 ],
-                'required' => 1,
             ])
             ->addNumber('padding_top', [
                 'label' => 'Padding Top',

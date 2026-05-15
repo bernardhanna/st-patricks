@@ -34,8 +34,58 @@ $primary_navigation = Navi::make()->build('primary');
 
 <!-- Alpine store (once) -->
 <script>
+function matrixSyncSiteHeaderHeight() {
+  var header = document.getElementById('site-nav');
+  if (!header) return;
+  document.documentElement.style.setProperty('--site-header-height', header.offsetHeight + 'px');
+}
+
+document.addEventListener('DOMContentLoaded', matrixSyncSiteHeaderHeight);
+window.addEventListener('resize', matrixSyncSiteHeaderHeight);
+window.addEventListener('scroll', matrixSyncSiteHeaderHeight, { passive: true });
+
 document.addEventListener('alpine:init', () => {
   if (!Alpine.store('nav')) Alpine.store('nav', { open: false });
+  Alpine.store('navMega', {
+    activeKey: null,
+    closeTimer: null,
+    open(key) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+      this.activeKey = key;
+    },
+    scheduleClose(key) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = setTimeout(() => {
+        if (this.activeKey === key) {
+          this.activeKey = null;
+        }
+      }, 150);
+    },
+    isWithinNavMegaZone(target) {
+      if (!target || typeof target.closest !== 'function') {
+        return false;
+      }
+
+      return Boolean(target.closest('#site-nav'));
+    },
+    scheduleCloseFrom(event, key) {
+      if (this.isWithinNavMegaZone(event?.relatedTarget)) {
+        return;
+      }
+
+      this.scheduleClose(key);
+    },
+    scheduleCloseFromEvent(event) {
+      if (this.isWithinNavMegaZone(event?.relatedTarget)) {
+        return;
+      }
+
+      if (this.activeKey) {
+        this.scheduleClose(this.activeKey);
+      }
+    },
+  });
   Alpine.data('navbarSearch', () => ({
     searchOpen: false,
     query: '',
@@ -45,10 +95,10 @@ document.addEventListener('alpine:init', () => {
     abortController: null,
     searchTimeout: null,
     faqLinks: [
-      { title: "Healthcare FAQ's", url: '#healthcare-faq' },
-      { title: 'Our locations and parking', url: '#locations-parking' },
-      { title: "Service user FAQ's", url: '#service-user-faq' },
-      { title: 'Make a payment', url: '#make-payment' },
+      { title: "Healthcare FAQ's", url: '<?php echo esc_url( home_url( '/healthcare-professionals/frequently-asked-questions/' ) ); ?>' },
+      { title: 'Our locations and parking', url: '<?php echo esc_url( home_url( '/about-us/our-locations/' ) ); ?>' },
+      { title: "Service user FAQ's", url: '<?php echo esc_url( home_url( '/service-users-and-visitors/frequently-asked-questions-faqs/' ) ); ?>' },
+      { title: 'Make a payment', url: '<?php echo esc_url( home_url( '/service-users-and-visitors/make-a-payment-external-link-to-stripe/' ) ); ?>' },
     ],
 
     openSearch() {
@@ -135,14 +185,16 @@ document.addEventListener('alpine:init', () => {
   x-data="navbarSearch()"
   x-init="window.addEventListener('resize', () => { if (window.innerWidth >= 1200) { $store.nav.open = false } })"
   x-effect="$store.nav.open ? document.body.style.overflow='hidden' : document.body.style.overflow=''"
-  class="bg-white"
+  class="overflow-visible bg-white"
   role="banner"
+  @mouseenter="if ($store.navMega.closeTimer) { clearTimeout($store.navMega.closeTimer); $store.navMega.closeTimer = null; }"
+  @mouseleave="$store.navMega.scheduleCloseFromEvent($event)"
 >
   <?php get_template_part('template-parts/header/topbar'); ?>
 
   <!-- WHITE BAR -->
   <nav
-  class="box-border flex relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-md:p-5 max-sm:p-4 max-w-container"
+  class="box-border flex overflow-visible relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-md:p-5 max-sm:p-4 max-w-container"
   role="navigation"
   aria-label="Main navigation"
 >
@@ -165,14 +217,24 @@ document.addEventListener('alpine:init', () => {
   <?php if ($primary_navigation->isNotEmpty()) : ?>
     <ul id="primary-menu" class="hidden gap-4 items-center lg:flex" role="menubar">
       <?php foreach ($primary_navigation->toArray() as $index => $item) : ?>
-        <li class="relative group <?php echo esc_attr($item->classes); ?> <?php echo $item->active ? 'current-item' : ''; ?>" role="none">
+        <li
+          class="relative <?php echo esc_attr($item->classes); ?> <?php echo $item->active ? 'current-item' : ''; ?>"
+          role="none"
+          <?php if ($item->children) : ?>
+            <?php matrix_render_nav_mega_menu_trigger_attrs($index); ?>
+          <?php endif; ?>
+        >
           <div class="flex gap-1 items-center">
             <a
               href="<?php echo esc_url($item->url); ?>"
-              class="flex gap-1 items-center text-sm font-semibold leading-5 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+              class="flex gap-1 items-center text-sm font-semibold leading-5 z-50 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer"
               role="menuitem"
               aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
-              aria-expanded="false"
+              <?php if ($item->children) : ?>
+                :aria-expanded="$store.navMega.activeKey === '<?php echo esc_attr(matrix_get_nav_mega_menu_key($index)); ?>' ? 'true' : 'false'"
+              <?php else : ?>
+                aria-expanded="false"
+              <?php endif; ?>
             >
               <span><?php echo esc_html($item->label); ?></span>
 
@@ -186,11 +248,27 @@ document.addEventListener('alpine:init', () => {
           </div>
 
           <?php if ($item->children) : ?>
-            <?php get_template_part('template-parts/header/navbar/dropdown', null, [
-              'item'   => $item,
-              'index'  => $index,
-              'images' => $dropdown_image_map
-            ]); ?>
+            <div
+              class="absolute left-1/2 top-full z-[70] h-20 w-48 -translate-x-1/2"
+              aria-hidden="true"
+              @mouseenter="$store.navMega.open('<?php echo esc_attr(matrix_get_nav_mega_menu_key($index)); ?>')"
+            ></div>
+          <?php endif; ?>
+
+          <?php if ($item->children) : ?>
+            <?php
+            $mega_menu_config = matrix_get_nav_mega_menu_config((string) $item->label);
+
+            if ($mega_menu_config !== null) {
+              matrix_render_nav_mega_menu($item, $index, $mega_menu_config);
+            } else {
+              get_template_part('template-parts/header/navbar/dropdown', null, [
+                'item'   => $item,
+                'index'  => $index,
+                'images' => $dropdown_image_map,
+              ]);
+            }
+            ?>
           <?php endif; ?>
         </li>
       <?php endforeach; ?>
@@ -292,7 +370,7 @@ document.addEventListener('alpine:init', () => {
 
         <button
           type="submit"
-          class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary whitespace-nowrap"
+          class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white whitespace-nowrap rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
           aria-label="Search"
         >
           <span class="sr-only">Search</span>
@@ -321,12 +399,12 @@ document.addEventListener('alpine:init', () => {
           <div>
             <div x-show="loading" class="px-5 py-4 text-sm text-slate-600">Searching...</div>
             <div x-show="!loading && error" class="px-5 py-4 text-sm text-red-600" x-text="error"></div>
-            <ul x-show="!loading && !error && results.length" class="list-none m-0 p-0">
+            <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
               <template x-for="item in results" :key="item.id + '-' + item.subtype">
                 <li>
                   <a
                     :href="item.url"
-                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                    class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
                   >
                     <span class="text-base font-medium text-slate-900" x-text="item.title"></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -344,12 +422,12 @@ document.addEventListener('alpine:init', () => {
 
         <template x-if="query.trim().length < 2">
           <nav aria-label="FAQ categories">
-            <ul class="list-none m-0 p-0">
+            <ul class="p-0 m-0 list-none">
               <template x-for="faq in faqLinks" :key="faq.title">
                 <li>
                   <a
                     :href="faq.url"
-                    class="flex justify-between items-center px-5 py-4 w-full border-b border-slate-200 no-underline transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                    class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
                   >
                     <span class="text-base font-medium text-slate-900" x-text="faq.title"></span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">

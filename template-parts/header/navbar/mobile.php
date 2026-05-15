@@ -149,7 +149,6 @@ $appointment_button = get_field('topbar_appointment_button', 'option');
         <div class="flex flex-col justify-between items-center w-full">
             <!-- Search -->
             <div class="relative mt-12 w-full">
-              <?php echo do_shortcode('[fibosearch]'); ?>
             </div>
           </div>
         </ul>

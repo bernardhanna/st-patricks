@@ -44,7 +44,6 @@ $counters
             'default_value' => 95,
             'min' => 0,
             'step' => 1,
-            'required' => 1,
         ])
         ->addText('suffix', [
             'label' => 'Suffix',
@@ -56,7 +55,6 @@ $counters
             'label' => 'Title',
             'instructions' => 'The title text displayed below the counter.',
             'default_value' => 'Key point text',
-            'required' => 1,
             'maxlength' => 100,
         ])
         ->addTextarea('description', [
@@ -113,7 +111,6 @@ $counters
                 'xxl' => 'XXL (1440px+)',
                 'ultrawide' => 'Ultrawide (1920px+)',
             ],
-            'required' => 1,
         ])
         ->addNumber('padding_top', [
             'label' => 'Padding Top',

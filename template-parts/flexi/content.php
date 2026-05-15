@@ -1,138 +1,178 @@
 <?php
-// Get ACF field values
-$heading = get_sub_field('heading');
-$heading_tag = get_sub_field('heading_tag');
+
+$section_id = 'content-section-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
+$heading = trim((string) get_sub_field('heading'));
+$heading_tag = (string) get_sub_field('heading_tag');
+$intro_text = get_sub_field('intro_text');
 $content = get_sub_field('content');
-$primary_button = get_sub_field('primary_button');
-$secondary_button = get_sub_field('secondary_button');
 $image = get_sub_field('image');
-$image_alt = get_post_meta($image, '_wp_attachment_image_alt', true) ?: 'Child safeguarding illustration';
-$background_type = get_sub_field('background_type');
-$background_color = get_sub_field('background_color');
-$reverse_layout = get_sub_field('reverse_layout');
+$layout_style = matrix_resolve_content_layout_style(
+    get_sub_field('layout_style'),
+    (bool) get_sub_field('reverse_layout')
+);
+$accent_position = matrix_resolve_content_accent_position(get_sub_field('accent_position'));
+$background_type = (string) get_sub_field('background_type');
+$background_color = (string) get_sub_field('background_color');
+$background_gradient = (string) get_sub_field('background_gradient');
+$primary_button = matrix_normalize_content_link(get_sub_field('primary_button'));
+$document_link = matrix_normalize_content_link(get_sub_field('document_link'));
+$secondary_button = matrix_normalize_content_link(get_sub_field('secondary_button'));
+$primary_button_variant = matrix_resolve_content_button_variant(
+    get_sub_field('primary_button_variant'),
+    'filled'
+);
+$secondary_button_variant = matrix_resolve_content_button_variant(
+    get_sub_field('secondary_button_variant'),
+    'outline'
+);
 
-// Generate unique section ID
-$section_id = 'child-safeguarding-' . wp_rand(1000, 9999);
+if ($heading === '') {
+    return;
+}
 
-$resolve_link = static function ($link) {
-    if (!is_array($link) || empty($link['url'])) {
-        return null;
+$allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
+if (! in_array($heading_tag, $allowed_tags, true)) {
+    $heading_tag = 'h2';
+}
+
+$image_alt = '';
+if ($image) {
+    $image_alt = (string) get_post_meta($image, '_wp_attachment_image_alt', true);
+    if ($image_alt === '') {
+        $image_alt = (string) get_the_title($image);
     }
+}
 
-    return [
-        'url' => esc_url($link['url']),
-        'title' => esc_html($link['title'] ?: $link['url']),
-        'target' => esc_attr($link['target'] ?: '_self'),
-    ];
-};
+if ($image_alt === '') {
+    $image_alt = $heading;
+}
 
-$primary_cta = $resolve_link($primary_button);
-$secondary_cta = $resolve_link($secondary_button);
+$heading_id = $section_id . '-heading';
+$background_style = matrix_get_content_background_style($background_type, $background_color, $background_gradient);
+$image_column_class = $layout_style === 'image_right' ? 'lg:order-2' : 'lg:order-1';
+$content_column_class = $layout_style === 'image_right' ? 'lg:order-1' : 'lg:order-2';
 
-// Build padding classes
-$padding_classes = [];
+$wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'pt-5', 'pb-5', 'max-xl:px-5', 'lg:py-[100px]'];
 if (have_rows('padding_settings')) {
     while (have_rows('padding_settings')) {
         the_row();
         $screen_size = get_sub_field('screen_size');
         $padding_top = get_sub_field('padding_top');
         $padding_bottom = get_sub_field('padding_bottom');
-        $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
+
+        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
+            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
+        }
+
+        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
+            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
+        }
     }
 }
 
-// Determine background style
-$background_style = '';
-if ($background_type === 'gradient') {
-    $background_style = 'background: linear-gradient(278deg, #F8F6F3 3.24%, #F5F6ED 90.88%);';
-} elseif ($background_type === 'color' && $background_color) {
-    $background_style = 'background-color: ' . esc_attr($background_color) . ';';
-}
+$accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
 ?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="flex overflow-hidden relative"
-    style="<?php echo $background_style; ?>"
-    role="region"
-    aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
+    class="relative flex overflow-hidden"
+    style="<?php echo esc_attr($background_style); ?>"
+    aria-labelledby="<?php echo esc_attr($heading_id); ?>"
 >
-    <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 lg:py-[6rem] lg max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
-        <div class="grid grid-cols-1 lg:grid-cols-2 max-lg:gap-12 items-center w-full max-w-[1018px] <?php echo $reverse_layout ? 'lg:grid-flow-col-dense' : ''; ?>">
-
-            <!-- Image Section -->
-            <div class="<?php echo $reverse_layout ? 'lg:col-start-2' : 'lg:col-start-1'; ?> flex justify-center lg:justify-start">
-                <?php if ($image): ?>
-                    <figure class="relative">
-                        <?php echo wp_get_attachment_image($image, 'full', false, [
+    <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
+        <div class="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <?php if ($image) { ?>
+                <div class="<?php echo esc_attr($image_column_class); ?> flex justify-center lg:justify-start">
+                    <figure class="w-full max-w-[502px]">
+                        <?php
+                        echo wp_get_attachment_image($image, 'full', false, [
                             'alt' => esc_attr($image_alt),
-                            'class' => 'rounded object-cover w-full h-auto max-w-[450px] max-h-[346px] max-md:max-w-[400px] max-sm:max-w-[300px]',
-                            'loading' => 'lazy'
-                        ]); ?>
+                            'class' => 'h-auto w-full max-h-[346px] rounded-[8px] object-cover',
+                            'loading' => 'lazy',
+                        ]);
+                        ?>
                     </figure>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php } ?>
 
-            <!-- Content Section -->
-            <article class="<?php echo $reverse_layout ? 'lg:col-start-1' : 'lg:col-start-2'; ?> flex flex-col gap-8 justify-center items-start w-full">
+            <article class="<?php echo esc_attr($content_column_class); ?> flex w-full flex-col gap-8">
+                <header class="flex w-full flex-col gap-8">
+                    <?php if ($accent_position === 'above_heading') { ?>
+                        <?php echo $accent_markup; ?>
+                    <?php } ?>
 
-                <!-- Header Section -->
-                <header class="flex flex-col gap-8 justify-center items-start w-full">
-                    <?php if (!empty($heading)): ?>
-                        <div class="flex flex-col gap-8">
-                            <<?php echo esc_attr($heading_tag); ?>
-                                id="<?php echo esc_attr($section_id); ?>-heading"
-                                class="text-3xl font-semibold tracking-tight leading-9 text-[#1E244B] max-md:text-2xl max-md:leading-8 max-sm:text-2xl max-sm:leading-8"
-                            >
-                                <?php echo esc_html($heading); ?>
-                            </<?php echo esc_attr($heading_tag); ?>>
+                    <<?php echo esc_attr($heading_tag); ?>
+                        id="<?php echo esc_attr($heading_id); ?>"
+                        class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
+                    >
+                        <?php echo esc_html($heading); ?>
+                    </<?php echo esc_attr($heading_tag); ?>>
 
-                            <div
-                                class="w-10 h-1 bg-[#6FC9C0]"
-                                role="presentation"
-                                aria-hidden="true"
-                            ></div>
-                        </div>
-                    <?php endif; ?>
+                    <?php if ($accent_position === 'below_heading') { ?>
+                        <?php echo $accent_markup; ?>
+                    <?php } ?>
                 </header>
 
-                <!-- Content Section -->
-                <?php if (!empty($content)): ?>
-                    <div class="w-full">
-                        <div class="text-base font-medium leading-7 text-[#08284B] wp_editor max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6">
-                            <?php echo wp_kses_post($content); ?>
-                        </div>
+                <?php if (matrix_content_has_visible_rich_text($intro_text)) { ?>
+                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-semibold leading-[28px] text-[#08284B] lg:text-[18px] [&_p:last-child]:mb-0">
+                        <?php echo wp_kses_post($intro_text); ?>
                     </div>
-                <?php endif; ?>
+                <?php } ?>
 
-                <?php if ($primary_cta || $secondary_cta): ?>
-                    <div class="flex flex-wrap gap-2.5 items-center">
-                        <?php if ($primary_cta): ?>
-                            <a
-                                href="<?php echo $primary_cta['url']; ?>"
-                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 bg-[#024B79] text-white text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79] rounded"
-                                target="<?php echo $primary_cta['target']; ?>"
-                                aria-label="<?php echo esc_attr($primary_cta['title']); ?>"
-                            >
-                                <?php echo $primary_cta['title']; ?>
-                            </a>
-                        <?php endif; ?>
-
-                        <?php if ($secondary_cta): ?>
-                            <a
-                                href="<?php echo $secondary_cta['url']; ?>"
-                                class="btn flex justify-center items-center gap-2.5 px-4 py-2 border border-[#024B79] bg-white text-[#024B79] text-sm font-medium leading-6 transition-colors duration-300 hover:bg-[#FF9E66] hover:text-[#1E244B] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79] rounded"
-                                target="<?php echo $secondary_cta['target']; ?>"
-                                aria-label="<?php echo esc_attr($secondary_cta['title']); ?>"
-                            >
-                                <?php echo $secondary_cta['title']; ?>
-                            </a>
-                        <?php endif; ?>
+                <?php if (matrix_content_has_visible_rich_text($content)) { ?>
+                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-normal leading-[28px] text-[#08284B] lg:text-[18px] [&_p:last-child]:mb-0">
+                        <?php echo wp_kses_post($content); ?>
                     </div>
-                <?php endif; ?>
+                <?php } ?>
 
+                <?php if ($document_link) { ?>
+                    <?php
+                    $document_target = $document_link['target'] !== '' ? $document_link['target'] : '_blank';
+                    ?>
+                    <a
+                        href="<?php echo esc_url($document_link['url']); ?>"
+                        target="<?php echo esc_attr($document_target); ?>"
+                        class="<?php echo esc_attr(matrix_get_content_document_link_class_names()); ?>"
+                        <?php if ($document_target === '_blank') { ?>
+                            rel="noopener noreferrer"
+                        <?php } ?>
+                    >
+                        <?php echo matrix_get_content_pdf_icon_svg(); ?>
+                        <span><?php echo esc_html($document_link['title']); ?></span>
+                        <span aria-hidden="true">→</span>
+                    </a>
+                <?php } ?>
+
+                <?php if ($primary_button || $secondary_button) { ?>
+                    <div class="flex flex-wrap gap-2.5">
+                        <?php if ($primary_button) { ?>
+                            <a
+                                href="<?php echo esc_url($primary_button['url']); ?>"
+                                target="<?php echo esc_attr($primary_button['target'] !== '' ? $primary_button['target'] : '_self'); ?>"
+                                class="<?php echo esc_attr(matrix_get_content_button_class_names($primary_button_variant)); ?>"
+                                <?php if ($primary_button['target'] === '_blank') { ?>
+                                    rel="noopener noreferrer"
+                                <?php } ?>
+                            >
+                                <?php echo esc_html($primary_button['title']); ?>
+                            </a>
+                        <?php } ?>
+
+                        <?php if ($secondary_button) { ?>
+                            <a
+                                href="<?php echo esc_url($secondary_button['url']); ?>"
+                                target="<?php echo esc_attr($secondary_button['target'] !== '' ? $secondary_button['target'] : '_self'); ?>"
+                                class="<?php echo esc_attr(matrix_get_content_button_class_names($secondary_button_variant)); ?>"
+                                <?php if ($secondary_button['target'] === '_blank') { ?>
+                                    rel="noopener noreferrer"
+                                <?php } ?>
+                            >
+                                <?php echo esc_html($secondary_button['title']); ?>
+                            </a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
             </article>
         </div>
     </div>

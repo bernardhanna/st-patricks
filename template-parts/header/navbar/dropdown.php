@@ -31,10 +31,12 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
 ?>
 
 <div
-    class="hidden fixed left-0 z-50 w-screen bg-transparent group-hover:flex group-focus-within:flex"
+    class="fixed left-0 top-[var(--site-header-height,120px)] z-[60] flex w-screen flex-col bg-transparent"
+    <?php matrix_render_nav_mega_menu_shell_attrs($index); ?>
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"
 >
+    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-20" aria-hidden="true"></div>
     <div class="w-full pt-2">
         <div class="mx-auto w-full max-w-[1440px] px-6">
             <div

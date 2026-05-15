@@ -119,6 +119,33 @@ body {
  .is-not-woo .wp_editor .entry-content blockquote {
   @apply pl-4 my-4 italic font-normal border-l-4 border-neutral-300 text-blockquote font-primary text-text-primary;
  }
+ .blog-single-content h2 {
+  @apply mb-8 font-primary text-[30px] font-semibold leading-[36px] tracking-[-0.225px] text-[#1E244B];
+ }
+ .blog-single-content h2::after {
+  @apply after:content-[''] after:block after:w-[40px] after:h-[4px] after:bg-[#6FC9C0] after:mt-[32px];
+ }
+ .blog-single-content p,
+  .blog-single-content li {
+  @apply font-primary text-[16px] font-medium leading-[28px] text-[#08284B];
+ }
+ .blog-single-content ul {
+  @apply mb-8 list-disc pl-6;
+ }
+ .blog-single-content blockquote,
+  .blog-single-content .wp-block-quote {
+  @apply my-8 rounded-[8px] border-0 bg-[#F1F8F9] p-8 not-italic;
+ }
+ .blog-single-content blockquote p,
+  .blog-single-content .wp-block-quote p {
+  @apply font-primary text-[16px] font-bold leading-[28px] text-[#08284B];
+ }
+ .blog-single-content .wp-block-columns {
+  @apply my-10 gap-10;
+ }
+ .blog-single-content .wp-block-image img {
+  @apply w-full rounded-[8px] object-cover;
+ }
 
  /* Code / pre */
  .is-not-woo .wp_editor .entry-content code {
@@ -364,6 +391,76 @@ body {
 }
 .form-checkbox {
  @apply flex w-[24px] h-[24px] flex-col justify-center items-center gap-[8px] rounded-custom-sm p-[8px];
+}
+
+/* Your Portal contact form (Figma 3279:18238) */
+.portal-contact-form {
+ @apply w-full;
+}
+.portal-contact-form__field {
+ @apply flex w-full flex-col gap-1.5;
+}
+.portal-contact-form__field--half {
+ @apply min-w-0 flex-1;
+}
+.portal-contact-form__row {
+ @apply flex w-full flex-col gap-6 lg:flex-row lg:gap-6;
+}
+.portal-contact-form__label {
+ @apply font-primary text-[14px] font-medium leading-5 text-[#08284B];
+}
+.portal-contact-form__label-row {
+ @apply flex items-center gap-2.5;
+}
+.portal-contact-form__required {
+ @apply text-[#08284B];
+}
+.portal-contact-form__input,
+.portal-contact-form__select {
+ @apply w-full rounded-[6px] border border-[#024B79] bg-white px-3 py-2 font-primary text-[16px] leading-6 text-[#08284B] placeholder:text-[#08284B]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+.portal-contact-form__input--with-icon {
+ @apply min-h-[40px];
+}
+.portal-contact-form__phone-row {
+ @apply flex w-full items-stretch gap-0 overflow-hidden rounded-[6px] border border-[#024B79] bg-white;
+}
+.portal-contact-form__phone-code {
+ @apply shrink-0 border-r border-[#024B79];
+}
+.portal-contact-form__phone-row .portal-contact-form__select {
+ @apply min-w-[88px] border-0 bg-transparent px-3 py-2;
+}
+.portal-contact-form__phone-row .portal-contact-form__input {
+ @apply border-0;
+}
+.portal-contact-form__info {
+ @apply inline-flex h-7 w-6 items-center justify-center rounded-full text-[12px] font-bold text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+.portal-contact-form__consent {
+ @apply flex items-start gap-2;
+}
+.portal-contact-form__checkbox {
+ @apply mt-0.5 h-4 w-4 shrink-0 rounded-[4px] border border-[#024B79] accent-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+.portal-contact-form__consent-title,
+.portal-contact-form__consent-label {
+ @apply font-primary text-[12px] font-bold leading-4 text-[#08284B];
+}
+.portal-contact-form__consent-description {
+ @apply mt-0 font-primary text-[12px] font-medium leading-4 text-[#08284B];
+}
+.portal-contact-form__link {
+ @apply font-primary text-[12px] font-medium leading-4 text-[#024B79] underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+.portal-contact-form__submit-wrap {
+ @apply w-full;
+}
+.portal-contact-form__submit {
+ @apply inline-flex h-10 w-full items-center justify-center rounded-[6px] bg-[#024B79] px-3 font-primary text-[14px] font-medium leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+.portal-contact-form.is-submitting {
+ @apply opacity-80;
 }
 
 

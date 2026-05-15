@@ -1,0 +1,317 @@
+<?php
+
+function matrix_careers_archive_sanitize_slug($value)
+{
+    if (function_exists('sanitize_title')) {
+        return sanitize_title($value);
+    }
+
+    $value = strtolower(trim((string) $value));
+    $value = preg_replace('/[^a-z0-9\s-]/', '', $value);
+    $value = preg_replace('/[\s-]+/', '-', $value);
+
+    return trim((string) $value, '-');
+}
+
+function matrix_careers_archive_add_query_args($params, $base_url)
+{
+    if (function_exists('add_query_arg')) {
+        return add_query_arg($params, $base_url);
+    }
+
+    $parts = function_exists('wp_parse_url') ? wp_parse_url($base_url) : parse_url($base_url);
+    $query = [];
+
+    if (! empty($parts['query'])) {
+        parse_str($parts['query'], $query);
+    }
+
+    $query = array_merge($query, $params);
+    $query_string = http_build_query($query);
+
+    $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+    $host = $parts['host'] ?? '';
+    $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+    $path = $parts['path'] ?? '';
+
+    return $scheme . $host . $port . $path . ($query_string !== '' ? '?' . $query_string : '');
+}
+
+function matrix_get_careers_archive_defaults()
+{
+    return [
+        'heading' => 'Current Vacancies',
+        'filter_label' => 'Filter by:',
+        'department_placeholder' => 'Department',
+        'location_placeholder' => 'Location',
+        'apply_filters_label' => 'Apply filters',
+        'search_placeholder' => 'Search vacancies',
+        'search_button_label' => 'Search',
+        'view_detail_label' => 'View detail',
+        'posts_per_page' => 10,
+        'empty_state_message' => 'No vacancies matched your filters.',
+    ];
+}
+
+function matrix_get_careers_archive_default_wrapper_classes()
+{
+    return 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]';
+}
+
+function matrix_resolve_careers_archive_base_url($preferred_base_url = '')
+{
+    $preferred_base_url = trim((string) $preferred_base_url);
+
+    if ($preferred_base_url !== '') {
+        return $preferred_base_url;
+    }
+
+    $archive_url = function_exists('get_post_type_archive_link') ? get_post_type_archive_link('careers') : '';
+    if (is_string($archive_url) && $archive_url !== '') {
+        return $archive_url;
+    }
+
+    return function_exists('home_url') ? home_url('/careers/') : '/careers/';
+}
+
+function matrix_resolve_careers_archive_state($request, $allowed_department_slugs = [], $allowed_location_slugs = [], $posts_per_page = 10)
+{
+    $allowed_department_slugs = array_values(array_filter(array_map('matrix_careers_archive_sanitize_slug', (array) $allowed_department_slugs)));
+    $allowed_location_slugs = array_values(array_filter(array_map('matrix_careers_archive_sanitize_slug', (array) $allowed_location_slugs)));
+    $department = matrix_careers_archive_sanitize_slug((string) ($request['career_department'] ?? 'all'));
+    $location = matrix_careers_archive_sanitize_slug((string) ($request['career_location'] ?? 'all'));
+    $search = trim((string) ($request['career_search'] ?? ''));
+    $paged = (int) ($request['career_page'] ?? 1);
+    $posts_per_page = (int) $posts_per_page;
+
+    if ($posts_per_page < 1) {
+        $posts_per_page = 10;
+    }
+
+    if ($paged < 1) {
+        $paged = 1;
+    }
+
+    if ($department === '' || $department === 'all') {
+        $department = 'all';
+    } elseif ($allowed_department_slugs !== [] && ! in_array($department, $allowed_department_slugs, true)) {
+        $department = 'all';
+    }
+
+    if ($location === '' || $location === 'all') {
+        $location = 'all';
+    } elseif ($allowed_location_slugs !== [] && ! in_array($location, $allowed_location_slugs, true)) {
+        $location = 'all';
+    }
+
+    return [
+        'department' => $department,
+        'location' => $location,
+        'search' => $search,
+        'paged' => $paged,
+        'posts_per_page' => $posts_per_page,
+    ];
+}
+
+function matrix_build_careers_archive_query_args($state, $department_slug_to_id_map = [], $location_slug_to_id_map = [])
+{
+    $args = [
+        'post_type' => 'careers',
+        'post_status' => 'publish',
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'posts_per_page' => (int) ($state['posts_per_page'] ?? 10),
+        'paged' => max(1, (int) ($state['paged'] ?? 1)),
+    ];
+
+    $search = trim((string) ($state['search'] ?? ''));
+    if ($search !== '') {
+        $args['s'] = $search;
+    }
+
+    $tax_query = [];
+    $department = matrix_careers_archive_sanitize_slug((string) ($state['department'] ?? 'all'));
+    $department_id = (int) ($department_slug_to_id_map[$department] ?? 0);
+    if ($department !== 'all' && $department_id > 0) {
+        $tax_query[] = [
+            'taxonomy' => 'career_department',
+            'field' => 'term_id',
+            'terms' => [$department_id],
+        ];
+    }
+
+    $location = matrix_careers_archive_sanitize_slug((string) ($state['location'] ?? 'all'));
+    $location_id = (int) ($location_slug_to_id_map[$location] ?? 0);
+    if ($location !== 'all' && $location_id > 0) {
+        $tax_query[] = [
+            'taxonomy' => 'career_location',
+            'field' => 'term_id',
+            'terms' => [$location_id],
+        ];
+    }
+
+    if ($tax_query !== []) {
+        if (count($tax_query) > 1) {
+            $args['tax_query'] = array_merge(['relation' => 'AND'], $tax_query);
+        } else {
+            $args['tax_query'] = $tax_query;
+        }
+    }
+
+    return $args;
+}
+
+function matrix_get_careers_archive_filter_options($taxonomy, $allowed_term_ids = [])
+{
+    $terms_args = [
+        'taxonomy' => $taxonomy,
+        'hide_empty' => true,
+        'orderby' => 'name',
+        'order' => 'ASC',
+    ];
+
+    $allowed_term_ids = array_values(array_filter(array_map('intval', (array) $allowed_term_ids)));
+    if ($allowed_term_ids !== []) {
+        $terms_args['include'] = $allowed_term_ids;
+        $terms_args['orderby'] = 'include';
+    }
+
+    $terms = function_exists('get_terms') ? get_terms($terms_args) : [];
+    if (is_wp_error($terms) || ! is_array($terms)) {
+        return [];
+    }
+
+    $options = [];
+    $slug_to_id_map = [];
+
+    foreach ($terms as $term) {
+        if (! $term instanceof WP_Term) {
+            continue;
+        }
+
+        $options[] = [
+            'slug' => $term->slug,
+            'label' => $term->name,
+            'term_id' => (int) $term->term_id,
+        ];
+        $slug_to_id_map[$term->slug] = (int) $term->term_id;
+    }
+
+    return [
+        'options' => $options,
+        'slug_to_id_map' => $slug_to_id_map,
+    ];
+}
+
+function matrix_map_career_post_row($post_id)
+{
+    $post_id = (int) $post_id;
+    $area = function_exists('get_field') ? trim((string) get_field('career_area', $post_id)) : '';
+    $location_terms = function_exists('get_the_terms') ? get_the_terms($post_id, 'career_location') : false;
+    $location_label = '';
+
+    if (is_array($location_terms)) {
+        foreach ($location_terms as $term) {
+            if ($term instanceof WP_Term) {
+                $location_label = $term->name;
+                break;
+            }
+        }
+    }
+
+    return [
+        'id' => $post_id,
+        'position' => function_exists('get_the_title') ? get_the_title($post_id) : '',
+        'area' => $area,
+        'location' => $location_label,
+        'permalink' => function_exists('get_permalink') ? get_permalink($post_id) : '',
+    ];
+}
+
+function matrix_prepare_careers_archive($args = [])
+{
+    $defaults = matrix_get_careers_archive_defaults();
+    $allowed_department_ids = array_values(array_filter(array_map('intval', (array) ($args['allowed_departments'] ?? []))));
+    $allowed_location_ids = array_values(array_filter(array_map('intval', (array) ($args['allowed_locations'] ?? []))));
+    $request_state = is_array($args['request_state'] ?? null) ? $args['request_state'] : [];
+    $posts_per_page = (int) ($args['posts_per_page'] ?? ($defaults['posts_per_page'] ?? 10));
+
+    if ($posts_per_page < 1) {
+        $posts_per_page = (int) ($defaults['posts_per_page'] ?? 10);
+    }
+
+    if (empty($request_state['career_page']) && function_exists('get_query_var')) {
+        $request_state['career_page'] = max(1, (int) get_query_var('paged'));
+    }
+
+    $department_data = matrix_get_careers_archive_filter_options('career_department', $allowed_department_ids);
+    $location_data = matrix_get_careers_archive_filter_options('career_location', $allowed_location_ids);
+    $state = matrix_resolve_careers_archive_state(
+        $request_state,
+        array_keys($department_data['slug_to_id_map']),
+        array_keys($location_data['slug_to_id_map']),
+        $posts_per_page
+    );
+    $query = new WP_Query(matrix_build_careers_archive_query_args(
+        $state,
+        $department_data['slug_to_id_map'],
+        $location_data['slug_to_id_map']
+    ));
+
+    $normalize_text = static function ($value, $fallback) {
+        $value = trim((string) $value);
+
+        return $value !== '' ? $value : $fallback;
+    };
+
+    return [
+        'section_id' => trim((string) ($args['section_id'] ?? '')),
+        'data_block' => trim((string) ($args['data_block'] ?? '')),
+        'heading' => $normalize_text($args['heading'] ?? '', (string) ($defaults['heading'] ?? 'Current Vacancies')),
+        'heading_tag' => trim((string) ($args['heading_tag'] ?? 'h2')),
+        'filter_label' => $normalize_text($args['filter_label'] ?? '', (string) ($defaults['filter_label'] ?? 'Filter by:')),
+        'department_placeholder' => $normalize_text($args['department_placeholder'] ?? '', (string) ($defaults['department_placeholder'] ?? 'Department')),
+        'location_placeholder' => $normalize_text($args['location_placeholder'] ?? '', (string) ($defaults['location_placeholder'] ?? 'Location')),
+        'apply_filters_label' => $normalize_text($args['apply_filters_label'] ?? '', (string) ($defaults['apply_filters_label'] ?? 'Apply filters')),
+        'search_placeholder' => $normalize_text($args['search_placeholder'] ?? '', (string) ($defaults['search_placeholder'] ?? 'Search vacancies')),
+        'search_button_label' => $normalize_text($args['search_button_label'] ?? '', (string) ($defaults['search_button_label'] ?? 'Search')),
+        'view_detail_label' => $normalize_text($args['view_detail_label'] ?? '', (string) ($defaults['view_detail_label'] ?? 'View detail')),
+        'empty_state_message' => $normalize_text($args['empty_state_message'] ?? '', (string) ($defaults['empty_state_message'] ?? 'No vacancies matched your filters.')),
+        'base_url' => matrix_resolve_careers_archive_base_url($args['base_url'] ?? ''),
+        'state' => $state,
+        'department_options' => $department_data['options'],
+        'location_options' => $location_data['options'],
+        'query' => $query,
+        'pagination' => [
+            'current' => max(1, (int) $query->get('paged')),
+            'total' => max(1, (int) $query->max_num_pages),
+        ],
+        'section_classes' => trim((string) ($args['section_classes'] ?? '')) !== '' ? trim((string) $args['section_classes']) : 'relative flex overflow-hidden w-full bg-white',
+        'wrapper_classes' => trim((string) ($args['wrapper_classes'] ?? '')) !== '' ? trim((string) $args['wrapper_classes']) : matrix_get_careers_archive_default_wrapper_classes(),
+    ];
+}
+
+function matrix_build_careers_archive_page_url($base_url, $state, $page)
+{
+    $page = max(1, (int) $page);
+    $params = [
+        'career_page' => $page,
+    ];
+
+    $department = matrix_careers_archive_sanitize_slug((string) ($state['department'] ?? 'all'));
+    if ($department !== '' && $department !== 'all') {
+        $params['career_department'] = $department;
+    }
+
+    $location = matrix_careers_archive_sanitize_slug((string) ($state['location'] ?? 'all'));
+    if ($location !== '' && $location !== 'all') {
+        $params['career_location'] = $location;
+    }
+
+    $search = trim((string) ($state['search'] ?? ''));
+    if ($search !== '') {
+        $params['career_search'] = $search;
+    }
+
+    return matrix_careers_archive_add_query_args($params, $base_url);
+}

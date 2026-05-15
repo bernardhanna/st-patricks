@@ -1,0 +1,18 @@
+---
+description: ACF Builder conventions for flexi block field definitions
+globs: acf-fields/partials/blocks/*.php
+alwaysApply: false
+---
+
+# Flexi Block ACF Builder
+
+- Define one `FieldsBuilder` per flexi block and always include a human-readable `label`.
+- Organize fields into `Content`, `Design`, and `Layout` tabs when applicable.
+- Include full heading-tag choices: `h1` to `h6`, `span`, and `p`.
+- Prefer `addWysiwyg()` over textarea fields for rich copy; pair frontend output with a `.wp_editor` wrapper.
+- Use single ACF link arrays for CTAs and links; never split URL, title, and target into separate fields.
+- Use descriptive field names, clear instructions, sensible defaults, and conditional logic where it improves editor UX.
+- Add the shared `padding_settings` repeater for block spacing using `xxs`, `xs`, `mob`, `sm`, `md`, `lg`, `xl`, `xxl`, and `ultrawide`.
+- Keep image fields compatible with WordPress media metadata so frontend templates can derive meaningful alt and title fallbacks.
+- Match the naming and tab structure style already used in existing block builders such as `acf_what_we_offer.php`.
+- Keep field groups concise, reusable, and aligned with existing flexi block conventions.

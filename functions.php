@@ -46,7 +46,34 @@ require_once get_template_directory() . '/inc/enqueue-fonts.php';
 // Include the Enqueue Scripts and Styles
 require_once get_template_directory() . '/inc/enqueue-scripts.php';
 // load the helper functions
+require_once get_template_directory() . '/inc/callout-bar-functions.php';
+require_once get_template_directory() . '/inc/content-cta-functions.php';
+require_once get_template_directory() . '/inc/content-section-functions.php';
+require_once get_template_directory() . '/inc/content-accordion-functions.php';
+require_once get_template_directory() . '/inc/key-contact-info-functions.php';
+require_once get_template_directory() . '/inc/faq-functions.php';
 require_once get_template_directory() . '/inc/hero-functions.php';
+require_once get_template_directory() . '/inc/blog-filter-archive-functions.php';
+require_once get_template_directory() . '/inc/blog-single-functions.php';
+require_once get_template_directory() . '/inc/careers-archive-functions.php';
+require_once get_template_directory() . '/inc/latest-posts-functions.php';
+require_once get_template_directory() . '/inc/locations-grid-functions.php';
+require_once get_template_directory() . '/inc/timeline-functions.php';
+require_once get_template_directory() . '/inc/research-cards-grid-functions.php';
+require_once get_template_directory() . '/inc/referral-action-cards-functions.php';
+require_once get_template_directory() . '/inc/search-results-functions.php';
+require_once get_template_directory() . '/inc/sitemap-functions.php';
+require_once get_template_directory() . '/inc/team-grid-functions.php';
+require_once get_template_directory() . '/inc/team-members-functions.php';
+require_once get_template_directory() . '/inc/testimonial-functions.php';
+require_once get_template_directory() . '/inc/useful-links-functions.php';
+require_once get_template_directory() . '/inc/video-showcase-functions.php';
+require_once get_template_directory() . '/inc/webinars-archive-functions.php';
+require_once get_template_directory() . '/inc/programmes-therapies-archive-functions.php';
+require_once get_template_directory() . '/inc/contact-form-functions.php';
+require_once get_template_directory() . '/inc/inpatient-bed-vacancies-functions.php';
+require_once get_template_directory() . '/inc/what-we-offer-functions.php';
+require_once get_template_directory() . '/inc/mega-menu-render.php';
 require_once get_template_directory() . '/inc/flexible-content-functions.php';
 
 // Function to handle Tailwind config updates and trigger rebuilds

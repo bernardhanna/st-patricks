@@ -9,6 +9,8 @@ $heading_link   = get_sub_field('heading_link');
 $show_heading_icon = get_sub_field('show_heading_icon');
 $services       = get_sub_field('services');
 $main_image     = get_sub_field('main_image');
+$layout_style   = matrix_resolve_what_we_offer_layout_style(get_sub_field('layout_style'));
+$intro_text     = trim((string) get_sub_field('intro_text'));
 
 // Main image alt from media
 $main_image_alt = '';
@@ -50,6 +52,28 @@ if (!in_array($heading_tag, $allowed_tags, true)) {
 }
 
 $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
+$service_rows = [];
+
+if (!empty($services) && is_array($services)) {
+    foreach ($services as $index => $service) {
+        $service_title       = (string) ($service['service_title'] ?? '');
+        $service_description = (string) ($service['service_description'] ?? '');
+        $service_link        = $service['service_link'] ?? null;
+        $show_service_icon   = !empty($service['show_service_icon']);
+        $has_service_link    = $service_link && is_array($service_link) && !empty($service_link['url']);
+
+        $service_rows[] = [
+            'index' => $index,
+            'source' => $service,
+            'title' => $service_title,
+            'description' => $service_description,
+            'link' => $service_link,
+            'has_link' => $has_service_link,
+            'show_icon' => $show_service_icon,
+            'accent_color' => matrix_get_what_we_offer_accent_color($service, $index),
+        ];
+    }
+}
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
@@ -101,112 +125,181 @@ $service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
             </div>
         <?php endif; ?>
 
-        <!-- Main Content Grid -->
-        <div class="flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
+        <?php if ($layout_style === 'image_feature') : ?>
+            <!-- Main Content Grid -->
+            <div class="flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
 
-          <!-- Services Container -->
-          <?php if (!empty($services) && is_array($services)) : ?>
-              <div class="grid flex-1 grid-cols-1 gap-x-10 gap-y-10 shrink basis-0 min-w-60 max-md:max-w-full md:grid-cols-2 tab:grid-cols-1">
-                  <?php foreach ($services as $service) :
-                      $service_icon        = $service['service_icon'] ?? null;
-                      $service_title       = $service['service_title'] ?? '';
-                      $service_description = $service['service_description'] ?? '';
-                      $service_link        = $service['service_link'] ?? null;
-                      $show_service_icon   = !empty($service['show_service_icon']);
-                      $service_icon_url    = $service_icon ? wp_get_attachment_image_url($service_icon, 'full') : '';
-                      $has_service_link    = $service_link && is_array($service_link) && !empty($service_link['url']);
+              <!-- Services Container -->
+              <?php if ($service_rows !== []) : ?>
+                  <div class="grid flex-1 grid-cols-1 gap-x-10 gap-y-10 shrink basis-0 min-w-60 max-md:max-w-full md:grid-cols-2 tab:grid-cols-1">
+                      <?php foreach ($service_rows as $service) : ?>
+                      <?php
+                          $service_icon = $service['source']['service_icon'] ?? null;
+                          $service_icon_url = $service_icon ? wp_get_attachment_image_url($service_icon, 'full') : '';
+                          $service_icon_alt = '';
 
-                      $service_icon_alt = '';
-                      if ($service_icon) {
-                          $service_icon_alt = get_post_meta($service_icon, '_wp_attachment_image_alt', true);
-                          if ($service_icon_alt === '' || $service_icon_alt === null) {
-                              $service_icon_alt = $service_title ? $service_title . ' icon' : 'Service icon';
+                          if ($service_icon) {
+                              $service_icon_alt = get_post_meta($service_icon, '_wp_attachment_image_alt', true);
+
+                              if ($service_icon_alt === '' || $service_icon_alt === null) {
+                                  $service_icon_alt = $service['title'] ? $service['title'] . ' icon' : 'Service icon';
+                              }
                           }
-                      }
-                  ?>
-                  <article class="w-full">
-                      <?php if ($has_service_link) : ?>
-                          <a
-                              href="<?php echo esc_url($service_link['url']); ?>"
-                              target="<?php echo esc_attr($service_link['target'] ?? '_self'); ?>"
-                              class="group flex overflow-hidden gap-6 items-start min-h-[140px] w-full rounded transition-colors duration-200"
-                              aria-label="<?php echo esc_attr($service_title ?: ($service_link['title'] ?? 'View service')); ?>"
-                          >
-                      <?php else : ?>
-                          <div class="group flex overflow-hidden gap-6 items-start min-h-[140px] w-full rounded">
-                      <?php endif; ?>
-
-                          <?php if ($service_icon_url) : ?>
-                              <div class="relative shrink-0 overflow-hidden rounded">
-                                  <img
-                                      src="<?php echo esc_url($service_icon_url); ?>"
-                                      alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                      class="object-contain transition-transform duration-300 group-hover:-translate-y-full"
-                                      decoding="async"
-                                      loading="lazy"
-                                  />
-                                  <img
-                                      src="<?php echo esc_url($service_hover_icon_url); ?>"
-                                      alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                      class="object-contain absolute inset-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0"
-                                      decoding="async"
-                                      loading="lazy"
-                                  />
-                              </div>
+                      ?>
+                      <article class="w-full">
+                          <?php if ($service['has_link']) : ?>
+                              <a
+                                  href="<?php echo esc_url($service['link']['url']); ?>"
+                                  target="<?php echo esc_attr($service['link']['target'] ?? '_self'); ?>"
+                                  class="group flex overflow-hidden gap-6 items-start min-h-[140px] w-full rounded transition-colors duration-200"
+                                  aria-label="<?php echo esc_attr($service['title'] ?: ($service['link']['title'] ?? 'View service')); ?>"
+                              >
+                          <?php else : ?>
+                              <div class="group flex overflow-hidden gap-6 items-start min-h-[140px] w-full rounded">
                           <?php endif; ?>
 
-                          <div class="flex flex-col w-full min-w-0">
-                              <?php if (!empty($service_title)) : ?>
-                                  <div class="flex gap-2 items-center self-start text-2xl font-semibold tracking-normal leading-none min-h-[33px] text-indigo-950 max-sm:text-xl">
-                                      <h3 class="self-stretch my-auto text-[#1E244B] transition-colors duration-200 group-hover:text-[#024B79]">
-                                          <?php echo esc_html($service_title); ?>
-                                      </h3>
-
-                                      <?php if ($show_service_icon) : ?>
-                                          <svg
-                                              width="24" height="24" viewBox="0 0 24 24"
-                                              fill="none" xmlns="http://www.w3.org/2000/svg"
-                                              class="w-6 h-6 transition-colors duration-200 text-[#001F33] group-hover:text-[#024B79]"
-                                              aria-hidden="true"
-                                          >
-                                              <path
-                                                  d="M8 4L16 12L8 20"
-                                                  stroke="currentColor"
-                                                  stroke-width="2"
-                                                  stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                              />
-                                          </svg>
-                                      <?php endif; ?>
+                              <?php if ($service_icon_url) : ?>
+                                  <div class="relative shrink-0 overflow-hidden rounded">
+                                      <img
+                                          src="<?php echo esc_url($service_icon_url); ?>"
+                                          alt="<?php echo esc_attr($service_icon_alt); ?>"
+                                          class="object-contain transition-transform duration-300 group-hover:-translate-y-full"
+                                          decoding="async"
+                                          loading="lazy"
+                                      />
+                                      <img
+                                          src="<?php echo esc_url($service_hover_icon_url); ?>"
+                                          alt="<?php echo esc_attr($service_icon_alt); ?>"
+                                          class="object-contain absolute inset-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0"
+                                          decoding="async"
+                                          loading="lazy"
+                                      />
                                   </div>
                               <?php endif; ?>
 
-                              <?php if (!empty($service_description)) : ?>
-                                  <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
-                                      <?php echo wp_kses_post($service_description); ?>
-                                  </div>
-                              <?php endif; ?>
-                          </div>
+                              <div class="flex flex-col w-full min-w-0">
+                                  <?php if ($service['title'] !== '') : ?>
+                                      <div class="flex gap-2 items-center self-start text-2xl font-semibold tracking-normal leading-none min-h-[33px] text-indigo-950 max-sm:text-xl">
+                                          <h3 class="self-stretch my-auto text-[#1E244B] transition-colors duration-200 group-hover:text-[#024B79]">
+                                              <?php echo esc_html($service['title']); ?>
+                                          </h3>
 
-                      <?php if ($has_service_link) : ?>
-                          </a>
-                      <?php else : ?>
-                          </div>
-                      <?php endif; ?>
-                  </article>
-                  <?php endforeach; ?>
-              </div>
-          <?php endif; ?>
+                                          <?php if ($service['show_icon']) : ?>
+                                              <svg
+                                                  width="24" height="24" viewBox="0 0 24 24"
+                                                  fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                  class="w-6 h-6 transition-colors duration-200 text-[#001F33] group-hover:text-[#024B79]"
+                                                  aria-hidden="true"
+                                              >
+                                                  <path
+                                                      d="M8 4L16 12L8 20"
+                                                      stroke="currentColor"
+                                                      stroke-width="2"
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                  />
+                                              </svg>
+                                          <?php endif; ?>
+                                      </div>
+                                  <?php endif; ?>
 
-            <!-- Main Image -->
-            <?php if ($main_image) : ?>
-            <aside class="flex-1 shrink w-full basis-0 min-h-[656px] min-w-60 tab:flex max-md:max-w-full max-tab:hidden">
-                <?php echo wp_get_attachment_image($main_image, 'full', false, [
-                    'alt'   => esc_attr($main_image_alt),
-                    'class' => 'object-contain flex-1 shrink w-full min-h-[656px] min-w-60 max-md:flex max-md:max-w-full',
-                ]); ?>
-            </aside>
-            <?php endif; ?>
-        </div>
+                                  <?php if ($service['description'] !== '') : ?>
+                                      <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
+                                          <?php echo wp_kses_post($service['description']); ?>
+                                      </div>
+                                  <?php endif; ?>
+                              </div>
+
+                          <?php if ($service['has_link']) : ?>
+                              </a>
+                          <?php else : ?>
+                              </div>
+                          <?php endif; ?>
+                      </article>
+                      <?php endforeach; ?>
+                  </div>
+              <?php endif; ?>
+
+                <!-- Main Image -->
+                <?php if ($main_image) : ?>
+                <aside class="flex-1 shrink w-full basis-0 min-h-[656px] min-w-60 tab:flex max-md:max-w-full max-tab:hidden">
+                    <?php echo wp_get_attachment_image($main_image, 'full', false, [
+                        'alt'   => esc_attr($main_image_alt),
+                        'class' => 'object-contain flex-1 shrink w-full min-h-[656px] min-w-60 max-md:flex max-md:max-w-full',
+                    ]); ?>
+                </aside>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($layout_style === 'intro_two_column') : ?>
+            <div class="mt-16 w-full max-w-[1018px] max-md:mt-10">
+                <?php if ($intro_text !== '') : ?>
+                    <div class="max-w-[606px] text-base font-medium leading-7 text-[#08284B] wp_editor">
+                        <?php echo wpautop(esc_html($intro_text)); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($service_rows !== []) : ?>
+                    <div class="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 lg:grid-cols-2">
+                        <?php foreach ($service_rows as $service) : ?>
+                            <article class="group flex min-h-[140px] gap-6">
+                                <div
+                                    class="relative h-[140px] w-12 shrink-0 overflow-hidden rounded"
+                                    aria-hidden="true"
+                                >
+                                    <div
+                                        class="h-[140px] w-full rounded"
+                                        style="background-color: <?php echo esc_attr($service['accent_color']); ?>;"
+                                    ></div>
+                                    <div class="absolute left-0 top-full h-[140px] w-12 rounded bg-[#08284B] transition-transform duration-300 group-hover:-translate-y-full"></div>
+                                </div>
+
+                                <div class="flex min-w-0 flex-1 flex-col justify-start">
+                                    <?php if ($service['title'] !== '') : ?>
+                                        <h3 class="text-2xl font-semibold leading-tight text-[#1E244B] max-sm:text-xl">
+                                            <?php if ($service['has_link']) : ?>
+                                                <a
+                                                    href="<?php echo esc_url($service['link']['url']); ?>"
+                                                    target="<?php echo esc_attr($service['link']['target'] ?? '_self'); ?>"
+                                                    class="rounded-[2px] text-inherit transition-colors duration-200 hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6FC9C0] focus-visible:ring-offset-4"
+                                                >
+                                                    <span><?php echo esc_html($service['title']); ?></span>
+
+                                                    <?php if ($service['show_icon']) : ?>
+                                                        <svg
+                                                            width="24" height="24" viewBox="0 0 24 24"
+                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                            class="ml-2 inline-block h-6 w-6 align-middle text-[#001F33] transition-colors duration-200"
+                                                            aria-hidden="true"
+                                                        >
+                                                            <path
+                                                                d="M8 4L16 12L8 20"
+                                                                stroke="currentColor"
+                                                                stroke-width="2"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                            />
+                                                        </svg>
+                                                    <?php endif; ?>
+                                                </a>
+                                            <?php else : ?>
+                                                <?php echo esc_html($service['title']); ?>
+                                            <?php endif; ?>
+                                        </h3>
+                                    <?php endif; ?>
+
+                                    <?php if ($service['description'] !== '') : ?>
+                                        <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
+                                            <?php echo wp_kses_post($service['description']); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </section>

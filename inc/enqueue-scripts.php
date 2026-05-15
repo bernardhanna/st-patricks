@@ -3,7 +3,10 @@
 
 function matrix_starter_enqueue_scripts()
 {
-  $theme_version = get_option('theme_css_version', '1.0');
+  $app_css_path = get_template_directory() . '/dist/app.css';
+  $theme_version = file_exists($app_css_path)
+    ? (string) filemtime($app_css_path)
+    : get_option('theme_css_version', '1.0');
 
   // Ensure jQuery is present early
   wp_enqueue_script('jquery');
@@ -49,10 +52,31 @@ function matrix_starter_enqueue_scripts()
     true
   );
 
-  if ( get_field('enable_recaptcha', 'option') ) {
+  if (function_exists('get_field')) {
+    $captcha_provider = (string) (get_field('captcha_provider', 'option') ?: 'none');
+    wp_add_inline_script('theme-forms', 'window.themeFormsCaptchaProvider = ' . wp_json_encode($captcha_provider) . ';', 'before');
+
+    if ($captcha_provider === 'recaptcha_v3') {
+      $key = (string) get_field('recaptcha_site_key', 'option');
+      if ($key !== '') {
+        wp_enqueue_script('recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . rawurlencode($key), [], null, true);
+        wp_add_inline_script('theme-forms', 'window.themeFormsRecaptchaV3 = ' . wp_json_encode($key) . ';', 'before');
+      }
+    }
+
+    if ($captcha_provider === 'turnstile') {
+      $turnstile_key = (string) get_field('turnstile_site_key', 'option');
+      if ($turnstile_key !== '') {
+        wp_enqueue_script('cloudflare-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], null, true);
+        wp_add_inline_script('theme-forms', 'window.themeFormsTurnstileSiteKey = ' . wp_json_encode($turnstile_key) . ';', 'before');
+      }
+    }
+  }
+
+  if (get_field('enable_recaptcha', 'option') && ! get_field('captcha_provider', 'option')) {
     $key = get_field('recaptcha_site_key', 'option');
-    wp_enqueue_script( 'recaptcha', "https://www.google.com/recaptcha/api.js?render={$key}", [], null, true );
-    wp_add_inline_script( 'theme-forms', "window.themeFormsRecaptchaV3 = '{$key}';", 'before' );
+    wp_enqueue_script('recaptcha', "https://www.google.com/recaptcha/api.js?render={$key}", [], null, true);
+    wp_add_inline_script('theme-forms', "window.themeFormsRecaptchaV3 = '{$key}';", 'before');
   }
 
   // Fonts
@@ -123,6 +147,7 @@ function matrix_starter_enqueue_scripts()
             headroom = null;
             headroomStarted = false;
             header.classList.remove('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0','-translate-y-full');
+            if (typeof matrixSyncSiteHeaderHeight === 'function') matrixSyncSiteHeaderHeight();
           }
 
           function syncHeaderWithScroll() {
@@ -137,8 +162,8 @@ function matrix_starter_enqueue_scripts()
             header.classList.add('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0');
 
             headroom = new Headroom(header, { tolerance: 5, offset: 100 });
-            headroom.onPin   = function(){ header.classList.remove('-translate-y-full'); header.classList.add('translate-y-0'); };
-            headroom.onUnpin = function(){ header.classList.remove('translate-y-0'); header.classList.add('-translate-y-full'); };
+            headroom.onPin   = function(){ header.classList.remove('-translate-y-full'); header.classList.add('translate-y-0'); if (typeof matrixSyncSiteHeaderHeight === 'function') matrixSyncSiteHeaderHeight(); };
+            headroom.onUnpin = function(){ header.classList.remove('translate-y-0'); header.classList.add('-translate-y-full'); if (typeof matrixSyncSiteHeaderHeight === 'function') matrixSyncSiteHeaderHeight(); };
             headroom.init();
           }
 
