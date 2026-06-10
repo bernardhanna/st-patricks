@@ -40,9 +40,9 @@ if (have_rows('padding_settings')) {
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden bg-white"
+    class="flex overflow-hidden relative bg-white"
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
         <div class="w-full">
             <<?php echo esc_attr($heading_tag); ?>
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
@@ -50,9 +50,9 @@ if (have_rows('padding_settings')) {
                 <?php echo esc_html($heading); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"></div>
+            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
 
-            <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-8">
+            <div class="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-8">
                 <?php foreach ($cards as $card) { ?>
                     <?php
                     $card_tag = $card['is_linked'] ? 'a' : 'article';
@@ -100,7 +100,7 @@ if (have_rows('padding_settings')) {
                                     <img
                                         src="<?php echo esc_url($image_url); ?>"
                                         alt="<?php echo esc_attr($image_alt); ?>"
-                                        class="h-full w-full object-cover"
+                                        class="object-cover w-full h-full"
                                     />
                                     <?php
                                 }

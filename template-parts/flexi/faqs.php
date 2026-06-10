@@ -136,17 +136,17 @@ $open_item_background_style = matrix_get_faq_background_style($open_item_backgro
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-        class="<?php echo esc_attr(implode(' ', array_unique(array_merge($wrapper_classes, $padding_classes)))); ?>"
+        class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge($wrapper_classes, $padding_classes)))); ?>"
     >
         <div class="w-full">
             <?php if ($show_heading) { ?>
             <<?php echo esc_attr($heading_tag); ?>
-                class="max-w-[312px] font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
+                class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
                 style="color: <?php echo esc_attr($heading_color); ?>;"
             >
                 <?php echo esc_html($heading); ?>

@@ -61,7 +61,7 @@ $grid_classes = $variant === 'search'
             <?php echo esc_html($heading); ?>
         </<?php echo esc_attr($heading_tag); ?>>
 
-        <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+        <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
 
         <div class="<?php echo esc_attr($grid_classes); ?>">
             <?php foreach ($links as $link) { ?>

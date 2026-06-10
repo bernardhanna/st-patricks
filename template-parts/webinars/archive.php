@@ -96,7 +96,7 @@ $format_time_label = static function ($raw_time) {
         style="<?php echo esc_attr($section_style); ?>"
     <?php } ?>
 >
-    <div class="<?php echo esc_attr($wrapper_classes); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr($wrapper_classes); ?>">
         <div
             x-data="{
                 type: '<?php echo esc_js((string) $state['type']); ?>',
@@ -139,6 +139,10 @@ $format_time_label = static function ($raw_time) {
                             type="submit"
                             class="btn inline-flex h-[40px] items-center justify-center gap-2 rounded-[6px] bg-[#08284B] px-4 text-[14px] font-medium leading-[24px] text-white sm:w-auto"
                         >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+                        <path d="M6.99935 12.6667C9.94487 12.6667 12.3327 10.2789 12.3327 7.33333C12.3327 4.38781 9.94487 2 6.99935 2C4.05383 2 1.66602 4.38781 1.66602 7.33333C1.66602 10.2789 4.05383 12.6667 6.99935 12.6667Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M13.6656 14L10.7656 11.1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                             <?php echo esc_html($search_button_label); ?>
                         </button>
                     </div>
@@ -176,7 +180,7 @@ $format_time_label = static function ($raw_time) {
             </form>
 
             <?php if ($has_posts) { ?>
-                <div class="mt-8 grid grid-cols-1 gap-4 lg:mt-10 lg:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 mt-8 lg:mt-10 lg:grid-cols-2">
                     <?php while ($query->have_posts()) { ?>
                         <?php
                         $query->the_post();
@@ -250,7 +254,7 @@ $format_time_label = static function ($raw_time) {
             <?php } ?>
 
             <?php if ($total_pages > 1) { ?>
-                <nav class="mt-10 flex flex-wrap items-center justify-center gap-6" aria-label="Webinars archive pagination">
+                <nav class="flex flex-wrap gap-6 justify-center items-center mt-10" aria-label="Webinars archive pagination">
                     <?php if ($current_page > 1) { ?>
                         <a
                             href="<?php echo esc_url(matrix_build_webinars_archive_page_url($base_url, $state, $current_page - 1)); ?>"
@@ -263,7 +267,7 @@ $format_time_label = static function ($raw_time) {
                         </a>
                     <?php } ?>
 
-                    <div class="flex flex-wrap items-center justify-center gap-2">
+                    <div class="flex flex-wrap gap-2 justify-center items-center">
                         <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
                             <?php if ($page === $current_page) { ?>
                                 <span

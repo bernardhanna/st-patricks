@@ -64,7 +64,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                 <?php echo esc_html($heading); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"></div>
+            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
 
             <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
                 <div

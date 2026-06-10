@@ -74,7 +74,7 @@ Keep the design controls narrow and relevant to this specific layout. Do not int
 
 - Render the standard flexi `<section>` shell with generated id and `data-matrix-block`
 - Use the established `max-w-[1018px]` content width and `max-xl:px-5`
-- Match the existing underline treatment: `mt-4 h-[4px] w-10 bg-[#6FC9C0]`
+- Match the existing underline treatment: `mt-6 h-[4px] w-10 bg-[#6FC9C0]`
 - Render the intro paragraph above the cards when populated
 - Render the cards as a responsive grid, not a slider or carousel
 - Use the card image at the top, followed by the title and summary

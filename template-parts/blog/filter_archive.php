@@ -124,7 +124,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                 <?php echo esc_html($heading); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
 
             <div class="mt-8 <?php echo esc_attr($controls_classes); ?>">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
@@ -247,7 +247,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                 <?php } ?>
                             </a>
 
-                            <div class="flex flex-1 flex-col p-5 lg:p-6">
+                            <div class="flex flex-col flex-1 p-5 lg:p-6">
                                 <?php if ($primary_category_name !== '') { ?>
                                     <div class="mb-4">
                                         <span
@@ -305,7 +305,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     <?php if ($current_page > 1) { ?>
                         <a
                             href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                            class="btn inline-flex h-11 w-11 items-center justify-center rounded-full border"
+                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
                             style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
                             aria-label="Go to previous page"
                         >
@@ -339,7 +339,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     <?php if ($current_page < $total_pages) { ?>
                         <a
                             href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                            class="btn inline-flex h-11 w-11 items-center justify-center rounded-full border"
+                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
                             style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
                             aria-label="Go to next page"
                         >

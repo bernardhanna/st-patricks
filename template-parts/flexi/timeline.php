@@ -149,7 +149,7 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
                 <?php echo esc_html($heading); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"></div>
+            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
 
             <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
                 <div class="wp_editor mt-8 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
