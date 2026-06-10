@@ -8532,6 +8532,11 @@ input:where([type='file']):focus {
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.shadow-\[0_1px_1px_rgba\(0\2c 0\2c 0\2c 0\.05\)\] {
+  --tw-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  --tw-shadow-colored: 0 1px 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 .outline-none {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -27150,6 +27155,10 @@ input:where([type='file']):focus {
     height: 1.5rem;
   }
 
+  .lg\:h-\[273px\] {
+    height: 273px;
+  }
+
   .lg\:max-h-96 {
     max-height: 24rem;
   }
@@ -27381,6 +27390,11 @@ input:where([type='file']):focus {
 
   .lg\:gap-y-16 {
     row-gap: 4rem;
+  }
+
+  .lg\:gap-x-8 {
+    -moz-column-gap: 2rem;
+         column-gap: 2rem;
   }
 
   .lg\:border-l-2 {

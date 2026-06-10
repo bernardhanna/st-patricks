@@ -3,7 +3,7 @@
  * About Links Grid (Flexi Block)
  */
 
-$section_id = 'about-links-grid-' . ( function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid() );
+$section_id = 'about-links-grid-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 
 $heading_tag  = get_sub_field('heading_tag') ?: 'h2';
 $heading_text = (string) (get_sub_field('heading_text') ?: '');
@@ -12,31 +12,24 @@ $links        = get_sub_field('links');
 $links        = is_array($links) ? $links : [];
 
 $bg_color         = get_sub_field('bg_color') ?: '#FFFFFF';
-$heading_color    = get_sub_field('heading_color') ?: '#0B0B08';
+$heading_color    = get_sub_field('heading_color') ?: '#1E244B';
 $intro_color      = get_sub_field('intro_color') ?: '#4A4B37';
-$card_bg_color    = get_sub_field('card_bg_color') ?: '#F9FAFB';
-$card_title_color = get_sub_field('card_title_color') ?: '#0B0B08';
+$card_title_color = get_sub_field('card_title_color') ?: '#1E244B';
 $card_desc_color  = get_sub_field('card_desc_color') ?: '#4A4B37';
 $columns_raw      = (string) (get_sub_field('columns') ?: '3');
 $columns          = preg_match('/[234]/', $columns_raw, $matches) ? $matches[0] : '3';
 
 $allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
-if (!in_array($heading_tag, $allowed_tags, true)) {
+if (! in_array($heading_tag, $allowed_tags, true)) {
     $heading_tag = 'h2';
 }
 
 $column_classes = [
-    '2' => 'sm:grid-cols-2',
-    '3' => 'sm:grid-cols-2 lg:grid-cols-3',
-    '4' => 'sm:grid-cols-2 lg:grid-cols-4',
+    '2' => 'lg:grid-cols-2',
+    '3' => 'lg:grid-cols-3',
+    '4' => 'lg:grid-cols-4',
 ];
-$grid_columns = $column_classes[$columns] ?? 'sm:grid-cols-2 lg:grid-cols-3';
-$card_tones = [
-    'bg1' => '#CEF2EE',
-    'bg2' => '#E4F4D6',
-    'bg3' => '#E9E2F7',
-    'bg4' => '#F9E5F2',
-];
+$grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
 
 $padding_classes = [];
 if (have_rows('padding_settings')) {
@@ -63,20 +56,20 @@ if (have_rows('padding_settings')) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($bg_color); ?>;">
 
-    <div class="w-full mx-auto max-w-[1018px] py-12 lg:py-[100px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 py-12 lg:gap-8 lg:py-[100px] xl:px-0 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
         <?php if ($heading_text || $intro_text) : ?>
-            <div class="flex flex-col gap-8 justify-center items-start mb-16 w-full">
+            <div class="flex w-full flex-col gap-8">
                 <?php if ($heading_text) : ?>
                     <<?php echo tag_escape($heading_tag); ?>
-                        class="text-[30px] font-semibold leading-9 tracking-[-0.225px]"
+                        class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
                         style="color: <?php echo esc_attr($heading_color); ?>;">
                         <?php echo esc_html($heading_text); ?>
                     </<?php echo tag_escape($heading_tag); ?>>
-                    <div class="w-10 h-1" style="background-color: #6FC9C0;"></div>
+                    <div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
                 <?php endif; ?>
 
                 <?php if ($intro_text) : ?>
-                    <div class="max-w-2xl text-base font-medium leading-7 wp_editor"
+                    <div class="max-w-2xl font-primary text-base font-medium leading-7 wp_editor"
                         style="color: <?php echo esc_attr($intro_color); ?>;">
                         <?php echo wp_kses_post($intro_text); ?>
                     </div>
@@ -84,88 +77,86 @@ if (have_rows('padding_settings')) {
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($links)) : ?>
-            <div class="grid grid-cols-1 gap-4 <?php echo esc_attr($grid_columns); ?>">
+        <?php if (! empty($links)) : ?>
+            <div class="grid grid-cols-1 gap-4 <?php echo esc_attr($grid_columns); ?> lg:gap-x-8 lg:gap-y-4">
                 <?php foreach ($links as $item) :
                     $icon = $item['icon'] ?? null;
                     $image_url = trim((string) ($item['image_url'] ?? ''));
                     $title = trim((string) ($item['title'] ?? ''));
                     $description = trim((string) ($item['description'] ?? ''));
                     $link = $item['link'] ?? null;
-                    $card_tone = (string) ($item['card_tone'] ?? 'bg1');
 
-                    $has_link = is_array($link) && !empty($link['url']);
+                    $has_link = is_array($link) && ! empty($link['url']);
                     $link_url = $has_link ? $link['url'] : '';
                     $link_target = $has_link ? ($link['target'] ?: '_self') : '_self';
-                    $link_title = $has_link ? (string) ($link['title'] ?: 'Learn more') : '';
+                    $link_title = $has_link ? (string) ($link['title'] ?: $title) : $title;
 
                     $icon_url = is_array($icon) ? ($icon['url'] ?? '') : '';
                     $icon_alt = is_array($icon) ? ($icon['alt'] ?? ($icon['title'] ?? $title)) : $title;
-                    $card_bg = $card_tones[$card_tone] ?? $card_tones['bg1'];
 
-                    if ($image_url === '' && $icon_url === '' && $title === '' && $description === '' && !$has_link) {
+                    if ($image_url === '' && $icon_url === '' && $title === '' && $description === '' && ! $has_link) {
                         continue;
                     }
 
-                    $card_inner_classes = 'flex h-full flex-col gap-4 items-start p-6 rounded-lg w-full';
-                    $card_wrapper_classes = 'group h-full rounded-lg shadow-sm transition-transform duration-200 hover:-translate-y-0.5';
+                    $card_tag = $has_link ? 'a' : 'div';
+                    $card_attrs = $has_link
+                        ? sprintf(
+                            ' href="%s" target="%s"%s',
+                            esc_url($link_url),
+                            esc_attr($link_target),
+                            $link_target === '_blank' ? ' rel="noopener noreferrer"' : ''
+                        )
+                        : '';
                     ?>
-                    <article class="<?php echo esc_attr($card_wrapper_classes); ?>"
-                        style="background-color: <?php echo esc_attr($card_bg); ?>; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
-                        <?php if ($has_link) : ?>
-                            <a href="<?php echo esc_url($link_url); ?>"
-                                target="<?php echo esc_attr($link_target); ?>"
-                                class="block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
-                                aria-label="<?php echo esc_attr($link_title ?: $title); ?>">
-                        <?php endif; ?>
-
-                        <div class="<?php echo esc_attr($card_inner_classes); ?>">
+                    <article class="h-full overflow-hidden rounded-lg bg-white shadow-[0_1px_1px_rgba(0,0,0,0.05)]">
+                        <<?php echo $card_tag; ?>
+                            <?php echo $card_attrs; ?>
+                            class="group flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]<?php echo $has_link ? '' : ' pointer-events-none'; ?>"
+                            <?php if ($has_link) { ?>
+                                aria-label="<?php echo esc_attr($link_title); ?>"
+                            <?php } ?>
+                        >
                             <?php if ($image_url || $icon_url) : ?>
-                                <div class="relative h-[129px] rounded-[4px] overflow-hidden w-full">
+                                <div class="relative h-[220px] w-full overflow-hidden rounded-t-lg lg:h-[273px]">
                                     <?php if ($image_url) : ?>
                                         <img src="<?php echo esc_url($image_url); ?>"
                                             alt="<?php echo esc_attr($title); ?>"
-                                            class="object-cover absolute inset-0 w-full h-full">
+                                            class="absolute inset-0 h-full w-full object-cover"
+                                            loading="lazy"
+                                            decoding="async">
                                     <?php else : ?>
-                                        <div class="flex justify-center items-center w-full h-full bg-white/80">
+                                        <div class="flex h-full w-full items-center justify-center bg-[#F1F8F9]">
                                             <img src="<?php echo esc_url($icon_url); ?>"
                                                 alt="<?php echo esc_attr($icon_alt); ?>"
-                                                class="object-contain w-12 h-12">
+                                                class="h-12 w-12 object-contain"
+                                                loading="lazy"
+                                                decoding="async">
                                         </div>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 
-                            <div class="flex gap-4 justify-between items-center w-full">
-                                <div class="flex-1 min-w-px">
+                            <div class="flex flex-1 items-center bg-[#F1F8F9] p-6">
+                                <div class="flex min-w-0 flex-col gap-2">
                                     <?php if ($title) : ?>
-                                        <h3 class="text-[20px] font-semibold leading-8 tracking-[-0.12px]"
+                                        <p class="font-primary text-[20px] font-semibold leading-6 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]"
                                             style="color: <?php echo esc_attr($card_title_color); ?>;">
-                                            <?php echo esc_html($title); ?>
-                                        </h3>
+                                            <span><?php echo esc_html($title); ?></span>
+                                            <?php if ($has_link) : ?>
+                                                <span aria-hidden="true"> &rarr;</span>
+                                            <?php endif; ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <?php if ($description) : ?>
+                                        <p class="font-primary text-base font-medium leading-7"
+                                            style="color: <?php echo esc_attr($card_desc_color); ?>;">
+                                            <?php echo esc_html($description); ?>
+                                        </p>
                                     <?php endif; ?>
                                 </div>
-
-                                <?php if ($has_link) : ?>
-                                    <div class="flex justify-center items-center shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                            <path d="M8 4L16 12L8 20" stroke="#08284B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
-                                    </div>
-                                <?php endif; ?>
                             </div>
-
-                            <?php if ($description) : ?>
-                                <p class="text-base font-medium leading-7"
-                                    style="color: <?php echo esc_attr($card_desc_color); ?>;">
-                                    <?php echo esc_html($description); ?>
-                                </p>
-                            <?php endif; ?>
-                        </div>
-
-                        <?php if ($has_link) : ?>
-                            </a>
-                        <?php endif; ?>
+                        </<?php echo $card_tag; ?>>
                     </article>
                 <?php endforeach; ?>
             </div>
