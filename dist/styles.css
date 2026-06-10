@@ -2052,6 +2052,12 @@ input:where([type='file']):focus {
 .min-w-px {
   min-width: 1px;
 }
+.min-w-\[104px\] {
+  min-width: 104px;
+}
+.min-w-\[160px\] {
+  min-width: 160px;
+}
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -2214,6 +2220,9 @@ input:where([type='file']):focus {
 .basis-0 {
   flex-basis: 0px;
 }
+.table-fixed {
+  table-layout: fixed;
+}
 .border-collapse {
   border-collapse: collapse;
 }
@@ -2306,6 +2315,11 @@ input:where([type='file']):focus {
 }
 .list-none {
   list-style-type: none;
+}
+.appearance-none {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
 }
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -2423,6 +2437,9 @@ input:where([type='file']):focus {
 }
 .gap-\[17px\] {
   gap: 17px;
+}
+.gap-\[34px\] {
+  gap: 34px;
 }
 .gap-x-10 {
   -moz-column-gap: 2.5rem;
@@ -2585,6 +2602,10 @@ input:where([type='file']):focus {
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
+.rounded-t-\[4px\] {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
 .rounded-bl-3xl {
   border-bottom-left-radius: 1.5rem;
 }
@@ -2605,6 +2626,9 @@ input:where([type='file']):focus {
 }
 .rounded-tr-\[4px\] {
   border-top-right-radius: 4px;
+}
+.rounded-tl-\[4px\] {
+  border-top-left-radius: 4px;
 }
 .border {
   border-width: 1px;
@@ -4498,8 +4522,17 @@ input:where([type='file']):focus {
 .bg-cover {
   background-size: cover;
 }
+.bg-\[length\:16px_16px\] {
+  background-size: 16px 16px;
+}
 .bg-center {
   background-position: center;
+}
+.bg-\[right_12px_center\] {
+  background-position: right 12px center;
+}
+.bg-no-repeat {
+  background-repeat: no-repeat;
 }
 .stroke-\[\#020617\] {
   stroke: #020617;
@@ -7128,6 +7161,9 @@ input:where([type='file']):focus {
 .pb-16 {
   padding-bottom: 4rem;
 }
+.pl-0 {
+  padding-left: 0px;
+}
 .text-left {
   text-align: left;
 }
@@ -8613,6 +8649,9 @@ input:where([type='file']):focus {
 .hover\:border-white:hover {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
+}
+.hover\:border-transparent:hover {
+  border-color: transparent;
 }
 .hover\:bg-\[\#001F33\]:hover {
   --tw-bg-opacity: 1;
@@ -27321,6 +27360,10 @@ input:where([type='file']):focus {
 
   .lg\:gap-2\.5 {
     gap: 0.625rem;
+  }
+
+  .lg\:gap-2 {
+    gap: 0.5rem;
   }
 
   .lg\:gap-x-10 {

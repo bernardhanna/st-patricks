@@ -10,7 +10,7 @@ $section_id = $is_careers_landing_page
 $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';
 
-$wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
+$wrapper_classes = explode(' ', matrix_get_careers_archive_default_wrapper_classes());
 if (have_rows('padding_settings')) {
     while (have_rows('padding_settings')) {
         the_row();

@@ -55,7 +55,54 @@ function matrix_get_careers_archive_defaults()
 
 function matrix_get_careers_archive_default_wrapper_classes()
 {
-    return 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]';
+    return 'mx-auto flex w-full max-w-[1018px] flex-col px-4 py-12 xl:px-0 xl:py-[100px]';
+}
+
+function matrix_get_careers_archive_table_header_style()
+{
+    return 'background-image: linear-gradient(-18.96deg, rgb(243, 234, 222) 3.24%, rgb(241, 243, 222) 90.88%);';
+}
+
+function matrix_get_careers_archive_mobile_table_header_style()
+{
+    return 'background-image: linear-gradient(-13.24deg, rgb(243, 234, 222) 3.24%, rgb(241, 243, 222) 90.88%);';
+}
+
+function matrix_get_careers_archive_filter_select_class_names()
+{
+    return implode(' ', [
+        'w-full',
+        'appearance-none',
+        'rounded-[6px]',
+        'border',
+        'border-[#E2E8F0]',
+        'bg-white',
+        'bg-[length:16px_16px]',
+        'bg-[right_12px_center]',
+        'bg-no-repeat',
+        'px-3',
+        'py-2',
+        'pr-10',
+        'font-primary',
+        'text-[16px]',
+        'font-normal',
+        'leading-[24px]',
+        'text-[#08284B]',
+        'focus:outline-none',
+        'focus:ring-2',
+        'focus:ring-offset-2',
+        'focus:ring-[#024B79]',
+    ]);
+}
+
+function matrix_get_careers_archive_apply_filters_button_class_names()
+{
+    return 'btn inline-flex h-[36px] w-fit shrink-0 items-center justify-center rounded-[6px] border border-transparent bg-[#08284B] px-3 text-[14px] font-medium leading-[24px] text-white hover:border-transparent hover:bg-[#024B79] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79] lg:w-auto';
+}
+
+function matrix_get_careers_archive_view_detail_button_class_names()
+{
+    return 'btn inline-flex h-[36px] w-full min-w-[104px] items-center justify-center whitespace-nowrap rounded-[6px] border border-transparent bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white no-underline hover:border-transparent hover:bg-[#08284B] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 }
 
 function matrix_resolve_careers_archive_base_url($preferred_base_url = '')

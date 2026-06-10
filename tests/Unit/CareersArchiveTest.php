@@ -93,3 +93,13 @@ test('careers archive preserves filters in pagination urls', function () {
 test('careers archive maps post rows with area and location labels', function () {
     expect(function_exists('matrix_map_career_post_row'))->toBeTrue();
 });
+
+test('careers archive layout helpers match figma vacancies styling', function () {
+    expect(matrix_get_careers_archive_table_header_style())->toContain('linear-gradient')
+        ->and(matrix_get_careers_archive_mobile_table_header_style())->toContain('-13.24deg')
+        ->and(matrix_get_careers_archive_filter_select_class_names())->toContain('font-normal')
+        ->and(matrix_get_careers_archive_apply_filters_button_class_names())->toContain('bg-[#08284B]')
+        ->and(matrix_get_careers_archive_apply_filters_button_class_names())->toContain('w-fit')
+        ->and(matrix_get_careers_archive_view_detail_button_class_names())->toContain('bg-[#024B79]')
+        ->and(matrix_get_careers_archive_view_detail_button_class_names())->toContain('whitespace-nowrap');
+});
