@@ -11,6 +11,7 @@ $layout_style = matrix_resolve_content_layout_style(
     (bool) get_sub_field('reverse_layout')
 );
 $accent_position = matrix_resolve_content_accent_position(get_sub_field('accent_position'));
+$image_height_mode = matrix_resolve_content_image_height_mode(get_sub_field('image_height_mode'));
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
@@ -52,7 +53,7 @@ $background_style = matrix_get_content_background_style($background_type, $backg
 $image_column_class = $layout_style === 'image_right' ? 'lg:order-2' : 'lg:order-1';
 $content_column_class = $layout_style === 'image_right' ? 'lg:order-1' : 'lg:order-2';
 
-$wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'pt-5', 'pb-5', 'max-xl:px-5', 'lg:py-[100px]'];
+$wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'px-4', 'py-12', 'lg:px-0', 'lg:py-[100px]'];
 if (have_rows('padding_settings')) {
     while (have_rows('padding_settings')) {
         the_row();
@@ -76,28 +77,14 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="<?php echo esc_attr($background_style); ?>"
     aria-labelledby="<?php echo esc_attr($heading_id); ?>"
 >
     <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
-        <div class="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <?php if ($image) { ?>
-                <div class="<?php echo esc_attr($image_column_class); ?> flex justify-center lg:justify-start">
-                    <figure class="w-full max-w-[502px]">
-                        <?php
-                        echo wp_get_attachment_image($image, 'full', false, [
-                            'alt' => esc_attr($image_alt),
-                            'class' => 'h-auto w-full max-h-[346px] rounded-[8px] object-cover',
-                            'loading' => 'lazy',
-                        ]);
-                        ?>
-                    </figure>
-                </div>
-            <?php } ?>
-
-            <article class="<?php echo esc_attr($content_column_class); ?> flex w-full flex-col gap-8">
-                <header class="flex w-full flex-col gap-8">
+        <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode)); ?>">
+            <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
+                <header class="flex flex-col gap-8 w-full">
                     <?php if ($accent_position === 'above_heading') { ?>
                         <?php echo $accent_markup; ?>
                     <?php } ?>
@@ -115,13 +102,13 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                 </header>
 
                 <?php if (matrix_content_has_visible_rich_text($intro_text)) { ?>
-                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-semibold leading-[28px] text-[#08284B] lg:text-[18px] [&_p:last-child]:mb-0">
+                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-bold leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
                         <?php echo wp_kses_post($intro_text); ?>
                     </div>
                 <?php } ?>
 
                 <?php if (matrix_content_has_visible_rich_text($content)) { ?>
-                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-normal leading-[28px] text-[#08284B] lg:text-[18px] [&_p:last-child]:mb-0">
+                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-medium leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
                         <?php echo wp_kses_post($content); ?>
                     </div>
                 <?php } ?>
@@ -145,7 +132,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                 <?php } ?>
 
                 <?php if ($primary_button || $secondary_button) { ?>
-                    <div class="flex flex-wrap gap-2.5">
+                    <div class="flex flex-wrap gap-4 lg:gap-2.5">
                         <?php if ($primary_button) { ?>
                             <a
                                 href="<?php echo esc_url($primary_button['url']); ?>"
@@ -174,6 +161,20 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                     </div>
                 <?php } ?>
             </article>
+
+            <?php if ($image) { ?>
+                <div class="<?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode)); ?>">
+                    <figure class="<?php echo esc_attr(matrix_get_content_image_figure_class_names($image_height_mode)); ?>">
+                        <?php
+                        echo wp_get_attachment_image($image, 'full', false, [
+                            'alt' => esc_attr($image_alt),
+                            'class' => matrix_get_content_image_class_names($image_height_mode),
+                            'loading' => 'lazy',
+                        ]);
+                        ?>
+                    </figure>
+                </div>
+            <?php } ?>
         </div>
     </div>
 </section>

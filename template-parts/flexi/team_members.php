@@ -134,24 +134,24 @@ $card_content_classes = 'flex flex-1 p-3 mob:p-4 lg:p-6';
 if ($layout_style === 'spokespeople_grid') {
     $card_content_classes .= ' flex-col';
 } else {
-    $card_content_classes .= ' items-center justify-between gap-3';
+    $card_content_classes .= ' items-center justify-between gap-3 max-sm:items-start max-sm:flex-col';
 }
 ?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
         >
             <?php echo esc_html($heading); ?>
         </<?php echo esc_attr($heading_tag); ?>>
 
-        <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"></div>
+        <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
 
         <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
             <div class="wp_editor mt-6 max-w-[1018px] [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
@@ -185,7 +185,7 @@ if ($layout_style === 'spokespeople_grid') {
                             <img
                                 src="<?php echo esc_url($team_item['image']['url']); ?>"
                                 alt="<?php echo esc_attr($team_item['image']['alt'] ?? $team_item['name']); ?>"
-                                class="h-full w-full object-cover"
+                                class="object-cover w-full h-full"
                             />
                         </div>
                     <?php } ?>
@@ -211,8 +211,8 @@ if ($layout_style === 'spokespeople_grid') {
 
                         <?php if ($team_item['show_arrow']) { ?>
                             <span class="ml-auto flex shrink-0 items-center justify-center text-[#08284B]" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M5.33301 2.66699L10.6663 8.00033L5.33301 13.3337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="18" viewBox="0 0 10 18" fill="none">
+                                <path d="M0.999999 1L9 9L1 17" stroke="#001F33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </span>
                         <?php } ?>

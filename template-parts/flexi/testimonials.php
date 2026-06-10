@@ -146,15 +146,15 @@ $tone_backgrounds = [
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
     <div
         x-data="{ visibleCount: <?php echo esc_attr((string) $visible_initial_count); ?>, totalCount: <?php echo esc_attr((string) $testimonial_count); ?> }"
-        class="flex flex-col items-center w-full mx-auto max-w-[1018px] pt-5 pb-5 max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+        class="flex flex-col items-center w-full mx-auto max-w-[1018px] py-12 lg:py-[100px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
     >
         <?php if ($background_image) { ?>
-            <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
                 <?php
                 echo wp_get_attachment_image($background_image, 'full', false, [
                     'alt' => esc_attr($background_image_alt),
@@ -165,8 +165,8 @@ $tone_backgrounds = [
             </div>
         <?php } ?>
 
-        <div class="relative grid w-full gap-16">
-            <div class="grid gap-8 w-full max-w-[312px]">
+        <div class="grid relative gap-16 w-full">
+            <div class="grid w-full max-w-[312px]">
                 <<?php echo esc_attr($heading_tag); ?>
                     class="font-primary text-[30px] not-italic font-semibold leading-[36px] tracking-[-0.225px]"
                     style="color: <?php echo esc_attr($heading_color); ?>;"
@@ -174,7 +174,7 @@ $tone_backgrounds = [
                     <?php echo esc_html($heading_text); ?>
                 </<?php echo esc_attr($heading_tag); ?>>
 
-                <div class="mt-4 w-10 h-[4px]" style="background-color: <?php echo esc_attr($accent_color); ?>;" aria-hidden="true"></div>
+                <div class="mt-7 w-10 h-[4px]" style="background-color: <?php echo esc_attr($accent_color); ?>;" aria-hidden="true"></div>
             </div>
 
             <?php if (!empty($testimonial_items)) { ?>

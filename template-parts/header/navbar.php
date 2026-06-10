@@ -60,7 +60,7 @@ document.addEventListener('alpine:init', () => {
         if (this.activeKey === key) {
           this.activeKey = null;
         }
-      }, 150);
+      }, 300);
     },
     isWithinNavMegaZone(target) {
       if (!target || typeof target.closest !== 'function') {
@@ -249,7 +249,7 @@ document.addEventListener('alpine:init', () => {
 
           <?php if ($item->children) : ?>
             <div
-              class="absolute left-1/2 top-full z-[70] h-20 w-48 -translate-x-1/2"
+              class="absolute left-1/2 top-full z-[70] h-16 w-[min(100vw,360px)] -translate-x-1/2 pointer-events-auto"
               aria-hidden="true"
               @mouseenter="$store.navMega.open('<?php echo esc_attr(matrix_get_nav_mega_menu_key($index)); ?>')"
             ></div>

@@ -187,7 +187,7 @@ $story_slider
                 'instructions' => 'Set the top padding in rem.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
             ])
             ->addNumber('padding_bottom', [
@@ -195,7 +195,7 @@ $story_slider
                 'instructions' => 'Set the bottom padding in rem.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
             ])
         ->endRepeater();

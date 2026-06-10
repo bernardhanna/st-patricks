@@ -88,7 +88,7 @@ $subpage_hero
                 'instructions' => 'Set the top padding in rem.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
                 'default_value' => 9,
             ])
@@ -97,7 +97,7 @@ $subpage_hero
                 'instructions' => 'Set the bottom padding in rem.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
                 'default_value' => 9,
             ])

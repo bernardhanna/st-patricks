@@ -43,7 +43,7 @@ $section_id = 'about-us-mega-menu-' . $index;
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"
 >
-    <div class="pointer-events-auto hidden absolute inset-x-0 bottom-full h-[42px]" aria-hidden="true"></div>
+    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
     <div class="relative w-full">
         <div
             id="<?php echo esc_attr($section_id); ?>"

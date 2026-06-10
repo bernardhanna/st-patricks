@@ -91,14 +91,14 @@ $referral_action_cards
                 'label' => 'Padding Top',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
             ])
             ->addNumber('padding_bottom', [
                 'label' => 'Padding Bottom',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
             ])
         ->endRepeater();

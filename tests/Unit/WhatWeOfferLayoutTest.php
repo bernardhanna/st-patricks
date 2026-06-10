@@ -36,3 +36,15 @@ test('what we offer intro two column icons use the existing left svg pair', func
         ->and($icons['default'])->toBe('http://localhost:10034/wp-content/uploads/2025/11/left.svg')
         ->and($icons['hover'])->toBe('http://localhost:10034/wp-content/uploads/2026/03/left.svg');
 });
+
+test('what we offer intro two column icon svg returns markup for default and hover states', function () {
+    expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_svg'))->toBeTrue();
+
+    $default = matrix_get_what_we_offer_intro_two_column_icon_svg('default');
+    $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover');
+
+    expect($default)->toContain('<svg')
+        ->and($default)->toContain('opacity="0.25"')
+        ->and($hover)->toContain('<svg')
+        ->and($hover)->toContain('opacity="1"');
+});

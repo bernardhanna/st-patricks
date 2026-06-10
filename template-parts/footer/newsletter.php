@@ -90,7 +90,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               </h1>
 
               <!-- Decorative Line -->
-              <div class="w-10 h-px" style="background-color: <?php echo esc_attr($accent_line_color); ?>;"></div>
+              <div class="w-10 h-1" style="background-color: <?php echo esc_attr($accent_line_color); ?>;"></div>
             </div>
 
             <!-- Subtitle -->

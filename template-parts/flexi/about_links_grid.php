@@ -63,16 +63,16 @@ if (have_rows('padding_settings')) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($bg_color); ?>;">
 
-    <div class="w-full mx-auto max-w-[1018px] py-[100px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="w-full mx-auto max-w-[1018px] py-12 lg:py-[100px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
         <?php if ($heading_text || $intro_text) : ?>
-            <div class="flex flex-col gap-8 items-start justify-center mb-16 w-full">
+            <div class="flex flex-col gap-8 justify-center items-start mb-16 w-full">
                 <?php if ($heading_text) : ?>
                     <<?php echo tag_escape($heading_tag); ?>
                         class="text-[30px] font-semibold leading-9 tracking-[-0.225px]"
                         style="color: <?php echo esc_attr($heading_color); ?>;">
                         <?php echo esc_html($heading_text); ?>
                     </<?php echo tag_escape($heading_tag); ?>>
-                    <div class="w-10 h-px" style="background-color: #6FC9C0;"></div>
+                    <div class="w-10 h-1" style="background-color: #6FC9C0;"></div>
                 <?php endif; ?>
 
                 <?php if ($intro_text) : ?>
@@ -125,9 +125,9 @@ if (have_rows('padding_settings')) {
                                     <?php if ($image_url) : ?>
                                         <img src="<?php echo esc_url($image_url); ?>"
                                             alt="<?php echo esc_attr($title); ?>"
-                                            class="absolute inset-0 object-cover w-full h-full">
+                                            class="object-cover absolute inset-0 w-full h-full">
                                     <?php else : ?>
-                                        <div class="flex items-center justify-center w-full h-full bg-white/80">
+                                        <div class="flex justify-center items-center w-full h-full bg-white/80">
                                             <img src="<?php echo esc_url($icon_url); ?>"
                                                 alt="<?php echo esc_attr($icon_alt); ?>"
                                                 class="object-contain w-12 h-12">
@@ -136,7 +136,7 @@ if (have_rows('padding_settings')) {
                                 </div>
                             <?php endif; ?>
 
-                            <div class="flex items-center justify-between w-full gap-4">
+                            <div class="flex gap-4 justify-between items-center w-full">
                                 <div class="flex-1 min-w-px">
                                     <?php if ($title) : ?>
                                         <h3 class="text-[20px] font-semibold leading-8 tracking-[-0.12px]"
@@ -147,7 +147,7 @@ if (have_rows('padding_settings')) {
                                 </div>
 
                                 <?php if ($has_link) : ?>
-                                    <div class="flex items-center justify-center shrink-0">
+                                    <div class="flex justify-center items-center shrink-0">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                             <path d="M8 4L16 12L8 20" stroke="#08284B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>

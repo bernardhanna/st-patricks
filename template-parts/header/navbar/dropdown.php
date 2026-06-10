@@ -31,13 +31,13 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
 ?>
 
 <div
-    class="fixed left-0 top-[var(--site-header-height,120px)] z-[60] flex w-screen flex-col bg-transparent"
+    class="<?php echo esc_attr(matrix_get_nav_mega_menu_shell_classes()); ?>"
     <?php matrix_render_nav_mega_menu_shell_attrs($index); ?>
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"
 >
-    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-20" aria-hidden="true"></div>
-    <div class="w-full pt-2">
+    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
+    <div class="w-full">
         <div class="mx-auto w-full max-w-[1440px] px-6">
             <div
                 class="relative overflow-hidden w-full border border-slate-200 bg-slate-100 rounded-lg shadow-lg"
@@ -52,7 +52,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                             <h2 class="text-[40px] font-semibold leading-[44px] tracking-[-0.6px] text-[#1E244B]">
                                 <?php echo esc_html($item->label); ?>
                             </h2>
-                            <div class="mt-8 w-10 h-px bg-[#FF9E66]" aria-hidden="true"></div>
+                            <div class="mt-8 w-10 h-1 bg-[#FF9E66]" aria-hidden="true"></div>
                         </div>
 
                         <?php if (is_array($dropdown_cta) && !empty($dropdown_cta['url']) && !empty($dropdown_cta['title'])) : ?>

@@ -173,6 +173,16 @@ $content_safeguarding
             'default_value' => 'image_left',
             'ui' => 1,
         ])
+        ->addSelect('image_height_mode', [
+            'label' => 'Image Height',
+            'instructions' => 'On desktop, match the image height to the text column or use a fixed minimum height.',
+            'choices' => [
+                'match_text' => 'Match Text Height',
+                'fixed_min' => 'Fixed Minimum Height (19.5rem)',
+            ],
+            'default_value' => 'match_text',
+            'ui' => 1,
+        ])
         ->addTrueFalse('reverse_layout', [
             'label' => 'Reverse Layout (Legacy)',
             'instructions' => 'Legacy toggle kept for older rows. Layout Style takes precedence when set.',
@@ -209,7 +219,7 @@ $content_safeguarding
                 'instructions' => 'Set the top padding in rem units.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
                 'default_value' => 5,
             ])
@@ -218,7 +228,7 @@ $content_safeguarding
                 'instructions' => 'Set the bottom padding in rem units.',
                 'min' => 0,
                 'max' => 20,
-                'step' => 0.1,
+                'step' => 0.01,
                 'append' => 'rem',
                 'default_value' => 5,
             ])

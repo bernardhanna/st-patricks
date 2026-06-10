@@ -38,3 +38,27 @@ function matrix_get_what_we_offer_intro_two_column_icon_urls($base_url = '')
         'hover' => $base_url . '/wp-content/uploads/2026/03/left.svg',
     ];
 }
+
+function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default')
+{
+    $theme_dir = function_exists('get_template_directory')
+        ? get_template_directory()
+        : dirname(__DIR__);
+    $svg_path = $theme_dir . '/assets/svg/st-patricks-logo-symbol.svg';
+
+    if (! is_readable($svg_path)) {
+        return '';
+    }
+
+    $svg = file_get_contents($svg_path);
+
+    if ($svg === false || $svg === '') {
+        return '';
+    }
+
+    if ($state === 'hover') {
+        $svg = str_replace('opacity="0.25"', 'opacity="1"', $svg);
+    }
+
+    return $svg;
+}

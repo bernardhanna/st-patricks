@@ -15,6 +15,67 @@ function matrix_resolve_content_layout_style($layout_style, $reverse_layout = fa
     return $reverse_layout ? 'image_right' : 'image_left';
 }
 
+function matrix_resolve_content_image_height_mode($value)
+{
+    $value = is_string($value) ? trim($value) : '';
+
+    if ($value === 'fixed_min') {
+        return 'fixed_min';
+    }
+
+    return 'match_text';
+}
+
+function matrix_get_content_grid_class_names($image_height_mode)
+{
+    $classes = 'grid grid-cols-1 gap-10 items-start w-full lg:grid-cols-2 lg:gap-8';
+
+    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
+        return $classes . ' lg:items-stretch';
+    }
+
+    return $classes;
+}
+
+function matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode)
+{
+    $classes = [
+        $image_column_class,
+        'order-2',
+        'flex',
+        'justify-center',
+        'lg:justify-start',
+    ];
+
+    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
+        $classes[] = 'lg:h-full';
+    }
+
+    return implode(' ', array_filter($classes));
+}
+
+function matrix_get_content_image_figure_class_names($image_height_mode)
+{
+    $classes = ['w-full', 'lg:max-w-[502px]'];
+
+    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
+        $classes[] = 'lg:h-full';
+    }
+
+    return implode(' ', $classes);
+}
+
+function matrix_get_content_image_class_names($image_height_mode)
+{
+    $classes = 'h-[212px] w-full rounded-[8px] object-cover lg:h-auto';
+
+    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'fixed_min') {
+        return $classes . ' lg:min-h-[19.5rem]';
+    }
+
+    return $classes . ' lg:h-full lg:min-h-0';
+}
+
 function matrix_resolve_content_accent_position($value)
 {
     $value = is_string($value) ? trim($value) : '';
@@ -103,13 +164,7 @@ function matrix_get_content_background_style($background_type, $background_color
 
 function matrix_get_content_button_class_names($variant = 'filled')
 {
-    $base = 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] px-3 text-[14px] font-medium leading-[24px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
-
-    if ($variant === 'outline') {
-        return $base . ' border border-[#024B79] bg-white text-[#024B79]';
-    }
-
-    return $base . ' border border-[#024B79] bg-[#024B79] text-white';
+    return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-transparent px-3 text-[14px] font-medium leading-[24px] text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 }
 
 function matrix_get_content_pdf_icon_svg()

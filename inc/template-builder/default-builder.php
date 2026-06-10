@@ -19,9 +19,21 @@ function matrix_resolve_post_type_for_acf($post_id) {
     return 'post';
 }
 
+/**
+ * True when a post already has stored ACF meta for a field, including an
+ * intentionally empty flexible-content value saved by update_field([], ...).
+ */
+function matrix_acf_field_was_saved($post_id, $field_name) {
+    return is_numeric($post_id) && metadata_exists('post', (int) $post_id, $field_name);
+}
+
 /** -------------------- HERO defaults -------------------- */
 add_filter('acf/load_value/name=hero_content_blocks', function ($value, $post_id, $field) {
     if (!empty($value)) return $value;
+
+    if (matrix_acf_field_was_saved($post_id, 'hero_content_blocks')) {
+        return is_array($value) ? $value : [];
+    }
 
     $type = matrix_resolve_post_type_for_acf($post_id);
 
@@ -31,11 +43,11 @@ add_filter('acf/load_value/name=hero_content_blocks', function ($value, $post_id
             $blog  = (int) get_option('page_for_posts');
             if ($post_id == $front || $post_id == $blog) return $value;
         }
-        return [ ['acf_fc_layout' => 'acf_subpage_hero'] ];
+        return [ ['acf_fc_layout' => 'subpage_hero'] ];
     }
 
     if ($type === 'post')   return [ ['acf_fc_layout' => 'banner_image'] ];
-    if ($type === 'brands') return [ ['acf_fc_layout' => 'acf_subpage_hero'] ];
+    if ($type === 'brands') return [ ['acf_fc_layout' => 'subpage_hero'] ];
 
     return $value;
 }, 10, 3);

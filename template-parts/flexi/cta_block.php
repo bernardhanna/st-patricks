@@ -71,7 +71,7 @@ $section_min = $min_full ? 'min-h-screen' : 'min-h-[14rem]';
           <?php echo esc_html($title); ?>
         </h2>
 
-        <div class="w-10 h-px" style="background: <?php echo esc_attr($divider_color); ?>;"></div>
+        <div class="w-10 h-1" style="background: <?php echo esc_attr($divider_color); ?>;"></div>
       </div>
 
       <?php if ($description): ?>

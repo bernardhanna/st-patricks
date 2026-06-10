@@ -86,7 +86,7 @@ if (have_rows('padding_settings')) {
                             </div>
 
                             <?php if ($index < $total_counter_items - 1): ?>
-                                <div class="hidden mt-3 w-10 h-px max-md:block bg-white/30"
+                                <div class="hidden mt-3 w-10 h-1 max-md:block bg-white/30"
                                      role="presentation"
                                      aria-hidden="true"></div>
                             <?php endif; ?>

@@ -163,12 +163,12 @@ $newsletter
       ->addNumber('padding_top', [
         'label' => 'Padding Top',
         'instructions' => 'Set the top padding in rem.',
-        'min' => 0, 'max' => 20, 'step' => 0.1, 'append' => 'rem',
+        'min' => 0, 'max' => 20, 'step' => 0.01, 'append' => 'rem',
       ])
       ->addNumber('padding_bottom', [
         'label' => 'Padding Bottom',
         'instructions' => 'Set the bottom padding in rem.',
-        'min' => 0, 'max' => 20, 'step' => 0.1, 'append' => 'rem',
+        'min' => 0, 'max' => 20, 'step' => 0.01, 'append' => 'rem',
       ])
     ->endRepeater();
 

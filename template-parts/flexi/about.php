@@ -108,7 +108,7 @@ if (!in_array($heading_tag, $allowed_tags, true)) $heading_tag = 'h2';
                 <?php echo esc_html($heading_text); ?>
               </<?php echo tag_escape($heading_tag); ?>>
 
-              <div class="w-10 h-px" style="background-color: <?php echo esc_attr($divider_color); ?>;"></div>
+              <div class="w-10 h-1" style="background-color: <?php echo esc_attr($divider_color); ?>;"></div>
             </div>
           </div>
 

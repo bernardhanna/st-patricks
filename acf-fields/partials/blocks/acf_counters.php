@@ -117,7 +117,7 @@ $counters
             'instructions' => 'Set the top padding in rem units.',
             'min' => 0,
             'max' => 20,
-            'step' => 0.1,
+            'step' => 0.01,
             'append' => 'rem',
             'default_value' => 5,
         ])
@@ -126,7 +126,7 @@ $counters
             'instructions' => 'Set the bottom padding in rem units.',
             'min' => 0,
             'max' => 20,
-            'step' => 0.1,
+            'step' => 0.01,
             'append' => 'rem',
             'default_value' => 5,
         ])

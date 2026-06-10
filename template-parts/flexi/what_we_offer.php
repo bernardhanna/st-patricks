@@ -249,10 +249,18 @@ if (!empty($services) && is_array($services)) {
                                     aria-hidden="true"
                                 >
                                     <div
-                                        class="h-[140px] w-full rounded"
+                                        class="relative h-[140px] w-full rounded"
                                         style="background-color: <?php echo esc_attr($service['accent_color']); ?>;"
-                                    ></div>
-                                    <div class="absolute left-0 top-full h-[140px] w-12 rounded bg-[#08284B] transition-transform duration-300 group-hover:-translate-y-full"></div>
+                                    >
+                                        <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 transition-opacity duration-300 group-hover:opacity-0">
+                                            <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('default'); ?>
+                                        </div>
+                                    </div>
+                                    <div class="absolute left-0 top-full h-[140px] w-12 rounded bg-[#08284B] transition-transform duration-300 group-hover:-translate-y-full">
+                                        <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('hover'); ?>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="flex min-w-0 flex-1 flex-col justify-start">

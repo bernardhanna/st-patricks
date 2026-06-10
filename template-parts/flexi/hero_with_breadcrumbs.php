@@ -138,15 +138,14 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="flex overflow-hidden relative"
+    class="flex overflow-hidden relative flex-col"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($hero_heading_id); ?>"
 >
-    <div class="flex flex-col items-center w-full mx-auto max-w-[1280px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
         <?php if ($show_breadcrumbs && (!empty($breadcrumb_items) || $breadcrumb_current_label !== '')) { ?>
+            <div class="flex items-center px-4 py-3 w-full lg:h-[42px] lg:px-0 lg:py-0" style="background-color: <?php echo esc_attr($breadcrumb_background_color); ?>;">
             <nav
-                class="w-full px-5 py-0 lg:px-[70px]"
-                style="background-color: <?php echo esc_attr($breadcrumb_background_color); ?>;"
+                class="w-full mx-auto max-w-[1203px] lg:px-5"
                 aria-label="Breadcrumb"
             >
                 <ol class="flex flex-wrap gap-3 items-center" role="list">
@@ -173,7 +172,9 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                     <?php } ?>
                 </ol>
             </nav>
+            </div>
         <?php } ?>
+    <div class="flex flex-col items-center w-full mx-auto max-w-[1280px]  <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
 
         <?php if ($layout_style === 'register_intro') { ?>
             <div class="w-full max-w-[1018px] px-5 max-xl:mx-auto lg:px-0">
@@ -198,7 +199,7 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                     </div>
 
                     <?php if ($aside_heading !== '' || $primary_button) { ?>
-                        <aside class="flex w-full flex-col items-start gap-3 lg:w-auto lg:items-end">
+                        <aside class="flex flex-col gap-3 items-start w-full lg:w-auto lg:items-end">
                             <?php if ($aside_heading !== '') { ?>
                                 <p class="font-primary text-[16px] font-bold leading-[28px] text-[#08284B]">
                                     <?php echo esc_html($aside_heading); ?>
@@ -252,42 +253,8 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                 </div>
             </div>
         <?php } else { ?>
-            <div class="grid w-full items-center overflow-hidden lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px]">
-                <div class="w-full px-5 lg:pl-[52px] lg:pr-8">
-                    <div class="grid gap-[17px]">
-                        <<?php echo esc_attr($heading_tag); ?>
-                            id="<?php echo esc_attr($hero_heading_id); ?>"
-                            class="max-w-[599px] font-primary text-[36px] not-italic font-bold leading-[40px] tracking-[-0.432px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
-                            style="color: <?php echo esc_attr($heading_color); ?>;"
-                        >
-                            <?php echo esc_html($heading); ?>
-                        </<?php echo esc_attr($heading_tag); ?>>
-
-                        <?php if (!empty($content)) { ?>
-                            <div
-                                class="max-w-[599px] font-primary text-[18px] not-italic font-normal leading-[28px] text-[#08284B] wp_editor"
-                                style="color: <?php echo esc_attr($text_color); ?>;"
-                            >
-                                <?php echo wp_kses_post($content); ?>
-                            </div>
-                        <?php } ?>
-
-                        <?php if ($primary_button) { ?>
-                            <a
-                                href="<?php echo esc_url($primary_button['url']); ?>"
-                                target="<?php echo esc_attr($primary_button['target'] !== '' ? $primary_button['target'] : '_self'); ?>"
-                                class="<?php echo esc_attr(matrix_get_content_button_class_names('filled')); ?>"
-                                <?php if ($primary_button['target'] === '_blank') { ?>
-                                    rel="noopener noreferrer"
-                                <?php } ?>
-                            >
-                                <?php echo esc_html($primary_button['title']); ?>
-                            </a>
-                        <?php } ?>
-                    </div>
-                </div>
-
-                <div class="relative h-[240px] w-full overflow-hidden lg:h-[320px] lg:border-l-2" style="border-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-center">
+                <div class="relative order-1 h-[240px] w-full overflow-hidden lg:order-2 lg:h-[320px] lg:border-l-2" style="border-color: <?php echo esc_attr($background_color); ?>;">
                     <?php
                     if ($hero_image) {
                         echo wp_get_attachment_image($hero_image, 'full', false, [
@@ -299,10 +266,52 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                     }
                     ?>
                     <div
-                        class="absolute inset-0 pointer-events-none"
+                        class="absolute inset-0 pointer-events-none lg:hidden"
+                        style="background: linear-gradient(to bottom, <?php echo esc_attr($gradient_clear); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 55%, <?php echo esc_attr($gradient_solid); ?> 100%);"
+                        aria-hidden="true"
+                    ></div>
+                    <div
+                        class="absolute inset-0 pointer-events-none max-lg:hidden"
                         style="background: linear-gradient(90deg, <?php echo esc_attr($gradient_solid); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 14.69%, <?php echo esc_attr($gradient_clear); ?> 45.97%);"
                         aria-hidden="true"
                     ></div>
+                    <div
+                        class="hidden absolute inset-y-0 right-0 w-1/3 pointer-events-none xl:block"
+                        style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);"
+                        aria-hidden="true"
+                    ></div>
+                </div>
+
+                <div class="order-2 flex w-full flex-col gap-3 px-4 py-4 lg:order-1 lg:gap-[17px] lg:pl-[52px] lg:pr-8 lg:py-0">
+                    <<?php echo esc_attr($heading_tag); ?>
+                        id="<?php echo esc_attr($hero_heading_id); ?>"
+                        class="max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
+                        style="color: <?php echo esc_attr($heading_color); ?>;"
+                    >
+                        <?php echo esc_html($heading); ?>
+                    </<?php echo esc_attr($heading_tag); ?>>
+
+                    <?php if (!empty($content)) { ?>
+                        <div
+                            class="max-w-[599px] font-primary text-[18px] font-normal leading-[22.75px] tracking-[-0.09px] text-[#08284B] wp_editor lg:text-[18px] lg:leading-[28px] lg:tracking-normal"
+                            style="color: <?php echo esc_attr($text_color); ?>;"
+                        >
+                            <?php echo wp_kses_post($content); ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($primary_button) { ?>
+                        <a
+                            href="<?php echo esc_url($primary_button['url']); ?>"
+                            target="<?php echo esc_attr($primary_button['target'] !== '' ? $primary_button['target'] : '_self'); ?>"
+                            class="<?php echo esc_attr(matrix_get_content_button_class_names('filled')); ?>"
+                            <?php if ($primary_button['target'] === '_blank') { ?>
+                                rel="noopener noreferrer"
+                            <?php } ?>
+                        >
+                            <?php echo esc_html($primary_button['title']); ?>
+                        </a>
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>

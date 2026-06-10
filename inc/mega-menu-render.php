@@ -3,7 +3,7 @@
 if (! function_exists('matrix_get_nav_mega_menu_shell_classes')) {
     function matrix_get_nav_mega_menu_shell_classes(): string
     {
-        return 'pointer-events-auto fixed left-0 top-[var(--site-header-height,120px)] z-[60] flex w-screen min-h-[280px] flex-col bg-transparent';
+        return 'pointer-events-auto fixed left-0 top-[calc(var(--site-header-height,120px)-3rem)] z-[60] flex w-screen min-h-[280px] flex-col bg-transparent pt-12';
     }
 }
 
@@ -131,7 +131,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
             role="region"
             aria-label="<?php echo esc_attr($item->label); ?> submenu"
         >
-            <div class="pointer-events-auto absolute inset-x-0 bottom-full h-[42px] hidden" aria-hidden="true"></div>
+            <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
             <div class="relative w-full">
                 <div
                     id="<?php echo esc_attr($section_id); ?>"
