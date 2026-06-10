@@ -139,10 +139,12 @@ $wrapper_classes = trim(implode(' ', array_unique(array_merge(
                                         <img
                                             src="<?php echo esc_url($row['icon']['url']); ?>"
                                             alt="<?php echo esc_attr($row['icon']['alt']); ?>"
-                                            class="h-6 w-6 object-contain"
+                                            class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?>"
                                         />
                                     <?php } elseif (($row['icon_key'] ?? '') !== '' && function_exists('matrix_get_content_accordion_icon_svg')) { ?>
-                                        <?php echo matrix_get_content_accordion_icon_svg($row['icon_key']); ?>
+                                        <span class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?> flex items-center justify-center [&_svg]:h-full [&_svg]:w-full">
+                                            <?php echo matrix_get_content_accordion_icon_svg($row['icon_key']); ?>
+                                        </span>
                                     <?php } ?>
                                 </div>
 

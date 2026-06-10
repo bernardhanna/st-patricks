@@ -50,10 +50,10 @@ $grid_classes = $variant === 'search'
     <?php if ($data_block !== '') { ?>
         data-matrix-block="<?php echo esc_attr($data_block); ?>"
     <?php } ?>
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="<?php echo esc_attr($wrapper_classes); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr($wrapper_classes); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
             style="color: <?php echo esc_attr($heading_color); ?>;"

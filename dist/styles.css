@@ -2451,6 +2451,13 @@ input:where([type='file']):focus {
 .gap-y-8 {
   row-gap: 2rem;
 }
+.gap-x-8 {
+  -moz-column-gap: 2rem;
+       column-gap: 2rem;
+}
+.gap-y-12 {
+  row-gap: 3rem;
+}
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
@@ -7118,6 +7125,9 @@ input:where([type='file']):focus {
 .pt-\[9rem\] {
   padding-top: 9rem;
 }
+.pb-16 {
+  padding-bottom: 4rem;
+}
 .text-left {
   text-align: left;
 }
@@ -8943,6 +8953,11 @@ input:where([type='file']):focus {
 .group:hover .group-hover\:scale-105 {
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.group:hover .group-hover\:scale-\[1\.02\] {
+  --tw-scale-x: 1.02;
+  --tw-scale-y: 1.02;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .group:hover .group-hover\:bg-\[\#041227\] {
@@ -15117,6 +15132,11 @@ input:where([type='file']):focus {
     padding-bottom: 9rem;
   }
 
+  .mob\:px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
   .mob\:pb-\[100rem\] {
     padding-bottom: 100rem;
   }
@@ -17952,6 +17972,10 @@ input:where([type='file']):focus {
 
   .mob\:leading-\[24px\] {
     line-height: 24px;
+  }
+
+  .mob\:leading-\[32px\] {
+    line-height: 32px;
   }
 
   .mob\:tracking-\[-0\.12px\] {
@@ -27083,6 +27107,10 @@ input:where([type='file']):focus {
     height: 42px;
   }
 
+  .lg\:h-6 {
+    height: 1.5rem;
+  }
+
   .lg\:max-h-96 {
     max-height: 24rem;
   }
@@ -27157,6 +27185,10 @@ input:where([type='file']):focus {
 
   .lg\:w-auto {
     width: auto;
+  }
+
+  .lg\:w-6 {
+    width: 1.5rem;
   }
 
   .lg\:min-w-\[180px\] {
@@ -27302,6 +27334,10 @@ input:where([type='file']):focus {
 
   .lg\:gap-y-8 {
     row-gap: 2rem;
+  }
+
+  .lg\:gap-y-16 {
+    row-gap: 4rem;
   }
 
   .lg\:border-l-2 {
@@ -28797,6 +28833,11 @@ input:where([type='file']):focus {
   .lg\:py-0 {
     padding-top: 0px;
     padding-bottom: 0px;
+  }
+
+  .lg\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 
   .lg\:pb-0 {
@@ -30445,6 +30486,14 @@ input:where([type='file']):focus {
 
   .lg\:pt-\[9rem\] {
     padding-top: 9rem;
+  }
+
+  .lg\:pb-\[120px\] {
+    padding-bottom: 120px;
+  }
+
+  .lg\:pb-6 {
+    padding-bottom: 1.5rem;
   }
 
   .lg\:text-right {
@@ -44650,6 +44699,12 @@ input:where([type='file']):focus {
 }
 .\[\&_strong\]\:font-semibold strong {
   font-weight: 600;
+}
+.\[\&_svg\]\:h-full svg {
+  height: 100%;
+}
+.\[\&_svg\]\:w-full svg {
+  width: 100%;
 }
 
 html {

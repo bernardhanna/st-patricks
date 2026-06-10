@@ -40,19 +40,20 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
 
     if ($layout_style === 'directions_page') {
         return [
-            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-5 py-12 xl:px-0 xl:py-[100px]',
+            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-4 py-12 mob:px-5 xl:px-0 xl:py-[100px]',
             'section_background' => '#FFFFFF',
             'panel_background' => 'linear-gradient(-28.52deg, #F3EADE 3.24%, #F1F3DE 90.88%)',
             'open_panel_background' => 'linear-gradient(-75.64deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
             'icon_tile_background_color' => '#B3DBAE',
             'item_classes' => 'overflow-hidden rounded-[4px]',
-            'button_classes' => 'flex w-full items-center justify-between gap-4 px-8 py-6 text-left',
+            'button_classes' => 'flex w-full items-center justify-between gap-3 px-6 py-4 text-left lg:gap-4 lg:px-8 lg:py-6',
             'title_classes' => 'font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]',
-            'panel_body_classes' => 'px-8 pb-6',
-            'rows_wrapper_classes' => 'flex flex-col pr-8',
-            'row_classes' => 'flex items-center gap-6 border-t border-[#F1F8F9] py-4',
-            'icon_tile_classes' => 'flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px] p-3',
-            'content_classes' => 'wp_editor min-w-0 flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold',
+            'panel_body_classes' => 'px-6 pb-3 lg:px-8 lg:pb-6',
+            'rows_wrapper_classes' => 'flex flex-col lg:pr-8',
+            'row_classes' => 'flex flex-col items-start gap-3 border-t border-[#F1F8F9] py-3 lg:flex-row lg:items-center lg:gap-6 lg:py-4',
+            'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[4px] p-3 lg:h-12 lg:w-12',
+            'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
+            'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold',
         ];
     }
 
@@ -67,9 +68,10 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
         'title_classes' => 'font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px] text-[#1E244B] lg:text-[24px] lg:leading-[28px] lg:tracking-[-0.18px]',
         'panel_body_classes' => 'px-5 pb-5 lg:px-8 lg:pb-8',
         'rows_wrapper_classes' => 'flex flex-col gap-4 border-t border-[rgba(30,36,75,0.12)] pt-5 lg:gap-5 lg:pt-6',
-        'row_classes' => 'flex items-start gap-3 lg:gap-4',
-        'icon_tile_classes' => 'flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] lg:h-12 lg:w-12',
-        'content_classes' => 'wp_editor min-w-0 flex-1 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[15px] [&_p]:leading-[24px] [&_p]:text-[#08284B] [&_strong]:font-semibold [&_a]:underline lg:[&_p]:text-[16px] lg:[&_p]:leading-[28px]',
+        'row_classes' => 'flex flex-col items-start gap-3 lg:flex-row lg:items-start lg:gap-4',
+        'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[8px] p-3 lg:h-12 lg:w-12',
+        'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
+        'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_a]:underline',
     ];
 }
 

@@ -167,3 +167,12 @@ test('content accordion falls back to the first item when none are flagged open'
 
     expect($result['initial_open_index'])->toBe(0);
 });
+
+test('directions page accordion layout stacks icon above text on mobile', function () {
+    $config = matrix_get_content_accordion_layout_config('directions_page');
+
+    expect($config['row_classes'])->toContain('flex-col')
+        ->and($config['row_classes'])->toContain('lg:flex-row')
+        ->and($config['icon_image_classes'])->toContain('h-12 w-12')
+        ->and($config['content_classes'])->toContain('[&_p]:text-[16px]');
+});

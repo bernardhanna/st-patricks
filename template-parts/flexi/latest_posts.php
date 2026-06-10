@@ -54,16 +54,30 @@ if (have_rows('padding_settings')) {
 
 $query_args = matrix_build_latest_posts_query_args($selected_categories, 6);
 $latest_posts_query = new WP_Query($query_args);
+$latest_post_cards = [];
+
+if ($latest_posts_query->have_posts()) {
+    while ($latest_posts_query->have_posts()) {
+        $latest_posts_query->the_post();
+        $card = matrix_normalize_latest_posts_card(get_the_ID());
+
+        if (is_array($card)) {
+            $latest_post_cards[] = $card;
+        }
+    }
+
+    wp_reset_postdata();
+}
 ?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
-        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div class="max-w-[680px]">
                 <<?php echo esc_attr($heading_tag); ?>
                     class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
@@ -72,60 +86,56 @@ $latest_posts_query = new WP_Query($query_args);
                     <?php echo esc_html($heading); ?>
                 </<?php echo esc_attr($heading_tag); ?>>
 
-                <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"></div>
+                <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
             </div>
 
             <?php if (is_array($header_button_link) && ! empty($header_button_link['url'])) { ?>
                 <a
                     href="<?php echo esc_url($header_button_link['url']); ?>"
                     target="<?php echo esc_attr($header_button_link['target'] ?: '_self'); ?>"
-                    class="inline-flex min-h-[52px] items-center justify-center border border-[#024B79] px-6 py-4 text-[16px] font-semibold leading-none text-[#024B79] transition-colors hover:bg-[#024B79] hover:text-white focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]"
+                    class="<?php echo esc_attr(matrix_get_latest_posts_header_button_class_names()); ?>"
+                    <?php if (($header_button_link['target'] ?? '') === '_blank') { ?>
+                        rel="noopener noreferrer"
+                    <?php } ?>
                 >
                     <?php echo esc_html($header_button_link['title'] ?: 'View all posts'); ?>
                 </a>
             <?php } ?>
         </div>
 
-        <?php if ($latest_posts_query->have_posts()) { ?>
-            <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-8">
-                <?php while ($latest_posts_query->have_posts()) { ?>
-                    <?php
-                    $latest_posts_query->the_post();
-                    $post_id = get_the_ID();
-                    $title = get_the_title($post_id);
-                    $permalink = get_permalink($post_id);
-                    $thumbnail_id = get_post_thumbnail_id($post_id);
-                    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'large') : '';
-                    $thumbnail_alt = $thumbnail_id ? (string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) : '';
-                    ?>
-                    <article class="flex h-full flex-col overflow-hidden rounded-[8px] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
-                        <?php if ($thumbnail_url !== '') { ?>
-                            <a href="<?php echo esc_url($permalink); ?>" class="block overflow-hidden">
+        <?php if ($latest_post_cards !== []) { ?>
+            <div class="grid grid-cols-2 gap-x-8 gap-y-12 mt-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-y-16">
+                <?php foreach ($latest_post_cards as $card) { ?>
+                    <a
+                        href="<?php echo esc_url($card['permalink']); ?>"
+                        class="group flex h-full flex-col gap-4 rounded-lg  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                    >
+                        <?php if ($card['thumbnail_url'] !== '') { ?>
+                            <div class="h-[129px] w-full overflow-hidden rounded-[4px]">
                                 <img
-                                    src="<?php echo esc_url($thumbnail_url); ?>"
-                                    alt="<?php echo esc_attr($thumbnail_alt !== '' ? $thumbnail_alt : $title); ?>"
-                                    class="h-[240px] w-full object-cover"
+                                    src="<?php echo esc_url($card['thumbnail_url']); ?>"
+                                    alt="<?php echo esc_attr($card['thumbnail_alt']); ?>"
+                                    class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
                                 />
-                            </a>
+                            </div>
+                        <?php } else { ?>
+                            <div class="flex h-[129px] w-full items-center justify-center rounded-[4px] bg-[#E7EEF0] px-4 text-center font-primary text-[14px] font-medium leading-[20px] text-[#08284B]">
+                                <?php echo esc_html($card['title']); ?>
+                            </div>
                         <?php } ?>
 
-                        <div class="flex flex-1 flex-col p-5 lg:p-6">
-                            <h3 class="font-primary text-[24px] font-semibold leading-[30px] tracking-[-0.18px]">
-                                <a
-                                    href="<?php echo esc_url($permalink); ?>"
-                                    class="transition-colors hover:text-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]"
-                                    style="color: <?php echo esc_attr($card_title_color); ?>;"
-                                >
-                                    <?php echo esc_html($title); ?>
-                                </a>
-                            </h3>
-                        </div>
-                    </article>
+                        <h3
+                            class="font-primary text-[18px] font-semibold leading-[28px] tracking-[-0.12px] transition-colors group-hover:text-[#024B79] mob:text-[20px] mob:leading-[32px]"
+                            style="color: <?php echo esc_attr($card_title_color); ?>;"
+                        >
+                            <?php echo esc_html($card['title']); ?>
+                            <span class="whitespace-nowrap" aria-hidden="true"> →</span>
+                        </h3>
+                    </a>
                 <?php } ?>
             </div>
-            <?php wp_reset_postdata(); ?>
         <?php } else { ?>
-            <p class="mt-8 font-primary text-[16px] leading-[28px] text-[#08284B] lg:mt-12">
+            <p class="mt-12 font-primary text-[16px] leading-[28px] text-[#08284B] lg:mt-16">
                 <?php echo esc_html($empty_state_message); ?>
             </p>
         <?php } ?>

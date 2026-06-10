@@ -21,3 +21,16 @@ test('latest posts query args fall back to six latest posts when no categories a
     expect($args['posts_per_page'])->toBe(6)
         ->and(array_key_exists('category__in', $args))->toBeFalse();
 });
+
+test('latest posts header button uses compact ghost styling from figma', function () {
+    $classes = matrix_get_latest_posts_header_button_class_names();
+
+    expect($classes)->toContain('h-[36px]')
+        ->and($classes)->toContain('text-[14px]')
+        ->and($classes)->toContain('text-[#08284B]')
+        ->and($classes)->toContain('bg-transparent');
+});
+
+test('latest posts card normalization returns null for invalid post id', function () {
+    expect(matrix_normalize_latest_posts_card(0))->toBeNull();
+});
