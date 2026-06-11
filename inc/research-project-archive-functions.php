@@ -435,6 +435,76 @@ function matrix_prepare_research_project_archive($args = [])
         'colors' => is_array($args['colors'] ?? null) ? $args['colors'] : [],
         'section_classes' => trim((string) ($args['section_classes'] ?? 'w-full')),
         'section_style' => trim((string) ($args['section_style'] ?? '')),
-        'wrapper_classes' => trim((string) ($args['wrapper_classes'] ?? 'flex w-full max-w-[1018px] flex-col items-center mx-auto pt-5 pb-5 max-xl:px-5')),
+        'wrapper_classes' => trim((string) ($args['wrapper_classes'] ?? 'flex w-full max-w-[1018px] flex-col items-center mx-auto py-12 lg:py-[100px] max-xl:px-5')),
+        'show_heading' => array_key_exists('show_heading', $args) ? (bool) $args['show_heading'] : true,
+    ];
+}
+
+function matrix_get_research_project_archive_hero_settings($overrides = [])
+{
+    $overrides = is_array($overrides) ? $overrides : [];
+    $settings = function_exists('get_field') ? (get_field('research_projects_settings', 'option') ?: []) : [];
+
+    $hero_tag = (string) ($overrides['hero_heading_tag'] ?? $settings['hero_heading_tag'] ?? 'h1');
+    $hero_text = trim((string) ($overrides['hero_heading_text'] ?? $settings['hero_heading_text'] ?? 'Research Projects'));
+    $sub_text = trim((string) ($overrides['hero_subheading_text'] ?? $settings['hero_subheading_text'] ?? 'Explore current and past research projects from St Patrick\'s Mental Health Services.'));
+    $filter_label = trim((string) ($overrides['filter_section_title'] ?? $settings['filter_section_title'] ?? 'Filter by:'));
+
+    if (! in_array($hero_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'], true)) {
+        $hero_tag = 'h1';
+    }
+
+    $hero_bg = ! empty($settings['hero_background_image']) && is_array($settings['hero_background_image'])
+        ? $settings['hero_background_image']
+        : null;
+
+    if ($hero_bg === null && function_exists('get_field')) {
+        $blog_settings = get_field('blog_settings', 'option') ?: [];
+        $blog_bg = ! empty($blog_settings['hero_background_image']) && is_array($blog_settings['hero_background_image'])
+            ? $blog_settings['hero_background_image']
+            : null;
+
+        if ($blog_bg !== null) {
+            $hero_bg = $blog_bg;
+        }
+    }
+
+    $hero_image_id = (int) ($hero_bg['ID'] ?? $hero_bg['id'] ?? 0);
+
+    return [
+        'hero_heading_tag' => $hero_tag,
+        'hero_heading_text' => $hero_text,
+        'hero_subheading_text' => $sub_text,
+        'filter_section_title' => $filter_label,
+        'hero_image_id' => $hero_image_id,
+        'hero_image_alt' => (string) ($hero_bg['alt'] ?? ''),
+        'hero_image_title' => (string) ($hero_bg['title'] ?? ''),
+    ];
+}
+
+function matrix_get_research_project_archive_chip_button_class_names()
+{
+    return function_exists('matrix_get_blog_filter_archive_chip_button_class_names')
+        ? matrix_get_blog_filter_archive_chip_button_class_names()
+        : 'btn inline-flex h-[36px] w-fit whitespace-nowrap items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors';
+}
+
+function matrix_get_research_project_category_badge_colors($category_name, $category_slug = '')
+{
+    $slug = $category_slug !== ''
+        ? matrix_research_project_archive_sanitize_slug($category_slug)
+        : matrix_research_project_archive_sanitize_slug($category_name);
+
+    $background = '#80CCD9';
+
+    if ($slug === 'past') {
+        $background = '#C3DBAE';
+    } elseif ($slug === 'current') {
+        $background = '#80CCD9';
+    }
+
+    return [
+        'background' => $background,
+        'text' => '#08284B',
     ];
 }

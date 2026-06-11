@@ -121,18 +121,10 @@ if ($hero_image_alt === '') {
     $hero_image_alt = $hero_image_title !== '' ? $hero_image_title : $heading;
 }
 
-$gradient_solid = $background_color;
-$gradient_soft = 'rgba(198, 236, 244, 0.9)';
-$gradient_clear = 'rgba(198, 236, 244, 0)';
-
-if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
-    $hex = $matches[1];
-    $red = hexdec(substr($hex, 0, 2));
-    $green = hexdec(substr($hex, 2, 2));
-    $blue = hexdec(substr($hex, 4, 2));
-    $gradient_soft = "rgba({$red}, {$green}, {$blue}, 0.9)";
-    $gradient_clear = "rgba({$red}, {$green}, {$blue}, 0)";
-}
+$gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);
+$gradient_solid = $gradient_vars['gradient_solid'];
+$gradient_soft = $gradient_vars['gradient_soft'];
+$gradient_clear = $gradient_vars['gradient_clear'];
 ?>
 
 <section
@@ -143,36 +135,13 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
     aria-labelledby="<?php echo esc_attr($hero_heading_id); ?>"
 >
         <?php if ($show_breadcrumbs && (!empty($breadcrumb_items) || $breadcrumb_current_label !== '')) { ?>
-            <div class="flex items-center px-4 py-3 w-full lg:h-[42px] lg:px-0 lg:py-0" style="background-color: <?php echo esc_attr($breadcrumb_background_color); ?>;">
-            <nav
-                class="w-full mx-auto max-w-[1203px] lg:px-5"
-                aria-label="Breadcrumb"
-            >
-                <ol class="flex flex-wrap gap-3 items-center" role="list">
-                    <?php foreach ($breadcrumb_items as $breadcrumb_item) { ?>
-                        <li class="flex gap-3 items-center">
-                            <a
-                                href="<?php echo esc_url($breadcrumb_item['url']); ?>"
-                                target="<?php echo esc_attr($breadcrumb_item['target'] !== '' ? $breadcrumb_item['target'] : '_self'); ?>"
-                                class="inline-flex w-fit whitespace-nowrap font-primary text-[14px] not-italic font-semibold leading-[20px] text-[#08284B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]"
-                                aria-label="<?php echo esc_attr($breadcrumb_item['title']); ?>"
-                            >
-                                <?php echo esc_html($breadcrumb_item['title']); ?>
-                            </a>
-                            <svg class="shrink-0" width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M4 1L8 6L4 11" stroke="#08284B" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </li>
-                    <?php } ?>
-
-                    <?php if ($breadcrumb_current_label !== '') { ?>
-                        <li class="font-primary text-[14px] not-italic font-normal leading-[20px] text-[#08284B]" aria-current="page">
-                            <?php echo esc_html($breadcrumb_current_label); ?>
-                        </li>
-                    <?php } ?>
-                </ol>
-            </nav>
-            </div>
+            <?php
+            get_template_part('template-parts/partials/hero-breadcrumbs-nav', null, [
+                'items' => $breadcrumb_items,
+                'current_label' => $breadcrumb_current_label,
+                'background_color' => $breadcrumb_background_color,
+            ]);
+            ?>
         <?php } ?>
     <div class="flex flex-col items-center w-full mx-auto max-w-[1280px]  <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
 
@@ -253,8 +222,8 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                 </div>
             </div>
         <?php } else { ?>
-            <div class="flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-center">
-                <div class="relative order-1 h-[240px] w-full overflow-hidden lg:order-2 lg:h-[320px] lg:border-l-2" style="border-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names()); ?>">
+                <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names()); ?>" style="border-color: <?php echo esc_attr($background_color); ?>;">
                     <?php
                     if ($hero_image) {
                         echo wp_get_attachment_image($hero_image, 'full', false, [
@@ -265,28 +234,21 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                         ]);
                     }
                     ?>
-                    <div
-                        class="absolute inset-0 pointer-events-none lg:hidden"
-                        style="background: linear-gradient(to bottom, <?php echo esc_attr($gradient_clear); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 55%, <?php echo esc_attr($gradient_solid); ?> 100%);"
-                        aria-hidden="true"
-                    ></div>
-                    <div
-                        class="absolute inset-0 pointer-events-none max-lg:hidden"
-                        style="background: linear-gradient(90deg, <?php echo esc_attr($gradient_solid); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 14.69%, <?php echo esc_attr($gradient_clear); ?> 45.97%);"
-                        aria-hidden="true"
-                    ></div>
-                    <div
-                        class="hidden absolute inset-y-0 right-0 w-1/3 pointer-events-none xl:block"
-                        style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);"
-                        aria-hidden="true"
-                    ></div>
+                    <?php
+                    get_template_part('template-parts/partials/hero-image-split-image-gradients', null, [
+                        'gradient_solid' => $gradient_solid,
+                        'gradient_soft' => $gradient_soft,
+                        'gradient_clear' => $gradient_clear,
+                        'background_color' => $background_color,
+                    ]);
+                    ?>
                 </div>
 
                 <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_column_class_names()); ?>">
                     <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()); ?>">
                         <<?php echo esc_attr($heading_tag); ?>
                             id="<?php echo esc_attr($hero_heading_id); ?>"
-                            class="max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
+                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names()); ?>"
                             style="color: <?php echo esc_attr($heading_color); ?>;"
                         >
                             <?php echo esc_html($heading); ?>

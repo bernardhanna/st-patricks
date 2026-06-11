@@ -15,7 +15,7 @@ $intro = matrix_get_blog_post_intro();
     <div class="mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 lg:px-0 lg:py-[100px]">
         <a
             href="<?php echo esc_url($blog_url); ?>"
-            class="btn inline-flex items-center gap-2 font-primary text-[20px] font-semibold leading-[32px] tracking-[-0.12px] text-[#1E244B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+            class="inline-flex w-fit self-start items-center gap-2 font-primary text-[20px] font-semibold leading-[32px] tracking-[-0.12px] text-[#1E244B] transition-colors hover:text-[#024B79] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
         >
             <span aria-hidden="true">&larr;</span>
             <span><?php echo esc_html($back_label); ?></span>

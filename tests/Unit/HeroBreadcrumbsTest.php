@@ -59,7 +59,18 @@ test('hero image split layout helpers add spacing before embedded and primary bu
         ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names())->toContain('[&_p:has(.btn)]:mt-5')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names())->toContain('lg:[&_p:has(.btn)]:mt-6')
         ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('bg-[#024B79]')
-        ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('text-white');
+        ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('text-white')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names())->toContain('lg:grid-cols-[minmax(0,1fr)_581px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('order-1')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names())->toContain('text-[28px]');
+});
+
+test('hero image split gradient vars derive rgba stops from hex background', function () {
+    $gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars('#C6ECF4');
+
+    expect($gradient_vars['gradient_solid'])->toBe('#C6ECF4')
+        ->and($gradient_vars['gradient_soft'])->toBe('rgba(198, 236, 244, 0.9)')
+        ->and($gradient_vars['gradient_clear'])->toBe('rgba(198, 236, 244, 0)');
 });
 
 test('auto breadcrumb mode falls back to auto breadcrumb data', function () {

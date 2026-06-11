@@ -134,6 +134,43 @@ function matrix_get_hero_external_link_icon_svg()
   return '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0"><path d="M6.5 2.5H12.5V8.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 2.5L3.5 11.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
+function matrix_get_hero_with_breadcrumbs_gradient_vars($background_color)
+{
+  $gradient_solid = (string) $background_color;
+  $gradient_soft = 'rgba(198, 236, 244, 0.9)';
+  $gradient_clear = 'rgba(198, 236, 244, 0)';
+
+  if (preg_match('/^#([A-Fa-f0-9]{6})$/', $gradient_solid, $matches)) {
+    $hex = $matches[1];
+    $red = hexdec(substr($hex, 0, 2));
+    $green = hexdec(substr($hex, 2, 2));
+    $blue = hexdec(substr($hex, 4, 2));
+    $gradient_soft = "rgba({$red}, {$green}, {$blue}, 0.9)";
+    $gradient_clear = "rgba({$red}, {$green}, {$blue}, 0)";
+  }
+
+  return [
+    'gradient_solid' => $gradient_solid,
+    'gradient_soft' => $gradient_soft,
+    'gradient_clear' => $gradient_clear,
+  ];
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names()
+{
+  return 'flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-center';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names()
+{
+  return 'relative order-1 h-[240px] w-full overflow-hidden lg:order-2 lg:h-[320px] lg:border-l-2';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_heading_class_names()
+{
+  return 'max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]';
+}
+
 function matrix_get_hero_with_breadcrumbs_image_split_content_class_names()
 {
   return implode(' ', [

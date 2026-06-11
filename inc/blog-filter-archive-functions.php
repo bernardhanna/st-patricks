@@ -123,3 +123,28 @@ function matrix_build_blog_filter_archive_page_url($base_url, $state, $page)
 
     return matrix_blog_filter_archive_add_query_args($params, $base_url);
 }
+
+function matrix_get_blog_filter_archive_chip_button_class_names()
+{
+    return 'btn inline-flex h-[36px] w-fit whitespace-nowrap items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors';
+}
+
+function matrix_get_blog_post_category_badge_colors($category_name, $category_slug = '')
+{
+    $slug = $category_slug !== ''
+        ? matrix_blog_filter_archive_sanitize_slug($category_slug)
+        : matrix_blog_filter_archive_sanitize_slug($category_name);
+
+    $background = '#80CCD9';
+
+    if ($slug === 'events') {
+        $background = '#C3DBAE';
+    } elseif ($slug === 'news') {
+        $background = '#F4978E';
+    }
+
+    return [
+        'background' => $background,
+        'text' => '#08284B',
+    ];
+}

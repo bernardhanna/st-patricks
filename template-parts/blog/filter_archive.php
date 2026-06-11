@@ -34,7 +34,11 @@ if (! in_array($heading_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'], 
     $heading_tag = 'h2';
 }
 
-if ($heading === '') {
+$show_heading = array_key_exists('show_heading', $blog_filter_archive)
+    ? (bool) $blog_filter_archive['show_heading']
+    : true;
+
+if ($heading === '' && $show_heading) {
     $heading = $default_heading;
 }
 
@@ -70,6 +74,7 @@ $colors = array_merge([
     'filter_label' => '#08284B',
     'chip_text' => '#08284B',
     'chip_border' => '#08284B',
+    'inactive_chip_background' => '#FFFFFF',
     'active_chip_background' => '#80CCD9',
     'active_chip_text' => '#08284B',
     'search_input_text' => '#08284B',
@@ -117,19 +122,21 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
             }"
             class="w-full"
         >
-            <<?php echo esc_attr($heading_tag); ?>
-                class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
-                style="color: <?php echo esc_attr($colors['card_title']); ?>;"
-            >
-                <?php echo esc_html($heading); ?>
-            </<?php echo esc_attr($heading_tag); ?>>
+            <?php if ($show_heading && $heading !== '') { ?>
+                <<?php echo esc_attr($heading_tag); ?>
+                    class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
+                    style="color: <?php echo esc_attr($colors['card_title']); ?>;"
+                >
+                    <?php echo esc_html($heading); ?>
+                </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+                <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+            <?php } ?>
 
-            <div class="mt-8 <?php echo esc_attr($controls_classes); ?>">
+            <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?><?php echo esc_attr($controls_classes); ?>">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
                     <p
-                        class="font-primary text-[16px] font-semibold leading-[24px]"
+                        class="font-primary text-[16px] font-medium leading-[28px]"
                         style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
                     >
                         <?php echo esc_html($filter_label); ?>
@@ -147,9 +154,9 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             ?>
                             <button
                                 type="button"
-                                class="btn inline-flex w-fit whitespace-nowrap items-center justify-center rounded-full border px-5 py-3 text-[14px] font-semibold leading-none transition-colors"
+                                class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
                                 :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
-                                :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: transparent; color: <?php echo esc_js($colors['chip_text']); ?>;'"
+                                :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
                                 @click="submitCategory('<?php echo esc_js($chip_slug); ?>')"
                             >
                                 <?php echo esc_html($chip_label); ?>
@@ -162,13 +169,13 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     x-ref="form"
                     method="get"
                     action="<?php echo esc_url($base_url); ?>"
-                    class="flex w-full max-w-[420px] flex-col gap-3 sm:flex-row"
+                    class="flex w-full max-w-[384px] items-center gap-2"
                     @submit="$refs.pageInput.value = 1"
                 >
                     <input type="hidden" name="blog_category" x-ref="categoryInput" :value="category" />
                     <input type="hidden" name="blog_page" x-ref="pageInput" value="<?php echo esc_attr((string) $current_page); ?>" />
 
-                    <div class="flex-1">
+                    <div class="min-w-0 flex-1">
                         <label for="<?php echo esc_attr($search_input_id); ?>" class="sr-only">
                             <?php echo esc_html($search_placeholder); ?>
                         </label>
@@ -178,16 +185,20 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             name="blog_search"
                             value="<?php echo esc_attr((string) $state['search']); ?>"
                             placeholder="<?php echo esc_attr($search_placeholder); ?>"
-                            class="w-full rounded-[6px] border px-4 py-4 font-primary text-[16px] leading-[24px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
+                            class="min-h-[40px] w-full rounded-[6px] border border-[#E2E8F0] px-3 py-2 font-primary text-[16px] leading-[24px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
                             style="color: <?php echo esc_attr($colors['search_input_text']); ?>; border-color: <?php echo esc_attr($colors['search_input_border']); ?>;"
                         />
                     </div>
 
                     <button
                         type="submit"
-                        class="btn inline-flex min-h-[56px] w-full items-center justify-center rounded-[6px] px-6 py-4 text-[16px] font-semibold leading-none sm:w-auto"
+                        class="btn inline-flex h-[36px] shrink-0 items-center justify-center gap-2 rounded-[6px] px-3 text-[14px] font-medium leading-[24px]"
                         style="background-color: <?php echo esc_attr($colors['search_button_background']); ?>; color: <?php echo esc_attr($colors['search_button_text']); ?>;"
                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+                            <path d="M6.99935 12.6667C9.94487 12.6667 12.3327 10.2789 12.3327 7.33333C12.3327 4.38781 9.94487 2 6.99935 2C4.05383 2 1.66602 4.38781 1.66602 7.33333C1.66602 10.2789 4.05383 12.6667 6.99935 12.6667Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13.6656 14L10.7656 11.1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         <?php echo esc_html($search_button_label); ?>
                     </button>
                 </form>
@@ -249,10 +260,16 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
 
                             <div class="flex flex-col flex-1 p-5 lg:p-6">
                                 <?php if ($primary_category_name !== '') { ?>
+                                    <?php
+                                    $category_badge_colors = matrix_get_blog_post_category_badge_colors(
+                                        $primary_category_name,
+                                        $primary_category ? $primary_category->slug : ''
+                                    );
+                                    ?>
                                     <div class="mb-4">
                                         <span
-                                            class="inline-flex w-fit rounded-full border px-3 py-1 font-primary text-[12px] font-semibold uppercase tracking-[0.06em]"
-                                            style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['card_meta']); ?>;"
+                                            class="inline-flex h-[30px] w-fit items-center justify-center rounded-full px-4 font-primary text-[14px] font-medium leading-[24px]"
+                                            style="background-color: <?php echo esc_attr($category_badge_colors['background']); ?>; color: <?php echo esc_attr($category_badge_colors['text']); ?>;"
                                         >
                                             <?php echo esc_html($primary_category_name); ?>
                                         </span>

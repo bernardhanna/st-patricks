@@ -102,3 +102,21 @@ test('research project main archive uses path-based category urls without defaul
             'paged' => 1,
         ]))->toBe([]);
 });
+
+test('research project archive hero settings provide defaults', function () {
+    $settings = matrix_get_research_project_archive_hero_settings();
+
+    expect($settings['hero_heading_text'])->toBe('Research Projects')
+        ->and($settings['hero_heading_tag'])->toBe('h1')
+        ->and($settings['filter_section_title'])->toBe('Filter by:');
+});
+
+test('research project category badge colors distinguish current and past', function () {
+    expect(matrix_get_research_project_category_badge_colors('Current', 'current'))->toBe([
+        'background' => '#80CCD9',
+        'text' => '#08284B',
+    ])->and(matrix_get_research_project_category_badge_colors('Past', 'past'))->toBe([
+        'background' => '#C3DBAE',
+        'text' => '#08284B',
+    ]);
+});

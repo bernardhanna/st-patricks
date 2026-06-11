@@ -75,3 +75,14 @@ test('blog filter archive preserves filters in pagination urls', function () {
         ->and($url)->toContain('blog_search=service+user')
         ->and($url)->toContain('blog_page=4');
 });
+
+test('blog post category badge colors match figma news and events tokens', function () {
+    expect(matrix_get_blog_post_category_badge_colors('News', 'news'))->toBe([
+        'background' => '#F4978E',
+        'text' => '#08284B',
+    ])->and(matrix_get_blog_post_category_badge_colors('Events', 'events'))->toBe([
+        'background' => '#C3DBAE',
+        'text' => '#08284B',
+    ])->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('h-[36px]')
+        ->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('px-6');
+});

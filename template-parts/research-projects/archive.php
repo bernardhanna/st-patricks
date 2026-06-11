@@ -1,112 +1,51 @@
 <?php
-$settings = get_field('blog_settings', 'option') ?: [];
 
-$hero_tag = (string) ($settings['hero_heading_tag'] ?? 'h1');
-$hero_text = (string) ($settings['hero_heading_text'] ?? "What's new at Tyrecare");
-$sub_text = (string) ($settings['hero_subheading_text'] ?? 'Latest and greatest.');
-$hero_bg = ! empty($settings['hero_background_image']) && is_array($settings['hero_background_image'])
-    ? $settings['hero_background_image']
-    : null;
-$hero_image_id = (int) ($hero_bg['ID'] ?? $hero_bg['id'] ?? 0);
+$prepare_args = is_array($args['prepare_args'] ?? null) ? $args['prepare_args'] : [];
+$hero_overrides = is_array($args['hero_overrides'] ?? null) ? $args['hero_overrides'] : [];
+$breadcrumb_items = is_array($args['breadcrumb_items'] ?? null) ? $args['breadcrumb_items'] : null;
+$current_breadcrumb_label = trim((string) ($args['current_breadcrumb_label'] ?? ''));
+$show_filter_heading = array_key_exists('show_filter_heading', $args)
+    ? (bool) $args['show_filter_heading']
+    : false;
+
+$hero_settings = matrix_get_research_project_archive_hero_settings($hero_overrides);
+$hero_tag = (string) ($hero_settings['hero_heading_tag'] ?? 'h1');
+$hero_text = (string) ($hero_settings['hero_heading_text'] ?? 'Research Projects');
+$sub_text = (string) ($hero_settings['hero_subheading_text'] ?? '');
+$filter_title = (string) ($hero_settings['filter_section_title'] ?? 'Filter by:');
+$hero_image_id = (int) ($hero_settings['hero_image_id'] ?? 0);
 $section_background_color = '#C6ECF4';
 $breadcrumb_background_color = '#F1F8F9';
 $heading_color = '#08284B';
 $text_color = '#08284B';
-$defaults = matrix_get_blog_filter_archive_defaults();
-$filter_title = (string) ($settings['filter_section_title'] ?? ($defaults['filter_label'] ?? 'Filter by:'));
-$request_state = $_GET;
 
-if (! in_array($hero_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'], true)) {
-    $hero_tag = 'h1';
-}
+$research_project_archive = matrix_prepare_research_project_archive(array_merge($prepare_args, [
+    'filter_label' => $filter_title,
+    'show_heading' => $show_filter_heading,
+    'wrapper_classes' => 'flex w-full max-w-[1018px] flex-col items-center mx-auto py-12 lg:py-[100px] max-xl:px-5',
+]));
 
-if (empty($request_state['blog_page'])) {
-    $request_state['blog_page'] = max(1, (int) get_query_var('paged'));
-}
+if ($breadcrumb_items === null) {
+    $archive_base_url = matrix_resolve_research_project_archive_base_url($prepare_args['base_url'] ?? '');
+    $breadcrumb_items = [
+        [
+            'title' => 'Home',
+            'url' => home_url('/'),
+            'target' => '',
+        ],
+    ];
 
-if (empty($request_state['blog_category']) && is_category()) {
-    $queried_term = get_queried_object();
-
-    if ($queried_term instanceof WP_Term && $queried_term->taxonomy === 'category') {
-        $request_state['blog_category'] = $queried_term->slug;
+    if ($current_breadcrumb_label !== '' && $current_breadcrumb_label !== $hero_text) {
+        $breadcrumb_items[] = [
+            'title' => $hero_text,
+            'url' => $archive_base_url,
+            'target' => '',
+        ];
     }
 }
 
-if (! array_key_exists('blog_search', $request_state) && is_search()) {
-    $request_state['blog_search'] = get_search_query(false);
-}
-
-$terms = get_terms([
-    'taxonomy' => 'category',
-    'hide_empty' => true,
-]);
-
-if (is_wp_error($terms) || ! is_array($terms)) {
-    $terms = [];
-}
-
-$chips = [
-    [
-        'slug' => 'all',
-        'label' => 'All',
-    ],
-];
-$slug_to_id_map = [];
-
-foreach ($terms as $term) {
-    if (! $term instanceof WP_Term) {
-        continue;
-    }
-
-    $chips[] = [
-        'slug' => $term->slug,
-        'label' => $term->name,
-        'term_id' => (int) $term->term_id,
-    ];
-    $slug_to_id_map[$term->slug] = (int) $term->term_id;
-}
-
-$state = matrix_resolve_blog_filter_archive_state(
-    $request_state,
-    array_keys($slug_to_id_map),
-    (int) ($defaults['posts_per_page'] ?? 12)
-);
-$query = new WP_Query(matrix_build_blog_filter_archive_query_args($state, $slug_to_id_map));
-$posts_page_id = (int) get_option('page_for_posts');
-$base_url = $posts_page_id > 0 ? get_permalink($posts_page_id) : '';
-
-if (! is_string($base_url) || $base_url === '') {
-    $resources_page = get_page_by_path('resources');
-    $base_url = $resources_page instanceof WP_Post ? get_permalink($resources_page) : home_url('/resources/');
-}
-
-$posts_page_title = $posts_page_id > 0 ? get_the_title($posts_page_id) : '';
-if (! is_string($posts_page_title) || $posts_page_title === '') {
-    $posts_page_title = 'Resources';
-}
-
-$breadcrumb_items = [
-    [
-        'title' => 'Home',
-        'url' => home_url('/'),
-        'target' => '',
-    ],
-];
-$current_breadcrumb_label = $posts_page_title;
-
-if (is_category() || is_search()) {
-    $breadcrumb_items[] = [
-        'title' => $posts_page_title,
-        'url' => $base_url,
-        'target' => '',
-    ];
-}
-
-if (is_category()) {
-    $current_breadcrumb_label = single_cat_title('', false);
-} elseif (is_search()) {
-    $search_term = trim((string) get_search_query(false));
-    $current_breadcrumb_label = $search_term !== '' ? sprintf('Search: %s', $search_term) : 'Search Results';
+if ($current_breadcrumb_label === '') {
+    $current_breadcrumb_label = $hero_text;
 }
 
 $breadcrumb_data = function_exists('matrix_resolve_hero_breadcrumbs')
@@ -118,15 +57,12 @@ $breadcrumb_data = function_exists('matrix_resolve_hero_breadcrumbs')
 $breadcrumb_items = is_array($breadcrumb_data['items'] ?? null) ? $breadcrumb_data['items'] : [];
 $current_breadcrumb_label = (string) ($breadcrumb_data['current_label'] ?? '');
 
-$hero_image_alt = '';
-$hero_image_title = '';
+$hero_image_alt = (string) ($hero_settings['hero_image_alt'] ?? '');
+$hero_image_title = (string) ($hero_settings['hero_image_title'] ?? '');
 
 if ($hero_image_id > 0) {
-    $hero_image_alt = (string) get_post_meta($hero_image_id, '_wp_attachment_image_alt', true);
-    $hero_image_title = (string) get_the_title($hero_image_id);
-} elseif ($hero_bg) {
-    $hero_image_alt = (string) ($hero_bg['alt'] ?? '');
-    $hero_image_title = (string) ($hero_bg['title'] ?? '');
+    $hero_image_alt = (string) get_post_meta($hero_image_id, '_wp_attachment_image_alt', true) ?: $hero_image_alt;
+    $hero_image_title = (string) get_the_title($hero_image_id) ?: $hero_image_title;
 }
 
 if ($hero_image_alt === '') {
@@ -137,20 +73,6 @@ $gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($section_backgro
 $gradient_solid = $gradient_vars['gradient_solid'];
 $gradient_soft = $gradient_vars['gradient_soft'];
 $gradient_clear = $gradient_vars['gradient_clear'];
-
-$blog_filter_archive = [
-    'show_heading' => false,
-    'filter_label' => $filter_title,
-    'wrapper_classes' => 'flex w-full max-w-[1018px] flex-col items-center mx-auto py-12 lg:py-[100px] max-xl:px-5',
-    'base_url' => $base_url,
-    'state' => $state,
-    'chips' => $chips,
-    'query' => $query,
-    'pagination' => [
-        'current' => max(1, (int) $query->get('paged')),
-        'total' => max(1, (int) $query->max_num_pages),
-    ],
-];
 ?>
 <div class="mt-[0rem] w-full">
     <section
@@ -215,8 +137,8 @@ $blog_filter_archive = [
     </section>
 
     <?php
-    get_template_part('template-parts/blog/filter_archive', null, [
-        'blog_filter_archive' => $blog_filter_archive,
+    get_template_part('template-parts/research-projects/filter_archive', null, [
+        'research_project_archive' => $research_project_archive,
     ]);
     ?>
 </div>
