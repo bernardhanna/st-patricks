@@ -11,8 +11,6 @@ $type_options = is_array($search_results['type_options'] ?? null) ? $search_resu
 $sort_options = is_array($search_results['sort_options'] ?? null) ? $search_results['sort_options'] : [];
 $pagination = is_array($search_results['pagination'] ?? null) ? $search_results['pagination'] : [];
 $has_results = ! empty($search_results['has_results']) || $items !== [];
-$heading_prefix = trim((string) ($heading['prefix'] ?? 'Search Results'));
-$heading_query = trim((string) ($heading['query'] ?? ''));
 $search_input_id = 'search-results-query-' . (function_exists('wp_rand') ? wp_rand(1000, 999999) : mt_rand(1000, 999999));
 $current_page = max(1, (int) ($pagination['current'] ?? 1));
 $total_pages = max(1, (int) ($pagination['total'] ?? 1));
@@ -21,54 +19,40 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
 <main class="w-full">
     <section class="w-full bg-[#C6ECF4]">
         <div class="mx-auto w-full max-w-[1280px]">
-            <nav class="w-full bg-[#F1F8F9] px-5 py-3 lg:px-[70px]" aria-label="Breadcrumb">
-                <ol class="flex flex-wrap items-center gap-3">
-                    <li class="flex items-center gap-3">
-                        <a href="<?php echo esc_url(home_url('/')); ?>" class="font-primary text-[14px] font-semibold leading-[20px] text-[#08284B]">
-                            Home
-                        </a>
-                        <span aria-hidden="true" class="text-[#08284B]">/</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="font-primary text-[14px] font-semibold leading-[20px] text-[#08284B]">Search</span>
-                        <span aria-hidden="true" class="text-[#08284B]">/</span>
-                    </li>
-                    <li class="font-primary text-[14px] font-normal leading-[20px] text-[#08284B]" aria-current="page">
-                        Results
-                    </li>
-                </ol>
-            </nav>
+            <?php
+            get_template_part('template-parts/partials/hero-breadcrumbs-nav', null, [
+                'items' => [
+                    [
+                        'title' => 'Home',
+                        'url' => home_url('/'),
+                        'target' => '',
+                    ],
+                    [
+                        'title' => 'Search',
+                        'url' => $base_url,
+                        'target' => '',
+                    ],
+                ],
+                'current_label' => 'Results',
+                'background_color' => '#F1F8F9',
+            ]);
+            ?>
         </div>
     </section>
 
     <section class="bg-white">
         <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-5 py-12 xl:px-0 xl:py-[100px]">
             <form action="<?php echo esc_url($base_url); ?>" method="get" class="flex flex-col gap-8">
-                <div class="flex w-full max-w-[384px] flex-col gap-3 sm:flex-row">
-                    <label for="<?php echo esc_attr($search_input_id); ?>" class="sr-only">Search site content</label>
-                    <input
-                        id="<?php echo esc_attr($search_input_id); ?>"
-                        type="search"
-                        name="s"
-                        value="<?php echo esc_attr((string) ($state['query'] ?? '')); ?>"
-                        placeholder="Search site content"
-                        class="min-h-[40px] flex-1 rounded-[6px] border border-[#E2E8F0] px-3 py-2 font-primary text-[16px] leading-[24px] text-[#08284B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
-                    />
-                    <input type="hidden" name="paged" value="1" />
-                    <button
-                        type="submit"
-                        class="btn inline-flex h-[40px] items-center justify-center rounded-[6px] bg-[#08284B] px-4 text-[14px] font-medium leading-[24px] text-white"
-                    >
-                        Search
-                    </button>
-                </div>
-
-                <h1 class="font-primary text-[36px] font-bold leading-[40px] tracking-[-0.432px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]">
-                    <?php echo esc_html($heading_prefix); ?>
-                    <?php if ($heading_query !== '') { ?>
-                        <span class="font-normal italic"><?php echo esc_html(" '" . $heading_query . "'"); ?></span>
-                    <?php } ?>
-                </h1>
+                <?php
+                get_template_part('template-parts/partials/search-results-intro', null, [
+                    'search_base_url' => $base_url,
+                    'search_query' => (string) ($state['query'] ?? ''),
+                    'heading' => $heading,
+                    'search_input_id' => $search_input_id,
+                    'render_form_tag' => false,
+                ]);
+                ?>
+                <input type="hidden" name="paged" value="1" />
 
                 <?php if ($has_results) { ?>
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

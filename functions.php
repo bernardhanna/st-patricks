@@ -64,6 +64,7 @@ require_once get_template_directory() . '/inc/research-project-archive-functions
 require_once get_template_directory() . '/inc/research-project-single-functions.php';
 require_once get_template_directory() . '/inc/referral-action-cards-functions.php';
 require_once get_template_directory() . '/inc/search-results-functions.php';
+require_once get_template_directory() . '/inc/not-found-functions.php';
 require_once get_template_directory() . '/inc/sitemap-functions.php';
 require_once get_template_directory() . '/inc/team-grid-functions.php';
 require_once get_template_directory() . '/inc/team-members-functions.php';

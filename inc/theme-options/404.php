@@ -12,8 +12,9 @@ $not_found
   ])
   ->addTab('Content', ['placement' => 'top'])
   ->addText('hero_title', [
-    'label' => 'Hero Title',
-    'default_value' => 'Sorry, We Can’t Find That Page.',
+    'label' => 'Heading Override',
+    'instructions' => 'Leave empty to use the default search-style heading: We couldn\'t find a match for \'this page\'.',
+    'default_value' => '',
   ])
   ->addWysiwyg('hero_text', [
     'label' => 'Hero Text',

@@ -31,6 +31,45 @@ if (! function_exists('esc_html')) {
     }
 }
 
+if (! function_exists('get_template_part')) {
+    function get_template_part($slug, $name = null, $args = [])
+    {
+        $templates = [];
+
+        if ($name !== null) {
+            $templates[] = "{$slug}-{$name}.php";
+        }
+
+        $templates[] = "{$slug}.php";
+        $theme_root = dirname(__DIR__, 2);
+
+        foreach ($templates as $template) {
+            $path = $theme_root . '/' . $template;
+
+            if (! is_readable($path)) {
+                continue;
+            }
+
+            include $path;
+
+            return;
+        }
+    }
+}
+
+if (! function_exists('selected')) {
+    function selected($selected, $current = true, $echo = true)
+    {
+        $result = ((string) $selected === (string) $current) ? ' selected="selected"' : '';
+
+        if ($echo) {
+            echo $result;
+        }
+
+        return $result;
+    }
+}
+
 function matrix_render_search_results_template_for_test($search_results)
 {
     $args = ['search_results' => $search_results];
