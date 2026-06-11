@@ -324,7 +324,7 @@ $query = $search_results['query'] ?? null;
 $has_results = ! empty($search_results['has_results']);
 ?>
 
-<main class="mt-[7rem] w-full">
+<main class="mt-[0rem] w-full">
     <section class="w-full bg-[#C6ECF4]">
         <div class="mx-auto flex w-full max-w-[1280px] flex-col">
             <nav class="w-full bg-[#F1F8F9] px-5 py-3 lg:px-[70px]" aria-label="Breadcrumb">

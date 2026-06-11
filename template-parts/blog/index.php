@@ -159,7 +159,7 @@ $blog_filter_archive = [
     ],
 ];
 ?>
-<div class="mt-[7rem] w-full">
+<div class="mt-[0rem] w-full">
     <section
         class="flex overflow-hidden relative"
         style="background-color: <?php echo esc_attr($section_background_color); ?>;"

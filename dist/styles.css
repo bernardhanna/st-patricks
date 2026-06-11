@@ -1484,6 +1484,9 @@ input:where([type='file']):focus {
 .mt-auto {
   margin-top: auto;
 }
+.mt-\[0rem\] {
+  margin-top: 0rem;
+}
 .box-border {
   box-sizing: border-box;
 }

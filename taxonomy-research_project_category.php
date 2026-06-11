@@ -15,7 +15,7 @@ $research_project_archive = matrix_prepare_research_project_archive([
     'lock_category' => true,
 ]);
 ?>
-<main class="mt-[7rem] w-full">
+<main class="mt-[0rem] w-full">
     <?php
     get_template_part('template-parts/research-projects/filter_archive', null, [
         'research_project_archive' => $research_project_archive,
