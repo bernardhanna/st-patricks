@@ -41,6 +41,14 @@ $video_showcase
             ],
             'default_value' => 'feature_single',
         ])
+        ->addSelect('video_surface_size', [
+            'label' => 'Video Surface Size',
+            'choices' => [
+                'default' => 'Default',
+                'small' => 'Small (48.625rem x 24.5rem max)',
+            ],
+            'default_value' => 'default',
+        ])
         ->addRepeater('slides', [
             'label' => 'Slides',
             'button_label' => 'Add Slide',

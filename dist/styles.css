@@ -1684,6 +1684,9 @@ input:where([type='file']):focus {
 .h-screen {
   height: 100vh;
 }
+.h-\[24\.5rem\] {
+  height: 24.5rem;
+}
 .max-h-80 {
   max-height: 20rem;
 }
@@ -1696,6 +1699,9 @@ input:where([type='file']):focus {
 .max-h-fit {
   max-height: -moz-fit-content;
   max-height: fit-content;
+}
+.max-h-\[24\.5rem\] {
+  max-height: 24.5rem;
 }
 .min-h-14 {
   min-height: 3.5rem;
@@ -2171,6 +2177,9 @@ input:where([type='file']):focus {
 }
 .max-w-xxs {
   max-width: 320px;
+}
+.max-w-\[48\.625rem\] {
+  max-width: 48.625rem;
 }
 .flex-1 {
   flex: 1 1 0%;

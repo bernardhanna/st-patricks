@@ -176,38 +176,54 @@ foreach ($faq_titles as $index => $faq_title) {
 
 $faq_ids = array_values(array_filter(array_map('intval', $faq_ids)));
 
+$contact_item_defaults = [
+    'starts_open' => 0,
+    'bullet_items' => [
+        ['label' => 'General enquiries'],
+        ['label' => 'Referrals and admissions'],
+        ['label' => 'Out-of-hours support'],
+    ],
+    'phone' => '01 012 123 123',
+    'email' => 'hello@StPatrick.ie',
+];
+
 $contact_column_1 = [
-    [
+    array_merge($contact_item_defaults, [
         'title' => 'General Enquires',
-        'starts_open' => 1,
         'bullet_items' => [
             ['label' => 'Inpatient care'],
             ['label' => 'Admissions'],
             ['label' => 'Pharmacy'],
         ],
-        'phone' => '01 012 123 123',
-        'email' => 'hello@StPatrick.ie',
-    ],
-    ['title' => 'Clinical Governance Office (Complaints and feedback)', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'St Patrick\'s University Hospital (Dublin 8)', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Dean Clinic Cork', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Dean Clinic St Patrick\'s', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
+    ]),
+    array_merge($contact_item_defaults, [
+        'title' => 'Clinical Governance Office (Complaints and feedback)',
+        'bullet_items' => [
+            ['label' => 'Complaints process'],
+            ['label' => 'Patient feedback'],
+            ['label' => 'Service improvement'],
+        ],
+        'email' => 'feedback@StPatrick.ie',
+    ]),
+    array_merge($contact_item_defaults, ['title' => 'St Patrick\'s University Hospital (Dublin 8)']),
+    array_merge($contact_item_defaults, ['title' => 'Dean Clinic Cork']),
+    array_merge($contact_item_defaults, ['title' => 'Dean Clinic St Patrick\'s']),
 ];
 
 $contact_column_2 = [
-    ['title' => 'Referral and Assessment Service', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Human Resources', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'St Patrick\'s, Lucan', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Dean Clinic Galway', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Adolescent Dean Clinic', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
+    array_merge($contact_item_defaults, ['title' => 'Referral and Assessment Service']),
+    array_merge($contact_item_defaults, ['title' => 'Human Resources']),
+    array_merge($contact_item_defaults, ['title' => 'St Patrick\'s, Lucan']),
+    array_merge($contact_item_defaults, ['title' => 'Dean Clinic Galway']),
+    array_merge($contact_item_defaults, ['title' => 'Adolescent Dean Clinic']),
 ];
 
 $contact_column_3 = [
-    ['title' => 'Pharmacy', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Placeholder', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Willow Grove Adolescent Unit', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Dean Clinic Lucan', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
-    ['title' => 'Dean Clinic St Patrick\'s', 'starts_open' => 0, 'bullet_items' => [], 'phone' => '', 'email' => ''],
+    array_merge($contact_item_defaults, ['title' => 'Pharmacy']),
+    array_merge($contact_item_defaults, ['title' => 'Placeholder']),
+    array_merge($contact_item_defaults, ['title' => 'Willow Grove Adolescent Unit']),
+    array_merge($contact_item_defaults, ['title' => 'Dean Clinic Lucan']),
+    array_merge($contact_item_defaults, ['title' => 'Dean Clinic St Patrick\'s']),
 ];
 
 $section_padding = [

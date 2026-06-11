@@ -19,6 +19,27 @@ function matrix_get_key_contact_info_background_style($background_value, $fallba
     return "background-color: {$resolved_value};";
 }
 
+function matrix_apply_key_contact_info_item_placeholders(array $item)
+{
+    $has_panel_content = ($item['bullet_items'] ?? []) !== []
+        || ($item['phone'] ?? '') !== ''
+        || ($item['email'] ?? '') !== '';
+
+    if ($has_panel_content) {
+        return $item;
+    }
+
+    return array_merge($item, [
+        'bullet_items' => [
+            'General enquiries',
+            'Referrals and admissions',
+            'Out-of-hours support',
+        ],
+        'phone' => '01 012 123 123',
+        'email' => 'hello@StPatrick.ie',
+    ]);
+}
+
 function matrix_normalize_key_contact_info_columns($columns)
 {
     $normalized_columns = [];
@@ -66,21 +87,17 @@ function matrix_normalize_key_contact_info_columns($columns)
                 $initial_open_index = count($items);
             }
 
-            $items[] = [
+            $items[] = matrix_apply_key_contact_info_item_placeholders([
                 'title' => $title,
                 'starts_open' => $starts_open,
                 'bullet_items' => $bullet_items,
                 'phone' => $phone,
                 'email' => $email,
-            ];
+            ]);
         }
 
         if ($items === []) {
             continue;
-        }
-
-        if ($initial_open_index < 0) {
-            $initial_open_index = 0;
         }
 
         $normalized_columns[] = [

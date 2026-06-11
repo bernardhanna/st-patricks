@@ -105,3 +105,63 @@ function matrix_get_video_showcase_section_background_style($background_value, $
 
     return "background-color: {$resolved_value};";
 }
+
+function matrix_resolve_video_showcase_layout_style($layout_style)
+{
+    $layout_style = (string) $layout_style;
+
+    if (in_array($layout_style, ['feature_single', 'feature_slider', 'compact_slider'], true)) {
+        return $layout_style;
+    }
+
+    return 'feature_single';
+}
+
+function matrix_resolve_video_showcase_surface_size($video_surface_size)
+{
+    return (string) $video_surface_size === 'small' ? 'small' : 'default';
+}
+
+function matrix_get_video_showcase_surface_width_class($layout_style, $video_surface_size = 'default')
+{
+    if (matrix_resolve_video_showcase_surface_size($video_surface_size) === 'small') {
+        return 'max-w-[48.625rem]';
+    }
+
+    return matrix_resolve_video_showcase_layout_style($layout_style) === 'compact_slider'
+        ? 'max-w-[780px]'
+        : 'max-w-[1018px]';
+}
+
+function matrix_get_video_showcase_surface_height_class($layout_style, $video_surface_size = 'default')
+{
+    if (matrix_resolve_video_showcase_surface_size($video_surface_size) === 'small') {
+        return 'h-[24.5rem] max-h-[24.5rem]';
+    }
+
+    return matrix_resolve_video_showcase_layout_style($layout_style) === 'compact_slider'
+        ? 'h-[220px] xs:h-[260px] md:h-[320px] lg:h-[380px]'
+        : 'h-[240px] xs:h-[300px] md:h-[400px] lg:h-[540px]';
+}
+
+function matrix_get_video_showcase_caption_width_class($layout_style, $video_surface_size = 'default')
+{
+    if (matrix_resolve_video_showcase_surface_size($video_surface_size) === 'small') {
+        return 'max-w-[48.625rem]';
+    }
+
+    return matrix_resolve_video_showcase_layout_style($layout_style) === 'compact_slider'
+        ? 'max-w-[780px]'
+        : 'max-w-[880px]';
+}
+
+function matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size = 'default')
+{
+    if (matrix_resolve_video_showcase_surface_size($video_surface_size) === 'small') {
+        return 'max-w-[48.625rem]';
+    }
+
+    return matrix_resolve_video_showcase_layout_style($layout_style) === 'compact_slider'
+        ? 'max-w-[780px]'
+        : 'max-w-[680px]';
+}

@@ -58,3 +58,11 @@ test('video showcase slides are normalized for embed and local sources', functio
         ->and($slides[1]['video_type'])->toBe('local')
         ->and($slides[1]['video_url'])->toBe('https://example.com/video.mp4');
 });
+
+test('video showcase surface size helpers resolve small dimensions', function () {
+    expect(matrix_get_video_showcase_surface_width_class('feature_single', 'small'))->toBe('max-w-[48.625rem]')
+        ->and(matrix_get_video_showcase_surface_height_class('feature_single', 'small'))->toBe('h-[24.5rem] max-h-[24.5rem]')
+        ->and(matrix_get_video_showcase_caption_width_class('feature_slider', 'small'))->toBe('max-w-[48.625rem]')
+        ->and(matrix_get_video_showcase_heading_wrap_width_class('compact_slider', 'small'))->toBe('max-w-[48.625rem]')
+        ->and(matrix_get_video_showcase_surface_width_class('feature_single', 'default'))->toBe('max-w-[1018px]');
+});

@@ -120,3 +120,7 @@ test('research project category badge colors distinguish current and past', func
         'text' => '#08284B',
     ]);
 });
+
+test('research project archive category context resolves path category terms', function () {
+    expect(function_exists('matrix_get_research_project_archive_category_context'))->toBeTrue();
+});

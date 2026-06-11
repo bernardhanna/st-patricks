@@ -48,14 +48,14 @@ if (have_rows('padding_settings')) {
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'max-xl:px-5', 'lg:grid', 'lg:grid-cols-3', 'lg:items-start'], $padding_classes)))); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'max-xl:px-5', 'lg:grid', 'lg:grid-cols-3', 'lg:items-start'], $padding_classes)))); ?>">
         <?php foreach ($columns as $column_index => $column) { ?>
             <div
                 x-data="{ activeIndex: <?php echo esc_attr((string) $column['initial_open_index']); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-                class="flex w-full flex-col gap-3"
+                class="flex flex-col gap-3 w-full"
             >
                 <?php foreach ($column['items'] as $item_index => $item) { ?>
                     <?php
@@ -104,7 +104,7 @@ if (have_rows('padding_settings')) {
                             >
                                 <div class="flex flex-col gap-2 pb-3">
                                     <?php foreach ($item['bullet_items'] as $bullet_label) { ?>
-                                        <div class="flex items-center gap-3">
+                                        <div class="flex gap-3 items-center">
                                             <span class="flex size-6 shrink-0 items-center justify-center font-primary text-[16px] font-medium leading-[28px] text-[#08284B]" aria-hidden="true">-</span>
                                             <span class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
                                                 <?php echo esc_html($bullet_label); ?>
@@ -113,7 +113,7 @@ if (have_rows('padding_settings')) {
                                     <?php } ?>
 
                                     <?php if ($item['phone'] !== '') { ?>
-                                        <div class="flex items-center gap-3">
+                                        <div class="flex gap-3 items-center">
                                             <span class="flex size-6 shrink-0 items-center justify-center text-[#08284B]" aria-hidden="true">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.85 21 3 13.15 3 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -129,7 +129,7 @@ if (have_rows('padding_settings')) {
                                     <?php } ?>
 
                                     <?php if ($item['email'] !== '') { ?>
-                                        <div class="flex items-center gap-3">
+                                        <div class="flex gap-3 items-center">
                                             <span class="flex size-6 shrink-0 items-center justify-center text-[#08284B]" aria-hidden="true">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>

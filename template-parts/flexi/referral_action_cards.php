@@ -59,9 +59,9 @@ if (have_rows('padding_settings')) {
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden bg-white"
+    class="flex overflow-hidden relative bg-white"
 >
-    <div class="<?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
         <?php foreach ($cards as $card) { ?>
             <?php
             $has_button = matrix_referral_action_card_has_button($card);
@@ -85,7 +85,7 @@ if (have_rows('padding_settings')) {
                 <?php } ?>
 
                 <?php if ($has_button) { ?>
-                    <div class="mt-auto pt-6">
+                    <div class="pt-6 mt-auto">
                         <a
                             href="<?php echo esc_url($card['button']['url']); ?>"
                             target="<?php echo esc_attr($button_target); ?>"

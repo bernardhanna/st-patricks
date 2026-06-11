@@ -440,6 +440,30 @@ function matrix_prepare_research_project_archive($args = [])
     ];
 }
 
+function matrix_get_research_project_archive_category_context($category_slug = '')
+{
+    $category_slug = matrix_research_project_archive_sanitize_slug($category_slug);
+
+    if (($category_slug === '' || $category_slug === 'all') && function_exists('get_query_var')) {
+        $category_slug = matrix_research_project_archive_sanitize_slug((string) get_query_var('research_archive_category'));
+    }
+
+    if ($category_slug === '' || $category_slug === 'all') {
+        return null;
+    }
+
+    $term = get_term_by('slug', $category_slug, 'research_project_category');
+    if (! $term instanceof WP_Term) {
+        return null;
+    }
+
+    return [
+        'slug' => $term->slug,
+        'name' => $term->name,
+        'hero_heading_text' => $term->name . ' Research Projects',
+    ];
+}
+
 function matrix_get_research_project_archive_hero_settings($overrides = [])
 {
     $overrides = is_array($overrides) ? $overrides : [];

@@ -4,7 +4,8 @@ $section_id = 'video-showcase-' . (function_exists('wp_generate_uuid4') ? wp_gen
 $heading = trim((string) get_sub_field('heading'));
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro = get_sub_field('intro');
-$layout_style = (string) get_sub_field('layout_style');
+$layout_style = matrix_resolve_video_showcase_layout_style(get_sub_field('layout_style'));
+$video_surface_size = matrix_resolve_video_showcase_surface_size(get_sub_field('video_surface_size'));
 $section_background = (string) get_sub_field('section_background');
 
 if ($heading === '') {
@@ -13,10 +14,6 @@ if ($heading === '') {
 
 if (! in_array($heading_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'], true)) {
     $heading_tag = 'h2';
-}
-
-if (! in_array($layout_style, ['feature_single', 'feature_slider', 'compact_slider'], true)) {
-    $layout_style = 'feature_single';
 }
 
 $slide_rows = [];
@@ -61,26 +58,24 @@ if (have_rows('padding_settings')) {
 $slide_count = count($slides);
 $show_slider_controls = $layout_style !== 'feature_single' && $slide_count > 1;
 $initial_slide = $slides[0];
-$surface_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]' : 'max-w-[1018px]';
-$surface_height_class = $layout_style === 'compact_slider'
-    ? 'h-[220px] xs:h-[260px] md:h-[320px] lg:h-[380px]'
-    : 'h-[240px] xs:h-[300px] md:h-[400px] lg:h-[540px]';
-$caption_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]' : 'max-w-[880px]';
+$surface_width_class = matrix_get_video_showcase_surface_width_class($layout_style, $video_surface_size);
+$surface_height_class = matrix_get_video_showcase_surface_height_class($layout_style, $video_surface_size);
+$caption_width_class = matrix_get_video_showcase_caption_width_class($layout_style, $video_surface_size);
 $section_background_style = matrix_get_video_showcase_section_background_style(
     $section_background,
     'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)'
 );
 $show_intro = is_string($intro) && trim(strip_tags($intro)) !== '';
-$heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]' : 'max-w-[680px]';
+$heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size);
 ?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
         <div class="<?php echo esc_attr($heading_wrap_width_class); ?>">
             <<?php echo esc_attr($heading_tag); ?>
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
@@ -97,7 +92,7 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
             <?php } ?>
         </div>
 
-        <div class="mt-8 flex flex-col items-center lg:mt-12" data-video-showcase-root>
+        <div class="flex flex-col items-center mt-8 lg:mt-12" data-video-showcase-root>
             <div class="relative w-full <?php echo esc_attr($surface_width_class); ?> <?php echo esc_attr($surface_height_class); ?> overflow-hidden rounded-[8px] bg-[#D9D9D9] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
                 <a
                     href="#"
@@ -109,12 +104,12 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
                 <img
                     src="<?php echo esc_url($initial_slide['poster_image']['url']); ?>"
                     alt="<?php echo esc_attr($initial_slide['poster_image']['alt']); ?>"
-                    class="absolute inset-0 h-full w-full object-cover"
+                    class="object-cover absolute inset-0 w-full h-full"
                     data-active-image
                 />
 
                 <video
-                    class="hidden absolute inset-0 z-10 h-full w-full object-cover"
+                    class="hidden object-cover absolute inset-0 z-10 w-full h-full"
                     playsinline
                     controls
                     preload="metadata"
@@ -123,7 +118,7 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
                 ></video>
 
                 <iframe
-                    class="hidden absolute inset-0 z-10 h-full w-full"
+                    class="hidden absolute inset-0 z-10 w-full h-full"
                     title="Featured video"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowfullscreen
@@ -132,7 +127,7 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
 
                 <button
                     type="button"
-                    class="absolute inset-0 z-30 flex items-center justify-center bg-transparent"
+                    class="flex absolute inset-0 z-30 justify-center items-center bg-transparent"
                     aria-label="Play video"
                     data-play-video
                 >
@@ -165,7 +160,7 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
             </div>
 
             <?php if ($show_slider_controls) { ?>
-                <div class="mt-8 flex items-center gap-6">
+                <div class="flex gap-6 items-center mt-8">
                     <button
                         type="button"
                         class="group flex h-8 w-8 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-colors hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0]"
@@ -177,11 +172,11 @@ $heading_wrap_width_class = $layout_style === 'compact_slider' ? 'max-w-[780px]'
                         </svg>
                     </button>
 
-                    <div class="flex items-center gap-4" data-dots>
+                    <div class="flex gap-4 items-center" data-dots>
                         <?php for ($i = 0; $i < $slide_count; $i++) { ?>
                             <button
                                 type="button"
-                                class="h-3 w-3 rounded-full transition-colors duration-200"
+                                class="w-3 h-3 rounded-full transition-colors duration-200"
                                 aria-label="<?php echo esc_attr('Go to video ' . ($i + 1)); ?>"
                                 data-dot="<?php echo esc_attr($i); ?>"
                             ></button>

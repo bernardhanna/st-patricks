@@ -14,14 +14,18 @@ $allowed_category_ids = array_values(array_filter(array_map('intval', (array) ge
 $allowed_researcher_ids = array_values(array_filter(array_map('intval', (array) get_sub_field('allowed_researchers'))));
 $default_category_field = get_sub_field('default_category');
 $default_category = 'all';
+$category_term = null;
 
 if (is_numeric($default_category_field)) {
-    $default_category_term = get_term((int) $default_category_field, 'research_project_category');
-    if ($default_category_term instanceof WP_Term) {
-        $default_category = $default_category_term->slug;
+    $category_term = get_term((int) $default_category_field, 'research_project_category');
+    if ($category_term instanceof WP_Term) {
+        $default_category = $category_term->slug;
     }
 } else {
     $default_category = matrix_research_project_archive_sanitize_slug((string) $default_category_field);
+    if ($default_category !== '' && $default_category !== 'all') {
+        $category_term = get_term_by('slug', $default_category, 'research_project_category');
+    }
 }
 
 $lock_category = (bool) get_sub_field('lock_category');
@@ -49,24 +53,6 @@ if ($posts_per_page < 1) {
     $posts_per_page = (int) $defaults['posts_per_page'];
 }
 
-$wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
-
 $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';
 
@@ -74,44 +60,63 @@ if (! is_string($base_url) || $base_url === '') {
     $base_url = matrix_resolve_research_project_archive_base_url();
 }
 
-$research_project_archive = matrix_prepare_research_project_archive([
-    'section_id' => $section_id,
-    'data_block' => str_replace('_', '-', get_row_layout()) . '-' . get_row_index(),
-    'heading_tag' => $heading_tag,
-    'heading' => $heading,
-    'filter_label' => $filter_label,
-    'researcher_filter_label' => $researcher_filter_label,
-    'search_placeholder' => $search_placeholder,
-    'search_button_label' => $search_button_label,
-    'posts_per_page' => $posts_per_page,
-    'allowed_category_ids' => $allowed_category_ids,
-    'allowed_researcher_ids' => $allowed_researcher_ids,
-    'default_category' => $default_category,
-    'lock_category' => $lock_category,
-    'empty_state_message' => $empty_state_message,
-    'request_state' => $_GET,
-    'base_url' => $base_url,
-    'colors' => [
-        'background' => $background_color,
-        'filter_label' => $filter_label_color,
-        'chip_text' => $chip_text_color,
-        'chip_border' => $chip_border_color,
-        'active_chip_background' => $active_chip_background_color,
-        'active_chip_text' => $active_chip_text_color,
-        'search_input_text' => $search_input_text_color,
-        'search_input_border' => $search_input_border_color,
-        'search_button_background' => $search_button_background_color,
-        'search_button_text' => $search_button_text_color,
-        'card_background' => $card_background_color,
-        'card_title' => $card_title_color,
-        'card_meta' => $card_meta_color,
-        'card_excerpt' => $card_excerpt_color,
-    ],
-    'section_classes' => 'relative flex overflow-hidden',
-    'section_style' => 'background-color: ' . $background_color . ';',
-    'wrapper_classes' => implode(' ', array_unique($wrapper_classes)),
-]);
+$archive_base_url = matrix_resolve_research_project_archive_base_url();
+$breadcrumb_current_label = $category_term instanceof WP_Term ? $category_term->name : $heading;
 
-get_template_part('template-parts/research-projects/filter_archive', null, [
-    'research_project_archive' => $research_project_archive,
+get_template_part('template-parts/research-projects/archive', null, [
+    'prepare_args' => [
+        'section_id' => $section_id,
+        'data_block' => str_replace('_', '-', get_row_layout()) . '-' . get_row_index(),
+        'heading_tag' => $heading_tag,
+        'heading' => $heading,
+        'filter_label' => $filter_label,
+        'researcher_filter_label' => $researcher_filter_label,
+        'search_placeholder' => $search_placeholder,
+        'search_button_label' => $search_button_label,
+        'posts_per_page' => $posts_per_page,
+        'allowed_category_ids' => $allowed_category_ids,
+        'allowed_researcher_ids' => $allowed_researcher_ids,
+        'default_category' => $default_category,
+        'lock_category' => $lock_category,
+        'empty_state_message' => $empty_state_message,
+        'request_state' => $_GET,
+        'base_url' => $base_url,
+        'colors' => [
+            'background' => $background_color,
+            'filter_label' => $filter_label_color,
+            'chip_text' => $chip_text_color,
+            'chip_border' => $chip_border_color,
+            'active_chip_background' => $active_chip_background_color,
+            'active_chip_text' => $active_chip_text_color,
+            'search_input_text' => $search_input_text_color,
+            'search_input_border' => $search_input_border_color,
+            'search_button_background' => $search_button_background_color,
+            'search_button_text' => $search_button_text_color,
+            'card_background' => $card_background_color,
+            'card_title' => $card_title_color,
+            'card_meta' => $card_meta_color,
+            'card_excerpt' => $card_excerpt_color,
+        ],
+        'section_classes' => 'relative flex overflow-hidden w-full',
+        'section_style' => 'background-color: ' . $background_color . ';',
+    ],
+    'hero_overrides' => [
+        'hero_heading_text' => $heading,
+        'hero_heading_tag' => $heading_tag,
+        'filter_section_title' => $filter_label,
+    ],
+    'breadcrumb_items' => [
+        [
+            'title' => 'Home',
+            'url' => home_url('/'),
+            'target' => '',
+        ],
+        [
+            'title' => 'Research Projects',
+            'url' => $archive_base_url,
+            'target' => '',
+        ],
+    ],
+    'current_breadcrumb_label' => $breadcrumb_current_label,
+    'show_filter_heading' => false,
 ]);
