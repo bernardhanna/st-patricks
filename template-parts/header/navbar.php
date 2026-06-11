@@ -52,7 +52,12 @@ document.addEventListener('alpine:init', () => {
     open(key) {
       clearTimeout(this.closeTimer);
       this.closeTimer = null;
+      matrixSyncSiteHeaderHeight();
       this.activeKey = key;
+    },
+    cancelClose() {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
     },
     scheduleClose(key) {
       clearTimeout(this.closeTimer);
@@ -60,7 +65,7 @@ document.addEventListener('alpine:init', () => {
         if (this.activeKey === key) {
           this.activeKey = null;
         }
-      }, 300);
+      }, 600);
     },
     isWithinNavMegaZone(target) {
       if (!target || typeof target.closest !== 'function') {
@@ -187,7 +192,7 @@ document.addEventListener('alpine:init', () => {
   x-effect="$store.nav.open ? document.body.style.overflow='hidden' : document.body.style.overflow=''"
   class="overflow-visible bg-white"
   role="banner"
-  @mouseenter="if ($store.navMega.closeTimer) { clearTimeout($store.navMega.closeTimer); $store.navMega.closeTimer = null; }"
+  @mouseenter="$store.navMega.cancelClose()"
   @mouseleave="$store.navMega.scheduleCloseFromEvent($event)"
 >
   <?php get_template_part('template-parts/header/topbar'); ?>
@@ -197,9 +202,10 @@ document.addEventListener('alpine:init', () => {
   class="box-border flex overflow-visible relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-md:p-5 max-sm:p-4 max-w-container"
   role="navigation"
   aria-label="Main navigation"
+  @mouseenter="$store.navMega.cancelClose()"
 >
   <!-- Logo -->
-  <div class="flex items-center">
+  <div class="flex relative z-[70] items-center">
     <a href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?> - Go to homepage">
       <?php if ($logo_url) : ?>
         <img
@@ -215,64 +221,66 @@ document.addEventListener('alpine:init', () => {
 
   <!-- Desktop Navigation -->
   <?php if ($primary_navigation->isNotEmpty()) : ?>
-    <ul id="primary-menu" class="hidden gap-4 items-center lg:flex" role="menubar">
-      <?php foreach ($primary_navigation->toArray() as $index => $item) : ?>
+    <?php $primary_nav_items = $primary_navigation->toArray(); ?>
+    <ul
+      id="primary-menu"
+      class="hidden relative z-[80] gap-1 items-center lg:flex"
+      role="menubar"
+      @mouseenter="$store.navMega.cancelClose()"
+    >
+      <?php foreach ($primary_nav_items as $index => $item) : ?>
+        <?php $mega_menu_key = matrix_get_nav_mega_menu_key($index); ?>
         <li
-          class="relative <?php echo esc_attr($item->classes); ?> <?php echo $item->active ? 'current-item' : ''; ?>"
+          class="relative py-2 <?php echo esc_attr($item->classes); ?> <?php echo $item->active ? 'current-item' : ''; ?>"
           role="none"
           <?php if ($item->children) : ?>
             <?php matrix_render_nav_mega_menu_trigger_attrs($index); ?>
           <?php endif; ?>
         >
-          <div class="flex gap-1 items-center">
-            <a
-              href="<?php echo esc_url($item->url); ?>"
-              class="flex gap-1 items-center text-sm font-semibold leading-5 z-50 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer"
-              role="menuitem"
-              aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
-              <?php if ($item->children) : ?>
-                :aria-expanded="$store.navMega.activeKey === '<?php echo esc_attr(matrix_get_nav_mega_menu_key($index)); ?>' ? 'true' : 'false'"
-              <?php else : ?>
-                aria-expanded="false"
-              <?php endif; ?>
-            >
-              <span><?php echo esc_html($item->label); ?></span>
+          <a
+            href="<?php echo esc_url($item->url); ?>"
+            class="flex gap-1 items-center px-2 py-1 text-sm font-semibold leading-5 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer"
+            role="menuitem"
+            aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
+            <?php if ($item->children) : ?>
+              @mouseenter="$store.navMega.open('<?php echo esc_attr($mega_menu_key); ?>')"
+              :aria-expanded="$store.navMega.activeKey === '<?php echo esc_attr($mega_menu_key); ?>' ? 'true' : 'false'"
+            <?php else : ?>
+              aria-expanded="false"
+            <?php endif; ?>
+          >
+            <span><?php echo esc_html($item->label); ?></span>
 
-              <?php if ($item->children) : ?>
-                <!-- Chevron icon (style-only change) -->
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="mt-0.5">
-                  <path d="M2 4L6 8L10 4" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              <?php endif; ?>
-            </a>
-          </div>
-
-          <?php if ($item->children) : ?>
-            <div
-              class="absolute left-1/2 top-full z-[70] h-16 w-[min(100vw,360px)] -translate-x-1/2 pointer-events-auto"
-              aria-hidden="true"
-              @mouseenter="$store.navMega.open('<?php echo esc_attr(matrix_get_nav_mega_menu_key($index)); ?>')"
-            ></div>
-          <?php endif; ?>
-
-          <?php if ($item->children) : ?>
-            <?php
-            $mega_menu_config = matrix_get_nav_mega_menu_config((string) $item->label);
-
-            if ($mega_menu_config !== null) {
-              matrix_render_nav_mega_menu($item, $index, $mega_menu_config);
-            } else {
-              get_template_part('template-parts/header/navbar/dropdown', null, [
-                'item'   => $item,
-                'index'  => $index,
-                'images' => $dropdown_image_map,
-              ]);
-            }
-            ?>
-          <?php endif; ?>
+            <?php if ($item->children) : ?>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="mt-0.5">
+                <path d="M2 4L6 8L10 4" stroke="black" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            <?php endif; ?>
+          </a>
         </li>
       <?php endforeach; ?>
     </ul>
+
+    <div class="hidden lg:contents" aria-hidden="true">
+      <?php foreach ($primary_nav_items as $index => $item) : ?>
+        <?php if (! $item->children) : ?>
+          <?php continue; ?>
+        <?php endif; ?>
+        <?php
+        $mega_menu_config = matrix_get_nav_mega_menu_config((string) $item->label);
+
+        if ($mega_menu_config !== null) {
+            matrix_render_nav_mega_menu($item, $index, $mega_menu_config);
+        } else {
+            get_template_part('template-parts/header/navbar/dropdown', null, [
+                'item'   => $item,
+                'index'  => $index,
+                'images' => $dropdown_image_map,
+            ]);
+        }
+        ?>
+      <?php endforeach; ?>
+    </div>
   <?php endif; ?>
 
   <!-- Right Side: Search + Buttons + Mobile trigger -->

@@ -43,8 +43,7 @@ $section_id = 'about-us-mega-menu-' . $index;
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"
 >
-    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
-    <div class="relative w-full">
+    <div class="relative w-full pointer-events-auto">
         <div
             id="<?php echo esc_attr($section_id); ?>"
             class="relative w-full bg-[#F1F8F9] shadow-lg"
@@ -55,7 +54,7 @@ $section_id = 'about-us-mega-menu-' . $index;
         >
             <?php matrix_render_nav_mega_menu_pointer('left-[245px]'); ?>
             <div
-                class="pointer-events-none absolute -left-[29px] top-[-16px] h-[78px] w-[80px] opacity-20"
+                class="pointer-events-none absolute left-6 top-4 h-[78px] w-[80px] opacity-20"
                 aria-hidden="true"
             >
                 <svg viewBox="0 0 80 78" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

@@ -11,7 +11,10 @@ $layout_style = matrix_resolve_content_layout_style(
     (bool) get_sub_field('reverse_layout')
 );
 $accent_position = matrix_resolve_content_accent_position(get_sub_field('accent_position'));
+$column_layout = matrix_resolve_content_column_layout(get_sub_field('column_layout'));
 $image_height_mode = matrix_resolve_content_image_height_mode(get_sub_field('image_height_mode'));
+$text_width_mode = matrix_resolve_content_text_width_mode(get_sub_field('text_width'));
+$text_max_width_classes = matrix_get_content_text_max_width_class_names($text_width_mode);
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
@@ -50,8 +53,8 @@ if ($image_alt === '') {
 
 $heading_id = $section_id . '-heading';
 $background_style = matrix_get_content_background_style($background_type, $background_color, $background_gradient);
-$image_column_class = $layout_style === 'image_right' ? 'lg:order-2' : 'lg:order-1';
-$content_column_class = $layout_style === 'image_right' ? 'lg:order-1' : 'lg:order-2';
+$image_column_class = matrix_get_content_image_column_class_names($layout_style, $column_layout);
+$content_column_class = matrix_get_content_content_column_class_names($layout_style, $column_layout);
 
 $wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'px-4', 'py-12', 'lg:px-0', 'lg:py-[100px]'];
 if (have_rows('padding_settings')) {
@@ -82,7 +85,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
     aria-labelledby="<?php echo esc_attr($heading_id); ?>"
 >
     <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
-        <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode)); ?>">
+        <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout)); ?>">
             <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
                 <header class="flex flex-col gap-8 w-full">
                     <?php if ($accent_position === 'above_heading') { ?>
@@ -102,13 +105,13 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                 </header>
 
                 <?php if (matrix_content_has_visible_rich_text($intro_text)) { ?>
-                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-bold leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
+                    <div class="wp_editor <?php echo esc_attr($text_max_width_classes); ?> font-primary text-[16px] font-bold leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
                         <?php echo wp_kses_post($intro_text); ?>
                     </div>
                 <?php } ?>
 
                 <?php if (matrix_content_has_visible_rich_text($content)) { ?>
-                    <div class="wp_editor max-w-[720px] font-primary text-[16px] font-medium leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
+                    <div class="wp_editor <?php echo esc_attr($text_max_width_classes); ?> font-primary text-[16px] font-medium leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
                         <?php echo wp_kses_post($content); ?>
                     </div>
                 <?php } ?>
@@ -163,12 +166,12 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
             </article>
 
             <?php if ($image) { ?>
-                <div class="<?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode)); ?>">
-                    <figure class="<?php echo esc_attr(matrix_get_content_image_figure_class_names($image_height_mode)); ?>">
+                <div class="<?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout)); ?>">
+                    <figure class="<?php echo esc_attr(matrix_get_content_image_figure_class_names($image_height_mode, $column_layout)); ?>">
                         <?php
                         echo wp_get_attachment_image($image, 'full', false, [
                             'alt' => esc_attr($image_alt),
-                            'class' => matrix_get_content_image_class_names($image_height_mode),
+                            'class' => matrix_get_content_image_class_names($image_height_mode, $column_layout),
                             'loading' => 'lazy',
                         ]);
                         ?>

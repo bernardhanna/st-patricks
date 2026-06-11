@@ -6,7 +6,20 @@ $section_id = 'research-cards-grid-' . (function_exists('wp_generate_uuid4') ? w
 $heading = trim((string) get_sub_field('heading')) ?: $defaults['heading'];
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro = get_sub_field('intro');
-$cards = matrix_normalize_research_cards_grid_cards(get_sub_field('cards'));
+$cards_source = (string) get_sub_field('cards_source');
+$posts_per_page = (int) get_sub_field('posts_per_page');
+
+if ($posts_per_page < 1) {
+    $posts_per_page = 4;
+}
+
+$cards = matrix_resolve_research_cards_grid_cards([
+    'cards_source' => $cards_source !== '' ? $cards_source : 'manual',
+    'manual_cards' => get_sub_field('cards'),
+    'selected_projects' => get_sub_field('selected_research_projects'),
+    'selected_categories' => get_sub_field('selected_research_categories'),
+    'posts_per_page' => $posts_per_page,
+]);
 $footer_button_link = matrix_normalize_research_cards_grid_link(get_sub_field('footer_button_link'));
 $background_color = (string) get_sub_field('background_color') ?: $defaults['background_color'];
 $heading_color = (string) get_sub_field('heading_color') ?: $defaults['heading_color'];
@@ -52,10 +65,10 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden"
+    class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="<?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
         <div class="w-full">
             <<?php echo esc_attr($heading_tag); ?>
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
@@ -107,7 +120,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                         <?php } ?>
                     >
                         <?php if ($image_id > 0 || $image_url !== '') { ?>
-                            <div class="h-[220px] w-full overflow-hidden bg-[#F8F6F3]">
+                            <div class="h-[10.5rem] rounded-[4px] w-full overflow-hidden bg-[#F8F6F3]">
                                 <?php
                                 if ($image_id > 0) {
                                     echo wp_get_attachment_image($image_id, 'medium_large', false, [
@@ -119,7 +132,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                                     <img
                                         src="<?php echo esc_url($image_url); ?>"
                                         alt="<?php echo esc_attr($image_alt); ?>"
-                                        class="h-full w-full object-cover"
+                                        class="object-cover w-full h-full"
                                     />
                                     <?php
                                 }
@@ -127,8 +140,8 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                             </div>
                         <?php } ?>
 
-                        <div class="flex flex-1 flex-col">
-                            <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-col flex-1">
+                            <div class="flex gap-3 justify-between items-start">
                                 <<?php echo esc_attr($card_title_tag); ?>
                                     class="font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px]"
                                     style="color: <?php echo esc_attr($card_title_color); ?>;"
@@ -138,9 +151,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
 
                                 <?php if ($is_linked) { ?>
                                     <span class="shrink-0" style="color: <?php echo esc_attr($card_title_color); ?>;" aria-hidden="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                            <path d="M5.33301 2.66699L10.6663 8.00033L5.33301 13.3337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
+                                       <span class="ml-1 text-[#1E244B] font-primary text-xl font-semibold leading-8 tracking-[-0.0075rem]" aria-hidden="true">→</span>
                                     </span>
                                 <?php } ?>
                             </div>
@@ -163,7 +174,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                 $button_title = (string) ($footer_button_link['title'] ?? 'Learn more');
                 $button_target = (string) ($footer_button_link['target'] ?? '_self');
                 ?>
-                <div class="mt-10 flex w-full justify-start sm:justify-end">
+                <div class="flex justify-start mt-10 w-full sm:justify-end">
                     <a
                         href="<?php echo esc_url($footer_button_link['url']); ?>"
                         target="<?php echo esc_attr($button_target); ?>"

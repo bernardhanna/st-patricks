@@ -47,6 +47,112 @@ function matrix_get_research_cards_grid_card_title_tag($section_heading_tag)
     }
 }
 
+function matrix_resolve_research_cards_grid_source_mode($source_mode)
+{
+    $source_mode = strtolower(trim((string) $source_mode));
+
+    if (! in_array($source_mode, ['manual', 'category', 'latest', 'selected'], true)) {
+        return 'manual';
+    }
+
+    return $source_mode;
+}
+
+function matrix_build_research_cards_grid_query_args($source_mode, $args = [])
+{
+    $source_mode = matrix_resolve_research_cards_grid_source_mode($source_mode);
+    $posts_per_page = max(1, (int) ($args['posts_per_page'] ?? 4));
+
+    $query_args = [
+        'post_type' => 'research_projects',
+        'post_status' => 'publish',
+        'posts_per_page' => $posts_per_page,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+
+    if ($source_mode === 'category') {
+        $category_ids = array_values(array_filter(array_map('intval', (array) ($args['selected_categories'] ?? []))));
+
+        if ($category_ids !== []) {
+            $query_args['tax_query'] = [[
+                'taxonomy' => 'research_project_category',
+                'field' => 'term_id',
+                'terms' => $category_ids,
+            ]];
+        }
+    }
+
+    return $query_args;
+}
+
+function matrix_normalize_research_cards_grid_card_from_post($post)
+{
+    $post_id = 0;
+
+    if ($post instanceof WP_Post) {
+        $post_id = (int) $post->ID;
+    } elseif (is_numeric($post)) {
+        $post_id = (int) $post;
+    } elseif (is_array($post)) {
+        $post_id = (int) ($post['ID'] ?? $post['id'] ?? 0);
+    }
+
+    if ($post_id < 1) {
+        return null;
+    }
+
+    $title = function_exists('get_the_title') ? trim((string) get_the_title($post_id)) : trim((string) ($post['post_title'] ?? ''));
+
+    if ($title === '') {
+        return null;
+    }
+
+    $summary = function_exists('get_the_excerpt') ? trim((string) get_the_excerpt($post_id)) : trim((string) ($post['post_excerpt'] ?? ''));
+
+    if ($summary === '' && function_exists('get_post_field')) {
+        $content = (string) get_post_field('post_content', $post_id);
+        $summary = function_exists('wp_trim_words')
+            ? wp_trim_words(wp_strip_all_tags($content), 24)
+            : trim($content);
+    }
+
+    $image = null;
+    $image_id = function_exists('get_post_thumbnail_id') ? (int) get_post_thumbnail_id($post_id) : (int) ($post['image_id'] ?? 0);
+
+    if ($image_id > 0) {
+        $image_url = function_exists('wp_get_attachment_image_url')
+            ? (string) wp_get_attachment_image_url($image_id, 'medium_large')
+            : (string) ($post['image_url'] ?? '');
+        $image_alt = function_exists('get_post_meta')
+            ? trim((string) get_post_meta($image_id, '_wp_attachment_image_alt', true))
+            : trim((string) ($post['image_alt'] ?? ''));
+
+        if ($image_alt === '') {
+            $image_alt = $title;
+        }
+
+        $image = [
+            'ID' => $image_id,
+            'url' => $image_url,
+            'alt' => $image_alt,
+        ];
+    }
+
+    $permalink = function_exists('get_permalink') ? (string) get_permalink($post_id) : (string) ($post['permalink'] ?? '');
+
+    return [
+        'title' => $title,
+        'summary' => $summary,
+        'image' => $image,
+        'link' => matrix_normalize_research_cards_grid_link([
+            'url' => $permalink,
+            'title' => $title,
+            'target' => '_self',
+        ]),
+    ];
+}
+
 function matrix_normalize_research_cards_grid_cards($rows)
 {
     $cards = [];
@@ -68,6 +174,37 @@ function matrix_normalize_research_cards_grid_cards($rows)
             'image' => is_array($row['image'] ?? null) ? $row['image'] : null,
             'link' => matrix_normalize_research_cards_grid_link($row['link'] ?? null),
         ];
+    }
+
+    return $cards;
+}
+
+function matrix_resolve_research_cards_grid_cards($args = [])
+{
+    $source_mode = matrix_resolve_research_cards_grid_source_mode($args['cards_source'] ?? 'manual');
+    $posts_per_page = max(1, (int) ($args['posts_per_page'] ?? 4));
+
+    if ($source_mode === 'manual') {
+        return matrix_normalize_research_cards_grid_cards($args['manual_cards'] ?? []);
+    }
+
+    $posts = [];
+
+    if ($source_mode === 'selected') {
+        $selected_projects = is_array($args['selected_projects'] ?? null) ? $args['selected_projects'] : [];
+        $posts = array_slice($selected_projects, 0, $posts_per_page);
+    } elseif (function_exists('get_posts')) {
+        $posts = get_posts(matrix_build_research_cards_grid_query_args($source_mode, $args));
+    }
+
+    $cards = [];
+
+    foreach ($posts as $post) {
+        $card = matrix_normalize_research_cards_grid_card_from_post($post);
+
+        if (is_array($card)) {
+            $cards[] = $card;
+        }
     }
 
     return $cards;

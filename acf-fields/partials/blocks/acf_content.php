@@ -163,6 +163,16 @@ $content_safeguarding
         'label' => 'Layout',
         'placement' => 'top',
     ])
+        ->addSelect('column_layout', [
+            'label' => 'Column Layout',
+            'instructions' => 'Stack content in one column or split text and image into two columns on desktop.',
+            'choices' => [
+                'two_column' => 'Two Columns (Desktop)',
+                'one_column' => 'One Column',
+            ],
+            'default_value' => 'two_column',
+            'ui' => 1,
+        ])
         ->addSelect('layout_style', [
             'label' => 'Layout Style',
             'instructions' => 'Choose whether the image sits on the left or right.',
@@ -172,6 +182,15 @@ $content_safeguarding
             ],
             'default_value' => 'image_left',
             'ui' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'column_layout',
+                        'operator' => '==',
+                        'value' => 'two_column',
+                    ],
+                ],
+            ],
         ])
         ->addSelect('image_height_mode', [
             'label' => 'Image Height',
@@ -181,6 +200,25 @@ $content_safeguarding
                 'fixed_min' => 'Fixed Minimum Height (19.5rem)',
             ],
             'default_value' => 'match_text',
+            'ui' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'column_layout',
+                        'operator' => '==',
+                        'value' => 'two_column',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('text_width', [
+            'label' => 'Text Width',
+            'instructions' => 'Limit intro and body text to 720px or allow full column width.',
+            'choices' => [
+                'constrained' => 'Constrained (720px)',
+                'full' => 'Full Width',
+            ],
+            'default_value' => 'constrained',
             'ui' => 1,
         ])
         ->addTrueFalse('reverse_layout', [

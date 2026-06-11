@@ -26,8 +26,23 @@ function matrix_resolve_content_image_height_mode($value)
     return 'match_text';
 }
 
-function matrix_get_content_grid_class_names($image_height_mode)
+function matrix_resolve_content_column_layout($value)
 {
+    $value = is_string($value) ? trim($value) : '';
+
+    if ($value === 'one_column') {
+        return 'one_column';
+    }
+
+    return 'two_column';
+}
+
+function matrix_get_content_grid_class_names($image_height_mode, $column_layout = 'two_column')
+{
+    if (matrix_resolve_content_column_layout($column_layout) === 'one_column') {
+        return 'grid grid-cols-1 gap-10 items-start w-full';
+    }
+
     $classes = 'grid grid-cols-1 gap-10 items-start w-full lg:grid-cols-2 lg:gap-8';
 
     if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
@@ -37,37 +52,71 @@ function matrix_get_content_grid_class_names($image_height_mode)
     return $classes;
 }
 
-function matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode)
+function matrix_get_content_content_column_class_names($layout_style, $column_layout = 'two_column')
 {
-    $classes = [
-        $image_column_class,
+    if (matrix_resolve_content_column_layout($column_layout) === 'one_column') {
+        return 'order-1';
+    }
+
+    return $layout_style === 'image_right' ? 'lg:order-1 order-1' : 'lg:order-2 order-1';
+}
+
+function matrix_get_content_image_column_class_names($layout_style, $column_layout = 'two_column')
+{
+    if (matrix_resolve_content_column_layout($column_layout) === 'one_column') {
+        return '';
+    }
+
+    return $layout_style === 'image_right' ? 'lg:order-2' : 'lg:order-1';
+}
+
+function matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout = 'two_column')
+{
+    $classes = array_filter([
+        $image_column_class !== '' ? $image_column_class : null,
         'order-2',
         'flex',
         'justify-center',
         'lg:justify-start',
-    ];
+    ]);
 
-    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
-        $classes[] = 'lg:h-full';
-    }
-
-    return implode(' ', array_filter($classes));
-}
-
-function matrix_get_content_image_figure_class_names($image_height_mode)
-{
-    $classes = ['w-full', 'lg:max-w-[502px]'];
-
-    if (matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text') {
+    if (
+        matrix_resolve_content_column_layout($column_layout) === 'two_column'
+        && matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text'
+    ) {
         $classes[] = 'lg:h-full';
     }
 
     return implode(' ', $classes);
 }
 
-function matrix_get_content_image_class_names($image_height_mode)
+function matrix_get_content_image_figure_class_names($image_height_mode, $column_layout = 'two_column')
 {
-    $classes = 'h-[212px] w-full rounded-[8px] object-cover lg:h-auto';
+    $classes = ['w-full'];
+
+    if (matrix_resolve_content_column_layout($column_layout) === 'two_column') {
+        $classes[] = 'lg:max-w-[502px]';
+    }
+
+    if (
+        matrix_resolve_content_column_layout($column_layout) === 'two_column'
+        && matrix_resolve_content_image_height_mode($image_height_mode) === 'match_text'
+    ) {
+        $classes[] = 'lg:h-full';
+    }
+
+    return implode(' ', $classes);
+}
+
+function matrix_get_content_image_class_names($image_height_mode, $column_layout = 'two_column')
+{
+    $classes = 'h-[212px] w-full rounded-[8px] object-cover';
+
+    if (matrix_resolve_content_column_layout($column_layout) === 'one_column') {
+        return $classes;
+    }
+
+    $classes .= ' lg:h-auto';
 
     if (matrix_resolve_content_image_height_mode($image_height_mode) === 'fixed_min') {
         return $classes . ' lg:min-h-[19.5rem]';
@@ -85,6 +134,24 @@ function matrix_resolve_content_accent_position($value)
     }
 
     return 'below_heading';
+}
+
+function matrix_resolve_content_text_width_mode($value)
+{
+    $value = is_string($value) ? trim($value) : '';
+
+    if ($value === 'full') {
+        return 'full';
+    }
+
+    return 'constrained';
+}
+
+function matrix_get_content_text_max_width_class_names($text_width_mode)
+{
+    return matrix_resolve_content_text_width_mode($text_width_mode) === 'full'
+        ? 'max-w-full'
+        : 'max-w-[720px]';
 }
 
 function matrix_resolve_content_button_variant($value, $default = 'filled')

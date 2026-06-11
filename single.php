@@ -4,7 +4,7 @@ get_header();
 
 if (get_post_type() === 'post') {
     ?>
-    <main class="mt-[7rem] w-full overflow-hidden bg-white">
+    <main class="w-full overflow-hidden bg-white">
         <?php while (have_posts()) { ?>
             <?php the_post(); ?>
 

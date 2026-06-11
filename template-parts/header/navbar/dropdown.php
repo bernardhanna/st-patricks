@@ -36,8 +36,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"
 >
-    <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
-    <div class="w-full">
+    <div class="w-full pointer-events-auto">
         <div class="mx-auto w-full max-w-[1440px] px-6">
             <div
                 class="relative overflow-hidden w-full border border-slate-200 bg-slate-100 rounded-lg shadow-lg"

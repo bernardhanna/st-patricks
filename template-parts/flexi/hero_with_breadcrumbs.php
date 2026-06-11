@@ -282,29 +282,31 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $background_color, $matches)) {
                     ></div>
                 </div>
 
-                <div class="order-2 flex w-full flex-col gap-3 px-4 py-4 lg:order-1 lg:gap-[17px] lg:pl-[52px] lg:pr-8 lg:py-0">
-                    <<?php echo esc_attr($heading_tag); ?>
-                        id="<?php echo esc_attr($hero_heading_id); ?>"
-                        class="max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
-                        style="color: <?php echo esc_attr($heading_color); ?>;"
-                    >
-                        <?php echo esc_html($heading); ?>
-                    </<?php echo esc_attr($heading_tag); ?>>
-
-                    <?php if (!empty($content)) { ?>
-                        <div
-                            class="max-w-[599px] font-primary text-[18px] font-normal leading-[22.75px] tracking-[-0.09px] text-[#08284B] wp_editor lg:text-[18px] lg:leading-[28px] lg:tracking-normal"
-                            style="color: <?php echo esc_attr($text_color); ?>;"
+                <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_column_class_names()); ?>">
+                    <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()); ?>">
+                        <<?php echo esc_attr($heading_tag); ?>
+                            id="<?php echo esc_attr($hero_heading_id); ?>"
+                            class="max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
+                            style="color: <?php echo esc_attr($heading_color); ?>;"
                         >
-                            <?php echo wp_kses_post($content); ?>
-                        </div>
-                    <?php } ?>
+                            <?php echo esc_html($heading); ?>
+                        </<?php echo esc_attr($heading_tag); ?>>
+
+                        <?php if (!empty($content)) { ?>
+                            <div
+                                class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_content_class_names()); ?>"
+                                style="color: <?php echo esc_attr($text_color); ?>;"
+                            >
+                                <?php echo wp_kses_post($content); ?>
+                            </div>
+                        <?php } ?>
+                    </div>
 
                     <?php if ($primary_button) { ?>
                         <a
                             href="<?php echo esc_url($primary_button['url']); ?>"
                             target="<?php echo esc_attr($primary_button['target'] !== '' ? $primary_button['target'] : '_self'); ?>"
-                            class="<?php echo esc_attr(matrix_get_content_button_class_names('filled')); ?>"
+                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_primary_button_class_names()); ?>"
                             <?php if ($primary_button['target'] === '_blank') { ?>
                                 rel="noopener noreferrer"
                             <?php } ?>

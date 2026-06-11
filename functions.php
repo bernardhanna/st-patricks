@@ -60,6 +60,8 @@ require_once get_template_directory() . '/inc/latest-posts-functions.php';
 require_once get_template_directory() . '/inc/locations-grid-functions.php';
 require_once get_template_directory() . '/inc/timeline-functions.php';
 require_once get_template_directory() . '/inc/research-cards-grid-functions.php';
+require_once get_template_directory() . '/inc/research-project-archive-functions.php';
+require_once get_template_directory() . '/inc/research-project-single-functions.php';
 require_once get_template_directory() . '/inc/referral-action-cards-functions.php';
 require_once get_template_directory() . '/inc/search-results-functions.php';
 require_once get_template_directory() . '/inc/sitemap-functions.php';

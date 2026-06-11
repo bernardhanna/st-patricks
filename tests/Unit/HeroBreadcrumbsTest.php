@@ -54,6 +54,14 @@ test('hero external link icon helper returns accessible svg markup', function ()
         ->and(matrix_get_hero_external_link_icon_svg())->toContain('aria-hidden="true"');
 });
 
+test('hero image split layout helpers add spacing before embedded and primary buttons', function () {
+    expect(matrix_get_hero_with_breadcrumbs_image_split_column_class_names())->toContain('lg:gap-6')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names())->toContain('[&_p:has(.btn)]:mt-5')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names())->toContain('lg:[&_p:has(.btn)]:mt-6')
+        ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('bg-[#024B79]')
+        ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('text-white');
+});
+
 test('auto breadcrumb mode falls back to auto breadcrumb data', function () {
     expect(function_exists('matrix_resolve_hero_breadcrumbs'))->toBeTrue();
 

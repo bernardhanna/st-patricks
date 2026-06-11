@@ -134,6 +134,42 @@ function matrix_get_hero_external_link_icon_svg()
   return '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0"><path d="M6.5 2.5H12.5V8.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 2.5L3.5 11.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
+function matrix_get_hero_with_breadcrumbs_image_split_content_class_names()
+{
+  return implode(' ', [
+    'max-w-[599px]',
+    'font-primary',
+    'text-[18px]',
+    'font-normal',
+    'leading-[22.75px]',
+    'tracking-[-0.09px]',
+    'text-[#08284B]',
+    'wp_editor',
+    'lg:text-[18px]',
+    'lg:leading-[28px]',
+    'lg:tracking-normal',
+    '[&_p:last-child]:mb-0',
+    '[&_p:has(.btn)]:mt-5',
+    'lg:[&_p:has(.btn)]:mt-6',
+    '[&_a.btn]:inline-flex',
+  ]);
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_column_class_names()
+{
+  return 'order-2 flex w-full flex-col gap-5 px-4 py-4 lg:order-1 lg:gap-6 lg:pl-[52px] lg:pr-8 lg:py-0';
+}
+
+function matrix_get_hero_with_breadcrumbs_primary_button_class_names()
+{
+  return 'btn inline-flex h-10 w-fit items-center justify-center gap-2 rounded-[6px] bg-[#024B79] px-3 text-[14px] font-medium leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()
+{
+  return 'flex w-full flex-col gap-3 lg:gap-[17px]';
+}
+
 function matrix_get_auto_hero_breadcrumb_data($post_id = 0)
 {
   $post_id = $post_id ? (int) $post_id : (int) get_the_ID();

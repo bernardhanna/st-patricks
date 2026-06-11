@@ -35,12 +35,80 @@ $research_cards_grid
             'toolbar' => 'basic',
             'media_upload' => 0,
         ])
+        ->addSelect('cards_source', [
+            'label' => 'Cards Source',
+            'choices' => [
+                'manual' => 'Manual cards',
+                'category' => 'By research category',
+                'latest' => 'Latest project posts',
+                'selected' => 'Select projects',
+            ],
+            'default_value' => 'manual',
+        ])
+        ->addNumber('posts_per_page', [
+            'label' => 'Projects to Show',
+            'instructions' => 'Used for latest, category, and selected project sources.',
+            'default_value' => 4,
+            'min' => 1,
+            'max' => 12,
+            'step' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'cards_source',
+                        'operator' => '!=',
+                        'value' => 'manual',
+                    ],
+                ],
+            ],
+        ])
+        ->addTaxonomy('selected_research_categories', [
+            'label' => 'Research Categories',
+            'taxonomy' => 'research_project_category',
+            'field_type' => 'multi_select',
+            'return_format' => 'id',
+            'allow_null' => 1,
+            'multiple' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'cards_source',
+                        'operator' => '==',
+                        'value' => 'category',
+                    ],
+                ],
+            ],
+        ])
+        ->addRelationship('selected_research_projects', [
+            'label' => 'Selected Research Projects',
+            'post_type' => ['research_projects'],
+            'filters' => ['search'],
+            'return_format' => 'object',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'cards_source',
+                        'operator' => '==',
+                        'value' => 'selected',
+                    ],
+                ],
+            ],
+        ])
         ->addRepeater('cards', [
             'label' => 'Cards',
             'instructions' => 'Add each research card in display order.',
             'button_label' => 'Add Card',
             'layout' => 'row',
             'min' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'cards_source',
+                        'operator' => '==',
+                        'value' => 'manual',
+                    ],
+                ],
+            ],
         ])
             ->addImage('image', [
                 'label' => 'Image',

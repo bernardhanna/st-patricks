@@ -3,7 +3,7 @@
 if (! function_exists('matrix_get_nav_mega_menu_shell_classes')) {
     function matrix_get_nav_mega_menu_shell_classes(): string
     {
-        return 'pointer-events-auto fixed left-0 top-[calc(var(--site-header-height,120px)-3rem)] z-[60] flex w-screen min-h-[280px] flex-col bg-transparent pt-12';
+        return 'pointer-events-none fixed left-0 top-[var(--site-header-height,120px)] z-[55] flex w-screen flex-col bg-transparent';
     }
 }
 
@@ -47,9 +47,9 @@ if (! function_exists('matrix_render_nav_mega_menu_pointer')) {
         $filter_id = 'mega-menu-pointer-' . wp_unique_id();
 
         ?>
-        <div class="pointer-events-auto absolute inset-x-0 top-0 z-[3] -translate-y-full" aria-hidden="true">
+        <div class="pointer-events-none absolute inset-x-0 top-0 z-[3] -translate-y-full" aria-hidden="true">
             <div class="relative px-6 mx-auto w-full max-w-container">
-                <div class="pointer-events-auto absolute <?php echo esc_attr($pointer_left); ?> flex h-[48px] w-[76px] -translate-x-1/2 items-end justify-center">
+                <div class="pointer-events-none absolute <?php echo esc_attr($pointer_left); ?> flex h-[48px] w-[76px] -translate-x-1/2 items-end justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="76" height="48" viewBox="0 0 76 48" fill="none" class="block h-[48px] w-[76px]" aria-hidden="true">
                         <g filter="url(#<?php echo esc_attr($filter_id); ?>)">
                             <path d="M12 5.74743e-07L36.5858 24.5858C37.3668 25.3668 38.6332 25.3668 39.4142 24.5858L64 0" fill="white"/>
@@ -131,8 +131,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
             role="region"
             aria-label="<?php echo esc_attr($item->label); ?> submenu"
         >
-            <div class="pointer-events-auto absolute inset-x-0 bottom-full h-12" aria-hidden="true"></div>
-            <div class="relative w-full">
+            <div class="relative w-full pointer-events-auto">
                 <div
                     id="<?php echo esc_attr($section_id); ?>"
                     class="relative w-full bg-[#F1F8F9] shadow-lg"
@@ -141,7 +140,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                 >
                     <?php matrix_render_nav_mega_menu_pointer($pointer_left); ?>
                     <div
-                        class="pointer-events-none absolute -left-[29px] top-[-16px] h-[78px] w-[80px] opacity-20"
+                        class="pointer-events-none absolute left-6 top-4 h-[78px] w-[80px] opacity-20"
                         aria-hidden="true"
                     >
                         <svg viewBox="0 0 80 78" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -150,7 +149,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                         </svg>
                     </div>
 
-                    <div class="relative mx-auto flex w-full max-w-container items-start justify-between gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8 <?php echo esc_attr($min_height); ?>">
+                    <div class="relative mx-auto flex w-full max-w-container items-start justify-start gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8 <?php echo esc_attr($min_height); ?>">
                         <?php
                         get_template_part('template-parts/header/navbar/mega-menu-header', null, [
                             'title' => $item->label,

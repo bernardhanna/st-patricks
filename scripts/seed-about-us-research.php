@@ -160,11 +160,7 @@ $intro_past = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed d
 $intro_ethics = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini incididunt ut lab, sed do eiusmod tempore et dolore magn.</p>';
 $spire_body = '<p>About SPIRE Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>';
 
-$hero_content = sprintf(
-    '<p>%s</p><p><a class="btn inline-flex min-h-[36px] items-center justify-center rounded-[6px] bg-[#024B79] px-3 py-2 text-[14px] font-medium leading-[24px] text-white no-underline" href="%s">Mental Health Research Hub</a></p>',
-    esc_html($lorem_hero),
-    esc_url($spire_url)
-);
+$hero_content = '<p>' . esc_html($lorem_hero) . '</p>';
 
 $section_padding = [
     [
@@ -205,6 +201,11 @@ $flexi_rows = [
         'heading_tag' => 'h1',
         'heading' => 'Research',
         'content' => $hero_content,
+        'primary_button' => [
+            'title' => 'Mental Health Research Hub',
+            'url' => $spire_url,
+            'target' => '',
+        ],
         'hero_image' => $hero_image_id,
         'background_color' => '#C6ECF4',
         'breadcrumb_background_color' => '#F1F8F9',

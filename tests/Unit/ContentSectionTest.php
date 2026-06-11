@@ -23,10 +23,36 @@ test('content image height mode resolves match text and fixed minimum options', 
         ->and(matrix_get_content_image_class_names('match_text'))->not->toContain('lg:min-h-[19.5rem]');
 });
 
+test('content column layout resolves one and two column grid classes', function () {
+    expect(matrix_resolve_content_column_layout('two_column'))->toBe('two_column')
+        ->and(matrix_resolve_content_column_layout('one_column'))->toBe('one_column')
+        ->and(matrix_resolve_content_column_layout(''))->toBe('two_column');
+
+    expect(matrix_get_content_grid_class_names('match_text', 'one_column'))
+        ->toBe('grid grid-cols-1 gap-10 items-start w-full')
+        ->and(matrix_get_content_grid_class_names('match_text', 'one_column'))->not->toContain('lg:grid-cols-2');
+
+    expect(matrix_get_content_grid_class_names('match_text', 'two_column'))
+        ->toContain('lg:grid-cols-2')
+        ->and(matrix_get_content_grid_class_names('match_text', 'two_column'))->toContain('lg:items-stretch');
+
+    expect(matrix_get_content_content_column_class_names('image_left', 'one_column'))->toBe('order-1')
+        ->and(matrix_get_content_image_column_class_names('image_left', 'one_column'))->toBe('')
+        ->and(matrix_get_content_image_class_names('match_text', 'one_column'))->not->toContain('lg:h-full');
+});
+
 test('content accent position resolves above and below heading', function () {
     expect(matrix_resolve_content_accent_position('below_heading'))->toBe('below_heading')
         ->and(matrix_resolve_content_accent_position('above_heading'))->toBe('above_heading')
         ->and(matrix_resolve_content_accent_position(''))->toBe('below_heading');
+});
+
+test('content text width resolves constrained and full max width classes', function () {
+    expect(matrix_resolve_content_text_width_mode('constrained'))->toBe('constrained')
+        ->and(matrix_resolve_content_text_width_mode('full'))->toBe('full')
+        ->and(matrix_resolve_content_text_width_mode(''))->toBe('constrained')
+        ->and(matrix_get_content_text_max_width_class_names('constrained'))->toBe('max-w-[720px]')
+        ->and(matrix_get_content_text_max_width_class_names('full'))->toBe('max-w-full');
 });
 
 test('content background style supports preset and custom values', function () {
