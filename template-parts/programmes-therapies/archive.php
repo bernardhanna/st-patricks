@@ -47,8 +47,8 @@ $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_ra
     <?php } ?>
     class="<?php echo esc_attr($section_classes); ?>"
 >
-    <div class="<?php echo esc_attr($wrapper_classes); ?>">
-        <header class="flex flex-col gap-8">
+    <div class="py-12 lg:py-[100px] <?php echo esc_attr($wrapper_classes); ?>">
+        <header class="flex flex-col gap-8 self-start">
             <<?php echo esc_attr($heading_tag); ?> class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]">
                 <?php echo esc_html($heading); ?>
             </<?php echo esc_attr($heading_tag); ?>>
@@ -150,7 +150,7 @@ $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_ra
                                 <div class="h-px w-full bg-[#C6ECF4]" aria-hidden="true"></div>
                             </div>
 
-                            <div class="mt-1 flex flex-col">
+                            <div class="flex flex-col mt-1">
                                 <?php foreach ($delivery_options as $delivery_option) { ?>
                                     <?php
                                     $delivery_slug = matrix_programmes_therapies_archive_sanitize_slug((string) ($delivery_option['slug'] ?? ''));
@@ -182,7 +182,7 @@ $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_ra
                 </form>
             </aside>
 
-            <div class="min-w-0 flex-1">
+            <div class="flex-1 min-w-0">
                 <?php if ($has_posts) { ?>
                     <div class="flex flex-col gap-8">
                         <?php while ($query->have_posts()) { ?>
@@ -192,7 +192,7 @@ $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_ra
                             ?>
                             <article class="rounded-[8px] bg-[#FBFAF7] p-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
                                 <?php if ($card['tags'] !== []) { ?>
-                                    <ul class="mb-4 flex flex-wrap gap-4" role="list">
+                                    <ul class="flex flex-wrap gap-4 mb-4" role="list">
                                         <?php foreach ($card['tags'] as $tag) { ?>
                                             <li>
                                                 <span class="inline-flex h-[30px] items-center justify-center rounded-full bg-[#FADBD8] px-4 font-primary text-[14px] font-medium leading-[24px] text-[#08284B]">
@@ -229,7 +229,7 @@ $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_ra
                 <?php } ?>
 
                 <?php if ($total_pages > 1) { ?>
-                    <nav class="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Programmes and therapies pagination">
+                    <nav class="flex flex-wrap gap-2 justify-center items-center mt-10" aria-label="Programmes and therapies pagination">
                         <?php if ($current_page > 1) { ?>
                             <a
                                 href="<?php echo esc_url(matrix_build_programmes_therapies_archive_page_url($base_url, $state, $current_page - 1)); ?>"

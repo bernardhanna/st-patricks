@@ -149,10 +149,12 @@ body {
     @apply pl-4 my-4 italic font-normal border-l-4 border-neutral-300 text-blockquote font-primary text-text-primary;
   }
 
+  .editor-body-content h2,
   .blog-single-content h2 {
     @apply mb-8 font-primary text-[30px] font-semibold leading-[36px] tracking-[-0.225px] text-[#1E244B];
   }
 
+  .editor-body-content h2::after,
   .blog-single-content h2::after {
     content: '';
     display: block;
@@ -162,29 +164,53 @@ body {
     background-color: #6FC9C0;
   }
 
+  .editor-body-content h3,
+  .blog-single-content h3 {
+    @apply mb-4 mt-10 font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B];
+  }
+
+  .editor-body-content h4,
+  .blog-single-content h4 {
+    @apply mb-3 mt-8 font-primary text-[20px] font-semibold leading-[32px] tracking-[-0.12px] text-[#1E244B];
+  }
+
+  .editor-body-content p,
+  .editor-body-content li,
   .blog-single-content p,
   .blog-single-content li {
     @apply font-primary text-[16px] font-medium leading-[28px] text-[#08284B];
   }
 
+  .editor-body-content ul,
   .blog-single-content ul {
     @apply mb-8 list-disc pl-6;
   }
 
+  .editor-body-content ol,
+  .blog-single-content ol {
+    @apply mb-8 list-decimal pl-6;
+  }
+
+  .editor-body-content blockquote,
+  .editor-body-content .wp-block-quote,
   .blog-single-content blockquote,
   .blog-single-content .wp-block-quote {
     @apply my-8 rounded-[8px] border-0 bg-[#F1F8F9] p-8 not-italic;
   }
 
+  .editor-body-content blockquote p,
+  .editor-body-content .wp-block-quote p,
   .blog-single-content blockquote p,
   .blog-single-content .wp-block-quote p {
     @apply font-primary text-[16px] font-bold leading-[28px] text-[#08284B];
   }
 
+  .editor-body-content .wp-block-columns,
   .blog-single-content .wp-block-columns {
     @apply my-10 gap-10;
   }
 
+  .editor-body-content .wp-block-image img,
   .blog-single-content .wp-block-image img {
     @apply w-full rounded-[8px] object-cover;
   }
@@ -595,6 +621,30 @@ body {
 
 .is-not-woo .wp_editor p {
    @apply text-tertiary font-primary leading-[28px] mb-4;
+}
+
+.editor-body-content p,
+.editor-body-content li,
+.blog-single-content p,
+.blog-single-content li {
+  @apply mb-4 font-primary text-[16px] font-medium leading-[28px] text-[#08284B];
+}
+
+.editor-body-content :is(h1, h2, h3, h4, h5, h6),
+.blog-single-content :is(h1, h2, h3, h4, h5, h6) {
+  @apply font-primary py-0;
+}
+
+.editor-body-content a,
+.blog-single-content a {
+  @apply font-medium text-[#024B79] underline hover:no-underline;
+}
+
+.editor-body-content strong,
+.editor-body-content b,
+.blog-single-content strong,
+.blog-single-content b {
+  @apply font-semibold text-[#08284B];
 }
 
 /* Image Styling */

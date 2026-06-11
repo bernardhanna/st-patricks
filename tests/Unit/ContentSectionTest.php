@@ -55,6 +55,12 @@ test('content text width resolves constrained and full max width classes', funct
         ->and(matrix_get_content_text_max_width_class_names('full'))->toBe('max-w-full');
 });
 
+test('editor body content helpers expose scoped rich text classes', function () {
+    expect(matrix_get_editor_body_content_class_names())->toBe('editor-body-content blog-single-content wp_editor entry-content')
+        ->and(matrix_get_editor_body_content_wrapper_class_names())->toContain('max-w-[1018px]')
+        ->and(matrix_get_editor_body_content_wrapper_class_names())->toContain('lg:py-[100px]');
+});
+
 test('content background style supports preset and custom values', function () {
     expect(matrix_get_content_background_style('white'))->toBe('background-color: #FFFFFF;')
         ->and(matrix_get_content_background_style('cream'))->toBe('background-color: #FBF8F3;')

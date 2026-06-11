@@ -2,6 +2,20 @@
 
 require_once dirname(__DIR__, 2) . '/inc/hero-functions.php';
 
+if (! function_exists('home_url')) {
+    function home_url($path = '')
+    {
+        return 'https://example.com' . $path;
+    }
+}
+
+if (! function_exists('esc_html')) {
+    function esc_html($text)
+    {
+        return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
+    }
+}
+
 test('manual breadcrumb mode returns manual items and current label', function () {
     expect(function_exists('matrix_resolve_hero_breadcrumbs'))->toBeTrue();
 
@@ -63,6 +77,42 @@ test('hero image split layout helpers add spacing before embedded and primary bu
         ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names())->toContain('lg:grid-cols-[minmax(0,1fr)_581px]')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('order-1')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names())->toContain('text-[28px]');
+});
+
+test('hero with breadcrumbs text max width resolves wide and default classes', function () {
+    expect(matrix_get_hero_with_breadcrumbs_text_max_width_class('wide'))->toBe('max-w-[50rem]')
+        ->and(matrix_get_hero_with_breadcrumbs_text_max_width_class('default'))->toBe('max-w-[599px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names('wide'))->toContain('max-w-[50rem]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names('wide'))->toContain('max-w-[50rem]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_content_class_names('wide'))->not->toContain('max-w-[1160px]');
+});
+
+test('hero image split wide text max width uses single column stacked layout', function () {
+    expect(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->toBe('mx-auto flex w-full max-w-[1160px] flex-col py-16 max-xl:px-0')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->not->toContain('lg:grid')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->toContain('order-2')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->not->toContain('lg:border-l-2')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->toContain('order-1')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->not->toContain('max-w-')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->not->toContain('lg:pl-[52px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_gradient_layout('wide'))->toBe('stacked')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_gradient_layout('default'))->toBe('split');
+});
+
+test('utility page hero config uses wide stacked image split hero', function () {
+    $config = matrix_get_utility_page_hero_config('Accessibility', 'Intro copy.');
+
+    expect($config['layout_style'])->toBe('image_split')
+        ->and($config['text_max_width'])->toBe('wide')
+        ->and($config['background_color'])->toBe('#C6ECF4')
+        ->and($config['content'])->toBe('<p>Intro copy.</p>');
+
+    $view = matrix_prepare_hero_with_breadcrumbs_view_model($config);
+
+    expect($view['layout_style'])->toBe('image_split')
+        ->and($view['text_max_width'])->toBe('wide')
+        ->and($view['breadcrumb_current_label'])->toBe('Accessibility')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($view['text_max_width']))->toContain('max-w-[1160px]');
 });
 
 test('hero image split gradient vars derive rgba stops from hex background', function () {

@@ -45,7 +45,7 @@ $show_cta_box = $has_cta_summary || $has_external_url;
             <?php } ?>
 
             <?php if (trim(get_the_content()) !== '') { ?>
-                <article class="blog-single-content wp_editor entry-content" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                     <?php the_content(); ?>
                 </article>
             <?php } ?>

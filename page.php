@@ -18,11 +18,13 @@ $enable_breadcrumbs = get_field('enable_breadcrumbs', 'option'); // Returns true
     if (have_posts()) :
         while (have_posts()) : the_post();
             if (trim(get_the_content()) != '') : ?>
-                <div class="max-w-[1095px] mx-auto max-md:px-5">
-                    <?php
-                    get_template_part('template-parts/content/content', 'page');
-                    ?>
-                </div>
+                <section class="bg-white">
+                    <div class="<?php echo esc_attr(matrix_get_editor_body_content_wrapper_class_names()); ?>">
+                        <?php
+                        get_template_part('template-parts/content/content', 'page');
+                        ?>
+                    </div>
+                </section>
     <?php endif;
         endwhile;
     else :

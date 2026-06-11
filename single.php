@@ -27,7 +27,7 @@ if (get_post_type() === 'post') {
                         <?php } ?>
 
                         <?php if (trim(get_the_content()) !== '') { ?>
-                            <article class="blog-single-content wp_editor entry-content" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                            <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                                 <?php the_content(); ?>
                             </article>
                         <?php } ?>
@@ -71,9 +71,11 @@ if (get_post_type() === 'post') {
         while (have_posts()) {
             the_post();
             if (trim(get_the_content()) != '') { ?>
-                <div class="max-w-[1095px] max-xl:px-5 mx-auto">
-                    <?php get_template_part('template-parts/content/content', 'page'); ?>
-                </div>
+                <section class="bg-white">
+                    <div class="<?php echo esc_attr(matrix_get_editor_body_content_wrapper_class_names()); ?>">
+                        <?php get_template_part('template-parts/content/content', 'page'); ?>
+                    </div>
+                </section>
             <?php }
         }
     } else {

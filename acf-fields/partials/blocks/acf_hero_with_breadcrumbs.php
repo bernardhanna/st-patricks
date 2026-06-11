@@ -198,6 +198,16 @@ $hero_with_breadcrumbs
             'label' => 'Text Color',
             'default_value' => '#08284B',
         ])
+        ->addSelect('text_max_width', [
+            'label' => 'Heading & Text Max Width',
+            'instructions' => 'Choose the maximum width for the hero heading and supporting copy.',
+            'choices' => [
+                'default' => 'Default (599px)',
+                'wide' => 'Wide (50rem text, stacked)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ])
 
     ->addTab('Layout', ['label' => 'Layout'])
         ->addRepeater('padding_settings', [

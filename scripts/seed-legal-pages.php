@@ -34,13 +34,13 @@ if (! function_exists('matrix_seed_legal_page_body')) {
 }
 
 if (! function_exists('matrix_seed_legal_page_hero')) {
-    function matrix_seed_legal_page_hero(string $title): array
+    function matrix_seed_legal_page_hero(string $title, string $intro = ''): array
     {
-        return [
+        $config = matrix_get_utility_page_hero_config($title, $intro);
+
+        return array_merge($config, [
             'acf_fc_layout' => 'hero_with_breadcrumbs',
-            'layout_style' => 'title_accent',
             'show_breadcrumbs' => 1,
-            'breadcrumb_source' => 'manual',
             'manual_breadcrumbs' => [
                 [
                     'breadcrumb_link' => [
@@ -50,16 +50,7 @@ if (! function_exists('matrix_seed_legal_page_hero')) {
                     ],
                 ],
             ],
-            'current_crumb_label' => $title,
-            'heading_tag' => 'h1',
-            'heading' => $title,
-            'content' => '',
-            'background_color' => '#FBF8F3',
-            'breadcrumb_background_color' => '#F1F8F9',
-            'heading_color' => '#1E244B',
-            'text_color' => '#08284B',
-            'accent_color' => '#6FC9C0',
-        ];
+        ]);
     }
 }
 
@@ -103,7 +94,7 @@ foreach ($pages as $page_config) {
         'post_content' => matrix_seed_legal_page_body((string) $page_config['intro']),
     ]);
 
-    update_field('hero_content_blocks', [matrix_seed_legal_page_hero($title)], $post_id);
+    update_field('hero_content_blocks', [matrix_seed_legal_page_hero($title, (string) $page_config['intro'])], $post_id);
     update_field('flexible_content_blocks', [], $post_id);
 
     $updated++;

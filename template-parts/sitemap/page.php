@@ -8,59 +8,18 @@ $current_crumb_label = trim((string) ($sitemap['current_crumb_label'] ?? $headin
 $page_sections = is_array($sitemap['page_sections'] ?? null) ? $sitemap['page_sections'] : [];
 $archive_sections = is_array($sitemap['archive_sections'] ?? null) ? $sitemap['archive_sections'] : [];
 $section_id = 'sitemap-page-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
-$heading_id = $section_id . '-heading';
 ?>
 
 <main id="<?php echo esc_attr($section_id); ?>" class="w-full site-main">
-    <section class="w-full bg-[#FBF8F3]" aria-labelledby="<?php echo esc_attr($heading_id); ?>">
-        <div class="mx-auto w-full max-w-[1280px]">
-            <nav class="w-full bg-[#F1F8F9] px-5 py-3 lg:px-[70px]" aria-label="Breadcrumb">
-                <ol class="flex flex-wrap items-center gap-3" role="list">
-                    <?php foreach ($breadcrumbs as $breadcrumb) :
-                        $crumb_title = trim((string) ($breadcrumb['title'] ?? ''));
-                        $crumb_url = trim((string) ($breadcrumb['url'] ?? ''));
-
-                        if ($crumb_title === '' || $crumb_url === '') {
-                            continue;
-                        }
-                        ?>
-                        <li class="flex items-center gap-3">
-                            <a
-                                href="<?php echo esc_url($crumb_url); ?>"
-                                class="font-primary text-[14px] font-semibold leading-[20px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
-                            >
-                                <?php echo esc_html($crumb_title); ?>
-                            </a>
-                            <span aria-hidden="true" class="text-[#08284B]">/</span>
-                        </li>
-                    <?php endforeach; ?>
-
-                    <?php if ($current_crumb_label !== '') { ?>
-                        <li class="font-primary text-[14px] font-normal leading-[20px] text-[#08284B]" aria-current="page">
-                            <?php echo esc_html($current_crumb_label); ?>
-                        </li>
-                    <?php } ?>
-                </ol>
-            </nav>
-
-            <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-5 py-10 xl:px-0 xl:py-[100px]">
-                <h1
-                    id="<?php echo esc_attr($heading_id); ?>"
-                    class="font-primary text-[30px] font-semibold leading-[36px] tracking-[-0.225px] text-[#1E244B] lg:text-[36px] lg:leading-[40px] lg:tracking-[-0.432px]"
-                >
-                    <?php echo esc_html($heading); ?>
-                </h1>
-
-                <div class="h-1 w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
-
-                <?php if ($intro !== '') { ?>
-                    <p class="max-w-[1018px] font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
-                        <?php echo esc_html($intro); ?>
-                    </p>
-                <?php } ?>
-            </div>
-        </div>
-    </section>
+    <?php
+    matrix_render_hero_with_breadcrumbs(
+        matrix_get_utility_page_hero_config($heading, $intro, [
+            'section_id' => $section_id . '-hero',
+            'manual_breadcrumb_items' => $breadcrumbs,
+            'current_crumb_label' => $current_crumb_label,
+        ])
+    );
+    ?>
 
     <section class="bg-white" aria-label="Site map links">
         <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-16 px-5 py-12 xl:px-0 xl:py-[100px]">

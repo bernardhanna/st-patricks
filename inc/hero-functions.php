@@ -156,25 +156,50 @@ function matrix_get_hero_with_breadcrumbs_gradient_vars($background_color)
   ];
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names()
+function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max_width = 'default')
 {
+  if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
+    return matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names();
+  }
+
   return 'flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-center';
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names()
+function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($text_max_width = 'default')
 {
+  if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
+    return 'relative order-2 mt-8 h-[240px] w-full overflow-hidden lg:mt-10 lg:h-[320px]';
+  }
+
   return 'relative order-1 h-[240px] w-full overflow-hidden lg:order-2 lg:h-[320px] lg:border-l-2';
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_heading_class_names()
+function matrix_resolve_hero_with_breadcrumbs_text_max_width($value)
 {
-  return 'max-w-[599px] font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]';
+  return (string) $value === 'wide' ? 'wide' : 'default';
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_content_class_names()
+function matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width = 'default')
+{
+  return matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide'
+    ? 'max-w-[50rem]'
+    : 'max-w-[599px]';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names()
+{
+  return 'mx-auto flex w-full max-w-[1160px] flex-col py-16 max-xl:px-0';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_heading_class_names($text_max_width = 'default')
+{
+  return matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width) . ' font-primary text-[28px] font-bold leading-[28px] tracking-[-0.336px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_content_class_names($text_max_width = 'default')
 {
   return implode(' ', [
-    'max-w-[599px]',
+    matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width),
     'font-primary',
     'text-[18px]',
     'font-normal',
@@ -192,9 +217,20 @@ function matrix_get_hero_with_breadcrumbs_image_split_content_class_names()
   ]);
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_column_class_names()
+function matrix_get_hero_with_breadcrumbs_image_split_column_class_names($text_max_width = 'default')
 {
+  if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
+    return 'order-1 flex w-full flex-col gap-5 px-4 lg:gap-6 lg:px-0';
+  }
+
   return 'order-2 flex w-full flex-col gap-5 px-4 py-4 lg:order-1 lg:gap-6 lg:pl-[52px] lg:pr-8 lg:py-0';
+}
+
+function matrix_get_hero_with_breadcrumbs_image_split_gradient_layout($text_max_width = 'default')
+{
+  return matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide'
+    ? 'stacked'
+    : 'split';
 }
 
 function matrix_get_hero_with_breadcrumbs_primary_button_class_names()
@@ -207,9 +243,242 @@ function matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()
   return 'flex w-full flex-col gap-3 lg:gap-[17px]';
 }
 
+/**
+ * Normalize manual breadcrumb rows from ACF or flat item arrays.
+ *
+ * @param mixed $rows
+ * @return array<int, array<string, string>>
+ */
+function matrix_prepare_hero_with_breadcrumbs_manual_items($rows)
+{
+  if (! is_array($rows)) {
+    return [];
+  }
+
+  $items = [];
+
+  foreach ($rows as $row) {
+    if (! is_array($row)) {
+      continue;
+    }
+
+    $link = isset($row['breadcrumb_link']) && is_array($row['breadcrumb_link']) ? $row['breadcrumb_link'] : $row;
+    $title = trim((string) ($link['title'] ?? ''));
+    $url = trim((string) ($link['url'] ?? ''));
+
+    if ($title === '' || $url === '') {
+      continue;
+    }
+
+    $items[] = [
+      'title' => $title,
+      'url' => $url,
+      'target' => (string) ($link['target'] ?? ''),
+    ];
+  }
+
+  return $items;
+}
+
+/**
+ * Build a reusable hero config for utility and policy pages.
+ *
+ * @param string               $heading
+ * @param string               $intro
+ * @param array<string, mixed> $overrides
+ * @return array<string, mixed>
+ */
+function matrix_get_utility_page_hero_config($heading, $intro = '', array $overrides = [])
+{
+  $heading = trim($heading);
+  $intro = trim($intro);
+
+  return array_merge([
+    'layout_style' => 'image_split',
+    'text_max_width' => 'wide',
+    'show_breadcrumbs' => true,
+    'breadcrumb_source' => 'manual',
+    'manual_breadcrumb_items' => [
+      [
+        'title' => 'Home',
+        'url' => home_url('/'),
+        'target' => '',
+      ],
+    ],
+    'current_crumb_label' => $heading,
+    'heading_tag' => 'h1',
+    'heading' => $heading,
+    'content' => $intro !== '' ? '<p>' . esc_html($intro) . '</p>' : '',
+    'primary_button' => null,
+    'hero_image' => '',
+    'background_color' => '#C6ECF4',
+    'breadcrumb_background_color' => '#F1F8F9',
+    'heading_color' => '#08284B',
+    'text_color' => '#08284B',
+    'accent_color' => '#6FC9C0',
+    'aside_heading' => '',
+    'padding_classes' => [],
+  ], $overrides);
+}
+
+/**
+ * Prepare the view model used by the hero with breadcrumbs partial.
+ *
+ * @param array<string, mixed> $config
+ * @param int                  $post_id
+ * @return array<string, mixed>
+ */
+function matrix_prepare_hero_with_breadcrumbs_view_model(array $config, $post_id = 0)
+{
+  $post_id = $post_id > 0 ? $post_id : (function_exists('get_the_ID') ? (int) get_the_ID() : 0);
+  $layout_style = matrix_resolve_hero_with_breadcrumbs_layout_style($config['layout_style'] ?? 'image_split');
+  $heading = trim((string) ($config['heading'] ?? ''));
+  $heading_tag = trim((string) ($config['heading_tag'] ?? 'h1'));
+  $content = $config['content'] ?? '';
+  $hero_image = (int) ($config['hero_image'] ?? 0);
+  $show_breadcrumbs = (bool) ($config['show_breadcrumbs'] ?? true);
+  $breadcrumb_source = (string) ($config['breadcrumb_source'] ?? 'auto');
+  $current_crumb_label = (string) ($config['current_crumb_label'] ?? '');
+  $background_color = (string) ($config['background_color'] ?? '');
+  $breadcrumb_background_color = (string) ($config['breadcrumb_background_color'] ?? '');
+  $heading_color = (string) ($config['heading_color'] ?? '');
+  $text_color = (string) ($config['text_color'] ?? '');
+  $accent_color = (string) ($config['accent_color'] ?? '');
+  $aside_heading = trim((string) ($config['aside_heading'] ?? ''));
+  $text_max_width = matrix_resolve_hero_with_breadcrumbs_text_max_width($config['text_max_width'] ?? 'default');
+  $padding_classes = is_array($config['padding_classes'] ?? null) ? $config['padding_classes'] : [];
+
+  if ($heading === '') {
+    if ($layout_style === 'title_accent') {
+      $heading = 'Press Releases';
+    } elseif ($layout_style === 'register_intro') {
+      $heading = 'Register for Your Portal | Online Form';
+    } else {
+      $heading = 'About Us landing page title';
+    }
+  }
+
+  if ($background_color === '') {
+    if ($layout_style === 'title_accent') {
+      $background_color = '#FBF8F3';
+    } elseif ($layout_style === 'register_intro') {
+      $background_color = '#FFFFFF';
+    } else {
+      $background_color = '#C6ECF4';
+    }
+  }
+
+  if ($aside_heading === '' && $layout_style === 'register_intro') {
+    $aside_heading = 'Already registered?';
+  }
+
+  if ($breadcrumb_background_color === '') {
+    $breadcrumb_background_color = '#F1F8F9';
+  }
+
+  if ($heading_color === '') {
+    $heading_color = $layout_style === 'title_accent' ? '#1E244B' : '#08284B';
+  }
+
+  if ($text_color === '') {
+    $text_color = '#08284B';
+  }
+
+  if ($accent_color === '') {
+    $accent_color = '#6FC9C0';
+  }
+
+  $allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
+  if (! in_array($heading_tag, $allowed_tags, true)) {
+    $heading_tag = 'h1';
+  }
+
+  $primary_button = function_exists('matrix_normalize_content_link')
+    ? matrix_normalize_content_link($config['primary_button'] ?? null)
+    : null;
+
+  $manual_breadcrumb_items = matrix_prepare_hero_with_breadcrumbs_manual_items(
+    $config['manual_breadcrumb_items'] ?? $config['manual_breadcrumbs'] ?? []
+  );
+  $auto_breadcrumb_data = matrix_get_auto_hero_breadcrumb_data($post_id);
+  $breadcrumb_data = matrix_resolve_hero_breadcrumbs(
+    $breadcrumb_source,
+    $manual_breadcrumb_items,
+    $current_crumb_label,
+    $auto_breadcrumb_data
+  );
+
+  $section_id = trim((string) ($config['section_id'] ?? ''));
+  if ($section_id === '') {
+    $section_id = 'hero-with-breadcrumbs-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
+  }
+
+  $hero_heading_id = $section_id . '-heading';
+  $hero_image_alt = '';
+  $hero_image_title = '';
+
+  if ($hero_image) {
+    $hero_image_alt = (string) get_post_meta($hero_image, '_wp_attachment_image_alt', true);
+    $hero_image_title = (string) get_the_title($hero_image);
+  }
+
+  if ($hero_image_alt === '') {
+    $hero_image_alt = $hero_image_title !== '' ? $hero_image_title : $heading;
+  }
+
+  $gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);
+
+  return [
+    'section_id' => $section_id,
+    'data_matrix_block' => trim((string) ($config['data_matrix_block'] ?? '')),
+    'layout_style' => $layout_style,
+    'heading' => $heading,
+    'heading_tag' => $heading_tag,
+    'content' => $content,
+    'primary_button' => $primary_button,
+    'hero_image' => $hero_image,
+    'hero_image_alt' => $hero_image_alt,
+    'hero_image_title' => $hero_image_title,
+    'show_breadcrumbs' => $show_breadcrumbs,
+    'breadcrumb_items' => is_array($breadcrumb_data['items']) ? $breadcrumb_data['items'] : [],
+    'breadcrumb_current_label' => (string) ($breadcrumb_data['current_label'] ?? ''),
+    'background_color' => $background_color,
+    'breadcrumb_background_color' => $breadcrumb_background_color,
+    'heading_color' => $heading_color,
+    'text_color' => $text_color,
+    'accent_color' => $accent_color,
+    'aside_heading' => $aside_heading,
+    'text_max_width' => $text_max_width,
+    'text_max_width_class' => matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width),
+    'padding_classes' => $padding_classes,
+    'hero_heading_id' => $hero_heading_id,
+    'gradient_solid' => $gradient_vars['gradient_solid'],
+    'gradient_soft' => $gradient_vars['gradient_soft'],
+    'gradient_clear' => $gradient_vars['gradient_clear'],
+  ];
+}
+
+/**
+ * Render the hero with breadcrumbs section from a config array.
+ *
+ * @param array<string, mixed> $config
+ * @param int                  $post_id
+ * @return void
+ */
+function matrix_render_hero_with_breadcrumbs(array $config, $post_id = 0)
+{
+  get_template_part(
+    'template-parts/partials/hero-with-breadcrumbs-section',
+    null,
+    [
+      'hero' => matrix_prepare_hero_with_breadcrumbs_view_model($config, $post_id),
+    ]
+  );
+}
+
 function matrix_get_auto_hero_breadcrumb_data($post_id = 0)
 {
-  $post_id = $post_id ? (int) $post_id : (int) get_the_ID();
+  $post_id = $post_id ? (int) $post_id : (function_exists('get_the_ID') ? (int) get_the_ID() : 0);
   $items = array(
     array(
       'title' => 'Home',

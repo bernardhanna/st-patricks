@@ -243,3 +243,20 @@ function matrix_get_content_document_link_class_names()
 {
     return 'btn inline-flex w-fit items-center gap-2 font-primary text-[16px] font-semibold leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]';
 }
+
+/**
+ * Class names for full-width WordPress editor body content (pages, singles).
+ * Scoped separately from flexi WYSIWYG snippets that only use `wp_editor`.
+ */
+function matrix_get_editor_body_content_class_names()
+{
+    return 'editor-body-content blog-single-content wp_editor entry-content';
+}
+
+/**
+ * Wrapper layout for editor body content sections.
+ */
+function matrix_get_editor_body_content_wrapper_class_names()
+{
+    return 'mx-auto w-full max-w-[1018px] px-5 py-12 lg:px-0 lg:py-[100px]';
+}
