@@ -21,10 +21,12 @@ function matrix_normalize_useful_links($rows)
             continue;
         }
 
+        $url = (string) $link['url'];
+
         $items[] = [
-            'url' => (string) $link['url'],
+            'url' => $url,
             'title' => $title,
-            'target' => trim((string) ($link['target'] ?? '')) ?: '_self',
+            'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
         ];
     }
 

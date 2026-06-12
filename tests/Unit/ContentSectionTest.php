@@ -76,6 +76,13 @@ test('content pdf helpers expose icon and document link classes', function () {
         ->and(matrix_get_content_document_link_class_names())->toContain('btn');
 });
 
+test('content rich text wrapper includes paragraph spacing classes', function () {
+    expect(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]'))
+        ->toContain('[&_p]:mb-4')
+        ->and(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]'))->toContain('[&_p:last-child]:mb-0')
+        ->and(matrix_get_content_rich_text_wrapper_class_names('bold', ''))->toContain('font-bold');
+});
+
 test('content button helpers normalize links and class names', function () {
     expect(matrix_normalize_content_link([
         'title' => ' Support Us ',

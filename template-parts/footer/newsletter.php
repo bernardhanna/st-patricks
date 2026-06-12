@@ -96,7 +96,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
             <!-- Subtitle -->
             <?php if (!empty($subtext)): ?>
               <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor">
-                <?php echo wp_kses_post($subtext); ?>
+                <?php echo matrix_kses_rich_text($subtext); ?>
               </div>
             <?php endif; ?>
           </div>

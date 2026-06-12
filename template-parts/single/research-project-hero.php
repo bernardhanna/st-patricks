@@ -6,7 +6,6 @@ if (get_post_type() !== 'research_projects') {
 
 $defaults = matrix_get_research_project_single_defaults();
 $back_label = (string) ($defaults['back_label'] ?? 'Back to research projects');
-$date_label = (string) ($defaults['date_label'] ?? 'Date posted:');
 $archive_url = matrix_get_research_project_archive_url();
 $intro = matrix_get_research_project_intro();
 ?>
@@ -25,10 +24,6 @@ $intro = matrix_get_research_project_intro();
             <h1 class="font-primary text-[36px] font-bold leading-[48px] tracking-[-0.576px] text-[#08284B] lg:text-[48px]">
                 <?php the_title(); ?>
             </h1>
-
-            <p class="font-primary text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-[#1E244B]">
-                <?php echo esc_html($date_label); ?> <?php echo esc_html(matrix_format_research_project_date()); ?>
-            </p>
 
             <?php if ($intro !== '') { ?>
                 <p class="max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">

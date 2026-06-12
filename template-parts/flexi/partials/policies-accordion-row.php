@@ -7,7 +7,7 @@ $row_type = (string) ($row['type'] ?? 'text');
 if ($row_type === 'text') {
     ?>
     <div class="<?php echo esc_attr($content_classes); ?>">
-        <?php echo wp_kses_post((string) ($row['content'] ?? '')); ?>
+        <?php echo matrix_kses_rich_text((string) ($row['content'] ?? '')); ?>
     </div>
     <?php
     return;

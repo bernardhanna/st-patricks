@@ -39,7 +39,7 @@ function matrix_normalize_timeline_link($link)
     return [
         'title' => $title,
         'url' => $url,
-        'target' => (string) ($link['target'] ?? '_self'),
+        'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
 

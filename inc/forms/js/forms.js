@@ -42,6 +42,18 @@
         form._submitController = new AbortController();
 
         const send = () => {
+          if (form.getAttribute('data-confirm-email') === '1') {
+            const email = form.querySelector('[name="email"]');
+            const emailConfirm = form.querySelector('[name="email_confirm"]');
+            if (email instanceof HTMLInputElement && emailConfirm instanceof HTMLInputElement) {
+              if (email.value.trim() !== emailConfirm.value.trim()) {
+                showBanner(form, 'Email addresses do not match.', false);
+                emailConfirm.focus();
+                return;
+              }
+            }
+          }
+
           lock(true);
 
           const data = new FormData(form);

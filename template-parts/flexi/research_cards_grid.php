@@ -84,7 +84,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                     class="wp_editor mt-6 max-w-[1018px] [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px]"
                     style="color: <?php echo esc_attr($intro_color); ?>;"
                 >
-                    <?php echo wp_kses_post($intro); ?>
+                    <?php echo matrix_kses_rich_text($intro); ?>
                 </div>
             <?php } ?>
 
@@ -161,7 +161,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
                                     class="wp_editor mt-3 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:leading-[28px]"
                                     style="color: <?php echo esc_attr($card_body_color); ?>;"
                                 >
-                                    <?php echo wp_kses_post($card['summary']); ?>
+                                    <?php echo matrix_kses_rich_text($card['summary']); ?>
                                 </div>
                             <?php } ?>
                         </div>

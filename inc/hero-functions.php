@@ -273,7 +273,9 @@ function matrix_prepare_hero_with_breadcrumbs_manual_items($rows)
     $items[] = [
       'title' => $title,
       'url' => $url,
-      'target' => (string) ($link['target'] ?? ''),
+      'target' => function_exists('matrix_normalize_link_target')
+        ? matrix_normalize_link_target($url, (string) ($link['target'] ?? ''))
+        : ((string) ($link['target'] ?? '') ?: '_self'),
     ];
   }
 

@@ -3,7 +3,12 @@
 $section_id = 'locations-grid-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading = trim((string) get_sub_field('heading'));
 $heading_tag = (string) get_sub_field('heading_tag');
-$cards = matrix_normalize_locations_grid_cards(get_sub_field('cards'));
+$source_mode = (string) get_sub_field('source_mode');
+$cards = matrix_resolve_locations_grid_cards(
+    $source_mode,
+    get_sub_field('cards'),
+    get_sub_field('selected_locations')
+);
 $footer_button_link = matrix_normalize_locations_grid_link(get_sub_field('footer_button_link'));
 
 if ($heading === '') {

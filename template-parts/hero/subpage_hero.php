@@ -72,7 +72,7 @@ if ($logo_id) {
               class="mt-2.5 text-2xl leading-8 text-neutral-700 max-md:max-w-full wp_editor"
               style="color: <?php echo esc_attr($text_color); ?>;"
             >
-              <?php echo wp_kses_post($content_text); ?>
+              <?php echo matrix_kses_rich_text($content_text); ?>
             </div>
           <?php endif; ?>
 

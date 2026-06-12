@@ -29,11 +29,7 @@ if ($links === []) {
 }
 
 if ($wrapper_classes === '') {
-    if ($variant === 'search') {
-        $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]';
-    } else {
-        $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col max-xl:px-5 pt-5 pb-5';
-    }
+    $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col max-xl:px-5';
 }
 
 $link_classes = $variant === 'search'

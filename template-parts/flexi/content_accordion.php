@@ -130,26 +130,34 @@ $wrapper_classes = trim(implode(' ', array_unique(array_merge(
                                 ]);
                                 ?>
                             <?php continue; } ?>
+                            <?php
+                            $row_icon_url = trim((string) ($row['icon']['url'] ?? ''));
+                            $row_icon_key = trim((string) ($row['icon_key'] ?? ''));
+                            $has_row_icon = $row_icon_url !== ''
+                                || ($row_icon_key !== '' && function_exists('matrix_get_content_accordion_icon_svg'));
+                            ?>
                             <div class="<?php echo esc_attr($layout_config['row_classes']); ?>">
-                                <div
-                                    class="<?php echo esc_attr($layout_config['icon_tile_classes']); ?>"
-                                    style="background-color: <?php echo esc_attr($icon_tile_background_color); ?>;"
-                                >
-                                    <?php if (($row['icon']['url'] ?? '') !== '') { ?>
-                                        <img
-                                            src="<?php echo esc_url($row['icon']['url']); ?>"
-                                            alt="<?php echo esc_attr($row['icon']['alt']); ?>"
-                                            class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?>"
-                                        />
-                                    <?php } elseif (($row['icon_key'] ?? '') !== '' && function_exists('matrix_get_content_accordion_icon_svg')) { ?>
-                                        <span class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?> flex items-center justify-center [&_svg]:h-full [&_svg]:w-full">
-                                            <?php echo matrix_get_content_accordion_icon_svg($row['icon_key']); ?>
-                                        </span>
-                                    <?php } ?>
-                                </div>
+                                <?php if ($has_row_icon && ($layout_config['icon_tile_classes'] ?? '') !== '') { ?>
+                                    <div
+                                        class="<?php echo esc_attr($layout_config['icon_tile_classes']); ?>"
+                                        style="background-color: <?php echo esc_attr($icon_tile_background_color); ?>;"
+                                    >
+                                        <?php if ($row_icon_url !== '') { ?>
+                                            <img
+                                                src="<?php echo esc_url($row_icon_url); ?>"
+                                                alt="<?php echo esc_attr($row['icon']['alt']); ?>"
+                                                class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?>"
+                                            />
+                                        <?php } else { ?>
+                                            <span class="<?php echo esc_attr($layout_config['icon_image_classes'] ?? 'h-6 w-6 object-contain'); ?> flex items-center justify-center [&_svg]:h-full [&_svg]:w-full">
+                                                <?php echo matrix_get_content_accordion_icon_svg($row_icon_key); ?>
+                                            </span>
+                                        <?php } ?>
+                                    </div>
+                                <?php } ?>
 
                                 <div class="<?php echo esc_attr($layout_config['content_classes']); ?>">
-                                    <?php echo wp_kses_post((string) ($row['content'] ?? '')); ?>
+                                    <?php echo matrix_kses_rich_text((string) ($row['content'] ?? '')); ?>
                                 </div>
                             </div>
                         <?php } ?>

@@ -33,6 +33,14 @@ function matrix_starter_setup()
 }
 add_action('after_setup_theme', 'matrix_starter_setup');
 
+add_filter('body_class', function (array $classes) {
+    if (! function_exists('is_woocommerce') || ! is_woocommerce()) {
+        $classes[] = 'is-not-woo';
+    }
+
+    return $classes;
+});
+
 // Temporary filter for footer menu
 add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     if ($args->theme_location === 'Footer One') {
@@ -46,6 +54,7 @@ require_once get_template_directory() . '/inc/enqueue-fonts.php';
 // Include the Enqueue Scripts and Styles
 require_once get_template_directory() . '/inc/enqueue-scripts.php';
 // load the helper functions
+require_once get_template_directory() . '/inc/link-functions.php';
 require_once get_template_directory() . '/inc/callout-bar-functions.php';
 require_once get_template_directory() . '/inc/content-cta-functions.php';
 require_once get_template_directory() . '/inc/content-section-functions.php';
@@ -56,8 +65,10 @@ require_once get_template_directory() . '/inc/hero-functions.php';
 require_once get_template_directory() . '/inc/blog-filter-archive-functions.php';
 require_once get_template_directory() . '/inc/blog-single-functions.php';
 require_once get_template_directory() . '/inc/careers-archive-functions.php';
+require_once get_template_directory() . '/inc/careers-single-functions.php';
 require_once get_template_directory() . '/inc/latest-posts-functions.php';
 require_once get_template_directory() . '/inc/locations-grid-functions.php';
+require_once get_template_directory() . '/inc/locations-functions.php';
 require_once get_template_directory() . '/inc/timeline-functions.php';
 require_once get_template_directory() . '/inc/research-cards-grid-functions.php';
 require_once get_template_directory() . '/inc/research-project-archive-functions.php';
@@ -70,6 +81,7 @@ require_once get_template_directory() . '/inc/team-grid-functions.php';
 require_once get_template_directory() . '/inc/team-members-functions.php';
 require_once get_template_directory() . '/inc/testimonial-functions.php';
 require_once get_template_directory() . '/inc/useful-links-functions.php';
+require_once get_template_directory() . '/inc/related-cards-functions.php';
 require_once get_template_directory() . '/inc/video-showcase-functions.php';
 require_once get_template_directory() . '/inc/webinars-archive-functions.php';
 require_once get_template_directory() . '/inc/programmes-therapies-archive-functions.php';

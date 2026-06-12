@@ -1,5 +1,37 @@
 <?php
 
+if (function_exists('add_action')) {
+    add_action('init', function () {
+        $careers_page = get_page_by_path('careers');
+
+        if (! $careers_page instanceof WP_Post) {
+            return;
+        }
+
+        $child_pages = get_pages([
+            'parent' => (int) $careers_page->ID,
+            'post_status' => 'publish',
+            'number' => 50,
+        ]);
+
+        if (! is_array($child_pages)) {
+            return;
+        }
+
+        foreach ($child_pages as $child_page) {
+            if (! $child_page instanceof WP_Post || $child_page->post_name === '') {
+                continue;
+            }
+
+            add_rewrite_rule(
+                '^careers/' . preg_quote($child_page->post_name, '/') . '/?$',
+                'index.php?page_id=' . (int) $child_page->ID,
+                'top'
+            );
+        }
+    }, 20);
+}
+
 function matrix_careers_archive_sanitize_slug($value)
 {
     if (function_exists('sanitize_title')) {

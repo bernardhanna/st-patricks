@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/migrate-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/blog-single-functions.php';
 
 test('blog single formats post dates for display', function () {
@@ -35,6 +36,54 @@ test('blog single resolves author name with fallback', function () {
 
 test('blog single maps related post cards', function () {
     expect(function_exists('matrix_map_blog_related_post_card'))->toBeTrue();
+});
+
+test('migrated post content formatter removes duplicate umbraco headings', function () {
+    expect(function_exists('matrix_format_migrated_post_content'))->toBeTrue();
+
+    $html = '<div class="section-head hide-for-side"><h2>Section title</h2></div>'
+        . '<h3 class="hide-for-main">Section title</h3>'
+        . '<p>Body copy</p>'
+        . '<ul><li>One</li><li>Two</li></ul>';
+
+    $formatted = matrix_format_migrated_post_content($html);
+
+    expect($formatted)->toContain('<h2>Section title</h2>')
+        ->and($formatted)->not->toContain('hide-for-main')
+        ->and($formatted)->not->toContain('section-head')
+        ->and($formatted)->toContain('<ul><li>One</li>');
+});
+
+test('migrated post content formatter removes leading figure when it matches featured image', function () {
+    expect(function_exists('matrix_remove_leading_duplicate_featured_image_from_content'))->toBeTrue();
+
+    $html = '<figure><img src="https://example.com/wp-content/uploads/2026/06/4.png" alt=""></figure>'
+        . '<p class="intro">Intro paragraph</p>'
+        . '<p>Body copy</p>';
+
+    $formatted = matrix_remove_leading_duplicate_featured_image_from_content(
+        $html,
+        1227,
+        'https://example.com/wp-content/uploads/2026/06/4.png'
+    );
+
+    expect($formatted)->not->toContain('<figure>')
+        ->and($formatted)->toContain('<p class="intro">Intro paragraph</p>')
+        ->and($formatted)->toContain('<p>Body copy</p>');
+});
+
+test('migrated post content formatter keeps leading figure when image differs from featured image', function () {
+    $html = '<figure><img src="https://example.com/wp-content/uploads/2026/06/other.png" alt=""></figure>'
+        . '<p>Body copy</p>';
+
+    $formatted = matrix_remove_leading_duplicate_featured_image_from_content(
+        $html,
+        1227,
+        'https://example.com/wp-content/uploads/2026/06/4.png'
+    );
+
+    expect($formatted)->toContain('<figure>')
+        ->and($formatted)->toContain('other.png');
 });
 
 test('event post helpers return safe defaults without a post context', function () {

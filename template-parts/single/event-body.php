@@ -17,7 +17,7 @@ $show_cta_box = $has_cta_summary || $has_external_url;
                 <div class="mb-8 flex flex-col gap-6 rounded-[8px] bg-[#F1F8F9] p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:p-8">
                     <?php if ($has_cta_summary) { ?>
                         <div class="blog-single-content font-primary text-[16px] leading-[28px] text-[#08284B] lg:max-w-[640px]">
-                            <?php echo wp_kses_post($event_fields['cta_summary']); ?>
+                            <?php echo matrix_kses_rich_text($event_fields['cta_summary']); ?>
                         </div>
                     <?php } ?>
 

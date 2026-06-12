@@ -60,10 +60,6 @@ $heading = (string) ($defaults['related_heading'] ?? 'Related Links');
                                 <?php echo esc_html($card['title']); ?>
                             </a>
                         </h3>
-
-                        <p class="font-primary text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-[#1E244B]">
-                            <?php echo esc_html($card['date_label']); ?>
-                        </p>
                     </div>
                 </article>
             <?php } ?>

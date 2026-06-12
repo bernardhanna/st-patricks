@@ -87,14 +87,14 @@ function matrix_get_blog_post_card_url($post_id = null, $context = 'default')
 function matrix_get_blog_post_link_target($post_id = null, $context = 'default')
 {
     $url = matrix_get_blog_post_card_url($post_id, $context);
-    $is_external = $context === 'thumbnail'
-        && matrix_should_link_event_thumbnail_externally($post_id)
-        && $url !== '';
+    $is_external = ($context === 'thumbnail' && matrix_should_link_event_thumbnail_externally($post_id) && $url !== '')
+        || matrix_is_external_url($url);
+    $target = matrix_normalize_link_target($url);
 
     return [
         'url' => $url,
-        'target' => $is_external ? '_blank' : '_self',
-        'rel' => $is_external ? 'noopener noreferrer' : '',
+        'target' => $target,
+        'rel' => matrix_external_link_rel($target),
         'is_external' => $is_external,
     ];
 }
@@ -260,6 +260,202 @@ function matrix_map_blog_related_post_card($post_id)
         'image_url' => $thumbnail_id ? (string) wp_get_attachment_image_url($thumbnail_id, 'medium_large') : '',
         'image_alt' => $thumbnail_id ? trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true)) : '',
     ];
+}
+
+function matrix_migrate_image_basename(string $url): string
+{
+    if ($url === '') {
+        return '';
+    }
+
+    $path = parse_url($url, PHP_URL_PATH);
+
+    return is_string($path) && $path !== ''
+        ? strtolower(basename($path))
+        : '';
+}
+
+function matrix_migrate_img_matches_attachment(DOMElement $img, int $attachment_id, string $attachment_url): bool
+{
+    if ($attachment_id < 1 || $attachment_url === '') {
+        return false;
+    }
+
+    $class = $img->getAttribute('class');
+
+    if ($class !== '' && preg_match('/\bwp-image-' . $attachment_id . '\b/', $class)) {
+        return true;
+    }
+
+    $src = $img->getAttribute('src');
+
+    if ($src === '') {
+        return false;
+    }
+
+    $thumb_base = matrix_migrate_image_basename($attachment_url);
+    $src_base = matrix_migrate_image_basename($src);
+
+    return $thumb_base !== '' && $thumb_base === $src_base;
+}
+
+/**
+ * Remove a leading hero image from migrated body HTML when it matches the post thumbnail.
+ */
+function matrix_remove_leading_duplicate_featured_image_from_content(string $content, int $attachment_id, string $attachment_url): string
+{
+    if ($content === '' || $attachment_id < 1 || $attachment_url === '') {
+        return $content;
+    }
+
+    if (! function_exists('matrix_migrate_parse_html_document')) {
+        $migrate_file = function_exists('get_template_directory')
+            ? get_template_directory() . '/inc/migrate-functions.php'
+            : dirname(__FILE__) . '/migrate-functions.php';
+        require_once $migrate_file;
+    }
+
+    $dom = matrix_migrate_parse_html_document($content);
+
+    if (! $dom instanceof DOMDocument) {
+        return $content;
+    }
+
+    $body = $dom->getElementsByTagName('body')->item(0);
+
+    if (! $body instanceof DOMElement) {
+        return $content;
+    }
+
+    $node_to_remove = null;
+
+    foreach ($body->childNodes as $child) {
+        if ($child instanceof DOMText && trim($child->textContent) === '') {
+            continue;
+        }
+
+        if (! $child instanceof DOMElement) {
+            break;
+        }
+
+        if ($child->tagName === 'figure') {
+            $img = $child->getElementsByTagName('img')->item(0);
+
+            if ($img instanceof DOMElement && matrix_migrate_img_matches_attachment($img, $attachment_id, $attachment_url)) {
+                $node_to_remove = $child;
+            }
+
+            break;
+        }
+
+        if ($child->tagName === 'img') {
+            if (matrix_migrate_img_matches_attachment($child, $attachment_id, $attachment_url)) {
+                $node_to_remove = $child;
+            }
+
+            break;
+        }
+
+        break;
+    }
+
+    if (! $node_to_remove instanceof DOMNode || ! $node_to_remove->parentNode instanceof DOMNode) {
+        return $content;
+    }
+
+    $node_to_remove->parentNode->removeChild($node_to_remove);
+
+    return trim(matrix_migrate_dom_inner_html($body));
+}
+
+function matrix_remove_leading_duplicate_featured_image(string $content, int $post_id): string
+{
+    if ($content === '' || $post_id < 1 || ! function_exists('has_post_thumbnail') || ! has_post_thumbnail($post_id)) {
+        return $content;
+    }
+
+    $attachment_id = (int) get_post_thumbnail_id($post_id);
+    $attachment_url = (string) wp_get_attachment_url($attachment_id);
+
+    return matrix_remove_leading_duplicate_featured_image_from_content($content, $attachment_id, $attachment_url);
+}
+
+/**
+ * Strip Umbraco migration artefacts from imported post HTML.
+ */
+function matrix_format_migrated_post_content(string $content, int $post_id = 0): string
+{
+    if ($content === '') {
+        return '';
+    }
+
+    if (! function_exists('matrix_migrate_parse_html_document')) {
+        $migrate_file = function_exists('get_template_directory')
+            ? get_template_directory() . '/inc/migrate-functions.php'
+            : dirname(__FILE__) . '/migrate-functions.php';
+        require_once $migrate_file;
+    }
+
+    $dom = matrix_migrate_parse_html_document($content);
+
+    if (! $dom instanceof DOMDocument) {
+        return $content;
+    }
+
+    $xpath = new DOMXPath($dom);
+
+    foreach ($xpath->query('//h3[contains(concat(" ", normalize-space(@class), " "), " hide-for-main ")]') as $node) {
+        if ($node->parentNode instanceof DOMNode) {
+            $node->parentNode->removeChild($node);
+        }
+    }
+
+    foreach ($xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " section-head ")]') as $wrapper) {
+        if (! $wrapper->parentNode instanceof DOMNode) {
+            continue;
+        }
+
+        $parent = $wrapper->parentNode;
+
+        while ($wrapper->firstChild) {
+            $parent->insertBefore($wrapper->firstChild, $wrapper);
+        }
+
+        $parent->removeChild($wrapper);
+    }
+
+    $body = $dom->getElementsByTagName('body')->item(0);
+
+    if (! $body instanceof DOMNode) {
+        return $content;
+    }
+
+    $html = trim(matrix_migrate_dom_inner_html($body));
+
+    if ($post_id > 0) {
+        $html = matrix_remove_leading_duplicate_featured_image($html, $post_id);
+    }
+
+    return matrix_process_external_links_in_html($html);
+}
+
+function matrix_filter_blog_single_content(string $content): string
+{
+    if ($content === '' || ! is_singular('post')) {
+        return $content;
+    }
+
+    $post_id = get_the_ID();
+
+    if ($post_id < 1 || get_post_meta($post_id, '_matrix_migrate_old_path', true) === '') {
+        return $content;
+    }
+
+    return matrix_format_migrated_post_content($content, $post_id);
+}
+
+if (function_exists('add_filter')) {
+    add_filter('the_content', 'matrix_filter_blog_single_content', 20);
 }
 
 function matrix_get_blog_adjacent_post_link($direction = 'next', $post_id = null)

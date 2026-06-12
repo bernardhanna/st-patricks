@@ -145,7 +145,7 @@ $padding_str = implode(' ', $padding_classes);
 
             <?php if (!empty($intro_text)): ?>
               <div class="text-[16px] text-[#08284B] font-medium not-italic leading-[28px] wp_editor">
-                <?php echo wp_kses_post($intro_text); ?>
+                <?php echo matrix_kses_rich_text($intro_text); ?>
               </div>
             <?php endif; ?>
           </div>

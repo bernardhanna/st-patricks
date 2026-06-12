@@ -110,7 +110,7 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
 
         <?php if (trim(strip_tags($item['item_text'])) !== '') { ?>
             <div class="wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                <?php echo wp_kses_post($item['item_text']); ?>
+                <?php echo matrix_kses_rich_text($item['item_text']); ?>
             </div>
         <?php } ?>
 
@@ -153,7 +153,7 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
 
             <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
                 <div class="wp_editor mt-8 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                    <?php echo wp_kses_post($intro); ?>
+                    <?php echo matrix_kses_rich_text($intro); ?>
                 </div>
             <?php } ?>
         </header>

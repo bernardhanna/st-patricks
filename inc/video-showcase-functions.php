@@ -7,11 +7,12 @@ function matrix_normalize_video_showcase_link($link)
     }
 
     $title = trim((string) ($link['title'] ?? ''));
+    $url = (string) $link['url'];
 
     return [
-        'url' => (string) $link['url'],
+        'url' => $url,
         'title' => $title !== '' ? $title : 'Learn more',
-        'target' => trim((string) ($link['target'] ?? '')) ?: '_self',
+        'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
 

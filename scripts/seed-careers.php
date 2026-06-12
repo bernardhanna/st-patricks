@@ -169,6 +169,48 @@ if (! function_exists('matrix_seed_ensure_career_term')) {
     }
 }
 
+if (! function_exists('matrix_seed_preserve_careers_page_media')) {
+    function matrix_seed_preserve_careers_page_media(int $post_id, array $flexi_rows): array
+    {
+        $existing_rows = get_field('flexible_content_blocks', $post_id);
+        if (! is_array($existing_rows) || $existing_rows === []) {
+            return $flexi_rows;
+        }
+
+        foreach ($flexi_rows as $index => &$row) {
+            $existing_row = $existing_rows[$index] ?? null;
+            if (! is_array($existing_row) || ($row['acf_fc_layout'] ?? '') !== ($existing_row['acf_fc_layout'] ?? '')) {
+                continue;
+            }
+
+            $layout = $row['acf_fc_layout'];
+
+            if ($layout === 'hero_with_breadcrumbs' && ! empty($existing_row['hero_image'])) {
+                $row['hero_image'] = $existing_row['hero_image'];
+            }
+
+            if ($layout === 'content' && ! empty($existing_row['image'])) {
+                $row['image'] = $existing_row['image'];
+            }
+
+            if ($layout === 'about_links_grid' && is_array($existing_row['links'] ?? null) && is_array($row['links'] ?? null)) {
+                foreach ($row['links'] as $link_index => &$link) {
+                    $existing_link = $existing_row['links'][$link_index] ?? null;
+                    if (! is_array($existing_link) || ($existing_link['image_url'] ?? '') === '') {
+                        continue;
+                    }
+
+                    $link['image_url'] = $existing_link['image_url'];
+                }
+                unset($link);
+            }
+        }
+        unset($row);
+
+        return $flexi_rows;
+    }
+}
+
 if (! function_exists('matrix_seed_careers_vacancies')) {
     function matrix_seed_careers_vacancies(): void
     {
@@ -177,8 +219,18 @@ if (! function_exists('matrix_seed_careers_vacancies')) {
         $location_dublin = matrix_seed_ensure_career_term('career_location', 'Dublin', 'dublin');
         $location_lucan = matrix_seed_ensure_career_term('career_location', 'Lucan', 'lucan');
 
+        $real_vacancy_content = '<p>SPMHS is the largest independent, not-for-profit mental health service provider in Ireland, offering fantastic job opportunities in psychiatric nursing. We are hiring registered psychiatric nurses for both adult and adolescent services.</p><p>Whether you are a recent nursing graduate, returning to work after a career break, or simply looking for the next step forward in your nursing career, we welcome your application.</p>';
+
         $vacancies = [
-            ['title' => 'Receptionist / Admin Support', 'area' => 'Dean Clinic', 'department' => $department_admin, 'location' => $location_dublin],
+            [
+                'title' => 'Staff Nurse (Psychiatric) – Adult & Adolescent Services',
+                'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)',
+                'department' => $department_clinical,
+                'location' => $location_dublin,
+                'excerpt' => 'We are hiring registered psychiatric nurses for both adult and adolescent services.',
+                'content' => $real_vacancy_content,
+                'update_existing' => true,
+            ],
             ['title' => 'Clinical Nurse Manager', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_clinical, 'location' => $location_dublin],
             ['title' => 'Occupational Therapist', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan],
             ['title' => 'Healthcare Assistant', 'area' => 'Willow Grove Adolescent Unit', 'department' => $department_clinical, 'location' => $location_dublin],
@@ -192,27 +244,51 @@ if (! function_exists('matrix_seed_careers_vacancies')) {
             ['title' => 'Dietitian', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan],
         ];
 
+        $placeholder_content = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
+        $placeholder_excerpt = 'Join our team in a rewarding healthcare role.';
+
         foreach ($vacancies as $index => $vacancy) {
             $slug = sanitize_title($vacancy['title'] . '-' . ($index + 1));
             $existing = get_page_by_path($slug, OBJECT, 'careers');
-            if ($existing instanceof WP_Post) {
-                continue;
+
+            if ($index === 0 && ! ($existing instanceof WP_Post)) {
+                $legacy = get_posts([
+                    'post_type' => 'careers',
+                    'post_status' => 'publish',
+                    'posts_per_page' => 1,
+                    'orderby' => 'ID',
+                    'order' => 'ASC',
+                ]);
+                $existing = $legacy[0] ?? null;
             }
 
-            $career_id = wp_insert_post([
-                'post_type' => 'careers',
-                'post_status' => 'publish',
-                'post_title' => $vacancy['title'],
-                'post_name' => $slug,
-                'post_content' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>',
-                'post_excerpt' => 'Join our team in a rewarding healthcare role.',
-            ], true);
-
-            if (is_wp_error($career_id)) {
-                if (class_exists('WP_CLI')) {
-                    WP_CLI::warning('Could not create career post: ' . $career_id->get_error_message());
-                }
+            if ($existing instanceof WP_Post && ! empty($vacancy['update_existing'])) {
+                wp_update_post([
+                    'ID' => (int) $existing->ID,
+                    'post_title' => $vacancy['title'],
+                    'post_name' => sanitize_title($vacancy['title']),
+                    'post_content' => $vacancy['content'] ?? $placeholder_content,
+                    'post_excerpt' => $vacancy['excerpt'] ?? $placeholder_excerpt,
+                ]);
+                $career_id = (int) $existing->ID;
+            } elseif ($existing instanceof WP_Post) {
                 continue;
+            } else {
+                $career_id = wp_insert_post([
+                    'post_type' => 'careers',
+                    'post_status' => 'publish',
+                    'post_title' => $vacancy['title'],
+                    'post_name' => $slug,
+                    'post_content' => $vacancy['content'] ?? $placeholder_content,
+                    'post_excerpt' => $vacancy['excerpt'] ?? $placeholder_excerpt,
+                ], true);
+
+                if (is_wp_error($career_id)) {
+                    if (class_exists('WP_CLI')) {
+                        WP_CLI::warning('Could not create career post: ' . $career_id->get_error_message());
+                    }
+                    continue;
+                }
             }
 
             update_field('career_area', $vacancy['area'], $career_id);
@@ -223,6 +299,11 @@ if (! function_exists('matrix_seed_careers_vacancies')) {
 
             if ($vacancy['location'] > 0) {
                 wp_set_object_terms($career_id, [(int) $vacancy['location']], 'career_location', false);
+            }
+
+            if (! empty($vacancy['update_existing']) && function_exists('matrix_get_staff_nurse_job_description_html')) {
+                update_field('career_job_description', matrix_get_staff_nurse_job_description_html(), $career_id);
+                update_field('career_show_application_form', 1, $career_id);
             }
         }
     }
@@ -283,13 +364,14 @@ $link_image_ids = [
     matrix_seed_resolve_image($figma['link_3'], 'careers-link-card-3-3279-18763', 'Careers useful link card 3'),
 ];
 
-$hero_intro = 'Join a team dedicated to mental health recovery and wellbeing. Explore current vacancies, learn what we offer our staff, and find useful resources for applicants.';
-$why_work_intro = '<p><strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong></p>';
-$why_work_body = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
-$staff_offer_intro = '<p><strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong></p>';
-$staff_offer_body = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
-$faq_intro = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>';
-$accordion_open_body = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat m dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inc <strong>consectetur adipisicing</strong>.</p>';
+$hero_intro = 'Here at St Patrick\'s Mental Health Services (SPMHS), our team works towards a society where everyone is empowered and given the opportunity to live mentally healthy lives. Our staff work across a wide variety of roles, both clinical and non-clinical.';
+$why_work_intro = '<p><strong>Here at St Patrick\'s Mental Health Services (SPMHS), our team works towards a society where everyone is empowered and given the opportunity to live mentally healthy lives.</strong></p>';
+$why_work_body = '<p>Our staff work across a wide variety of roles, both clinical and non-clinical.</p><p>If you are interested in working in an exciting, forward-looking environment and being at the forefront of mental healthcare, we would love to hear from you. See our latest vacancies below or <a href="mailto:hr@stpatricks.ie">email your CV to hr@stpatricks.ie</a>.</p>';
+$staff_offer_intro = '<p><strong>Our staff make everything we do possible.</strong></p>';
+$staff_offer_body = '<p>Our mission is to make a positive difference in the care of people experiencing mental health difficulties. We are looking for dedicated and motivated people who share our vision and can help us to achieve this goal.</p><p>We are committed to building and growing an innovative workplace where all staff are empowered and encouraged to reach their full potential. We are an equal opportunities employer.</p>';
+$faq_intro = '<p>Find answers to common questions about working with us, applying for roles, and arranging placements or work experience.</p>';
+$faq_apply_body = '<p>If you would like to work with us, you can see our latest vacancies on this page. If a role or area you are interested in is not currently advertised, you can email your cover letter and CV to our Human Resources (HR) Department at <a href="mailto:hr@stpatricks.ie">hr@stpatricks.ie</a>.</p><p>Please get in touch with the HR Department if you have any questions or need any help with your application: email hr@stpatricks.ie or <a href="tel:012493435">call 01 249 3435</a>. We cannot accept paper applications; all applications must be made online.</p>';
+$faq_placement_body = '<p>Honorary and elective placements are usually arranged by people seeking this work experience directly with the department concerned. The documentation needed to confirm the placement is provided by Human Resources. If you would like to apply for a placement, please <a href="mailto:hr@stpatricks.ie">email your request to hr@stpatricks.ie</a>, from where it will be forwarded on to the relevant department.</p><p>Please note that these placements do not establish a relationship of employment between the person and SPMHS. We cannot offer standard employment benefits, including remuneration, to honorary or elective contracts.</p><p>We also welcome volunteers in a number of areas of our organisation. If you are interested in a volunteer role, please email hr@stpatricks.ie.</p>';
 
 $section_padding = [
     ['screen_size' => 'mob', 'padding_top' => '3', 'padding_bottom' => '3'],
@@ -305,7 +387,7 @@ $useful_link_cards = [
     ],
     [
         'title' => 'Attending an interview',
-        'url' => home_url('/attending-an-interview/'),
+        'url' => home_url('/careers/attending-an-interview/'),
         'image_id' => $link_image_ids[1],
         'tone' => 'bg2',
     ],
@@ -420,7 +502,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'about_links_grid',
         'heading_tag' => 'h2',
-        'heading_text' => 'Useful links (all placeholder/suggestions)',
+        'heading_text' => 'Useful links',
         'intro_text' => '',
         'links' => $about_links,
         'bg_color' => '#E9E2F7',
@@ -452,12 +534,31 @@ $flexi_rows = [
         'panel_background' => '#FFFFFF',
         'open_panel_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
         'items' => [
-            matrix_seed_accordion_item('Lorem ipsum dolor sit amet lorem consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
-            matrix_seed_accordion_item('Lorem ipsum dolor sit amet consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
-            matrix_seed_accordion_item('Lorem ipsum sit amet consectetur.', $accordion_open_body, true),
-            matrix_seed_accordion_item('Lorem ipsum dolor sit amet lorem consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
-            matrix_seed_accordion_item('Sit amet lorem consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
-            matrix_seed_accordion_item('Lorem ipsum dolor sit amet consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
+            matrix_seed_accordion_item(
+                'Why join St Patrick\'s Mental Health Services?',
+                '<p>Our staff is our most important asset: working across diverse clinical and non-clinical roles, they support people towards mental health recovery every day.</p><p>In turn, we work to create a positive, dynamic and rewarding workplace where our staff are supported to continually learn, expand their skills, progress their careers, and enjoy satisfaction in what they do. By joining us, you can be part of a team that, with over 250 years experience, is proud of its rich history, but is always driving innovation and looking to an exciting future.</p>'
+            ),
+            matrix_seed_accordion_item(
+                'What do we offer our staff?',
+                '<p>As Ireland\'s largest independent, not-for-profit mental health service provider, we have a strong reputation for delivering high quality mental healthcare. We are continuing to grow and expand, offering many opportunities for collaborative working and career advancement.</p><p>We provide excellent pay and remuneration, including a generous contributory pension scheme and free Employee Assistance Programme. We take career development seriously, offering internal and external training, research opportunities, funding for further education, paid study leave, and opportunities for promotion and career progression.</p>'
+            ),
+            matrix_seed_accordion_item(
+                'What wellbeing support is available?',
+                '<p>We were the first hospital and first healthcare organisation in Ireland to be awarded the IBEC KeepWell Mark in 2018, in recognition of our workplace wellbeing, and have received this award every year since.</p><p>We offer an active Staff Wellbeing Committee, flexible working arrangements, opportunities for remote or hybrid working where appropriate, a subsidised canteen and onsite gym, central locations, Bike to Work and TaxSaver Commuter Ticket schemes, and an award-winning menopause workplace programme.</p>',
+                true
+            ),
+            matrix_seed_accordion_item(
+                'Who are we looking for?',
+                '<p>We are always welcoming of applications from dedicated, proactive people who enjoy being part of an inclusive, progressive team and share our vision of empowering people towards mentally healthy living.</p><p>Our team works across a wide variety of clinical and non-clinical areas, with our roles spanning from entry-level to leadership and management positions.</p>'
+            ),
+            matrix_seed_accordion_item(
+                'How do I apply for a role?',
+                $faq_apply_body
+            ),
+            matrix_seed_accordion_item(
+                'How can I arrange a work placement or work experience?',
+                $faq_placement_body
+            ),
         ],
         'padding_settings' => [
             ['screen_size' => 'mob', 'padding_top' => '1', 'padding_bottom' => '3'],
@@ -465,6 +566,8 @@ $flexi_rows = [
         ],
     ],
 ];
+
+$flexi_rows = matrix_seed_preserve_careers_page_media($post_id, $flexi_rows);
 
 update_field('hero_content_blocks', [], $post_id);
 update_field('flexible_content_blocks', $flexi_rows, $post_id);

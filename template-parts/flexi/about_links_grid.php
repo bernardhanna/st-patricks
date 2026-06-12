@@ -71,7 +71,7 @@ if (have_rows('padding_settings')) {
                 <?php if ($intro_text) : ?>
                     <div class="max-w-2xl font-primary text-base font-medium leading-7 wp_editor"
                         style="color: <?php echo esc_attr($intro_color); ?>;">
-                        <?php echo wp_kses_post($intro_text); ?>
+                        <?php echo matrix_kses_rich_text($intro_text); ?>
                     </div>
                 <?php endif; ?>
             </div>

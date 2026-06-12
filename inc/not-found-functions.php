@@ -27,11 +27,13 @@ function matrix_normalize_not_found_acf_links($rows)
             continue;
         }
 
+        $url = (string) $link['url'];
+
         $items[] = [
             'link' => [
                 'title' => $title,
-                'url' => (string) $link['url'],
-                'target' => trim((string) ($link['target'] ?? '')) ?: '_self',
+                'url' => $url,
+                'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
             ],
         ];
     }

@@ -125,7 +125,7 @@ $hero_img_title = isset($hero_image['title']) && $hero_image['title'] !== '' ? $
           <?php if (!empty($description)) : ?>
             <div class="text-lg font-medium leading-relaxed md:text-xl wp_editor"
                  style="color: <?php echo esc_attr($text_color); ?>;">
-              <?php echo wp_kses_post($description); ?>
+              <?php echo matrix_kses_rich_text($description); ?>
             </div>
           <?php endif; ?>
 

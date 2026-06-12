@@ -181,13 +181,41 @@ function matrix_normalize_content_link($link)
     return [
         'title' => $title,
         'url' => $url,
-        'target' => (string) ($link['target'] ?? '_self'),
+        'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
 
 function matrix_content_has_visible_rich_text($value)
 {
     return is_string($value) && trim(strip_tags($value)) !== '';
+}
+
+function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $text_max_width_classes = '')
+{
+    $classes = array_filter([
+        'wp_editor',
+        is_string($text_max_width_classes) && $text_max_width_classes !== '' ? $text_max_width_classes : null,
+        'font-primary',
+        'text-[16px]',
+        $weight === 'bold' ? 'font-bold' : 'font-medium',
+        'leading-[28px]',
+        'text-[#08284B]',
+        '[&_p]:mb-4',
+        '[&_p:last-child]:mb-0',
+        '[&_ul]:mb-4',
+        '[&_ul]:list-disc',
+        '[&_ul]:pl-6',
+        '[&_ol]:mb-4',
+        '[&_ol]:list-decimal',
+        '[&_ol]:pl-6',
+        '[&_li]:mb-2',
+        '[&_a]:font-medium',
+        '[&_a]:text-[#024B79]',
+        '[&_a]:underline',
+        'hover:[&_a]:no-underline',
+    ]);
+
+    return implode(' ', $classes);
 }
 
 function matrix_get_content_background_style($background_type, $background_color = '', $background_gradient = '')

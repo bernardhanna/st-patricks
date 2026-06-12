@@ -93,9 +93,9 @@ $section_id = 'about-us-mega-menu-' . $index;
                         ?>
                         <li>
                             <?php if ($has_panel) : ?>
-                                <button
-                                    type="button"
-                                    class="flex gap-2.5 items-center w-full text-base font-medium leading-6 text-left transition-colors"
+                                <a
+                                    href="<?php echo esc_url($child->url); ?>"
+                                    class="flex gap-2.5 items-center w-full text-base font-medium leading-6 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                                     :class="activePanelIndex === <?php echo $child_index; ?> ? 'text-[#024B79] underline underline-offset-2' : 'text-[#001F33] hover:text-[#024B79]'"
                                     aria-controls="<?php echo esc_attr($section_id); ?>-panel-<?php echo $child_index; ?>"
                                     :aria-expanded="activePanelIndex === <?php echo $child_index; ?> ? 'true' : 'false'"
@@ -106,7 +106,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
                                         <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                </button>
+                                </a>
                             <?php else : ?>
                                 <a
                                     href="<?php echo esc_url($child->url); ?>"
@@ -149,7 +149,13 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <h3 class="font-primary text-[20px] font-semibold leading-7 tracking-[-0.1px] text-[#1E244B]">
-                                    <?php echo esc_html($child->label); ?>
+                                    <a
+                                        href="<?php echo esc_url($child->url); ?>"
+                                        class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                                        <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                    >
+                                        <?php echo esc_html($child->label); ?>
+                                    </a>
                                 </h3>
                             </div>
 

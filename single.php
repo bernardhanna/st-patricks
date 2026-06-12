@@ -27,9 +27,11 @@ if (get_post_type() === 'post') {
                         <?php } ?>
 
                         <?php if (trim(get_the_content()) !== '') { ?>
-                            <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                                <?php the_content(); ?>
-                            </article>
+                            <div class="relative min-w-0 w-full wp_editor">
+                                <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                                    <?php the_content(); ?>
+                                </article>
+                            </div>
                         <?php } ?>
 
                         <?php get_template_part('template-parts/single/author-share'); ?>

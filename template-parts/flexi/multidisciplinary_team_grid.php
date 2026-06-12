@@ -69,7 +69,7 @@ $tone_backgrounds = [
 
         <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
             <div class="wp_editor mt-6  [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                <?php echo wp_kses_post($intro); ?>
+                <?php echo matrix_kses_rich_text($intro); ?>
             </div>
         <?php } ?>
 
@@ -98,7 +98,7 @@ $tone_backgrounds = [
 
                             <?php if (trim(strip_tags($card['description'])) !== '') { ?>
                                 <div class="wp_editor mt-4 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                                    <?php echo wp_kses_post($card['description']); ?>
+                                    <?php echo matrix_kses_rich_text($card['description']); ?>
                                 </div>
                             <?php } ?>
                         </div>
@@ -121,7 +121,7 @@ $tone_backgrounds = [
 
                             <?php if (trim(strip_tags($card['description'])) !== '') { ?>
                                 <div class="wp_editor mt-4 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                                    <?php echo wp_kses_post($card['description']); ?>
+                                    <?php echo matrix_kses_rich_text($card['description']); ?>
                                 </div>
                             <?php } ?>
                         </div>

@@ -206,8 +206,21 @@ if (is_array($home_partners_row['partners'] ?? null)) {
     }
 }
 
-$lorem_short = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-$lorem_long = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
+$hero_intro = "Welcome to St Patrick's Mental Health Services, Ireland's largest, independent, not-for-profit mental health service.";
+
+$welcome_intro = '<p><strong>Welcome to St Patrick\'s Mental Health Services, Ireland\'s largest, independent, not-for-profit mental health service.</strong></p>';
+$welcome_content = '<p>At St Patrick\'s Mental Health Services (SPMHS), we provide community and outpatient care through our Dean Clinics and day patient services through our Wellness and Recovery Centre. We offer a multidisciplinary inpatient service through our three approved centres: St Patrick\'s University Hospital (208 beds); St Patrick\'s Hospital Lucan (52 beds); and Willow Grove Adolescent Unit (14 beds). We also provide a Homecare Service and remote access to our services through phone, video or online channels.</p>';
+
+$what_we_offer_intro = 'At St Patrick\'s Mental Health Services (SPMHS), we provide community and outpatient care through our Dean Clinics and day patient services through our Wellness and Recovery Centre.';
+
+$vision_intro = '<p><strong>Our vision is to see a society where all citizens are empowered and given the opportunity to live mentally healthy lives.</strong></p>';
+$vision_content = '<p>We work to provide the highest quality mental healthcare, to promote mental wellbeing and mental health awareness, and to advocate for the rights of those experiencing mental health difficulties. We achieve this through a human rights-based approach, through the enhancement of evidence-based knowledge, and by striving to be at the cutting-edge of new initiatives and advances in the field.</p>';
+
+$commitment_intro = '<p><strong>SPMHS is a registered charity (Registered Charity Number (RCN): 20000370).</strong></p>';
+$commitment_content = '<p>Jonathan Swift, Dean of St Patrick\'s Cathedral and noted author, founded St Patrick\'s Hospital over 270 years ago. Now known as St Patrick\'s Mental Health Services, the hospital is driven by the same vision, energy and determination first demonstrated by Dean Swift in 1746.</p>';
+
+$leader_intro = '<p><strong>We aspire to be a recognised leader in mental health.</strong></p>';
+$leader_content = '<ul><li>The provision of quality mental healthcare</li><li>The promotion of mental health awareness</li><li>The protection of the rights and integrity of those experiencing mental health difficulties.</li></ul>';
 
 $testimonial_quote = '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 
@@ -225,25 +238,25 @@ for ($i = 0; $i < 4; $i++) {
 $what_we_offer_services = [
     [
         'service_title' => 'Inpatient Care',
-        'service_description' => '<p>' . $lorem_short . '</p>',
+        'service_description' => '<p>We offer a multidisciplinary inpatient service through our three approved centres: St Patrick\'s University Hospital, St Patrick\'s Hospital Lucan, and Willow Grove Adolescent Unit.</p>',
         'accent_color' => '#6FC9C0',
         'show_service_icon' => 0,
     ],
     [
         'service_title' => "St Patrick's at Home",
-        'service_description' => '<p>' . $lorem_short . '</p>',
+        'service_description' => '<p>We provide a Homecare Service and remote access to our services through phone, video or online channels.</p>',
         'accent_color' => '#C3DBAE',
         'show_service_icon' => 0,
     ],
     [
         'service_title' => 'Outpatient Care - Dean Clinics',
-        'service_description' => '<p>' . $lorem_short . '</p>',
+        'service_description' => '<p>We provide community and outpatient care through our Dean Clinics across Ireland.</p>',
         'accent_color' => '#B4A8CE',
         'show_service_icon' => 0,
     ],
     [
         'service_title' => 'Day Programmes',
-        'service_description' => '<p>' . $lorem_short . '</p>',
+        'service_description' => '<p>Day patient services are delivered through our Wellness and Recovery Centre.</p>',
         'accent_color' => '#E4B8D6',
         'show_service_icon' => 0,
     ],
@@ -273,8 +286,8 @@ $flexi_rows = [
         ],
         'current_crumb_label' => 'Overview',
         'heading_tag' => 'h1',
-        'heading' => 'Overview - Short title',
-        'content' => '<p>' . $lorem_short . '</p>',
+        'heading' => 'Overview',
+        'content' => '<p>' . esc_html($hero_intro) . '</p>',
         'hero_image' => $hero_image_id,
         'background_color' => '#C6ECF4',
         'breadcrumb_background_color' => '#F1F8F9',
@@ -286,8 +299,8 @@ $flexi_rows = [
         'heading' => "Welcome to St Patrick's Mental Health Services",
         'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
-        'intro_text' => '<p><strong>' . $lorem_short . '</strong></p>',
-        'content' => $lorem_long,
+        'intro_text' => $welcome_intro,
+        'content' => $welcome_content,
         'layout_style' => 'image_left',
         'background_type' => 'white',
         'image' => $welcome_image_id,
@@ -297,7 +310,7 @@ $flexi_rows = [
         'heading' => 'What we offer',
         'heading_tag' => 'h2',
         'layout_style' => 'intro_two_column',
-        'intro_text' => $lorem_short,
+        'intro_text' => $what_we_offer_intro,
         'services' => $what_we_offer_services,
         'background_gradient' => '#FBF8F3',
     ],
@@ -318,8 +331,8 @@ $flexi_rows = [
         'heading' => 'Our Vision and Mission',
         'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
-        'intro_text' => '<p><strong>Our vision is to see a society where all citizens are empowered and given the opportunity to live mentally healthy lives</strong></p>',
-        'content' => $lorem_long,
+        'intro_text' => $vision_intro,
+        'content' => $vision_content,
         'layout_style' => 'image_left',
         'background_type' => 'white',
         'image' => $vision_image_id,
@@ -329,11 +342,11 @@ $flexi_rows = [
         'heading' => 'Our Commitment',
         'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
-        'intro_text' => '<p><strong>At St Patrick\'s Mental Health Services (SPMHS), we provide community and outpatient care through our Dean Clinics and day patient services through our Wellness and Recovery Centre.</strong></p>',
-        'content' => $lorem_long,
+        'intro_text' => $commitment_intro,
+        'content' => $commitment_content,
         'primary_button' => [
             'title' => 'Support Us',
-            'url' => home_url('/support-us/'),
+            'url' => home_url('/about-us/support-us/'),
             'target' => '',
         ],
         'primary_button_variant' => 'outline',
@@ -346,8 +359,8 @@ $flexi_rows = [
         'heading' => 'A recognised leader in Mental Health',
         'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
-        'intro_text' => '<p><strong>Our vision is to see a society where all citizens are empowered and given the opportunity to live mentally healthy lives</strong></p>',
-        'content' => $lorem_long,
+        'intro_text' => $leader_intro,
+        'content' => $leader_content,
         'primary_button' => [
             'title' => 'Our Future',
             'url' => home_url('/about-us/our-present-and-future/'),
@@ -361,7 +374,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => "Video Title St. Patrick's Mental Health Services 1746-2016",
+        'heading' => "St Patrick's Mental Health Services 1746–2016",
         'intro' => '',
         'layout_style' => 'feature_single',
         'slides' => [

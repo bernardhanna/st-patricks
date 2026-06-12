@@ -14,13 +14,15 @@ function matrix_normalize_referral_action_card($card, $defaults = [])
         $action_icon = (string) ($defaults['action_icon'] ?? 'external');
     }
 
+    $button_url = trim((string) ($button['url'] ?? ''));
+
     return [
         'title' => trim((string) ($card['title'] ?? '')),
         'description' => trim((string) ($card['description'] ?? '')),
         'button' => [
             'title' => trim((string) ($button['title'] ?? '')),
-            'url' => trim((string) ($button['url'] ?? '')),
-            'target' => (string) ($button['target'] ?? '_self'),
+            'url' => $button_url,
+            'target' => matrix_normalize_link_target($button_url, (string) ($button['target'] ?? '')),
         ],
         'action_icon' => $action_icon,
         'background_color' => $background_color,

@@ -1,27 +1,6 @@
 <?php
 
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
-
-$wrapper_classes = trim(implode(' ', array_unique(array_merge(
-    ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5', 'pt-5', 'pb-5'],
-    $padding_classes
-))));
+$wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col max-xl:px-5';
 
 get_template_part('template-parts/useful-links/section', null, [
     'useful_links' => [

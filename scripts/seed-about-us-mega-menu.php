@@ -73,7 +73,7 @@ $top_level = [
     ['Policies and Publications', $home . 'about-us/policies-and-publications/'],
     ['Careers', $home . 'careers/', [
         ['Recruitment and useful information', $home . 'recruitment-and-useful-information/'],
-        ['Attending an interview', $home . 'attending-an-interview/'],
+        ['Attending an interview', $home . 'careers/attending-an-interview/'],
         ['Staff Wellbeing', $home . 'recruitment-and-useful-information/staff-wellbeing/'],
         ['How to get work experience', $home . 'recruitment-and-useful-information/how-to-get-work-experience/'],
         ['How to apply for a role', $home . 'recruitment-and-useful-information/how-to-apply-for-a-role/'],
@@ -81,7 +81,7 @@ $top_level = [
     ['Research', $home . 'about-us/research/', [
         ['Current research projects', $home . 'current-research-projects/'],
         ['Past research projects', $home . 'past-research-projects/'],
-        ['Research library / SPIRE', $home . 'research-library-spire/'],
+        ['Research library / SPIRE', $home . 'research/spire/'],
         ['Research Ethics Committee', $home . 'research-ethics-committee/'],
     ]],
     ['Advocacy', $home . 'about-us/advocacy/'],

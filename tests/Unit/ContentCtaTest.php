@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/faq-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/content-cta-functions.php';
 
@@ -33,4 +34,11 @@ test('content cta resolves solid and gradient backgrounds', function () {
 
     expect(matrix_get_content_cta_background_style('color', '', ''))
         ->toBe('background-color: #E9E2F7;');
+});
+
+test('content cta resolves inverse theme classes for dark backgrounds', function () {
+    $inverse = matrix_get_content_cta_theme_classes('inverse');
+
+    expect($inverse['heading'])->toBe('text-white')
+        ->and($inverse['button'])->toContain('bg-white');
 });

@@ -9,3 +9,6 @@ tests/link-report/
 vendor/.env
 # Mac junk
 .DS_Store
+
+# Legacy site scrape and migration artefacts
+old/

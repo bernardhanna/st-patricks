@@ -4,7 +4,6 @@ function matrix_get_research_project_single_defaults()
 {
     return [
         'back_label' => 'Back to research projects',
-        'date_label' => 'Date posted:',
         'published_by_label' => 'Published by',
         'author_fallback' => 'St Patrick Hospital Team',
         'share_label' => 'Share on:',
@@ -28,13 +27,6 @@ function matrix_get_research_project_archive_url()
     }
 
     return home_url('/research-projects/');
-}
-
-function matrix_format_research_project_date($post_id = null)
-{
-    $post_id = $post_id ?: get_the_ID();
-
-    return get_the_date('d/m/y', $post_id);
 }
 
 function matrix_get_research_project_intro($post_id = null)
@@ -175,6 +167,25 @@ function matrix_get_research_project_adjacent_post_link($direction = 'next', $po
     ];
 }
 
+function matrix_filter_research_project_single_content(string $content): string
+{
+    if ($content === '' || ! is_singular('research_projects')) {
+        return $content;
+    }
+
+    $post_id = (int) get_the_ID();
+
+    if ($post_id < 1 || ! function_exists('matrix_remove_leading_duplicate_featured_image')) {
+        return $content;
+    }
+
+    return matrix_remove_leading_duplicate_featured_image($content, $post_id);
+}
+
+if (function_exists('add_filter')) {
+    add_filter('the_content', 'matrix_filter_research_project_single_content', 20);
+}
+
 function matrix_map_research_project_related_post_card($post_id)
 {
     $post_id = (int) $post_id;
@@ -187,7 +198,6 @@ function matrix_map_research_project_related_post_card($post_id)
         'thumbnail_href' => get_permalink($post_id),
         'thumbnail_target' => '_self',
         'thumbnail_rel' => '',
-        'date_label' => 'Date: ' . matrix_format_research_project_date($post_id),
         'category_name' => matrix_get_research_project_primary_category_name($post_id),
         'image_id' => (int) $thumbnail_id,
         'image_url' => $thumbnail_id ? (string) wp_get_attachment_image_url($thumbnail_id, 'medium_large') : '',

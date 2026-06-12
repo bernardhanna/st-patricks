@@ -208,7 +208,7 @@ $open_item_background_style = matrix_get_faq_background_style($open_item_backgro
                                     class="wp_editor border-t border-[rgba(30,36,75,0.12)] pt-4 text-[15px] font-medium leading-[28px] [&_a]:underline [&_p:last-child]:mb-0 [&_strong]:font-semibold lg:text-[16px]"
                                     style="color: <?php echo esc_attr($answer_color); ?>;"
                                 >
-                                    <?php echo wp_kses_post($faq_item['answer']); ?>
+                                    <?php echo matrix_kses_rich_text($faq_item['answer']); ?>
                                 </div>
                             </div>
                         </div>

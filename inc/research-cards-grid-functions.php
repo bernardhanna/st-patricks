@@ -22,10 +22,12 @@ function matrix_normalize_research_cards_grid_link($link)
 
     $title = trim((string) ($link['title'] ?? ''));
 
+    $url = (string) $link['url'];
+
     return [
-        'url' => (string) $link['url'],
+        'url' => $url,
         'title' => $title !== '' ? $title : 'Learn more',
-        'target' => trim((string) ($link['target'] ?? '')) ?: '_self',
+        'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
 

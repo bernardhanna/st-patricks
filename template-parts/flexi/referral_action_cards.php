@@ -80,7 +80,7 @@ if (have_rows('padding_settings')) {
 
                 <?php if (trim(strip_tags($card['description'])) !== '') { ?>
                     <div class="wp_editor mt-4 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#1E244B]">
-                        <?php echo wp_kses_post($card['description']); ?>
+                        <?php echo matrix_kses_rich_text($card['description']); ?>
                     </div>
                 <?php } ?>
 

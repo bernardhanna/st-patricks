@@ -27,10 +27,11 @@ function matrix_normalize_multidisciplinary_team_cards($cards)
         $link = null;
 
         if (is_array($raw_link) && ! empty($raw_link['url'])) {
+            $url = (string) $raw_link['url'];
             $link = [
-                'url' => (string) $raw_link['url'],
+                'url' => $url,
                 'title' => trim((string) ($raw_link['title'] ?? '')),
-                'target' => trim((string) ($raw_link['target'] ?? '')) ?: '_self',
+                'target' => matrix_normalize_link_target($url, (string) ($raw_link['target'] ?? '')),
             ];
         }
 

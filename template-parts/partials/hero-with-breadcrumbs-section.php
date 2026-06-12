@@ -46,7 +46,7 @@ extract($hero, EXTR_SKIP);
                                 class="font-primary text-[16px] font-medium leading-[28px] wp_editor [&_p:last-child]:mb-0"
                                 style="color: <?php echo esc_attr($text_color); ?>;"
                             >
-                                <?php echo wp_kses_post($content); ?>
+                                <?php echo matrix_kses_rich_text($content); ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -100,7 +100,7 @@ extract($hero, EXTR_SKIP);
                             class="<?php echo esc_attr($text_max_width_class); ?> font-primary text-[16px] not-italic font-medium leading-[28px] text-[#08284B] wp_editor [&_p:last-child]:mb-0"
                             style="color: <?php echo esc_attr($text_color); ?>;"
                         >
-                            <?php echo wp_kses_post($content); ?>
+                            <?php echo matrix_kses_rich_text($content); ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -156,7 +156,7 @@ extract($hero, EXTR_SKIP);
                                 class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_content_class_names($text_max_width)); ?>"
                                 style="color: <?php echo esc_attr($text_color); ?>;"
                             >
-                                <?php echo wp_kses_post($content); ?>
+                                <?php echo matrix_kses_rich_text($content); ?>
                             </div>
                         <?php } ?>
                     </div>

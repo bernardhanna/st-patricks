@@ -38,7 +38,7 @@ function matrix_normalize_locations_grid_cards($rows)
             'link' => [
                 'title' => trim((string) ($link['title'] ?? '')),
                 'url' => $url,
-                'target' => (string) ($link['target'] ?? '_self'),
+                'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
             ],
             'is_linked' => $url !== '',
         ];
@@ -63,6 +63,6 @@ function matrix_normalize_locations_grid_link($link)
     return [
         'title' => $title,
         'url' => $url,
-        'target' => (string) ($link['target'] ?? '_self'),
+        'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }

@@ -205,7 +205,7 @@ if (!empty($services) && is_array($services)) {
 
                                   <?php if ($service['description'] !== '') : ?>
                                       <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
-                                          <?php echo wp_kses_post($service['description']); ?>
+                                          <?php echo matrix_kses_rich_text($service['description']); ?>
                                       </div>
                                   <?php endif; ?>
                               </div>
@@ -299,7 +299,7 @@ if (!empty($services) && is_array($services)) {
 
                                     <?php if ($service['description'] !== '') : ?>
                                         <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
-                                            <?php echo wp_kses_post($service['description']); ?>
+                                            <?php echo matrix_kses_rich_text($service['description']); ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>

@@ -87,7 +87,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
 
             <?php if ($show_intro) { ?>
                 <div class="wp_editor mt-6 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                    <?php echo wp_kses_post($intro); ?>
+                    <?php echo matrix_kses_rich_text($intro); ?>
                 </div>
             <?php } ?>
         </div>
@@ -144,7 +144,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
                     class="<?php echo esc_attr(trim('wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[#08284B] ' . ($layout_style === 'compact_slider' ? '[&_p]:text-[16px] [&_p]:leading-[26px]' : '[&_p]:text-[18px] [&_p]:leading-[28px]'))); ?>"
                     data-active-caption
                 >
-                    <?php echo wp_kses_post($initial_slide['caption']); ?>
+                    <?php echo matrix_kses_rich_text($initial_slide['caption']); ?>
                 </div>
 
                 <div class="mt-5 <?php echo $initial_slide['cta_link'] ? '' : 'hidden'; ?>" data-active-cta-wrap>

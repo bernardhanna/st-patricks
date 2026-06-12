@@ -1,0 +1,27 @@
+---
+description: Rules for building WordPress pages from MD specs and PHP seed scripts
+globs: scripts/seed*.php,scripts/lib/*-seed*.php,docs/superpowers/**/*.md
+alwaysApply: false
+---
+
+# Page seed conventions
+
+Read `docs/superpowers/page-build-rules.md` before writing or editing page specs or seed scripts.
+
+## Padding
+
+- **Do not** set `padding_settings` on flexi blocks unless the user explicitly asks for custom spacing.
+- Omit the key entirely; use template defaults.
+
+## Heading hierarchy
+
+- **One `h1` per page** — hero block only.
+- Major sections: `h2` (`content`, `content_cta`, `team_members` at section level).
+- Subsections under a major section: `h3` (e.g. team grid under “Role of the REC”).
+- Continue down (`h4`, `h5`) when the source outline requires it — **do not default everything to `h2`**.
+- Accordion panel titles are not `heading_tag` fields; put the parent section heading on the `content` block above.
+
+## Helpers
+
+- `require_once __DIR__ . '/lib/page-seed-conventions.php';`
+- `matrix_page_seed_heading(2)` for outline-driven tags.

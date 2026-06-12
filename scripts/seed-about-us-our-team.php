@@ -183,42 +183,44 @@ $team_image_ids = [
     matrix_seed_resolve_image($figma['team_c'], 'our-team-card-c', 'Team member portrait C'),
 ];
 
-$card_description = '<p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam.</p>';
+$hero_intro = 'The different professions bring complementary areas of expertise so they can combine their skillsets to tackle complex mental health conditions. The MDT meets regularly so that each service user has a care plan best suited to their individual needs.';
+
+$mdt_intro = '<p>A multidisciplinary team (MDT) is a mental health team comprising a variety of professional staff. Core team members include psychiatrists, psychiatric nurses, clinical psychologists, social workers and occupational therapists.</p><p>The different professions all have different areas of expertise so that they can combine their skillsets if necessary to tackle complex and challenging mental health conditions. The MDT meets regularly to discuss its work with individuals, so that each service user has a care plan best suited to their individual needs.</p>';
 
 $multidisciplinary_cards = [
     [
-        'title' => "Psychiatrists (consultants and registrars)",
-        'description' => $card_description,
+        'title' => 'Psychiatrists (consultants and registrars)',
+        'description' => '<p>Our medical care team consists of consultant psychiatrists and registrar psychiatrists. A psychiatrist is a physician who specialises in the prevention, diagnosis and treatment of mental, addictive and emotional disorders.</p>',
         'card_tone' => 'teal',
         'link' => ['title' => 'Psychiatrists', 'url' => $home . 'inpatient-care/', 'target' => ''],
     ],
     [
         'title' => 'Social Workers',
-        'description' => $card_description,
+        'description' => '<p>Social work help is provided through information, advice, counselling and advocacy. It is often directed towards enabling service users to deal with social and emotional concerns and to access beneficial services and resources relevant to rehabilitation, social care, accommodation and welfare rights.</p>',
         'card_tone' => 'lavender',
         'link' => ['title' => 'Social Workers', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Nurses',
-        'description' => $card_description,
+        'description' => '<p>Nursing is the use of clinical judgement in the provision of care to enable people to improve, maintain, or recover health, to cope with health problems and to achieve the best possible quality of life. Our nurses work across ward-based and specialist settings throughout our service.</p>',
         'card_tone' => 'green',
         'link' => ['title' => 'Nurses', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Occupational Therapists',
-        'description' => $card_description,
+        'description' => '<p>Occupational therapy is concerned with what we do in our daily lives and how this both affects and is affected by our health. Occupational therapists support you to take part in everyday activities that matter to you, contributing to your wellbeing, independence and satisfaction in daily life.</p>',
         'card_tone' => 'pink',
         'link' => ['title' => 'Occupational Therapists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Clinical Psychologists',
-        'description' => $card_description,
+        'description' => '<p>In addition to clinical psychologists working within MDTs, the Clinical Psychology Department runs a number of psychology-based therapeutic programmes both at an inpatient and day service level.</p>',
         'card_tone' => 'yellow',
         'link' => ['title' => 'Clinical Psychologists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Pharmacists',
-        'description' => $card_description,
+        'description' => '<p>Pharmacists work with our medical and nursing colleagues to promote safe and effective use of medicines. They discuss the most appropriate medicines for you, check prescriptions are safe, and provide information about new medicines that have been prescribed.</p>',
         'card_tone' => 'coral',
         'link' => ['title' => 'Pharmacists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
@@ -368,7 +370,7 @@ $flexi_rows = [
         'current_crumb_label' => 'Our team',
         'heading_tag' => 'h1',
         'heading' => 'Our Team',
-        'content' => '<p>We believe a collaborative approach is essential, and place huge importance on links and partnerships with other organisations sharing our objectives, both nationally and internationally.</p>',
+        'content' => '<p>' . esc_html($hero_intro) . '</p>',
         'hero_image' => $hero_image_id,
         'background_color' => '#C6ECF4',
         'breadcrumb_background_color' => '#F1F8F9',
@@ -379,7 +381,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'multidisciplinary_team_grid',
         'heading_tag' => 'h2',
         'heading' => 'Our Multidisciplinary Teams',
-        'intro' => '<p>Introductory text explaining what a Multidisciplinary Team is - 4 lines max invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Introductory text explaining what a Multidisciplinary Team is - 4 lines max invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</p>',
+        'intro' => $mdt_intro,
         'cards' => $multidisciplinary_cards,
         'background_color' => '#FFFFFF',
         'padding_settings' => [
@@ -394,7 +396,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'team_members',
         'heading_tag' => 'h2',
         'heading' => 'Our Senior Management Team',
-        'intro' => '<p>We offer inpatient care in three approved centres:</p>',
+        'intro' => '<p>Meet the senior leadership team at St Patrick\'s Mental Health Services.</p>',
         'layout_style' => 'standard_grid',
         'source_mode' => 'category',
         'selected_team_categories' => $leadership_term_id > 0 ? [$leadership_term_id] : [],
@@ -413,7 +415,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'team_members',
         'heading_tag' => 'h2',
         'heading' => 'Our Board Members',
-        'intro' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>',
+        'intro' => '<p>Our Board Members provide governance and oversight for St Patrick\'s Mental Health Services.</p>',
         'layout_style' => 'standard_grid',
         'source_mode' => 'category',
         'selected_team_categories' => $board_term_id > 0 ? [$board_term_id] : [],

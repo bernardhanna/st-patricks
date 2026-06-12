@@ -112,12 +112,18 @@ $appointment_button = get_field('topbar_appointment_button', 'option');
           <template x-for="(item, i) in level" :key="i">
             <li class="pb-4 border-b border-[#CCDEE2]">
               <template x-if="item.children.length">
-                <button type="button"
-                        @click.prevent="forward(item.children)"
-                        class="flex justify-between items-center w-full max-sm:text-[20px] text-lg text-secondary-800">
-                  <span class="text-left uppercase" x-text="item.label"></span>
-                  <i class="ml-2 fa-solid fa-chevron-right" aria-hidden="true"></i>
-                </button>
+                <div class="flex gap-3 justify-between items-center w-full">
+                  <a :href="item.url"
+                     class="flex-1 text-lg text-left text-secondary-800 uppercase"
+                     :class="item.active ? 'font-semibold' : ''"
+                     x-text="item.label"></a>
+                  <button type="button"
+                          @click.prevent="forward(item.children)"
+                          class="inline-flex shrink-0 justify-center items-center p-2 -mr-2"
+                          :aria-label="'Show ' + item.label + ' submenu'">
+                    <i class="ml-2 fa-solid fa-chevron-right" aria-hidden="true"></i>
+                  </button>
+                </div>
               </template>
               <template x-if="!item.children.length">
                 <a :href="item.url"

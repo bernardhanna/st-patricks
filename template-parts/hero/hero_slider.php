@@ -171,7 +171,7 @@ $is_slider = count($slides) > 1;
 
                     <?php if (!empty($sl['desc'])) { ?>
                         <div class="mb-6 text-large text-[#08284B] md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
-                            <?php echo wp_kses_post($sl['desc']); ?>
+                            <?php echo matrix_kses_rich_text($sl['desc']); ?>
                         </div>
                     <?php } ?>
 

@@ -314,7 +314,7 @@ foreach ($card_definitions as $card) {
     ];
 }
 
-$hero_intro = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+$hero_intro = "Welcome to St Patrick's Mental Health Services, Ireland's largest independent, not-for-profit mental health service. Explore our teams, locations, research, advocacy, and the communities we support across Ireland.";
 
 $section_padding = [
     ['screen_size' => 'mob', 'padding_top' => '3', 'padding_bottom' => '3'],
@@ -337,7 +337,7 @@ $flexi_rows = [
         ],
         'current_crumb_label' => 'About Us',
         'heading_tag' => 'h1',
-        'heading' => 'About Us landing page title',
+        'heading' => 'About Us',
         'content' => '<p>' . esc_html($hero_intro) . '</p>',
         'primary_button' => '',
         'hero_image' => $hero_image_id,

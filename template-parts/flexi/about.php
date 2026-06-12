@@ -115,7 +115,7 @@ if (!in_array($heading_tag, $allowed_tags, true)) $heading_tag = 'h2';
           <?php if ($description): ?>
             <div class="w-full max-w-md text-sm font-medium leading-6 wp_editor sm:text-base sm:leading-7"
                  style="color: <?php echo esc_attr($desc_color); ?>;">
-              <?php echo wp_kses_post($description); ?>
+              <?php echo matrix_kses_rich_text($description); ?>
             </div>
           <?php endif; ?>
         </div>

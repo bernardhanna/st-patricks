@@ -212,7 +212,7 @@ $tone_backgrounds = [
 
                                             <div class="flex flex-1 flex-col justify-between gap-[10px] rounded-[6px] px-4 py-2" style="background-color: <?php echo esc_attr($card_inner_color); ?>;">
                                                 <div class="wp_editor font-primary text-[16px] italic leading-[24px]" style="color: <?php echo esc_attr($quote_color); ?>;">
-                                                    <?php echo wp_kses_post($quote); ?>
+                                                    <?php echo matrix_kses_rich_text($quote); ?>
                                                 </div>
 
                                                 <div class="font-primary text-[#08284B]">
@@ -262,7 +262,7 @@ $tone_backgrounds = [
 
                                         <div class="flex flex-1 flex-col justify-between gap-[10px] rounded-[6px] px-4 py-2" style="background-color: <?php echo esc_attr($card_inner_color); ?>;">
                                             <div class="wp_editor font-primary text-[16px] italic leading-[24px]" style="color: <?php echo esc_attr($quote_color); ?>;">
-                                                <?php echo wp_kses_post($quote); ?>
+                                                <?php echo matrix_kses_rich_text($quote); ?>
                                             </div>
 
                                             <div class="font-primary text-[#08284B]">
@@ -308,7 +308,7 @@ $tone_backgrounds = [
 
                                 <div class="flex flex-1 flex-col justify-between gap-[10px] rounded-[6px] px-4 py-2" style="background-color: <?php echo esc_attr($card_inner_color); ?>;">
                                     <div class="wp_editor font-primary text-[16px] italic leading-[24px]" style="color: <?php echo esc_attr($quote_color); ?>;">
-                                        <?php echo wp_kses_post($quote); ?>
+                                        <?php echo matrix_kses_rich_text($quote); ?>
                                     </div>
 
                                     <div class="font-primary text-[#08284B]">

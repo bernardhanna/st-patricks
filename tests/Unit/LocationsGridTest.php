@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__, 2) . '/inc/locations-grid-functions.php';
+require_once dirname(__DIR__, 2) . '/inc/locations-functions.php';
 
 test('locations grid normalizes cards and trims card content', function () {
     expect(function_exists('matrix_normalize_locations_grid_cards'))->toBeTrue();
@@ -84,4 +85,19 @@ test('locations grid normalizes an optional footer cta link', function () {
         'title' => 'Missing URL',
         'url' => '',
     ]))->toBeNull();
+});
+
+test('locations grid resolves cards from selected source mode', function () {
+    $manual = matrix_resolve_locations_grid_cards('manual', [
+        [
+            'title' => 'Manual Card',
+            'link' => ['title' => 'Manual', 'url' => 'https://example.com/manual'],
+        ],
+    ], []);
+
+    expect($manual)->toHaveCount(1)
+        ->and($manual[0]['title'])->toBe('Manual Card');
+
+    expect(matrix_resolve_locations_grid_cards('locations', [], 'not-an-array'))->toBe([]);
+    expect(matrix_locations_grid_cards_from_posts([]))->toBe([]);
 });

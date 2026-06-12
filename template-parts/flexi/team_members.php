@@ -155,7 +155,7 @@ if ($layout_style === 'spokespeople_grid') {
 
         <?php if (is_string($intro) && trim(strip_tags($intro)) !== '') { ?>
             <div class="wp_editor mt-6 max-w-[1018px] [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                <?php echo wp_kses_post($intro); ?>
+                <?php echo matrix_kses_rich_text($intro); ?>
             </div>
         <?php } ?>
 
@@ -204,7 +204,7 @@ if ($layout_style === 'spokespeople_grid') {
 
                             <?php if ($layout_style === 'spokespeople_grid' && trim(strip_tags($team_item['profile_teaser'])) !== '') { ?>
                                 <div class="wp_editor mt-3 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[14px] [&_p]:leading-[24px] [&_p]:text-[#1E244B]">
-                                    <?php echo wp_kses_post($team_item['profile_teaser']); ?>
+                                    <?php echo matrix_kses_rich_text($team_item['profile_teaser']); ?>
                                 </div>
                             <?php } ?>
                         </div>

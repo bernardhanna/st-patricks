@@ -105,14 +105,14 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                 </header>
 
                 <?php if (matrix_content_has_visible_rich_text($intro_text)) { ?>
-                    <div class="wp_editor <?php echo esc_attr($text_max_width_classes); ?> font-primary text-[16px] font-bold leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
-                        <?php echo wp_kses_post($intro_text); ?>
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('bold', $text_max_width_classes)); ?>">
+                        <?php echo matrix_kses_rich_text($intro_text); ?>
                     </div>
                 <?php } ?>
 
                 <?php if (matrix_content_has_visible_rich_text($content)) { ?>
-                    <div class="wp_editor <?php echo esc_attr($text_max_width_classes); ?> font-primary text-[16px] font-medium leading-[28px] text-[#08284B] [&_p:last-child]:mb-0">
-                        <?php echo wp_kses_post($content); ?>
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', $text_max_width_classes)); ?>">
+                        <?php echo matrix_kses_rich_text($content); ?>
                     </div>
                 <?php } ?>
 

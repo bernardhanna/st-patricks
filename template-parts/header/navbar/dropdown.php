@@ -76,21 +76,22 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                         ?>
                                         <li>
                                             <?php if ($child_children) : ?>
-                                                <button
-                                                    type="button"
-                                                    class="flex justify-between items-center w-full text-left text-[16px] font-medium leading-6 transition-colors"
+                                                <a
+                                                    href="<?php echo esc_url($child->url); ?>"
+                                                    class="flex justify-between items-center w-full text-left text-[16px] font-medium leading-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                                                     :class="activeTier3Index === <?php echo $child_index; ?> ? 'text-[#024B79] underline underline-offset-2' : 'text-[#0F2419] hover:text-[#024B79]'"
                                                     aria-label="<?php echo esc_attr($child->label); ?>"
                                                     :aria-expanded="activeTier3Index === <?php echo $child_index; ?>"
                                                     aria-controls="tier3-<?php echo $index; ?>-<?php echo $child_index; ?>"
                                                     @mouseenter="activeTier3Index = <?php echo $child_index; ?>"
                                                     @focus="activeTier3Index = <?php echo $child_index; ?>"
+                                                    <?php if (!empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
                                                 >
                                                     <span><?php echo esc_html($child->label); ?></span>
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                         <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                     </svg>
-                                                </button>
+                                                </a>
                                             <?php else : ?>
                                                 <a
                                                     href="<?php echo esc_url($child->url); ?>"
@@ -122,7 +123,13 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                         aria-label="<?php echo esc_attr($child->label); ?> submenu"
                                     >
                                         <h3 class="pb-6 text-[20px] font-semibold leading-[28px] tracking-[-0.1px] text-[#1E244B]">
-                                            <?php echo esc_html($child->label); ?>
+                                            <a
+                                                href="<?php echo esc_url($child->url); ?>"
+                                                class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                                                <?php if (!empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                            >
+                                                <?php echo esc_html($child->label); ?>
+                                            </a>
                                         </h3>
                                         <ul class="space-y-3" role="list">
                                             <?php foreach ($child_children_tier3 as $grandchild) : ?>

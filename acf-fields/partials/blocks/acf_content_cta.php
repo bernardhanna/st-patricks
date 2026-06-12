@@ -75,6 +75,16 @@ $content_cta
                 ],
             ],
         ])
+        ->addSelect('color_scheme', [
+            'label' => 'Text & Button Style',
+            'instructions' => 'Use Inverse on dark backgrounds so headings, body copy, and buttons stay readable.',
+            'choices' => [
+                'default' => 'Default (dark text)',
+                'inverse' => 'Inverse (light text)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ])
 
     ->addTab('Layout', ['label' => 'Layout'])
         ->addRepeater('padding_settings', [

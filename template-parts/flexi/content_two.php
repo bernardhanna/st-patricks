@@ -54,7 +54,7 @@ if (have_rows('padding_settings')) {
 
                     <?php if (!empty($description)): ?>
                         <div class="max-w-full text-base font-medium leading-7 text-[#08284B] <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
-                            <?php echo wp_kses_post($description); ?>
+                            <?php echo matrix_kses_rich_text($description); ?>
                         </div>
                     <?php endif; ?>
 
