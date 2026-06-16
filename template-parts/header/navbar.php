@@ -127,16 +127,23 @@ document.addEventListener('alpine:init', () => {
 
     openSearch() {
       this.searchOpen = true;
-      document.body.style.overflow = 'hidden';
       this.$nextTick(() => {
         if (this.$refs.searchInput) this.$refs.searchInput.focus();
       });
     },
 
+    toggleSearch() {
+      if (this.searchOpen) {
+        this.closeSearch();
+        return;
+      }
+
+      this.openSearch();
+    },
+
     closeSearch() {
       this.searchOpen = false;
       this.clearSearch(false);
-      if (!Alpine.store('nav').open) document.body.style.overflow = '';
     },
 
     clearSearch(keepFocus = true) {
@@ -207,8 +214,8 @@ document.addEventListener('alpine:init', () => {
 <section
   id="site-nav"
   x-data="navbarSearch()"
-  x-init="window.addEventListener('resize', () => { if (window.innerWidth >= 1200) { $store.nav.open = false } })"
-  x-effect="$store.nav.open ? document.body.style.overflow='hidden' : document.body.style.overflow=''"
+  x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1024) { closeSearch() } if (window.innerWidth >= 1200) { $store.nav.open = false } })"
+  x-effect="if ($store.nav.open) document.body.style.overflow = 'hidden'"
   class="overflow-visible bg-white"
   role="banner"
   @open-navbar-search="openSearch()"

@@ -80,7 +80,7 @@ $render_timeline_card = static function (array $item, bool $include_mobile_date 
                     <img
                         src="<?php echo esc_url($image_url); ?>"
                         alt="<?php echo esc_attr($image_alt); ?>"
-                        class="h-full w-full object-cover"
+                        class="object-cover w-full h-full"
                     />
                     <?php
                 }
@@ -135,7 +135,7 @@ $render_timeline_date = static function (array $item, string $classes = '') {
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden bg-white"
+    class="flex overflow-hidden relative bg-white"
     aria-labelledby="<?php echo esc_attr($heading_id); ?>"
 >
     <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
@@ -156,7 +156,7 @@ $render_timeline_date = static function (array $item, string $classes = '') {
             <?php } ?>
         </header>
 
-        <ol class="mt-12 flex w-full flex-col lg:mt-16">
+        <ol class="flex flex-col mt-12 w-full lg:mt-16">
             <?php foreach ($items as $index => $item) { ?>
                 <?php
                 $is_first = $index === 0;
@@ -169,9 +169,9 @@ $render_timeline_date = static function (array $item, string $classes = '') {
                 ?>
 
                 <li class="w-full <?php echo esc_attr($is_last && $has_footer_cta ? 'lg:pb-16' : ($is_last ? '' : 'lg:pb-16')); ?>">
-                    <?php /* Mobile / tablet: left spine + date above card (Figma 3279:15332) */ ?>
+                    <?php /* Mobile / tablet: left spine + card with date inside (Figma 3279:15332) */ ?>
                     <div class="grid w-full grid-cols-[31px_minmax(0,1fr)] lg:hidden">
-                        <div class="relative flex flex-col items-center self-stretch">
+                        <div class="flex relative flex-col items-center self-stretch">
                             <span
                                 class="absolute top-0 left-1/2 h-[50px] w-[2px] -translate-x-1/2"
                                 style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
@@ -199,9 +199,8 @@ $render_timeline_date = static function (array $item, string $classes = '') {
                             <?php } ?>
                         </div>
 
-                        <div class="flex min-w-0 flex-col gap-2.5 pl-8 pt-8">
-                            <?php $render_timeline_date($item); ?>
-                            <?php $render_timeline_card($item); ?>
+                        <div class="pt-8 pl-8 min-w-0">
+                            <?php $render_timeline_card($item, true); ?>
                         </div>
                     </div>
 
@@ -217,7 +216,7 @@ $render_timeline_date = static function (array $item, string $classes = '') {
                             </div>
                         <?php } ?>
 
-                        <div class="relative flex flex-col items-center self-stretch lg:col-start-2">
+                        <div class="flex relative flex-col items-center self-stretch lg:col-start-2">
                             <?php if ($is_first) { ?>
                                 <span
                                     class="absolute top-0 left-1/2 h-5 w-[2px] -translate-x-1/2"
@@ -263,7 +262,7 @@ $render_timeline_date = static function (array $item, string $classes = '') {
 
         <?php if (is_array($footer_button_link)) { ?>
             <?php $footer_target = (string) ($footer_button_link['target'] ?? '_self'); ?>
-            <div class="flex w-full justify-center">
+            <div class="flex justify-center mt-12 w-full">
                 <a
                     href="<?php echo esc_url($footer_button_link['url']); ?>"
                     target="<?php echo esc_attr($footer_target); ?>"
