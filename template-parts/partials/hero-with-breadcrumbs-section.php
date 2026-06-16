@@ -27,7 +27,7 @@ extract($hero, EXTR_SKIP);
         ]);
         ?>
     <?php } ?>
-    <div class="flex flex-col items-center w-full mx-auto max-w-[1280px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="flex flex-col items-center w-full mx-auto max-w-[1280px]">
 
         <?php if ($layout_style === 'register_intro') { ?>
             <div class="w-full max-w-[1018px] px-5 max-xl:mx-auto lg:px-0">

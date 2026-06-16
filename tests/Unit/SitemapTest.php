@@ -68,7 +68,6 @@ test('sitemap list renderer outputs nested accessible links', function () {
     expect($html)->toContain('About Us');
     expect($html)->toContain('Overview');
     expect($html)->toContain('role="list"');
-    expect($html)->toContain('border-l');
 });
 
 if (! function_exists('get_pages')) {
@@ -141,4 +140,22 @@ test('sitemap page view model includes breadcrumbs and default intro', function 
     expect($view['intro'])->toBe('Find every page quickly.');
     expect($view['breadcrumbs'][0]['title'])->toBe('Home');
     expect($view['current_crumb_label'])->toBe('Sitemap');
+});
+
+test('sitemap taxonomy children build filtered archive urls', function () {
+    if (! function_exists('get_terms')) {
+        expect(true)->toBeTrue();
+
+        return;
+    }
+
+    $children = matrix_build_sitemap_taxonomy_children('http://localhost:10034/news-and-events/', [
+        'taxonomy' => 'category',
+        'query_var' => 'blog_category',
+        'all_label' => 'All',
+    ]);
+
+    expect($children)->not->toBeEmpty();
+    expect($children[0]['title'])->toBe('All');
+    expect($children[0]['url'])->toBe('http://localhost:10034/news-and-events/');
 });

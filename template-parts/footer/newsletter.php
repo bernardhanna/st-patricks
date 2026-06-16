@@ -12,18 +12,6 @@ $bg_color = get_field('newsletter_bg_color', 'option') ?: '#024B79'; // spmhs-bl
 $accent_line_color = get_field('newsletter_accent_line_color', 'option') ?: '#7ED0E0';
 
 // Padding classes (RENAMED repeater to avoid collisions)
-$padding_classes = [];
-if (have_rows('newsletter_padding_settings', 'option')) {
-  while (have_rows('newsletter_padding_settings', 'option')) {
-    the_row();
-    $screen = get_sub_field('screen_size');
-    $pt     = get_sub_field('padding_top');
-    $pb     = get_sub_field('padding_bottom');
-    if ($screen !== '' && $pt !== '' && $pt !== null) $padding_classes[] = "{$screen}:pt-[{$pt}rem]";
-    if ($screen !== '' && $pb !== '' && $pb !== null) $padding_classes[] = "{$screen}:pb-[{$pb}rem]";
-  }
-}
-$padding_str = implode(' ', $padding_classes);
 
 // Background images (options)
 $bg_right = get_field('bg_vector_image', 'option'); // right/top
@@ -64,7 +52,7 @@ $priv_target  = !empty($privacy_link['target'])? esc_attr($privacy_link['target'
 $admin_ajax  = esc_url(admin_url('admin-ajax.php'));
 $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 ?>
-<section id="<?php echo esc_attr($section_id); ?>" class="relative overflow-hidden <?php echo esc_attr($padding_str); ?>" style="background-color: <?php echo esc_attr($bg_color); ?>;">
+<section id="<?php echo esc_attr($section_id); ?>" class="relative overflow-hidden" style="background-color: <?php echo esc_attr($bg_color); ?>;">
       <!-- Decorative Background Images -->
     <div class="relative w-full h-full">
 

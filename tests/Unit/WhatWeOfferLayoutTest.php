@@ -40,11 +40,22 @@ test('what we offer intro two column icons use the existing left svg pair', func
 test('what we offer intro two column icon svg returns markup for default and hover states', function () {
     expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_svg'))->toBeTrue();
 
-    $default = matrix_get_what_we_offer_intro_two_column_icon_svg('default');
-    $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover');
+    $default = matrix_get_what_we_offer_intro_two_column_icon_svg('default', '#6FC9C0');
+    $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover', '#6FC9C0');
 
     expect($default)->toContain('<svg')
-        ->and($default)->toContain('opacity="0.25"')
+        ->and($default)->toContain('fill="#6FC9C0"')
+        ->and($default)->toContain('opacity="1"')
         ->and($hover)->toContain('<svg')
+        ->and($hover)->toContain('fill="white"')
         ->and($hover)->toContain('opacity="1"');
+});
+
+test('what we offer intro two column icon background maps accent to pastel tint', function () {
+    expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_background'))->toBeTrue();
+
+    expect(matrix_get_what_we_offer_intro_two_column_icon_background('#6FC9C0'))->toBe('#CEF2EE')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#E4F4D6')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#E9E2F7')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#F9E5F2');
 });

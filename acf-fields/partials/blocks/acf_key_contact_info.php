@@ -60,41 +60,6 @@ $key_contact_info
         ->addText('open_panel_background', [
             'label' => 'Open Panel Background / Gradient',
             'default_value' => 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
-        ])
-
-    ->addTab('Layout', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'button_label' => 'Add Screen Size Padding',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'xxs' => 'xxs',
-                    'xs' => 'xs',
-                    'mob' => 'mob',
-                    'sm' => 'sm',
-                    'md' => 'md',
-                    'lg' => 'lg',
-                    'xl' => 'xl',
-                    'xxl' => 'xxl',
-                    'ultrawide' => 'ultrawide',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ]);
 
 return $key_contact_info;

@@ -1,6 +1,7 @@
 <?php
 /**
  * About Links Grid (Flexi Block)
+ * Figma: 2780:3450 (About Us landing grid)
  */
 
 $section_id = 'about-links-grid-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
@@ -13,9 +14,10 @@ $links        = is_array($links) ? $links : [];
 
 $bg_color         = get_sub_field('bg_color') ?: '#FFFFFF';
 $heading_color    = get_sub_field('heading_color') ?: '#1E244B';
-$intro_color      = get_sub_field('intro_color') ?: '#4A4B37';
+$intro_color      = get_sub_field('intro_color') ?: '#08284B';
+$card_bg_color    = (string) (get_sub_field('card_bg_color') ?: '#F1F8F9');
 $card_title_color = get_sub_field('card_title_color') ?: '#1E244B';
-$card_desc_color  = get_sub_field('card_desc_color') ?: '#4A4B37';
+$card_desc_color  = get_sub_field('card_desc_color') ?: '#08284B';
 $columns_raw      = (string) (get_sub_field('columns') ?: '3');
 $columns          = preg_match('/[234]/', $columns_raw, $matches) ? $matches[0] : '3';
 
@@ -31,24 +33,6 @@ $column_classes = [
 ];
 $grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
 
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
@@ -56,7 +40,7 @@ if (have_rows('padding_settings')) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($bg_color); ?>;">
 
-    <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 py-12 lg:gap-8 lg:py-[100px] xl:px-0 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 py-12 lg:gap-8 lg:py-[100px] xl:px-0">
         <?php if ($heading_text || $intro_text) : ?>
             <div class="flex w-full flex-col gap-8">
                 <?php if ($heading_text) : ?>
@@ -85,6 +69,8 @@ if (have_rows('padding_settings')) {
                     $title = trim((string) ($item['title'] ?? ''));
                     $description = trim((string) ($item['description'] ?? ''));
                     $link = $item['link'] ?? null;
+                    $card_tone = trim((string) ($item['card_tone'] ?? ''));
+                    $footer_background = matrix_get_about_links_grid_card_footer_background($card_tone, $card_bg_color);
 
                     $has_link = is_array($link) && ! empty($link['url']);
                     $link_url = $has_link ? $link['url'] : '';
@@ -117,11 +103,11 @@ if (have_rows('padding_settings')) {
                             <?php } ?>
                         >
                             <?php if ($image_url || $icon_url) : ?>
-                                <div class="relative h-[220px] w-full overflow-hidden rounded-t-lg lg:h-[273px]">
+                                <div class="relative h-[220px] w-full overflow-hidden lg:h-[273px]">
                                     <?php if ($image_url) : ?>
                                         <img src="<?php echo esc_url($image_url); ?>"
                                             alt="<?php echo esc_attr($title); ?>"
-                                            class="absolute inset-0 h-full w-full object-cover"
+                                            class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                                             loading="lazy"
                                             decoding="async">
                                     <?php else : ?>
@@ -136,16 +122,25 @@ if (have_rows('padding_settings')) {
                                 </div>
                             <?php endif; ?>
 
-                            <div class="flex flex-1 items-center bg-[#F1F8F9] p-6">
-                                <div class="flex min-w-0 flex-col gap-2">
+                            <div
+                                class="flex flex-1 items-center p-6"
+                                style="background-color: <?php echo esc_attr($footer_background); ?>;"
+                            >
+                                <div class="flex min-w-0 w-full flex-col gap-2">
                                     <?php if ($title) : ?>
-                                        <p class="font-primary text-[20px] font-semibold leading-6 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]"
-                                            style="color: <?php echo esc_attr($card_title_color); ?>;">
-                                            <span><?php echo esc_html($title); ?></span>
+                                        <div class="flex w-full items-center justify-between gap-4">
+                                            <h3 class="min-w-0 font-primary text-[20px] font-semibold leading-6 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]"
+                                                style="color: <?php echo esc_attr($card_title_color); ?>;">
+                                                <?php echo esc_html($title); ?>
+                                            </h3>
                                             <?php if ($has_link) : ?>
-                                                <span aria-hidden="true"> &rarr;</span>
+                                                <span class="shrink-0 text-[#1E244B] transition-colors group-hover:text-[#024B79]" aria-hidden="true">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                        <path d="M6 3L12 9L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                </span>
                                             <?php endif; ?>
-                                        </p>
+                                        </div>
                                     <?php endif; ?>
 
                                     <?php if ($description) : ?>

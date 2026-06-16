@@ -255,12 +255,6 @@ foreach ($faq_titles as $index => $faq_title) {
     matrix_seed_ensure_faq_post(
         $faq_title,
         $faq_answer,
-        'faq-healthcare-' . ($index + 1),
-        $healthcare_term_id
-    );
-    matrix_seed_ensure_faq_post(
-        $faq_title,
-        $faq_answer,
         'faq-service-users-' . ($index + 1),
         $service_users_term_id
     );
@@ -269,25 +263,6 @@ foreach ($faq_titles as $index => $faq_title) {
 $hero_copy = 'Page context is optional - Service Users FAQs will be the same layout as this Healthcare Professionals page but different content (text can be added updated during content gathering stage).';
 
 $pages = [
-    [
-        'id' => (int) (get_page_by_path('healthcare-professionals/frequently-asked-questions')?->ID ?? 0),
-        'label' => 'Healthcare Professionals FAQ page',
-        'rows' => matrix_seed_faq_page_rows(
-            $home,
-            $healthcare_section_url,
-            'Healthcare Professionals',
-            'FAQs',
-            'FAQs for Healthcare Professionals',
-            $hero_copy,
-            [
-                'title' => 'See Service Users FAQs',
-                'url' => $service_users_faqs_url,
-                'target' => '',
-            ],
-            $hero_image_id,
-            $healthcare_term_id
-        ),
-    ],
     [
         'id' => (int) (get_page_by_path('service-users-and-visitors/frequently-asked-questions-faqs')?->ID ?? 0),
         'label' => 'Service Users FAQ page',

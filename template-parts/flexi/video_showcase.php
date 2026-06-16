@@ -8,9 +8,7 @@ $layout_style = matrix_resolve_video_showcase_layout_style(get_sub_field('layout
 $video_surface_size = matrix_resolve_video_showcase_surface_size(get_sub_field('video_surface_size'));
 $section_background = (string) get_sub_field('section_background');
 
-if ($heading === '') {
-    $heading = 'Video showcase';
-}
+$show_heading = $heading !== '';
 
 if (! in_array($heading_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'], true)) {
     $heading_tag = 'h2';
@@ -37,23 +35,7 @@ if ($slides === []) {
     return;
 }
 
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $slide_count = count($slides);
 $show_slider_controls = $layout_style !== 'feature_single' && $slide_count > 1;
@@ -66,6 +48,7 @@ $section_background_style = matrix_get_video_showcase_section_background_style(
     'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)'
 );
 $show_intro = is_string($intro) && trim(strip_tags($intro)) !== '';
+$show_header = $show_heading || $show_intro;
 $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size);
 ?>
 
@@ -75,24 +58,28 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
-        <div class="<?php echo esc_attr($heading_wrap_width_class); ?>">
-            <<?php echo esc_attr($heading_tag); ?>
-                class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
-            >
-                <?php echo esc_html($heading); ?>
-            </<?php echo esc_attr($heading_tag); ?>>
+    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names()); ?>">
+        <?php if ($show_header) { ?>
+            <div class="<?php echo esc_attr($heading_wrap_width_class); ?>">
+                <?php if ($show_heading) { ?>
+                    <<?php echo esc_attr($heading_tag); ?>
+                        class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
+                    >
+                        <?php echo esc_html($heading); ?>
+                    </<?php echo esc_attr($heading_tag); ?>>
 
-            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
+                    <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"></div>
+                <?php } ?>
 
-            <?php if ($show_intro) { ?>
-                <div class="wp_editor mt-6 [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
-                    <?php echo matrix_kses_rich_text($intro); ?>
-                </div>
-            <?php } ?>
-        </div>
+                <?php if ($show_intro) { ?>
+                    <div class="wp_editor <?php echo $show_heading ? 'mt-6' : ''; ?> [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
+                        <?php echo matrix_kses_rich_text($intro); ?>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
 
-        <div class="flex flex-col items-center mt-8 lg:mt-12" data-video-showcase-root>
+        <div class="flex flex-col items-center <?php echo $show_header ? 'mt-8 lg:mt-12' : ''; ?>" data-video-showcase-root>
             <div class="relative w-full <?php echo esc_attr($surface_width_class); ?> <?php echo esc_attr($surface_height_class); ?> overflow-hidden rounded-[8px] bg-[#D9D9D9] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
                 <a
                     href="#"

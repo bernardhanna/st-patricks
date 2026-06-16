@@ -177,40 +177,15 @@ $content_accordion
             'label' => 'Icon Tile Background Color',
             'default_value' => '#FFFFFF',
         ])
-
-    ->addTab('Layout', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'button_label' => 'Add Screen Size Padding',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'xxs' => 'xxs',
-                    'xs' => 'xs',
-                    'mob' => 'mob',
-                    'sm' => 'sm',
-                    'md' => 'md',
-                    'lg' => 'lg',
-                    'xl' => 'xl',
-                    'xxl' => 'xxl',
-                    'ultrawide' => 'ultrawide',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Bottom only” when this block should sit flush against the section above on desktop.',
+            'choices' => [
+                'default' => 'Top & bottom (policies/directions layouts)',
+                'bottom_only' => 'Bottom only (no top padding)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ]);
 
 return $content_accordion;

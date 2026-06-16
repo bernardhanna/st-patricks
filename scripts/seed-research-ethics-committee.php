@@ -136,7 +136,7 @@ $dean_clinics_url = home_url('/outpatient-care-dean-clinics/');
 $research_strategy_url = matrix_seed_media_url('/media-centre/news/2024/april/research-update-spring-2024');
 $research_publications_url = matrix_seed_media_url('/research/research-publications');
 $faqs_url = home_url('/service-users-and-visitors/frequently-asked-questions-faqs/');
-$referrals_url = home_url('/make-a-referral-cta/');
+$referrals_url = home_url('/make-a-referral/');
 
 $assets = matrix_get_research_page_seed_assets();
 $banner_image_id = matrix_migrate_attachment_id_for_source_path(

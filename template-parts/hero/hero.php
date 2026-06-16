@@ -27,24 +27,6 @@ $show_pager      = (bool) get_sub_field('show_pager');
 $pager_count     = (int) (get_sub_field('pager_count') ?: 5);
 $pager_active    = (int) (get_sub_field('pager_active_index') ?: 1);
 
-// Layout padding
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen_size    = get_sub_field('screen_size');
-    $padding_top    = get_sub_field('padding_top');
-    $padding_bottom = get_sub_field('padding_bottom');
-
-    if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-      $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-    }
-    if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-      $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-    }
-  }
-}
-
 // Sanitize heading tag
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
 if (! in_array($heading_tag, $allowed_tags, true)) {
@@ -106,7 +88,7 @@ $hero_img_title = isset($hero_image['title']) && $hero_image['title'] !== '' ? $
   <?php endif; ?>
 
   <!-- Inner container -->
-  <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+  <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 max-lg:px-5">
 
     <!-- Main Hero Content -->
     <div class="relative z-10 flex flex-col lg:flex-row items-center min-h-[440px] px-4 md:px-8 lg:px-16 py-8 lg:py-12 w-full">

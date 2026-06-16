@@ -1,10 +1,14 @@
 <?php
 
 /**
- * Seed Directions and Parking (page 233) to match Figma frame 2780:4181.
+ * Seed Directions and Parking (page 233) with travel and parking content
+ * sourced from stpatricks.ie location pages. Preserves the existing 3-block
+ * layout and only updates copy in the hero and directions accordion.
  *
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-directions-and-parking.php
  */
+
+require_once __DIR__ . '/lib/page-seed-conventions.php';
 
 $post_id = (int) (get_page_by_path('directions-and-parking')?->ID ?? 0);
 
@@ -16,265 +20,214 @@ if ($post_id === 0) {
     exit(1);
 }
 
-if (! function_exists('matrix_seed_import_remote_image')) {
-    function matrix_seed_import_remote_image(string $url, string $title, string $cache_key): int
-    {
-        if ($url === '') {
-            return 0;
-        }
-
-        $existing = get_posts([
-            'post_type' => 'attachment',
-            'post_status' => 'inherit',
-            'posts_per_page' => 1,
-            'meta_query' => [
-                [
-                    'key' => '_matrix_seed_figma_key',
-                    'value' => $cache_key,
-                ],
-            ],
-        ]);
-
-        if ($existing !== []) {
-            return (int) $existing[0]->ID;
-        }
-
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/media.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-
-        $tmp = download_url($url, 30);
-
-        if (is_wp_error($tmp)) {
-            return 0;
-        }
-
-        $path = parse_url($url, PHP_URL_PATH);
-        $filename = $path ? basename($path) : 'figma-asset.jpg';
-
-        if (! preg_match('/\.(jpe?g|png|gif|webp|svg)$/i', $filename)) {
-            $filename .= '.jpg';
-        }
-
-        $file_array = [
-            'name' => sanitize_file_name($filename),
-            'tmp_name' => $tmp,
-        ];
-
-        $attachment_id = media_handle_sideload($file_array, 0, $title);
-
-        if (is_wp_error($attachment_id)) {
-            @unlink($tmp);
-
-            return 0;
-        }
-
-        update_post_meta($attachment_id, '_matrix_seed_figma_key', $cache_key);
-        update_post_meta($attachment_id, '_matrix_seed_figma_url', $url);
-
-        return (int) $attachment_id;
-    }
-}
-
-if (! function_exists('matrix_seed_resolve_image')) {
-    function matrix_seed_resolve_image(string $figma_url, string $cache_key, string $title): int
-    {
-        $id = matrix_seed_import_remote_image($figma_url, $title, $cache_key);
-
-        if ($id > 0) {
-            return $id;
-        }
-
-        $attachments = get_posts([
-            'post_type' => 'attachment',
-            'post_status' => 'inherit',
-            'posts_per_page' => 1,
-            'post_mime_type' => 'image',
-            'orderby' => 'ID',
-            'order' => 'DESC',
-        ]);
-
-        return $attachments !== [] ? (int) $attachments[0]->ID : 0;
-    }
-}
-
 if (! function_exists('matrix_seed_directions_row')) {
     function matrix_seed_directions_row(string $icon_key, string $content): array
     {
         return [
+            'row_type' => 'text',
             'icon_key' => $icon_key,
-            'icon' => '',
+            'icon' => false,
             'content' => $content,
         ];
     }
 }
 
-$home = home_url('/');
-$locations_map_url = home_url('/about-us/our-locations/');
-$service_users_url = home_url('/service-users-and-visitors/');
-$faqs_url = home_url('/service-users-and-visitors/frequently-asked-questions-faqs/');
+if (! function_exists('matrix_seed_directions_map_link')) {
+    function matrix_seed_directions_map_link(string $label, string $url): string
+    {
+        return ' <a href="' . esc_url($url) . '" target="_blank" rel="noopener noreferrer">' . esc_html($label) . '</a>';
+    }
+}
 
-$figma_hero = 'https://www.figma.com/api/mcp/asset/551222b9-e044-495d-bd85-b1f688d1db0c';
-$hero_image_id = matrix_seed_resolve_image($figma_hero, 'directions-parking-hero-2780-4181', 'Directions and parking hero');
+$spuh_map = 'https://maps.app.goo.gl/VBsyyXzA1aD2YnoH8';
+$lucan_map = 'https://maps.app.goo.gl/pBRGjtom1tRSbfNV9';
 
-$hero_copy = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+$spuh_bus = '<p><strong>Dublin Bus:</strong> Take the G1, G2, 13 or 123 to James\' Street or the C1, C2, C3, C4, G1, 26, 52, or 145 to Heuston Station. From either of these locations, our Dublin 8 campus is a five to 10 minute walk.</p>';
 
-$university_rows = [
-    matrix_seed_directions_row(
-        'car',
-        '<p><strong>Car park:</strong> There is a paid car park available at the campus entrance on Steeven\'s Lane.</p>'
-    ),
-    matrix_seed_directions_row(
-        'map_pin',
-        '<p><strong>Address:</strong> St Patrick\'s University Hospital, James\' Street, Dublin 8, D08 K7YW, Ireland <a href="https://maps.google.com/?q=St+Patrick%27s+University+Hospital+James+Street+Dublin+8" target="_blank" rel="noopener noreferrer">Get directions</a></p>'
-    ),
-    matrix_seed_directions_row(
-        'clock',
-        '<p><strong>Visiting times:</strong> 2pm to 5pm and 6pm to 8.30pm everyday</p>'
-    ),
-    matrix_seed_directions_row(
-        'bus',
-        '<p><strong>Dublin Bus:</strong> Take the G1, G2, 13 or 123 to James\' Street or the C1, C2, C3, C4, G1, 26, 52, or 145 to Heuston Station. From either of these locations, our Dublin 8 campus is a five to 10 minute walk.</p>'
-    ),
-    matrix_seed_directions_row(
-        'train',
-        '<p><strong>Rail or Luas:</strong> Heuston Station is less than a five minute walk from St Patrick\'s University Hospital. You can reach Heuston Station through a number of <a href="https://www.irishrail.ie/en-ie/station/dublin-heuston" target="_blank" rel="noopener noreferrer">Irish Rail routes</a>, or on the red line Luas, which runs every five minutes from Dublin city centre. The Luas journey is approximately five to 10 minutes from the city centre; you need to get off at the Heuston Station stop.</p>'
-    ),
-];
-
-$placeholder_rows = [
-    matrix_seed_directions_row(
-        'map_pin',
-        '<p><strong>Address:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
-    ),
-    matrix_seed_directions_row(
-        'car',
-        '<p><strong>Car park:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>'
-    ),
-];
+$spuh_rail = '<p><strong>Rail or Luas:</strong> Heuston Station is less than a five minute walk from St Patrick\'s University Hospital. You can reach Heuston Station through a number of <a href="https://www.irishrail.ie/en-ie/station/dublin-heuston" target="_blank" rel="noopener noreferrer">Irish Rail routes</a>, or on the red line Luas, which runs every five minutes from Dublin city centre. The Luas journey is approximately five to 10 minutes from the city centre; you need to get off at the Heuston Station stop.</p>';
 
 $accordion_items = [
     [
         'title' => 'Getting to St Patrick\'s University Hospital',
         'starts_open' => 1,
-        'content_rows' => $university_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> There is a paid car park available at the campus entrance on Steeven\'s Lane.</p>'
+            ),
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> St Patrick\'s University Hospital, James\' Street, Dublin 8, D08 K7YW, Ireland.'
+                . matrix_seed_directions_map_link('Get directions', $spuh_map)
+                . '</p>'
+            ),
+            matrix_seed_directions_row(
+                'clock',
+                '<p><strong>Visiting times:</strong> 2pm to 5pm and 6pm to 8.30pm everyday</p>'
+            ),
+            matrix_seed_directions_row('bus', $spuh_bus),
+            matrix_seed_directions_row('train', $spuh_rail),
+        ],
     ],
     [
         'title' => 'Getting to Willow Grove Adolescent Unit',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> Willow Grove Adolescent Unit is on the St Patrick\'s University Hospital campus at James\' Street, Dublin 8, D08 K7YW, Ireland.'
+                . matrix_seed_directions_map_link('Get directions', $spuh_map)
+                . '</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> There is a paid car park available at the campus entrance on Steeven\'s Lane.</p>'
+            ),
+            matrix_seed_directions_row(
+                'clock',
+                '<p><strong>Visiting times:</strong> Contact Willow Grove for visiting information.</p>'
+            ),
+            matrix_seed_directions_row('bus', $spuh_bus),
+            matrix_seed_directions_row('train', $spuh_rail),
+        ],
     ],
     [
         'title' => 'Getting to St Patrick\'s Hospital Lucan',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> St Patrick\'s Hospital Lucan (St Edmundsbury), Old Lucan Road, Lucan, County Dublin, Ireland.'
+                . matrix_seed_directions_map_link('Get directions', $lucan_map)
+                . '</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> Limited free car parking is available in the hospital grounds.</p>'
+            ),
+            matrix_seed_directions_row(
+                'clock',
+                '<p><strong>Visiting times:</strong> 2pm to 5pm and 6pm to 8.30pm everyday</p>'
+            ),
+            matrix_seed_directions_row(
+                'bus',
+                '<p><strong>Dublin Bus:</strong> Routes C3 and C4 travel between Maynooth and Dublin city centre and stop close to the hospital grounds. Local routes L54 and P29 also stop nearby. It takes a five to 10 minute walk to reach the hospital from the bus stops.</p>'
+            ),
+        ],
     ],
     [
         'title' => 'Getting to Dean Clinic St Patrick\'s',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> The Dean Clinic St Patrick\'s is on the St Patrick\'s University Hospital campus at Steeven\'s Lane, James\' Street, Dublin 8.'
+                . matrix_seed_directions_map_link('Get directions', $spuh_map)
+                . ' When you arrive, the clinic is the green building at the back of the car park, facing the main entrance gates.</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> There is a paid car park available at the SPUH campus.</p>'
+            ),
+            matrix_seed_directions_row('bus', $spuh_bus),
+            matrix_seed_directions_row('train', $spuh_rail),
+        ],
     ],
     [
-        'title' => 'Getting to Dean Clinic St Patrick\'s',
+        'title' => 'Getting to Dean Clinic Cork',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> Dean Clinic Cork, Building 2000, City Gate, Mahon, County Cork, Ireland.</p>'
+            ),
+            matrix_seed_directions_row(
+                'bus',
+                '<p><strong>Bus:</strong> The 215 bus from Cork city centre stops within walking distance of City Gate, Mahon.</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> Very limited free parking is available with a maximum stay of three hours; clamping is in operation. There is no parking for the clinic in the nearby underground car park.</p>'
+            ),
+        ],
     ],
     [
-        'title' => 'Getting to Dean Clinic St Patrick\'s',
+        'title' => 'Getting to Dean Clinic Galway',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> Dean Clinic Galway, Merchant\'s Square, Merchant\'s Road, Galway City, Ireland.</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> There is a paid car park available near the clinic.</p>'
+            ),
+            matrix_seed_directions_row(
+                'bus',
+                '<p><strong>Bus:</strong> Several bus routes pass close to the clinic; all routes to Eyre Square are within a 15 minute walk.</p>'
+            ),
+            matrix_seed_directions_row(
+                'train',
+                '<p><strong>Rail:</strong> Galway train station is approximately a 10 minute walk from the clinic.</p>'
+            ),
+        ],
     ],
     [
         'title' => 'Getting to Dean Clinic Lucan',
         'starts_open' => 0,
-        'content_rows' => $placeholder_rows,
+        'content_rows' => [
+            matrix_seed_directions_row(
+                'map_pin',
+                '<p><strong>Address:</strong> The Dean Clinic Lucan is based at the second entrance to St Patrick\'s Hospital Lucan.'
+                . matrix_seed_directions_map_link('Get directions', $lucan_map)
+                . '</p>'
+            ),
+            matrix_seed_directions_row(
+                'car',
+                '<p><strong>Car park:</strong> There is a car park available at the clinic.</p>'
+            ),
+            matrix_seed_directions_row(
+                'bus',
+                '<p><strong>Dublin Bus:</strong> Routes C3 and C4 travel between Dublin city centre and Maynooth, and local routes L54 and P29 pass nearby. The bus stops are a short walk from the clinic.</p>'
+            ),
+        ],
     ],
 ];
 
-$flexi_rows = [
-    [
-        'acf_fc_layout' => 'hero_with_breadcrumbs',
-        'layout_style' => 'image_split',
-        'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
-        'manual_breadcrumbs' => [
-            [
-                'breadcrumb_link' => [
-                    'title' => 'Home',
-                    'url' => $home,
-                    'target' => '',
-                ],
-            ],
-            [
-                'breadcrumb_link' => [
-                    'title' => 'Service users and visitors',
-                    'url' => $service_users_url,
-                    'target' => '',
-                ],
-            ],
-        ],
-        'current_crumb_label' => 'Directions and Parking',
-        'heading_tag' => 'h1',
-        'heading' => 'Directions and Parking',
-        'content' => '<p>' . esc_html($hero_copy) . '</p>',
-        'primary_button' => [
-            'title' => 'Our Locations Map',
-            'url' => $locations_map_url,
-            'target' => '',
-        ],
-        'hero_image' => $hero_image_id,
-        'background_color' => '#C6ECF4',
-        'breadcrumb_background_color' => '#F1F8F9',
-        'heading_color' => '#08284B',
-        'text_color' => '#08284B',
-    ],
-    [
-        'acf_fc_layout' => 'content_accordion',
-        'layout_style' => 'directions_page',
-        'section_background' => '#FFFFFF',
-        'panel_background' => 'linear-gradient(-28.52deg, #F3EADE 3.24%, #F1F3DE 90.88%)',
-        'open_panel_background' => 'linear-gradient(-75.64deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
-        'icon_tile_background_color' => '#B3DBAE',
-        'items' => $accordion_items,
-    ],
-    [
-        'acf_fc_layout' => 'useful_links',
-        'heading' => 'Useful links',
-        'heading_tag' => 'h2',
-        'variant' => 'search',
-        'background_color' => '#E9E2F7',
-        'heading_color' => '#1E244B',
-        'link_color' => '#1E244B',
-        'links' => [
-            ['link' => ['title' => 'Contact Us', 'url' => home_url('/contact-us/'), 'target' => '']],
-            ['link' => ['title' => 'About Us', 'url' => home_url('/about-us/'), 'target' => '']],
-            ['link' => ['title' => 'About Your Portal', 'url' => home_url('/about-your-portal/'), 'target' => '']],
-            ['link' => ['title' => 'What We Offer', 'url' => home_url('/what-we-offer/'), 'target' => '']],
-            ['link' => ['title' => 'Careers', 'url' => home_url('/about-us/careers/'), 'target' => '']],
-            ['link' => ['title' => 'Service User FAQs', 'url' => $faqs_url, 'target' => '']],
-        ],
-    ],
-];
+$hero_intro = 'Find directions, parking and public transport information for our hospitals and Dean Clinics across Ireland.';
+
+$rows = get_field('flexible_content_blocks', $post_id);
+
+if (! is_array($rows) || $rows === []) {
+    if (class_exists('WP_CLI')) {
+        WP_CLI::error('Directions and Parking page has no flexible content blocks to update.');
+    }
+
+    exit(1);
+}
+
+foreach ($rows as &$row) {
+    $layout = $row['acf_fc_layout'] ?? '';
+
+    if ($layout === 'hero_with_breadcrumbs') {
+        $row['content'] = '<p>' . esc_html($hero_intro) . '</p>';
+    }
+
+    if ($layout === 'content_accordion' && ($row['layout_style'] ?? '') === 'directions_page') {
+        $row['items'] = $accordion_items;
+    }
+}
+unset($row);
 
 update_field('hero_content_blocks', [], $post_id);
-update_field('flexible_content_blocks', $flexi_rows, $post_id);
-
-$saved_rows = get_field('flexible_content_blocks', $post_id);
-$saved_count = is_array($saved_rows) ? count($saved_rows) : 0;
+update_field('flexible_content_blocks', $rows, $post_id);
+update_post_meta($post_id, '_matrix_seed_key', 'directions-and-parking-content');
 
 if (class_exists('WP_CLI')) {
-    if ($saved_count === count($flexi_rows)) {
-        WP_CLI::success(sprintf(
-            'Seeded Directions and Parking page (%d) with %d flexi blocks.',
-            $post_id,
-            $saved_count
-        ));
-    } else {
-        WP_CLI::warning(sprintf(
-            'Updated page %d but expected %d blocks, found %d.',
-            $post_id,
-            count($flexi_rows),
-            $saved_count
-        ));
-    }
+    WP_CLI::success(sprintf(
+        'Updated Directions and Parking page (%d) with travel content for %d locations.',
+        $post_id,
+        count($accordion_items)
+    ));
 }

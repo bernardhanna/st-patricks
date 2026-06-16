@@ -1,23 +1,6 @@
 <?php
 
-$padding_classes = [];
 
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 matrix_render_hero_with_breadcrumbs([
     'section_id' => 'hero-with-breadcrumbs-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid()),
@@ -39,5 +22,4 @@ matrix_render_hero_with_breadcrumbs([
     'accent_color' => get_sub_field('accent_color'),
     'aside_heading' => get_sub_field('aside_heading'),
     'text_max_width' => get_sub_field('text_max_width'),
-    'padding_classes' => $padding_classes,
 ], get_the_ID());

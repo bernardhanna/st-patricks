@@ -44,7 +44,7 @@ if (! function_exists('matrix_seed_accordion_item')) {
 }
 
 $home = home_url('/');
-$advocacy_url = get_permalink(271) ?: home_url('/advocacy/');
+$advocacy_url = get_permalink(271) ?: home_url('/about-us/advocacy/');
 $about_url = home_url('/about-us/');
 $wmhn_url = get_permalink(get_page_by_path('women-s-mental-health-network')) ?: home_url('/women-s-mental-health-network/');
 $youth_advocacy_url = home_url('/youth-advocacy-service/');

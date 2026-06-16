@@ -56,51 +56,6 @@ $subpage_hero
             'label' => 'Content Text Color',
             'instructions' => 'Choose the color for the content text.',
             'default_value' => '#404040',
-        ])
-
-    // Layout Tab
-    ->addTab('Layout', ['placement' => 'top'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'instructions' => 'Customize padding for different screen sizes.',
-            'button_label' => 'Add Screen Size Padding',
-            'min' => 0,
-            'max' => 10,
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'instructions' => 'Select the screen size for this padding setting.',
-                'choices' => [
-                    'xxs' => 'XXS (Extra Extra Small)',
-                    'xs' => 'XS (Extra Small)',
-                    'mob' => 'Mobile',
-                    'sm' => 'SM (Small)',
-                    'md' => 'MD (Medium)',
-                    'lg' => 'LG (Large)',
-                    'xl' => 'XL (Extra Large)',
-                    'xxl' => 'XXL (Extra Extra Large)',
-                    'ultrawide' => 'Ultrawide',
-                ],
-                'default_value' => 'lg',
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'instructions' => 'Set the top padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 9,
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'instructions' => 'Set the bottom padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 9,
-            ])
-        ->endRepeater();
+        ]);
 
 return $subpage_hero;

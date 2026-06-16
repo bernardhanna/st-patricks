@@ -23,6 +23,8 @@ $category_map = [
     'podcasts' => matrix_migrate_ensure_category('podcasts', 'Podcasts'),
     'videos' => matrix_migrate_ensure_category('videos', 'Videos'),
     'newsletter' => matrix_migrate_ensure_category('newsletter', 'Newsletter'),
+    'events' => matrix_migrate_ensure_category('events', 'Events'),
+    'press-releases' => matrix_migrate_ensure_category('press-releases', 'Press Releases'),
 ];
 
 $items = [];

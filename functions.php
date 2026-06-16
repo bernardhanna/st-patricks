@@ -85,9 +85,12 @@ require_once get_template_directory() . '/inc/related-cards-functions.php';
 require_once get_template_directory() . '/inc/video-showcase-functions.php';
 require_once get_template_directory() . '/inc/webinars-archive-functions.php';
 require_once get_template_directory() . '/inc/programmes-therapies-archive-functions.php';
+require_once get_template_directory() . '/inc/mental-health-functions.php';
+require_once get_template_directory() . '/inc/programmes-therapies-single-functions.php';
 require_once get_template_directory() . '/inc/contact-form-functions.php';
 require_once get_template_directory() . '/inc/inpatient-bed-vacancies-functions.php';
 require_once get_template_directory() . '/inc/what-we-offer-functions.php';
+require_once get_template_directory() . '/inc/about-links-grid-functions.php';
 require_once get_template_directory() . '/inc/mega-menu-render.php';
 require_once get_template_directory() . '/inc/flexible-content-functions.php';
 

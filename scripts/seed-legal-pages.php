@@ -54,23 +54,7 @@ if (! function_exists('matrix_seed_legal_page_hero')) {
     }
 }
 
-$pages = [
-    [
-        'path' => 'cookie-privacy-policy',
-        'title' => 'Cookie & Privacy policy',
-        'intro' => 'This page explains how St Patrick\'s Mental Health Services uses cookies and handles personal data on this website.',
-    ],
-    [
-        'path' => 'data-protection-policy',
-        'title' => 'Data protection policy',
-        'intro' => 'This page outlines how we collect, store, and protect personal information in line with data protection requirements.',
-    ],
-    [
-        'path' => 'accessibility',
-        'title' => 'Accessibility',
-        'intro' => 'This page describes our commitment to making this website accessible to as many people as possible.',
-    ],
-];
+$pages = [];
 
 $home = home_url('/');
 $updated = 0;

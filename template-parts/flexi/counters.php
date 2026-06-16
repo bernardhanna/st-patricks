@@ -18,27 +18,12 @@ $counter_items = get_sub_field('counter_items') ?: [];
 $total_counter_items = count($counter_items);
 
 // Layout padding classes
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-        if ($screen_size && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-         class="relative flex overflow-hidden bg-[#024B79] <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+         class="relative flex overflow-hidden bg-[#024B79]"
          role="region"
          aria-label="Statistics and Key Metrics">
 <svg class="absolute bottom-0 left-0 max-lg:hidden" xmlns="http://www.w3.org/2000/svg" width="240" height="482" viewBox="0 0 240 482" fill="none">

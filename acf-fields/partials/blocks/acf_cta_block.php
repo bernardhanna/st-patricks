@@ -24,15 +24,6 @@ $cta
   ->addTab('style', ['label' => 'Style'])
     ->addColorPicker('divider_color', ['label' => 'Divider Color', 'default_value' => '#D1D5DB'])
     ->addTrueFalse('min_full_screen', ['label' => 'Min Height Full Screen', 'default_value' => 0])
-    ->addText('section_classes', ['label' => 'Extra Section Classes'])
-    ->addRepeater('padding_settings', ['label' => 'Padding Settings', 'layout' => 'table'])
-      ->addSelect('screen_size', [
-        'label' => 'Screen',
-        'choices' => ['' => 'base','sm' => 'sm','md' => 'md','lg' => 'lg','xl' => 'xl','2xl' => '2xl'],
-        'default_value' => '',
-      ])
-      ->addText('padding_top', ['label' => 'Top (rem)', 'placeholder' => '16'])
-      ->addText('padding_bottom', ['label' => 'Bottom (rem)', 'placeholder' => '25'])
-    ->endRepeater();
+    ->addText('section_classes', ['label' => 'Extra Section Classes']);
 
 return $cta;

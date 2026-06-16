@@ -105,24 +105,10 @@ $dot_inactive      = get_sub_field('dot_inactive_color') ?: '#3B82F6';
 $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
 
 // Layout: padding classes
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen_size    = get_sub_field('screen_size');
-    $padding_top    = get_sub_field('padding_top');
-    $padding_bottom = get_sub_field('padding_bottom');
-    if ($screen_size !== '' && $padding_top !== '' && $padding_bottom !== '') {
-      $padding_classes[] = esc_attr("{$screen_size}:pt-[{$padding_top}rem]");
-      $padding_classes[] = esc_attr("{$screen_size}:pb-[{$padding_bottom}rem]");
-    }
-  }
-}
-$padding_str = implode(' ', $padding_classes);
 
 ?>
 <section id="<?php echo esc_attr($section_id); ?>" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>" class="flex overflow-hidden relative" aria-label="Story slider"  style="background-image: linear-gradient(135deg, <?php echo esc_attr($bg_from); ?>, <?php echo esc_attr($bg_via); ?>, <?php echo esc_attr($bg_to); ?>);">
-  <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 max-lg:px-5 <?php echo esc_attr($padding_str); ?>">
+  <div class="flex flex-col items-center w-full mx-auto max-w-container pt-5 pb-5 max-lg:px-5">
 
     <div class="flex relative justify-center items-center px-6 py-16 w-full md:py-20 lg:py-24 md:px-12 lg:px-28 xl:px-32"
 >

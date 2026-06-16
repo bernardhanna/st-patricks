@@ -11,22 +11,7 @@ $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';
 
 $wrapper_classes = explode(' ', matrix_get_careers_archive_default_wrapper_classes());
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $careers_archive = matrix_prepare_careers_archive([
     'section_id' => $section_id,

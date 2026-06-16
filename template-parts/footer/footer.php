@@ -2,22 +2,7 @@
 // Colors / Padding
 $background_color = get_field('background_color', 'option') ?: '#ffffff';
 
-$padding_classes = [];
-if (have_rows('padding_settings', 'option')) {
-    while (have_rows('padding_settings', 'option')) {
-        the_row();
-        $screen_size    = get_sub_field('screen_size');
-        $padding_top    = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 // Brand strip (optional background logos) — used only on desktop block
 $brand_strip_opacity = get_field('brand_strip_opacity', 'option');
@@ -283,7 +268,7 @@ $mob_icons = [
             </div>
         <?php endif; ?>
 
-        <div class="flex flex-col items-center w-full mx-auto max-w-[1300px] pt-12 pb-5 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+        <div class="flex flex-col items-center w-full mx-auto max-w-[1300px] pt-12 pb-5 max-lg:px-5">
             <div class="w-full max-xxl:px-5">
 
                 <!-- Top navigation area as GRID -->

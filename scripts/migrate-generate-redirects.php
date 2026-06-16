@@ -20,7 +20,7 @@ foreach (matrix_migrate_frozen_redirect_map() as $old_path => $destination) {
 }
 
 $migrated = get_posts([
-    'post_type' => ['post', 'page'],
+    'post_type' => ['post', 'page', 'mental_health'],
     'post_status' => 'publish',
     'posts_per_page' => -1,
     'meta_key' => '_matrix_migrate_old_path',
@@ -37,7 +37,13 @@ foreach ($migrated as $post) {
         continue;
     }
 
-    $redirects['/' . $old_path] = '/' . trim($post->post_name, '/') . '/';
+    $permalink_path = wp_parse_url((string) get_permalink($post), PHP_URL_PATH);
+
+    if (! is_string($permalink_path) || $permalink_path === '') {
+        $permalink_path = '/' . trim($post->post_name, '/') . '/';
+    }
+
+    $redirects['/' . $old_path] = $permalink_path;
 }
 
 ksort($redirects);

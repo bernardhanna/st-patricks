@@ -89,10 +89,10 @@ if (! function_exists('matrix_seed_recruitment_urls')) {
             'multidisciplinary_teams' => home_url('/about-us/multidisciplinary-teams/'),
             'our_team' => home_url('/about-us/our-team/'),
             'service_user_participation' => home_url('/service-users-and-visitors/service-user-participation/'),
-            'advocacy' => home_url('/advocacy/'),
+            'advocacy' => home_url('/about-us/advocacy/'),
             'staff_nurse' => get_permalink(get_page_by_path('staff-nurse-psychiatric-adult-adolescent-services', OBJECT, 'careers')) ?: home_url('/careers/staff-nurse-psychiatric-adult-adolescent-services/'),
             'faqs' => home_url('/service-users-and-visitors/frequently-asked-questions-faqs/'),
-            'referrals' => home_url('/make-a-referral-cta/'),
+            'referrals' => home_url('/make-a-referral/'),
             'keepwell_news' => home_url('/media-centre/news/2019/march/keepwell-mark/'),
         ];
     }

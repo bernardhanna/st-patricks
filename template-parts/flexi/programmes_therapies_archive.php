@@ -13,22 +13,7 @@ $posts_per_page = get_sub_field('posts_per_page');
 $empty_state_message = get_sub_field('empty_state_message');
 
 $wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';

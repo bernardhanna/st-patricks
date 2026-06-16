@@ -2,8 +2,8 @@
 $settings = get_field('blog_settings', 'option') ?: [];
 
 $hero_tag = (string) ($settings['hero_heading_tag'] ?? 'h1');
-$hero_text = (string) ($settings['hero_heading_text'] ?? "What's new at Tyrecare");
-$sub_text = (string) ($settings['hero_subheading_text'] ?? 'Latest and greatest.');
+$hero_text = (string) ($settings['hero_heading_text'] ?? 'News and Events');
+$sub_text = (string) ($settings['hero_subheading_text'] ?? 'Get mental health news and events, articles, videos and podcasts from St Patrick\'s Mental Health Services.');
 $hero_bg = ! empty($settings['hero_background_image']) && is_array($settings['hero_background_image'])
     ? $settings['hero_background_image']
     : null;

@@ -33,22 +33,7 @@ $heading_id = $section_id . '-heading';
 $allowed_item_tags = ['h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
 
 $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $render_timeline_card = static function (array $item) use ($card_background_color, $allowed_item_tags) {
     $item_heading_tag = $item['item_heading_tag'];

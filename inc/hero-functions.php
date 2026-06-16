@@ -319,7 +319,6 @@ function matrix_get_utility_page_hero_config($heading, $intro = '', array $overr
     'text_color' => '#08284B',
     'accent_color' => '#6FC9C0',
     'aside_heading' => '',
-    'padding_classes' => [],
   ], $overrides);
 }
 
@@ -348,7 +347,6 @@ function matrix_prepare_hero_with_breadcrumbs_view_model(array $config, $post_id
   $accent_color = (string) ($config['accent_color'] ?? '');
   $aside_heading = trim((string) ($config['aside_heading'] ?? ''));
   $text_max_width = matrix_resolve_hero_with_breadcrumbs_text_max_width($config['text_max_width'] ?? 'default');
-  $padding_classes = is_array($config['padding_classes'] ?? null) ? $config['padding_classes'] : [];
 
   if ($heading === '') {
     if ($layout_style === 'title_accent') {
@@ -451,9 +449,7 @@ function matrix_prepare_hero_with_breadcrumbs_view_model(array $config, $post_id
     'accent_color' => $accent_color,
     'aside_heading' => $aside_heading,
     'text_max_width' => $text_max_width,
-    'text_max_width_class' => matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width),
-    'padding_classes' => $padding_classes,
-    'hero_heading_id' => $hero_heading_id,
+    'text_max_width_class' => matrix_get_hero_with_breadcrumbs_text_max_width_class($text_max_width),    'hero_heading_id' => $hero_heading_id,
     'gradient_solid' => $gradient_vars['gradient_solid'],
     'gradient_soft' => $gradient_vars['gradient_soft'],
     'gradient_clear' => $gradient_vars['gradient_clear'],

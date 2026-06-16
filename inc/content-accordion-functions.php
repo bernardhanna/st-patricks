@@ -22,7 +22,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
 {
     if ($layout_style === 'policies_page') {
         return [
-            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-5 py-12 xl:px-0 xl:py-[100px]',
+            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-5 xl:px-0',
             'section_background' => '#FFFFFF',
             'panel_background' => 'linear-gradient(-29.03deg, #F3EADE 3.24%, #F1F3DE 90.88%)',
             'open_panel_background' => 'linear-gradient(-80.97deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
@@ -40,7 +40,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
 
     if ($layout_style === 'directions_page') {
         return [
-            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-4 py-12 mob:px-5 xl:px-0 xl:py-[100px]',
+            'wrapper_classes' => 'mx-auto flex w-full max-w-[1018px] flex-col gap-3 px-4 mob:px-5 xl:px-0',
             'section_background' => '#FFFFFF',
             'panel_background' => 'linear-gradient(-28.52deg, #F3EADE 3.24%, #F1F3DE 90.88%)',
             'open_panel_background' => 'linear-gradient(-75.64deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
@@ -288,4 +288,30 @@ function matrix_normalize_content_accordion_items($items, $layout_style = 'defau
         'items' => $normalized_items,
         'initial_open_index' => $initial_open_index,
     ];
+}
+
+function matrix_resolve_content_accordion_vertical_padding($value = '')
+{
+    return trim((string) $value) === 'bottom_only' ? 'bottom_only' : 'default';
+}
+
+function matrix_content_accordion_layout_uses_section_padding(string $layout_style): bool
+{
+    return in_array(matrix_resolve_content_accordion_layout_style($layout_style), ['policies_page', 'directions_page'], true);
+}
+
+function matrix_get_content_accordion_vertical_padding_classes(string $vertical_padding = 'default', string $layout_style = 'default'): string
+{
+    $vertical_padding = matrix_resolve_content_accordion_vertical_padding($vertical_padding);
+    $uses_section_padding = matrix_content_accordion_layout_uses_section_padding($layout_style);
+
+    if ($vertical_padding === 'bottom_only') {
+        return 'pt-0 pb-12 xl:pt-0 xl:pb-[100px]';
+    }
+
+    if ($uses_section_padding) {
+        return 'py-12 xl:py-[100px]';
+    }
+
+    return '';
 }

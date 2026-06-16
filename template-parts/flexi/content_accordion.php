@@ -44,28 +44,13 @@ $open_panel_background_style = matrix_get_content_accordion_background_style(
 );
 $section_background_style = matrix_get_content_accordion_background_style($section_background, '#FFFFFF');
 
-$padding_classes = [];
-if ($layout_style !== 'directions_page' && have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
-
-$wrapper_classes = trim(implode(' ', array_unique(array_merge(
-    explode(' ', $layout_config['wrapper_classes']),
-    $padding_classes
-))));
+$vertical_padding = function_exists('matrix_resolve_content_accordion_vertical_padding')
+    ? matrix_resolve_content_accordion_vertical_padding(get_sub_field('vertical_padding'))
+    : 'default';
+$padding_classes = function_exists('matrix_get_content_accordion_vertical_padding_classes')
+    ? matrix_get_content_accordion_vertical_padding_classes($vertical_padding, $layout_style)
+    : '';
+$wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !== '' ? ' ' . $padding_classes : ''));
 ?>
 
 <section

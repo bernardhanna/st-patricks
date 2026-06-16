@@ -26,23 +26,7 @@ $section_background_style = matrix_get_key_contact_info_background_style($sectio
 $closed_panel_background_style = matrix_get_key_contact_info_background_style($closed_panel_background, '#FBFAF7');
 $open_panel_background_style = matrix_get_key_contact_info_background_style($open_panel_background, 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)');
 
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 ?>
 
 <section
@@ -51,7 +35,7 @@ if (have_rows('padding_settings')) {
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'max-xl:px-5', 'lg:grid', 'lg:grid-cols-3', 'lg:items-start'], $padding_classes)))); ?>">
+    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names(['gap-8', 'lg:grid', 'lg:grid-cols-3', 'lg:items-start'])); ?>">
         <?php foreach ($columns as $column_index => $column) { ?>
             <div
                 x-data="{ activeIndex: <?php echo esc_attr((string) $column['initial_open_index']); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"

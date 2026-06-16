@@ -84,5 +84,18 @@ test('blog post category badge colors match figma news and events tokens', funct
         'background' => '#C3DBAE',
         'text' => '#08284B',
     ])->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('h-[36px]')
-        ->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('px-6');
+        ->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('px-6')
+        ->and(matrix_get_blog_filter_archive_chip_button_class_names())->toContain('shrink-0');
+});
+
+test('blog filter archive pagination collapses large page counts', function () {
+    expect(matrix_build_blog_filter_archive_pagination_items(15, 32))->toBe([
+        ['type' => 'page', 'page' => 1],
+        ['type' => 'ellipsis'],
+        ['type' => 'page', 'page' => 14],
+        ['type' => 'page', 'page' => 15],
+        ['type' => 'page', 'page' => 16],
+        ['type' => 'ellipsis'],
+        ['type' => 'page', 'page' => 32],
+    ]);
 });

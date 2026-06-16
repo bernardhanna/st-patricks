@@ -67,34 +67,6 @@ $related_cards
             ],
             'default_value' => '3',
             'ui' => 1,
-        ])
-
-    ->addTab('layout_tab', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'button_label' => 'Add Screen Size Padding',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'mob' => 'mob',
-                    'lg' => 'lg',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ]);
 
 return $related_cards;

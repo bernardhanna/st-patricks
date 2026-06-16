@@ -86,7 +86,7 @@ $url_map = [
 
 $nav_button_map = [
     'looking for help?' => $home . 'contact-us/',
-    'make a referral' => $home . 'make-a-referral-cta/',
+    'make a referral' => $home . 'make-a-referral/',
     'access your portal' => $home . 'your-portal/',
 ];
 

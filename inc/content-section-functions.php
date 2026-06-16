@@ -190,8 +190,43 @@ function matrix_content_has_visible_rich_text($value)
     return is_string($value) && trim(strip_tags($value)) !== '';
 }
 
-function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $text_max_width_classes = '')
+function matrix_resolve_content_color_scheme($scheme = '', $background_type = '')
 {
+    if (trim((string) $scheme) === 'inverse') {
+        return 'inverse';
+    }
+
+    if (trim((string) $background_type) === 'navy') {
+        return 'inverse';
+    }
+
+    return 'default';
+}
+
+/**
+ * @return array{heading: string, rich_text: string, document_link: string}
+ */
+function matrix_get_content_theme_classes(string $color_scheme = 'default'): array
+{
+    if (matrix_resolve_content_color_scheme($color_scheme) === 'inverse') {
+        return [
+            'heading' => 'text-white',
+            'rich_text' => 'text-white [&_a]:text-white [&_a]:underline hover:[&_a]:no-underline',
+            'document_link' => 'text-white hover:text-white/90 focus-visible:text-white/90',
+        ];
+    }
+
+    return [
+        'heading' => 'text-[#1E244B]',
+        'rich_text' => 'text-[#08284B] [&_a]:text-[#024B79] [&_a]:underline hover:[&_a]:no-underline',
+        'document_link' => 'text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]',
+    ];
+}
+
+function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $text_max_width_classes = '', $color_scheme = 'default')
+{
+    $theme_classes = matrix_get_content_theme_classes($color_scheme);
+
     $classes = array_filter([
         'wp_editor',
         is_string($text_max_width_classes) && $text_max_width_classes !== '' ? $text_max_width_classes : null,
@@ -199,7 +234,7 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
         'text-[16px]',
         $weight === 'bold' ? 'font-bold' : 'font-medium',
         'leading-[28px]',
-        'text-[#08284B]',
+        $theme_classes['rich_text'],
         '[&_p]:mb-4',
         '[&_p:last-child]:mb-0',
         '[&_ul]:mb-4',
@@ -210,9 +245,6 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
         '[&_ol]:pl-6',
         '[&_li]:mb-2',
         '[&_a]:font-medium',
-        '[&_a]:text-[#024B79]',
-        '[&_a]:underline',
-        'hover:[&_a]:no-underline',
     ]);
 
     return implode(' ', $classes);
@@ -232,6 +264,10 @@ function matrix_get_content_background_style($background_type, $background_color
 
     if ($background_type === 'light_blue') {
         return 'background-color: #C6ECF4;';
+    }
+
+    if ($background_type === 'navy') {
+        return 'background-color: #024B79;';
     }
 
     if ($background_type === 'gradient') {
@@ -257,19 +293,35 @@ function matrix_get_content_background_style($background_type, $background_color
         : 'background-color: ' . $color . ';';
 }
 
-function matrix_get_content_button_class_names($variant = 'filled')
+function matrix_get_content_button_class_names($variant = 'filled', $color_scheme = 'default')
 {
-    return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-transparent px-3 text-[14px] font-medium leading-[24px] text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+    $is_inverse = matrix_resolve_content_color_scheme($color_scheme) === 'inverse';
+
+    if ($is_inverse) {
+        if ($variant === 'outline') {
+            return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white/80 bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+        }
+
+        return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+    }
+
+    if ($variant === 'outline') {
+        return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-transparent px-3 text-[14px] font-medium leading-[24px] text-[#024B79] hover:bg-[#024B79]/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+    }
+
+    return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-[#013a5f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+}
+
+function matrix_get_content_document_link_class_names($color_scheme = 'default')
+{
+    $theme_classes = matrix_get_content_theme_classes($color_scheme);
+
+    return 'btn inline-flex w-fit items-center gap-2 font-primary text-[16px] font-semibold leading-[24px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79] ' . $theme_classes['document_link'];
 }
 
 function matrix_get_content_pdf_icon_svg()
 {
     return '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11.5 1.5H4.5C3.67 1.5 3 2.17 3 3V17C3 17.83 3.67 18.5 4.5 18.5H15.5C16.33 18.5 17 17.83 17 17V6.5L11.5 1.5Z" fill="#E53935"/><path d="M11 2V7H16" fill="#FFCDD2"/><path d="M6.5 11H13.5M6.5 14H11" stroke="white" stroke-width="1.25" stroke-linecap="round"/></svg>';
-}
-
-function matrix_get_content_document_link_class_names()
-{
-    return 'btn inline-flex w-fit items-center gap-2 font-primary text-[16px] font-semibold leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]';
 }
 
 /**
@@ -287,4 +339,53 @@ function matrix_get_editor_body_content_class_names()
 function matrix_get_editor_body_content_wrapper_class_names()
 {
     return 'mx-auto w-full max-w-[1018px] px-5 py-12 lg:px-0 lg:py-[100px]';
+}
+
+/**
+ * Standard inner wrapper for flexi blocks after custom padding_settings removal.
+ *
+ * @param array<int, string> $extra
+ */
+function matrix_get_flexi_section_wrapper_class_names(array $extra = []): string
+{
+    return implode(' ', array_unique(array_merge([
+        'mx-auto',
+        'flex',
+        'w-full',
+        'max-w-[1018px]',
+        'flex-col',
+        'max-xl:px-5',
+        'py-12',
+        'lg:py-[100px]',
+    ], $extra)));
+}
+
+function matrix_resolve_content_vertical_padding($value = '')
+{
+    return trim((string) $value) === 'no_bottom' ? 'no_bottom' : 'default';
+}
+
+function matrix_get_content_wrapper_class_names($vertical_padding = 'default')
+{
+    $vertical_padding = matrix_resolve_content_vertical_padding($vertical_padding);
+
+    $classes = [
+        'mx-auto',
+        'flex',
+        'w-full',
+        'max-w-[1018px]',
+        'flex-col',
+        'px-4',
+        'lg:px-0',
+        'py-12',
+    ];
+
+    if ($vertical_padding === 'no_bottom') {
+        $classes[] = 'lg:pt-[100px]';
+        $classes[] = 'lg:pb-0';
+    } else {
+        $classes[] = 'lg:py-[100px]';
+    }
+
+    return implode(' ', $classes);
 }

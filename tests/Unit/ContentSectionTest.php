@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/faq-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/content-section-functions.php';
 
@@ -61,13 +62,39 @@ test('editor body content helpers expose scoped rich text classes', function () 
         ->and(matrix_get_editor_body_content_wrapper_class_names())->toContain('lg:py-[100px]');
 });
 
+test('content wrapper padding resolves default and top-only desktop spacing', function () {
+    expect(matrix_get_content_wrapper_class_names('default'))->toContain('lg:py-[100px]')
+        ->and(matrix_get_content_wrapper_class_names('default'))->not->toContain('lg:pb-0')
+        ->and(matrix_get_content_wrapper_class_names('no_bottom'))->toContain('lg:pt-[100px]')
+        ->and(matrix_get_content_wrapper_class_names('no_bottom'))->toContain('lg:pb-0')
+        ->and(matrix_get_content_wrapper_class_names('no_bottom'))->not->toContain('lg:py-[100px]');
+});
+
+test('flexi section wrapper keeps standard max width and padding', function () {
+    expect(matrix_get_flexi_section_wrapper_class_names())->toContain('max-w-[1018px]')
+        ->and(matrix_get_flexi_section_wrapper_class_names())->toContain('py-12')
+        ->and(matrix_get_flexi_section_wrapper_class_names(['lg:grid']))->toContain('lg:grid');
+});
+
 test('content background style supports preset and custom values', function () {
     expect(matrix_get_content_background_style('white'))->toBe('background-color: #FFFFFF;')
         ->and(matrix_get_content_background_style('cream'))->toBe('background-color: #FBF8F3;')
         ->and(matrix_get_content_background_style('light_blue'))->toBe('background-color: #C6ECF4;')
+        ->and(matrix_get_content_background_style('navy'))->toBe('background-color: #024B79;')
         ->and(matrix_get_content_background_style('color', '#E9E2F7', ''))->toContain('#E9E2F7')
         ->and(matrix_get_content_background_style('gradient', '', 'linear-gradient(135deg, #fff 0%, #000 100%)'))
         ->toContain('linear-gradient(135deg, #fff 0%, #000 100%)');
+});
+
+test('content color scheme resolves inverse for navy backgrounds', function () {
+    expect(matrix_resolve_content_color_scheme('default', 'navy'))->toBe('inverse')
+        ->and(matrix_resolve_content_color_scheme('inverse', 'white'))->toBe('inverse')
+        ->and(matrix_resolve_content_color_scheme('default', 'white'))->toBe('default');
+
+    $inverse = matrix_get_content_theme_classes('inverse');
+
+    expect($inverse['heading'])->toBe('text-white')
+        ->and($inverse['rich_text'])->toContain('text-white');
 });
 
 test('content pdf helpers expose icon and document link classes', function () {
@@ -94,6 +121,8 @@ test('content button helpers normalize links and class names', function () {
     ])
         ->and(matrix_get_content_button_class_names('outline'))->toContain('bg-transparent')
         ->and(matrix_get_content_button_class_names('outline'))->toContain('text-[#024B79]')
-        ->and(matrix_get_content_button_class_names('filled'))->toContain('bg-transparent')
-        ->and(matrix_get_content_button_class_names('filled'))->not->toContain('bg-[#024B79]');
+        ->and(matrix_get_content_button_class_names('filled'))->toContain('bg-[#024B79]')
+        ->and(matrix_get_content_button_class_names('filled'))->toContain('text-white')
+        ->and(matrix_get_content_button_class_names('filled', 'inverse'))->toContain('text-white')
+        ->and(matrix_get_content_button_class_names('filled', 'inverse'))->toContain('border-white');
 });

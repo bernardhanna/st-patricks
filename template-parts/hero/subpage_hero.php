@@ -9,17 +9,7 @@ $content_text    = get_sub_field('content_text');
 $text_color      = get_sub_field('text_color');
 
 // Padding settings
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size    = get_sub_field('screen_size');
-        $padding_top    = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-        $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-    }
-}
+
 
 // Generate unique section ID
 $section_id = 'subpage-hero-' . uniqid();
@@ -37,7 +27,7 @@ if ($logo_id) {
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>" class="relative flex overflow-hidden max-lg:mt-[5rem] mt-[8rem]">
-  <div class="flex flex-col items-center w-full mx-auto max-w-container max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+  <div class="flex flex-col items-center w-full mx-auto max-w-container max-lg:px-5">
 
     <?php if (!empty($background_image['url'])): ?>
       <img

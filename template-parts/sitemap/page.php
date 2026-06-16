@@ -22,9 +22,9 @@ $section_id = 'sitemap-page-' . (function_exists('wp_generate_uuid4') ? wp_gener
     ?>
 
     <section class="bg-white" aria-label="Site map links">
-        <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-16 px-5 py-12 xl:px-0 xl:py-[100px]">
+        <div class="mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]">
             <?php if ($page_sections !== []) { ?>
-                <div class="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
+                <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
                     <?php foreach ($page_sections as $section) :
                         $section_title = trim((string) ($section['title'] ?? ''));
                         $section_url = trim((string) ($section['url'] ?? ''));
@@ -49,22 +49,31 @@ $section_id = 'sitemap-page-' . (function_exists('wp_generate_uuid4') ? wp_gener
                                 </a>
                             </h2>
 
-                            <div class="mt-4 h-1 w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
-
-                            <?php echo matrix_render_sitemap_list($children); ?>
+                            <?php if ($children !== []) { ?>
+                                <div class="mt-4 h-1 w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+                                <?php echo matrix_render_sitemap_list($children); ?>
+                            <?php } ?>
                         </article>
                     <?php endforeach; ?>
                 </div>
             <?php } ?>
 
-            <?php if ($archive_sections !== []) { ?>
+            <?php
+            $archive_sections_with_items = array_values(array_filter($archive_sections, static function ($archive_section) {
+                return is_array($archive_section)
+                    && is_array($archive_section['items'] ?? null)
+                    && $archive_section['items'] !== [];
+            }));
+            ?>
+
+            <?php if ($archive_sections_with_items !== []) { ?>
                 <div class="flex flex-col gap-12 border-t border-[rgba(8,40,75,0.12)] pt-12">
                     <h2 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]">
                         News, resources, and listings
                     </h2>
 
-                    <div class="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
-                        <?php foreach ($archive_sections as $index => $archive_section) :
+                    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                        <?php foreach ($archive_sections_with_items as $index => $archive_section) :
                             $archive_title = trim((string) ($archive_section['title'] ?? ''));
                             $archive_url = trim((string) ($archive_section['url'] ?? ''));
                             $archive_items = is_array($archive_section['items'] ?? null) ? $archive_section['items'] : [];

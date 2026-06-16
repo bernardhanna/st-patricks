@@ -137,39 +137,6 @@ $newsletter
       'label'         => 'Default Error Message',
       'default_value' => 'Sorry, something went wrong. Please try again.',
     ])
-  ->addAccordion('newsletter_brevo_acc_end', ['endpoint' => 1])
-
-  // Layout: padding (RENAMED to avoid collision)
-  ->addTab('layout_tab', ['label' => 'Layout'])
-    ->addRepeater('newsletter_padding_settings', [
-      'label' => 'Padding Settings (Newsletter)',
-      'instructions' => 'Customize padding for different screen sizes.',
-      'button_label' => 'Add Screen Size Padding',
-    ])
-      ->addSelect('screen_size', [
-        'label' => 'Screen Size',
-        'choices' => [
-          'xxs' => 'xxs',
-          'xs'  => 'xs',
-          'mob' => 'mob',
-          'sm'  => 'sm',
-          'md'  => 'md',
-          'lg'  => 'lg',
-          'xl'  => 'xl',
-          'xxl' => 'xxl',
-          'ultrawide' => 'ultrawide',
-        ],
-      ])
-      ->addNumber('padding_top', [
-        'label' => 'Padding Top',
-        'instructions' => 'Set the top padding in rem.',
-        'min' => 0, 'max' => 20, 'step' => 0.01, 'append' => 'rem',
-      ])
-      ->addNumber('padding_bottom', [
-        'label' => 'Padding Bottom',
-        'instructions' => 'Set the bottom padding in rem.',
-        'min' => 0, 'max' => 20, 'step' => 0.01, 'append' => 'rem',
-      ])
-    ->endRepeater();
+  ->addAccordion('newsletter_brevo_acc_end', ['endpoint' => 1]);
 
 return $newsletter;

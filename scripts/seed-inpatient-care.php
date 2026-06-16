@@ -100,7 +100,7 @@ $locations_archive_url = home_url('/about-us/our-locations/');
 $your_stay_adult_url = home_url('/service-users-and-visitors/your-stay-in-hospital-as-an-adult/');
 $homecare_url = home_url('/what-we-offer/st-patricks-at-home/');
 $faqs_url = home_url('/service-users-and-visitors/frequently-asked-questions-faqs/');
-$referrals_url = home_url('/make-a-referral-cta/');
+$referrals_url = home_url('/make-a-referral/');
 
 $spuh_post = get_posts([
     'post_type' => 'locations',

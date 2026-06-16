@@ -38,6 +38,15 @@ function matrixSyncSiteHeaderHeight() {
   var header = document.getElementById('site-nav');
   if (!header) return;
   document.documentElement.style.setProperty('--site-header-height', header.offsetHeight + 'px');
+  matrixSyncNavMegaPointer();
+}
+
+function matrixSyncNavMegaPointer() {
+  if (typeof Alpine === 'undefined' || typeof Alpine.store !== 'function') return;
+  var store = Alpine.store('navMega');
+  if (store && store.activeKey && typeof store.syncPointer === 'function') {
+    store.syncPointer(store.activeKey);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', matrixSyncSiteHeaderHeight);
@@ -48,12 +57,22 @@ document.addEventListener('alpine:init', () => {
   if (!Alpine.store('nav')) Alpine.store('nav', { open: false });
   Alpine.store('navMega', {
     activeKey: null,
+    pointerLeft: 0,
     closeTimer: null,
     open(key) {
       clearTimeout(this.closeTimer);
       this.closeTimer = null;
       matrixSyncSiteHeaderHeight();
       this.activeKey = key;
+      requestAnimationFrame(() => this.syncPointer(key));
+    },
+    syncPointer(key) {
+      const triggerKey = key || this.activeKey;
+      if (!triggerKey) return;
+      const trigger = document.querySelector('[data-nav-mega-trigger="' + triggerKey + '"]');
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      this.pointerLeft = rect.left + (rect.width / 2);
     },
     cancelClose() {
       clearTimeout(this.closeTimer);
@@ -192,6 +211,7 @@ document.addEventListener('alpine:init', () => {
   x-effect="$store.nav.open ? document.body.style.overflow='hidden' : document.body.style.overflow=''"
   class="overflow-visible bg-white"
   role="banner"
+  @open-navbar-search="openSearch()"
   @mouseenter="$store.navMega.cancelClose()"
   @mouseleave="$store.navMega.scheduleCloseFromEvent($event)"
 >
@@ -280,6 +300,16 @@ document.addEventListener('alpine:init', () => {
         }
         ?>
       <?php endforeach; ?>
+    </div>
+
+    <div
+      class="pointer-events-none fixed z-[56] hidden lg:block"
+      x-show="$store.navMega.activeKey"
+      x-cloak
+      :style="'left:' + $store.navMega.pointerLeft + 'px; top: calc(var(--site-header-height, 120px) - 48px);'"
+      aria-hidden="true"
+    >
+      <?php matrix_render_nav_mega_menu_pointer_graphic(); ?>
     </div>
   <?php endif; ?>
 

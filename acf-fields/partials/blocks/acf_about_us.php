@@ -130,48 +130,6 @@ $about_us
             'label' => 'Section Background Color',
             'instructions' => 'Background color for the section.',
             'default_value' => '#FFFFFF',
-        ])
-
-    ->addTab('Layout', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'instructions' => 'Customize padding for different screen sizes.',
-            'button_label' => 'Add Screen Size Padding',
-            'layout' => 'table',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'instructions' => 'Select the screen size for this padding setting.',
-                'choices' => [
-                    'xxs'       => 'XXS (320px+)',
-                    'xs'        => 'XS (480px+)',
-                    'mob'       => 'Mobile (575px+)',
-                    'sm'        => 'Small (640px+)',
-                    'md'        => 'Medium (768px+)',
-                    'lg'        => 'Large (1100px+)',
-                    'xl'        => 'XL (1280px+)',
-                    'xxl'       => 'XXL (1440px+)',
-                    'ultrawide' => 'Ultrawide (1920px+)',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'instructions' => 'Set the top padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 6,
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'instructions' => 'Set the bottom padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 6,
-            ])
-        ->endRepeater();
+        ]);
 
 return $about_us;

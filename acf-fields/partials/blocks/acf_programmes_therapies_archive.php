@@ -38,43 +38,6 @@ $programmes_therapies_archive
         ->addText('empty_state_message', [
             'label' => 'Empty State Message',
             'default_value' => $defaults['empty_state_message'],
-        ])
-
-    ->addTab('Layout', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'instructions' => 'Customize padding for different screen sizes.',
-            'button_label' => 'Add Screen Size Padding',
-            'layout' => 'table',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'xxs' => 'xxs',
-                    'xs' => 'xs',
-                    'mob' => 'mob',
-                    'sm' => 'sm',
-                    'md' => 'md',
-                    'lg' => 'lg',
-                    'xl' => 'xl',
-                    'xxl' => 'xxl',
-                    'ultrawide' => 'ultrawide',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ]);
 
 return $programmes_therapies_archive;

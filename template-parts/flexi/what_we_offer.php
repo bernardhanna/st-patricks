@@ -28,22 +28,7 @@ if ($background_gradient === '' || $background_gradient === null) {
 }
 
 // Padding settings
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size    = get_sub_field('screen_size');
-        $padding_top    = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 // Sanitize heading tag
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
@@ -51,7 +36,6 @@ if (!in_array($heading_tag, $allowed_tags, true)) {
     $heading_tag = 'h2';
 }
 
-$service_hover_icon_url = home_url('/wp-content/uploads/2026/03/left.svg');
 $service_rows = [];
 
 if (!empty($services) && is_array($services)) {
@@ -71,6 +55,9 @@ if (!empty($services) && is_array($services)) {
             'has_link' => $has_service_link,
             'show_icon' => $show_service_icon,
             'accent_color' => matrix_get_what_we_offer_accent_color($service, $index),
+            'icon_background' => matrix_get_what_we_offer_intro_two_column_icon_background(
+                matrix_get_what_we_offer_accent_color($service, $index)
+            ),
         ];
     }
 }
@@ -80,7 +67,7 @@ if (!empty($services) && is_array($services)) {
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background: <?php echo esc_attr($background_gradient); ?>;">
-    <div class="flex flex-col items-center w-full mx-auto max-w-container py-12 lg:py-24 max-lg:px-5 max-sm:px-6 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="flex flex-col items-center w-full mx-auto max-w-container py-12 lg:py-24 max-lg:px-5 max-sm:px-6">
 
         <!-- Header Section -->
         <?php if (!empty($heading)) : ?>
@@ -133,19 +120,6 @@ if (!empty($services) && is_array($services)) {
               <?php if ($service_rows !== []) : ?>
                   <div class="grid flex-1 grid-cols-1 gap-x-10 gap-y-10 shrink basis-0 min-w-60 max-md:max-w-full md:grid-cols-2 tab:grid-cols-1">
                       <?php foreach ($service_rows as $service) : ?>
-                      <?php
-                          $service_icon = $service['source']['service_icon'] ?? null;
-                          $service_icon_url = $service_icon ? wp_get_attachment_image_url($service_icon, 'full') : '';
-                          $service_icon_alt = '';
-
-                          if ($service_icon) {
-                              $service_icon_alt = get_post_meta($service_icon, '_wp_attachment_image_alt', true);
-
-                              if ($service_icon_alt === '' || $service_icon_alt === null) {
-                                  $service_icon_alt = $service['title'] ? $service['title'] . ' icon' : 'Service icon';
-                              }
-                          }
-                      ?>
                       <article class="w-full">
                           <?php if ($service['has_link']) : ?>
                               <a
@@ -158,24 +132,7 @@ if (!empty($services) && is_array($services)) {
                               <div class="group flex overflow-hidden gap-6 items-start min-h-[140px] w-full rounded">
                           <?php endif; ?>
 
-                              <?php if ($service_icon_url) : ?>
-                                  <div class="relative shrink-0 overflow-hidden rounded">
-                                      <img
-                                          src="<?php echo esc_url($service_icon_url); ?>"
-                                          alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                          class="object-contain transition-transform duration-300 group-hover:-translate-y-full"
-                                          decoding="async"
-                                          loading="lazy"
-                                      />
-                                      <img
-                                          src="<?php echo esc_url($service_hover_icon_url); ?>"
-                                          alt="<?php echo esc_attr($service_icon_alt); ?>"
-                                          class="object-contain absolute inset-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0"
-                                          decoding="async"
-                                          loading="lazy"
-                                      />
-                                  </div>
-                              <?php endif; ?>
+                              <?php matrix_render_what_we_offer_service_rail($service); ?>
 
                               <div class="flex flex-col w-full min-w-0">
                                   <?php if ($service['title'] !== '') : ?>
@@ -244,24 +201,7 @@ if (!empty($services) && is_array($services)) {
                     <div class="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 lg:grid-cols-2">
                         <?php foreach ($service_rows as $service) : ?>
                             <article class="group flex min-h-[140px] gap-6">
-                                <div
-                                    class="relative h-[140px] w-12 shrink-0 overflow-hidden rounded"
-                                    aria-hidden="true"
-                                >
-                                    <div
-                                        class="relative h-[140px] w-full rounded"
-                                        style="background-color: <?php echo esc_attr($service['accent_color']); ?>;"
-                                    >
-                                        <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 transition-opacity duration-300 group-hover:opacity-0">
-                                            <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('default'); ?>
-                                        </div>
-                                    </div>
-                                    <div class="absolute left-0 top-full h-[140px] w-12 rounded bg-[#08284B] transition-transform duration-300 group-hover:-translate-y-full">
-                                        <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                            <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('hover'); ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php matrix_render_what_we_offer_service_rail($service); ?>
 
                                 <div class="flex min-w-0 flex-1 flex-col justify-start">
                                     <?php if ($service['title'] !== '') : ?>

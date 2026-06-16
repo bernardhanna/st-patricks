@@ -13,17 +13,7 @@ $divider_color = get_sub_field('divider_color') ?: '#D1D5DB';
 $min_full      = (bool) get_sub_field('min_full_screen');
 $extra_classes = trim((string) get_sub_field('section_classes'));
 
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen = (string) get_sub_field('screen_size');
-    $pt     = get_sub_field('padding_top');
-    $pb     = get_sub_field('padding_bottom');
-    if ($pt !== '' && $pt !== null) $padding_classes[] = ($screen ? "{$screen}:" : '') . "pt-[{$pt}rem]";
-    if ($pb !== '' && $pb !== null) $padding_classes[] = ($screen ? "{$screen}:" : '') . "pb-[{$pb}rem]";
-  }
-}
+
 
 $btn_url    = $button['url'] ?? '#';
 $btn_title  = $button['title'] ?? 'Learn more';
@@ -43,7 +33,7 @@ $section_min = $min_full ? 'min-h-screen' : 'min-h-[14rem]';
 ?>
 
 <section class="relative overflow-hidden <?php echo esc_attr($section_min); ?> <?php echo esc_attr($extra_classes); ?>" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>">
-  <div class=" flex items-center max-w-container mx-auto py-16  <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+  <div class=" flex items-center max-w-container mx-auto py-16">
 
     <!-- Polaroid -->
     <div class="flex-shrink-0">

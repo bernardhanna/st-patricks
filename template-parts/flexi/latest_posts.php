@@ -34,23 +34,7 @@ if ($empty_state_message === '') {
     $empty_state_message = 'No posts are available yet.';
 }
 
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $query_args = matrix_build_latest_posts_query_args($selected_categories, 6);
 $latest_posts_query = new WP_Query($query_args);
@@ -76,7 +60,7 @@ if ($latest_posts_query->have_posts()) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
+    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px]">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div class="max-w-[680px]">
                 <<?php echo esc_attr($heading_tag); ?>

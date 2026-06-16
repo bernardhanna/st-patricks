@@ -11,26 +11,9 @@ $card_background_color = get_sub_field('card_background_color');
 if (empty($card_background_color) || strtolower((string) $card_background_color) === '#fafaf9') {
   $card_background_color = 'var(--StPatricks_Aux_DarkBG2, #FBF8F3)';
 }
-$divider_color = get_sub_field('divider_color') ?: '#F9F1D1';
-$text_color = get_sub_field('text_color') ?: '#08284B';
-$date_color = get_sub_field('date_color') ?: '#08284B';
 
 // Padding classes
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen_size = get_sub_field('screen_size');
-    $padding_top = get_sub_field('padding_top');
-    $padding_bottom = get_sub_field('padding_bottom');
-    if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-      $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-    }
-    if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-      $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-    }
-  }
-}
+
 
 // Query posts
 $posts_query = new WP_Query([
@@ -47,7 +30,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
 <section
   id="<?php echo esc_attr($section_id); ?>"
   data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-  class="relative flex overflow-hidden <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+  class="relative flex overflow-hidden"
   aria-label="Latest Stories"
 >
   <div class="flex flex-col items-center pt-5 pb-24 mx-auto w-full max-w-container max-lg:px-5 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10">
@@ -81,22 +64,23 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
             $post_url   = get_permalink($p->ID);
             $img_url    = get_the_post_thumbnail_url($p->ID, 'medium_large') ?: '';
           ?>
-            <article class="flex-shrink-0 w-[237px] rounded-card shadow-sm overflow-hidden snap-start" style="background: var(--StPatricks_Aux_DarkBG2, #FBF8F3);">
-              <a href="<?php echo esc_url($post_url); ?>" class="block" aria-label="<?php echo esc_attr(sprintf('Read more: %s', $post_title)); ?>">
+            <article class="flex w-[237px] shrink-0 snap-start flex-col overflow-hidden rounded-lg shadow-sm" style="background: var(--StPatricks_Aux_DarkBG2, #FBF8F3);">
+              <a href="<?php echo esc_url($post_url); ?>" class="group flex h-full flex-col" aria-label="<?php echo esc_attr(sprintf('Read more: %s', $post_title)); ?>">
                 <?php if ($img_url): ?>
-                  <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($post_title); ?>" class="w-full h-[260px] object-cover" />
+                  <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($post_title); ?>" class="h-[142px] w-full shrink-0 object-cover" />
                 <?php endif; ?>
-                <div class="p-4">
+                <div class="flex flex-1 flex-col gap-3 p-4">
                   <?php if ($show_date): ?>
-                    <time datetime="<?php echo esc_attr(get_the_date('c', $p->ID)); ?>" class="block mb-1 text-sm font-medium text-secondary-coral">
+                    <time datetime="<?php echo esc_attr(get_the_date('c', $p->ID)); ?>" class="font-primary text-sm font-medium leading-6 text-[#08284B]">
                       <?php echo esc_html($post_date); ?>
                     </time>
                   <?php endif; ?>
-                  <h3 class="font-semibold text-h4 font-heading text-secondary-coral">
+                  <div class="h-1 w-10 shrink-0 bg-[#F9F1D1]" aria-hidden="true"></div>
+                  <h3 class="font-primary text-xl font-semibold leading-7 tracking-[-0.00625rem] text-[#08284B] group-hover:underline">
                     <?php echo esc_html($post_title); ?>
                   </h3>
                   <?php if ($show_excerpt && !empty($mobile_excerpt)): ?>
-                    <p class="mt-2 text-sm leading-6 text-teal-950">
+                    <p class="mt-auto font-primary text-base font-medium leading-7 text-[#08284B]">
                       <?php echo esc_html($mobile_excerpt); ?>
                     </p>
                   <?php endif; ?>
@@ -153,7 +137,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
           $slide_index++;
         ?>
           <div class="slide" role="group" aria-label="Slide <?php echo esc_attr($slide_index); ?> of <?php echo esc_attr($total_slides); ?>" style="<?php echo $slide_index === 1 ? '' : 'display:none'; ?>">
-            <div class="flex gap-3 justify-between items-stretch w-full max-w-full">
+            <div class="flex w-full max-w-full items-stretch justify-between gap-3">
               <?php foreach ($slide_posts as $card_index => $sp):
                 setup_postdata($sp);
                 $post_date  = get_the_date('j M Y', $sp->ID);
@@ -167,45 +151,44 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
                   ? wp_trim_words($post_excerpt, 20)
                   : wp_trim_words(wp_strip_all_tags(get_post_field('post_content', $sp->ID)), 20);
               ?>
-                <article class="flex flex-col flex-[1_0_0] max-w-[280px] h-full min-h-[290px]">
+                <article class="flex min-w-0 flex-[1_0_0] flex-col max-w-[280px]">
                   <a
                     href="<?php echo esc_url($post_url); ?>"
-                    class="block w-full h-full rounded-lg shadow-sm group focus:outline-none focus:ring-2 focus:ring-offset-2 lg:min-h-[290px]"
+                    class="group flex h-full w-full flex-col rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
                     aria-label="<?php echo esc_attr(sprintf('Read more: %s', $post_title)); ?>"
                     title="<?php echo esc_attr($post_title); ?>"
                     style="background-color: <?php echo esc_attr($card_background_color); ?>;"
                   >
-                    <div class="box-border flex flex-col gap-1.5 items-start p-4 w-full">
-                      <header class="flex flex-col gap-3 justify-center items-start w-full">
-                        <?php if ($show_thumbnail_layout && !empty($post_thumb)): ?>
-                          <img
-                            src="<?php echo esc_url($post_thumb); ?>"
-                            alt="<?php echo esc_attr($post_title); ?>"
-                            class="w-full h-[142px] object-cover rounded"
-                            loading="lazy"
-                          />
-                        <?php endif; ?>
+                    <div class="flex h-full w-full flex-col gap-3 p-4">
+                      <?php if ($show_thumbnail_layout && !empty($post_thumb)): ?>
+                        <img
+                          src="<?php echo esc_url($post_thumb); ?>"
+                          alt="<?php echo esc_attr($post_title); ?>"
+                          class="h-[142px] w-full shrink-0 rounded object-cover"
+                          loading="lazy"
+                        />
+                      <?php endif; ?>
 
+                      <div class="flex flex-1 flex-col gap-3">
                         <?php if ($show_date): ?>
                           <time
                             datetime="<?php echo esc_attr(get_the_date('c', $sp->ID)); ?>"
-                            class="w-full text-sm font-medium leading-6"
-                            style="color: <?php echo esc_attr($date_color); ?>;"
+                            class="w-full font-primary text-sm font-medium leading-6 text-[#08284B]"
                           ><?php echo esc_html($post_date); ?></time>
                         <?php endif; ?>
 
-                        <div class="w-10 h-1" style="background-color: <?php echo esc_attr($divider_color); ?>;" aria-hidden="true"></div>
+                        <div class="h-1 w-10 shrink-0 bg-[#F9F1D1]" aria-hidden="true"></div>
 
-                        <h3 class="w-full text-xl font-semibold tracking-normal leading-7 group-hover:underline">
-                          <span style="color: <?php echo esc_attr($text_color); ?>;"><?php echo esc_html($post_title); ?></span>
+                        <h3 class="w-full font-primary text-xl font-semibold leading-7 tracking-[-0.00625rem] text-[#08284B] group-hover:underline">
+                          <?php echo esc_html($post_title); ?>
                         </h3>
 
                         <?php if (!$show_thumbnail_layout && !empty($excerpt_text)): ?>
-                          <p class="mt-2 w-full text-sm leading-6" style="color: <?php echo esc_attr($text_color); ?>;">
+                          <p class="mt-auto w-full font-primary text-base font-medium leading-7 text-[#08284B]">
                             <?php echo esc_html($excerpt_text); ?>
                           </p>
                         <?php endif; ?>
-                      </header>
+                      </div>
                     </div>
                   </a>
                 </article>
@@ -284,6 +267,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var current = 0;
 
+    function equalizeSlideCards(slide){
+      if (!slide) return;
+      var articles = slide.querySelectorAll('article');
+      if (!articles.length) return;
+      articles.forEach(function(article){
+        article.style.minHeight = '';
+      });
+      var maxHeight = 0;
+      articles.forEach(function(article){
+        maxHeight = Math.max(maxHeight, article.offsetHeight);
+      });
+      articles.forEach(function(article){
+        article.style.minHeight = maxHeight + 'px';
+      });
+    }
+
     function show(i){
       slides.forEach(function(slide, idx){
         var on = idx === i;
@@ -291,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         slide.setAttribute('aria-hidden', on ? 'false' : 'true');
       });
       current = i;
+      equalizeSlideCards(slides[i]);
       updateUI();
     }
 
@@ -324,6 +324,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     show(0);
+
+    window.addEventListener('resize', function(){
+      equalizeSlideCards(slides[current]);
+    });
   })();
 
   /* -------------------------

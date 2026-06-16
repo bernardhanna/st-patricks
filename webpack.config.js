@@ -64,5 +64,23 @@ module.exports = {
     hot: false,
     devMiddleware: { writeToDisk: true },
     watchFiles: ['assets/**/*.{js,css}'],
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        // Third-party CDN scripts (Alpine, reCAPTCHA, Turnstile, Slick, etc.) throw
+        // cross-origin errors that browsers report only as "Script error." — noisy and
+        // unactionable. Real theme bundle errors still include filename/stack and show.
+        runtimeErrors: (error) => {
+          if (!error || error.message === 'Script error.') {
+            return false;
+          }
+          if (!error.filename && !error.stack) {
+            return false;
+          }
+          return true;
+        },
+      },
+    },
   },
 };

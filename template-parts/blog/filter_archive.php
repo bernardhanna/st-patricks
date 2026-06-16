@@ -90,9 +90,11 @@ $colors = array_merge([
 $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
 $controls_classes = 'flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between';
-$chip_group_classes = 'flex flex-wrap gap-3';
+$chip_scroll_classes = matrix_get_blog_filter_archive_horizontal_scroll_class_names();
+$chip_group_classes = matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names();
 $grid_classes = 'mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:mt-10 xl:grid-cols-3 xl:gap-8';
-$pagination_classes = 'mt-10 flex flex-wrap items-center justify-center gap-2';
+$pagination_classes = matrix_get_blog_filter_archive_pagination_class_names();
+$pagination_items = matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages);
 $search_input_id = 'blog-filter-archive-search-' . wp_rand(1000, 999999);
 $has_posts = $query instanceof WP_Query && $query->have_posts();
 ?>
@@ -113,11 +115,57 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
         <div
             x-data="{
                 category: '<?php echo esc_js((string) $state['category']); ?>',
+                isDragging: false,
+                startX: 0,
+                scrollStart: 0,
+                moved: false,
                 submitCategory(slug) {
                     this.category = slug;
                     this.$refs.categoryInput.value = slug;
                     this.$refs.pageInput.value = 1;
                     this.$refs.form.submit();
+                },
+                onChipScrollPointerDown(event) {
+                    if (event.pointerType === 'mouse' && event.button !== 0) {
+                        return;
+                    }
+
+                    this.isDragging = true;
+                    this.moved = false;
+                    this.startX = event.clientX;
+                    this.scrollStart = this.$refs.chipScroll.scrollLeft;
+                    this.$refs.chipScroll.setPointerCapture?.(event.pointerId);
+                },
+                onChipScrollPointerMove(event) {
+                    if (! this.isDragging) {
+                        return;
+                    }
+
+                    const distance = event.clientX - this.startX;
+
+                    if (Math.abs(distance) > 3) {
+                        this.moved = true;
+                    }
+
+                    this.$refs.chipScroll.scrollLeft = this.scrollStart - distance;
+                },
+                onChipScrollPointerUp(event) {
+                    if (! this.isDragging) {
+                        return;
+                    }
+
+                    this.isDragging = false;
+                    this.$refs.chipScroll.releasePointerCapture?.(event.pointerId);
+                },
+                onChipClick(event, slug) {
+                    if (this.moved) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.moved = false;
+                        return;
+                    }
+
+                    this.submitCategory(slug);
                 }
             }"
             class="w-full"
@@ -134,34 +182,44 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
             <?php } ?>
 
             <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?><?php echo esc_attr($controls_classes); ?>">
-                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
+                <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
                     <p
-                        class="font-primary text-[16px] font-medium leading-[28px]"
+                        class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
                         style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
                     >
                         <?php echo esc_html($filter_label); ?>
                     </p>
 
-                    <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
-                        <?php foreach ($chips as $chip) { ?>
-                            <?php
-                            $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
-                            $chip_label = trim((string) ($chip['label'] ?? ''));
+                    <div
+                        x-ref="chipScroll"
+                        class="<?php echo esc_attr($chip_scroll_classes); ?>"
+                        @pointerdown="onChipScrollPointerDown($event)"
+                        @pointermove="onChipScrollPointerMove($event)"
+                        @pointerup="onChipScrollPointerUp($event)"
+                        @pointercancel="onChipScrollPointerUp($event)"
+                        @pointerleave="onChipScrollPointerUp($event)"
+                    >
+                        <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
+                            <?php foreach ($chips as $chip) { ?>
+                                <?php
+                                $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
+                                $chip_label = trim((string) ($chip['label'] ?? ''));
 
-                            if ($chip_slug === '' || $chip_label === '') {
-                                continue;
-                            }
-                            ?>
-                            <button
-                                type="button"
-                                class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
-                                :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
-                                :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
-                                @click="submitCategory('<?php echo esc_js($chip_slug); ?>')"
-                            >
-                                <?php echo esc_html($chip_label); ?>
-                            </button>
-                        <?php } ?>
+                                if ($chip_slug === '' || $chip_label === '') {
+                                    continue;
+                                }
+                                ?>
+                                <button
+                                    type="button"
+                                    class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
+                                    :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
+                                    :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
+                                    @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
+                                >
+                                    <?php echo esc_html($chip_label); ?>
+                                </button>
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
 
@@ -322,7 +380,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     <?php if ($current_page > 1) { ?>
                         <a
                             href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
+                            class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border"
                             style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
                             aria-label="Go to previous page"
                         >
@@ -332,31 +390,42 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         </a>
                     <?php } ?>
 
-                    <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
-                        <?php if ($page === $current_page) { ?>
+                    <?php foreach ($pagination_items as $pagination_item) { ?>
+                        <?php if (($pagination_item['type'] ?? '') === 'ellipsis') { ?>
                             <span
-                                class="inline-flex h-11 w-11 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                style="border-color: <?php echo esc_attr($colors['active_chip_background']); ?>; background-color: <?php echo esc_attr($colors['active_chip_background']); ?>; color: <?php echo esc_attr($colors['active_chip_text']); ?>;"
-                                aria-current="page"
+                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center font-primary text-[14px] font-semibold"
+                                style="color: <?php echo esc_attr($colors['chip_text']); ?>;"
+                                aria-hidden="true"
                             >
-                                <?php echo esc_html((string) $page); ?>
+                                …
                             </span>
-                        <?php } else { ?>
-                            <a
-                                href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $page)); ?>"
-                                class="btn inline-flex h-11 w-11 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                                aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
-                            >
-                                <?php echo esc_html((string) $page); ?>
-                            </a>
+                        <?php } elseif (($pagination_item['type'] ?? '') === 'page') { ?>
+                            <?php $page = max(1, (int) ($pagination_item['page'] ?? 1)); ?>
+                            <?php if ($page === $current_page) { ?>
+                                <span
+                                    class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
+                                    style="border-color: <?php echo esc_attr($colors['active_chip_background']); ?>; background-color: <?php echo esc_attr($colors['active_chip_background']); ?>; color: <?php echo esc_attr($colors['active_chip_text']); ?>;"
+                                    aria-current="page"
+                                >
+                                    <?php echo esc_html((string) $page); ?>
+                                </span>
+                            <?php } else { ?>
+                                <a
+                                    href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $page)); ?>"
+                                    class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
+                                    style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
+                                    aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
+                                >
+                                    <?php echo esc_html((string) $page); ?>
+                                </a>
+                            <?php } ?>
                         <?php } ?>
                     <?php } ?>
 
                     <?php if ($current_page < $total_pages) { ?>
                         <a
                             href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
+                            class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border"
                             style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
                             aria-label="Go to next page"
                         >

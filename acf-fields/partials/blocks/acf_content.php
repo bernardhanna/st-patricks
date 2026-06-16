@@ -126,6 +126,7 @@ $content_safeguarding
                 'white' => 'White',
                 'cream' => 'Cream',
                 'light_blue' => 'Light Blue',
+                'navy' => 'Navy Blue (#024B79)',
                 'color' => 'Custom Color',
             ],
             'default_value' => 'gradient',
@@ -157,6 +158,16 @@ $content_safeguarding
                     ],
                 ],
             ],
+        ])
+        ->addSelect('color_scheme', [
+            'label' => 'Text & Button Style',
+            'instructions' => 'Use Inverse on dark backgrounds (e.g. Navy Blue) so headings, body copy, and buttons use light colours.',
+            'choices' => [
+                'default' => 'Default (dark text)',
+                'inverse' => 'Inverse (light text)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
         ])
 
     ->addTab('Layout', [
@@ -229,47 +240,15 @@ $content_safeguarding
             'ui_on_text' => 'Image Right',
             'ui_off_text' => 'Image Left',
         ])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'instructions' => 'Customize padding for different screen sizes. Add multiple entries to control padding at different breakpoints.',
-            'button_label' => 'Add Screen Size Padding',
-            'layout' => 'table',
-            'min' => 0,
-            'max' => 9,
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'instructions' => 'Select the screen size breakpoint.',
-                'choices' => [
-                    'xxs' => 'Extra Extra Small (320px+)',
-                    'xs' => 'Extra Small (480px+)',
-                    'mob' => 'Mobile (575px+)',
-                    'sm' => 'Small (640px+)',
-                    'md' => 'Medium (768px+)',
-                    'lg' => 'Large (1100px+)',
-                    'xl' => 'Extra Large (1280px+)',
-                    'xxl' => 'Extra Extra Large (1440px+)',
-                    'ultrawide' => 'Ultra Wide (1920px+)',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'instructions' => 'Set the top padding in rem units.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 5,
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'instructions' => 'Set the bottom padding in rem units.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-                'default_value' => 5,
-            ])
-        ->endRepeater();
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Top only” when the next block should sit flush underneath on desktop.',
+            'choices' => [
+                'default' => 'Top & bottom (100px desktop)',
+                'no_bottom' => 'Top only (100px top, no bottom on desktop)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ]);
 
 return $content_safeguarding;

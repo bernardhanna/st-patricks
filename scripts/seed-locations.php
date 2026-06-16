@@ -193,10 +193,15 @@ if (! function_exists('matrix_seed_ensure_location')) {
 $home = home_url('/');
 $inpatient_care_url = home_url('/inpatient-care/');
 $what_we_offer_url = home_url('/what-we-offer/');
-$your_stay_url = home_url('/service-users-and-visitors/your-stay-in-hospital-as-an-adult/');
+$contact_url = home_url('/contact/');
+$spuh_location_url = home_url('/locations/st-patricks-university-hospital/');
+$lucan_location_url = home_url('/locations/st-patricks-hospital-lucan/');
+$willow_grove_url = home_url('/locations/willow-grove-adolescent-unit/');
+$carers_guide_url = home_url('/carers-supporters-information-guide/');
+$family_series_url = home_url('/family-mental-health-series/');
 $faqs_url = home_url('/service-users-and-visitors/frequently-asked-questions-faqs/');
-$referrals_url = home_url('/make-a-referral-cta/');
-$our_team_url = home_url('/about-us/our-team/');
+$referrals_url = home_url('/make-a-referral/');
+$our_team_url = home_url('/about-us/multidisciplinary-teams/');
 
 $hospital_term_id = matrix_seed_ensure_term('location_type', 'Hospital', 'hospital');
 
@@ -228,7 +233,55 @@ $spuh_intro = '<p>St Patrick\'s University Hospital is Ireland\'s largest indepe
 
 $spuh_location = '<p>Situated on Steeven\'s Lane in Dublin 8, between Heuston Station and St James\'s Hospital, SPUH is close to Dublin city centre. The hospital is well served by public transport, with bus, rail and LUAS services all within a five to 10-minute walk. Limited paid parking is also available for visitors travelling by car.</p>';
 
-$spuh_visiting = '<p>We have visiting hours in place every weekday and at the weekends in SPUH. Throughout the ground floor and garden of SPUH, there are tables and seating available for visitors to spend time with their loved ones. We also have a dedicated space, the Wishing Well Family Room, for visitors and service users to use when children are visiting.</p>';
+$spuh_visiting = '<p>At St Patrick\'s Mental Health Services (SPMHS), we have visiting opportunities in place for our service users and their supporters.</p>'
+    . '<p>Before coming to our campuses, we ask that you check our latest information and updates. <a href="' . esc_url($contact_url) . '">Our campus locations and contact details can be found here</a>.</p>';
+
+$spuh_visiting_hours = '<p>Visiting is open in <a href="' . esc_url($spuh_location_url) . '">St Patrick\'s University Hospital</a> (SPUH) and <a href="' . esc_url($lucan_location_url) . '">St Patrick\'s Hospital Lucan</a>. Visiting times are currently from 2pm to 5pm and from 6pm to 8.30pm each day. On Saturday and Sunday, there is also currently an additional visiting time of between 10am and 12.30pm.</p>'
+    . '<p>Service users can welcome a small number of visitors at a time. Visiting should not take place at service user\'s mealtimes or when they are due to attend programmes or therapies. Please note that, from time to time, there may need to be changes to visiting opportunities, depending on the service user\'s ward or other factors; if this arises, it will be communicated with service users. Special arrangements may be made for service users who are unable to leave their ward; in this instance, service users should speak with the nursing staff in charge of the ward.</p>'
+    . '<p>Tables and seating are widely available on the ground floor and in the gardens of both hospitals for service users and visitors to meet and spend time together. Visitors will not be able to meet service users on their wards.</p>'
+    . '<p>Please note that visiting for <a href="' . esc_url($willow_grove_url) . '">Willow Grove Adolescent Unit</a> is organised separately; the Willow Grove team will liaise with service users and their families to make arrangements.</p>';
+
+$spuh_visiting_measures_intro = '<p>We follow public health guidance for visiting to acute hospitals. We make our visiting guidelines with everyone\'s health and safety and our service users\' recovery in mind.</p>'
+    . '<p>All visitors must follow the measures outlined below.</p>';
+
+$spuh_arrival_content = '<p>If you are visiting a service user, you should check in at the main reception of the hospital when you arrive.</p>'
+    . '<p>Our reception staff will ask you to complete a standard COVID-19 screening survey and agree to follow our infection control measures, which you can see further below. Once this screening is passed, the visit can go ahead.</p>';
+
+$spuh_children_visiting_content = '<p>Yes, children and young people aged 16 or under are allowed to visit. Children and young people will need to follow the visiting guidelines and infection control measures in place.</p>'
+    . '<p>We have a child-friendly visiting space, The Wishing Well Family Room, in SPUH. This is available to all children visiting a service user, once they are accompanied by a responsible adult. A fob key is needed to access this family room; please go to the main reception in SPUH to ask for this.</p>';
+
+$spuh_infection_control_content = '<p>If you are coming to one of our campuses, please come to the main reception desk when you arrive. Our reception staff will ask you to complete a questionnaire with the queries below:</p>'
+    . '<ul>'
+    . '<li>Have you recently experienced or are you experiencing any respiratory or cold/flu like symptoms including cough, fever, sore throat, headache, loss of smell, loss of taste or distortion of smell or taste?</li>'
+    . '<li>Are you a close contact of a confirmed or suspected case of COVID-19?</li>'
+    . '<li>Have you been advised that you are currently required to self-isolate/restrict your movements?</li>'
+    . '</ul>'
+    . '<p>If you answer “yes” to any of the questions, we cannot allow entry to the campus. If you pass this screening protocol, you will be asked to sign a document agreeing to:</p>'
+    . '<ul>'
+    . '<li>perform hand hygiene</li>'
+    . '<li>practice cough and sneeze etiquette.</li>'
+    . '</ul>'
+    . '<p>Please follow the guidelines below when you are on campus.</p>'
+    . '<ul>'
+    . '<li>Wash your hands thoroughly before you arrive</li>'
+    . '<li>Use our hand hygiene gels at the entrance and throughout the campus</li>'
+    . '<li>Observe hand hygiene and coughing and sneezing etiquette closely, <a href="https://www2.hse.ie/conditions/coronavirus/protect-yourself.html" target="_blank" rel="noopener noreferrer">as promoted by the Health Service Executive</a>, throughout your time on the campus</li>'
+    . '<li>cover your mouth and nose with a tissue when coughing or sneezing</li>'
+    . '<li>dispose your used tissues in a bin</li>'
+    . '<li>wash your hands thoroughly after coughing or sneezing</li>'
+    . '<li>wash your hands thoroughly before leaving the hospital.</li>'
+    . '</ul>';
+
+$carers_card_image_id = matrix_seed_import_scraped_image(
+    'https://www.stpatricks.ie/media/3320/carers-and-supporers.png?width=400&height=218&mode=crop',
+    'Carers and Supporters Information Guide',
+    'location-spuh-carers-card'
+);
+$family_series_card_image_id = matrix_seed_import_scraped_image(
+    'https://www.stpatricks.ie/media/3337/website-launch-of-family-lecture-series.png?width=400&height=218&mode=crop',
+    'Family Mental Health Information Series',
+    'location-spuh-family-series-card'
+);
 
 $lucan_intro = '<p>St Patrick\'s Hospital Lucan provides a wide range of mental healthcare services.</p>'
     . '<p>The hospital is one of our three approved inpatient services here in St Patrick\'s Mental Health Services (SPMHS). There are 52 beds available in St Patrick\'s Hospital Lucan, where we provide inpatient care to people experiencing diverse mental health difficulties. Accommodation for inpatient service users is mainly in single ensuite rooms.</p>'
@@ -340,31 +393,79 @@ $spuh_flexi_rows = [
         'padding_settings' => $section_padding,
     ],
     [
-        'acf_fc_layout' => 'content_cta',
+        'acf_fc_layout' => 'content',
+        'heading' => 'See our visiting hours',
         'heading_tag' => 'h2',
-        'heading' => 'See visiting information for SPUH',
-        'body' => '<p>Find out more about visiting times and arrangements at St Patrick\'s University Hospital.</p>',
-        'button_link' => [
-            'title' => 'Visiting information',
-            'url' => $your_stay_url,
-            'target' => '',
-        ],
-        'background_type' => 'color',
-        'background_color' => '#CEF2EE',
+        'accent_position' => 'below_heading',
+        'content' => $spuh_visiting_hours,
+        'column_layout' => 'one_column',
+        'background_type' => 'white',
+        'text_width' => 'constrained',
         'padding_settings' => $section_padding,
     ],
     [
-        'acf_fc_layout' => 'content_cta',
+        'acf_fc_layout' => 'content',
+        'heading' => 'Check our current visiting measures',
         'heading_tag' => 'h2',
-        'heading' => 'Learn more about our multidisciplinary teams',
-        'body' => '<p>Read about the teams who provide inpatient care across our approved centres.</p>',
-        'button_link' => [
-            'title' => 'Multidisciplinary Teams',
-            'url' => $our_team_url,
-            'target' => '',
+        'accent_position' => 'below_heading',
+        'content' => $spuh_visiting_measures_intro,
+        'column_layout' => 'one_column',
+        'background_type' => 'cream',
+        'text_width' => 'constrained',
+        'padding_settings' => $section_padding,
+    ],
+    [
+        'acf_fc_layout' => 'content_accordion',
+        'layout_style' => 'default',
+        'section_background' => '#FBFAF7',
+        'panel_background' => '#FFFFFF',
+        'open_panel_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
+        'items' => [
+            matrix_seed_accordion_item(
+                'What should you do when you arrive for a visit?',
+                $spuh_arrival_content,
+                true
+            ),
+            matrix_seed_accordion_item(
+                'Are children allowed to visit?',
+                $spuh_children_visiting_content
+            ),
+            matrix_seed_accordion_item(
+                'What infection control measures will I need to follow?',
+                $spuh_infection_control_content
+            ),
         ],
-        'background_type' => 'color',
-        'background_color' => '#E9E2F7',
+        'padding_settings' => $section_padding,
+    ],
+    [
+        'acf_fc_layout' => 'related_cards',
+        'heading_tag' => 'h2',
+        'heading' => 'More for families and supporters',
+        'intro_text' => 'If you\'re supporting someone going through a mental health difficulty, we have a range of resources you might find helpful.',
+        'cards' => [
+            [
+                'image' => $carers_card_image_id,
+                'title' => 'Carers & Supporters Information Guide',
+                'description' => '',
+                'link' => [
+                    'title' => 'Carers & Supporters Information Guide',
+                    'url' => $carers_guide_url,
+                    'target' => '',
+                ],
+            ],
+            [
+                'image' => $family_series_card_image_id,
+                'title' => 'Family Mental Health Information Series',
+                'description' => '',
+                'link' => [
+                    'title' => 'Family Mental Health Information Series',
+                    'url' => $family_series_url,
+                    'target' => '',
+                ],
+            ],
+        ],
+        'background_color' => '#FFFFFF',
+        'columns' => '2',
         'padding_settings' => $section_padding,
     ],
 ];

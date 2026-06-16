@@ -38,22 +38,7 @@ if (! $has_visible_content) {
 }
 
 $wrapper_classes = ['mx-auto', 'grid', 'w-full', 'max-w-[1018px]', 'grid-cols-1', 'gap-4', 'pt-5', 'pb-5', 'max-xl:px-5', 'lg:grid-cols-2'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 ?>
 
 <section

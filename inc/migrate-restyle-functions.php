@@ -946,7 +946,7 @@ if (! function_exists('matrix_migrate_build_structured_flexi_rows')) {
 if (! function_exists('matrix_migrate_restyle_page')) {
     function matrix_migrate_restyle_page(int $post_id, bool $force = false): bool
     {
-        if ($post_id < 1 || get_post_type($post_id) !== 'page') {
+        if ($post_id < 1 || ! in_array(get_post_type($post_id), ['page', 'mental_health', 'referrals'], true)) {
             return false;
         }
 

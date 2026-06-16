@@ -54,25 +54,9 @@ if ($answer_color === '') {
 
 $wrapper_classes = $layout_style === 'page'
     ? ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']
-    : ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
+    : ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5', 'py-12', 'lg:py-[100px]'];
 
-$padding_classes = [];
-if ($layout_style !== 'page' && have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $selected_category_ids = array_values(array_filter(array_map('intval', is_array($selected_faq_categories) ? $selected_faq_categories : [])));
 $category_posts = [];
@@ -141,7 +125,7 @@ $open_item_background_style = matrix_get_faq_background_style($open_item_backgro
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-        class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge($wrapper_classes, $padding_classes)))); ?>"
+        class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>"
     >
         <div class="w-full">
             <?php if ($show_heading) { ?>

@@ -18,6 +18,11 @@ $text_max_width_classes = matrix_get_content_text_max_width_class_names($text_wi
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
+$color_scheme = matrix_resolve_content_color_scheme(
+    get_sub_field('color_scheme'),
+    $background_type
+);
+$theme_classes = matrix_get_content_theme_classes($color_scheme);
 $primary_button = matrix_normalize_content_link(get_sub_field('primary_button'));
 $document_link = matrix_normalize_content_link(get_sub_field('document_link'));
 $secondary_button = matrix_normalize_content_link(get_sub_field('secondary_button'));
@@ -30,7 +35,14 @@ $secondary_button_variant = matrix_resolve_content_button_variant(
     'outline'
 );
 
-if ($heading === '') {
+$show_heading = $heading !== '';
+
+$has_intro = matrix_content_has_visible_rich_text($intro_text);
+$has_content = matrix_content_has_visible_rich_text($content);
+$has_image = (bool) $image;
+$has_actions = (bool) ($primary_button || $document_link || $secondary_button);
+
+if (! $show_heading && ! $has_intro && ! $has_content && ! $has_image && ! $has_actions) {
     return;
 }
 
@@ -48,7 +60,7 @@ if ($image) {
 }
 
 if ($image_alt === '') {
-    $image_alt = $heading;
+    $image_alt = $heading !== '' ? $heading : 'Section image';
 }
 
 $heading_id = $section_id . '-heading';
@@ -56,23 +68,8 @@ $background_style = matrix_get_content_background_style($background_type, $backg
 $image_column_class = matrix_get_content_image_column_class_names($layout_style, $column_layout);
 $content_column_class = matrix_get_content_content_column_class_names($layout_style, $column_layout);
 
-$wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'px-4', 'py-12', 'lg:px-0', 'lg:py-[100px]'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
+$wrapper_classes = matrix_get_content_wrapper_class_names(get_sub_field('vertical_padding'));
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $wrapper_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $wrapper_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
 ?>
@@ -80,38 +77,43 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
+    data-content-scheme="<?php echo esc_attr($color_scheme); ?>"
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($background_style); ?>"
-    aria-labelledby="<?php echo esc_attr($heading_id); ?>"
+    <?php if ($show_heading) { ?>
+        aria-labelledby="<?php echo esc_attr($heading_id); ?>"
+    <?php } ?>
 >
-    <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
+    <div class="<?php echo esc_attr($wrapper_classes); ?>">
         <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout)); ?>">
             <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
-                <header class="flex flex-col gap-8 w-full">
-                    <?php if ($accent_position === 'above_heading') { ?>
-                        <?php echo $accent_markup; ?>
-                    <?php } ?>
+                <?php if ($show_heading) { ?>
+                    <header class="flex flex-col gap-8 w-full">
+                        <?php if ($accent_position === 'above_heading') { ?>
+                            <?php echo $accent_markup; ?>
+                        <?php } ?>
 
-                    <<?php echo esc_attr($heading_tag); ?>
-                        id="<?php echo esc_attr($heading_id); ?>"
-                        class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
-                    >
-                        <?php echo esc_html($heading); ?>
-                    </<?php echo esc_attr($heading_tag); ?>>
+                        <<?php echo esc_attr($heading_tag); ?>
+                            id="<?php echo esc_attr($heading_id); ?>"
+                            class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] <?php echo esc_attr($theme_classes['heading']); ?>"
+                        >
+                            <?php echo esc_html($heading); ?>
+                        </<?php echo esc_attr($heading_tag); ?>>
 
-                    <?php if ($accent_position === 'below_heading') { ?>
-                        <?php echo $accent_markup; ?>
-                    <?php } ?>
-                </header>
+                        <?php if ($accent_position === 'below_heading') { ?>
+                            <?php echo $accent_markup; ?>
+                        <?php } ?>
+                    </header>
+                <?php } ?>
 
-                <?php if (matrix_content_has_visible_rich_text($intro_text)) { ?>
-                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('bold', $text_max_width_classes)); ?>">
+                <?php if ($has_intro) { ?>
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('bold', $text_max_width_classes, $color_scheme)); ?>">
                         <?php echo matrix_kses_rich_text($intro_text); ?>
                     </div>
                 <?php } ?>
 
-                <?php if (matrix_content_has_visible_rich_text($content)) { ?>
-                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', $text_max_width_classes)); ?>">
+                <?php if ($has_content) { ?>
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', $text_max_width_classes, $color_scheme)); ?>">
                         <?php echo matrix_kses_rich_text($content); ?>
                     </div>
                 <?php } ?>
@@ -123,7 +125,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                     <a
                         href="<?php echo esc_url($document_link['url']); ?>"
                         target="<?php echo esc_attr($document_target); ?>"
-                        class="<?php echo esc_attr(matrix_get_content_document_link_class_names()); ?>"
+                        class="<?php echo esc_attr(matrix_get_content_document_link_class_names($color_scheme)); ?>"
                         <?php if ($document_target === '_blank') { ?>
                             rel="noopener noreferrer"
                         <?php } ?>
@@ -140,7 +142,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                             <a
                                 href="<?php echo esc_url($primary_button['url']); ?>"
                                 target="<?php echo esc_attr($primary_button['target'] !== '' ? $primary_button['target'] : '_self'); ?>"
-                                class="<?php echo esc_attr(matrix_get_content_button_class_names($primary_button_variant)); ?>"
+                                class="<?php echo esc_attr(matrix_get_content_button_class_names($primary_button_variant, $color_scheme)); ?>"
                                 <?php if ($primary_button['target'] === '_blank') { ?>
                                     rel="noopener noreferrer"
                                 <?php } ?>
@@ -153,7 +155,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                             <a
                                 href="<?php echo esc_url($secondary_button['url']); ?>"
                                 target="<?php echo esc_attr($secondary_button['target'] !== '' ? $secondary_button['target'] : '_self'); ?>"
-                                class="<?php echo esc_attr(matrix_get_content_button_class_names($secondary_button_variant)); ?>"
+                                class="<?php echo esc_attr(matrix_get_content_button_class_names($secondary_button_variant, $color_scheme)); ?>"
                                 <?php if ($secondary_button['target'] === '_blank') { ?>
                                     rel="noopener noreferrer"
                                 <?php } ?>

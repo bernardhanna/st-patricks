@@ -46,42 +46,22 @@ $section_id = 'about-us-mega-menu-' . $index;
     <div class="relative w-full pointer-events-auto">
         <div
             id="<?php echo esc_attr($section_id); ?>"
-            class="relative w-full bg-[#F1F8F9] shadow-lg"
+            class="relative w-full overflow-visible bg-[#F1F8F9] shadow-lg"
             role="navigation"
             aria-label="<?php echo esc_attr($item->label); ?> menu"
             x-data="{ activePanelIndex: <?php echo (int) $default_panel_index; ?> }"
             @mouseleave="activePanelIndex = <?php echo (int) $default_panel_index; ?>"
         >
-            <?php matrix_render_nav_mega_menu_pointer('left-[245px]'); ?>
-            <div
-                class="pointer-events-none absolute left-6 top-4 h-[78px] w-[80px] opacity-20"
-                aria-hidden="true"
-            >
-                <svg viewBox="0 0 80 78" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M40 8C24 8 12 20 12 36C12 52 24 64 40 64C56 64 68 52 68 36C68 20 56 8 40 8Z" fill="#80CCD9" fill-opacity="0.35"/>
-                    <path d="M40 18C30 18 22 26 22 36C22 46 30 54 40 54C50 54 58 46 58 36C58 26 50 18 40 18Z" fill="#024B79" fill-opacity="0.2"/>
-                </svg>
-            </div>
+            <?php matrix_render_nav_mega_menu_decorative_symbol(); ?>
 
             <div class="relative mx-auto flex min-h-[553px] w-full max-w-container items-stretch gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8">
-                <div class="relative z-[1] flex w-[232px] shrink-0 flex-col gap-12">
-                    <div>
-                        <h2 class="font-primary text-[30px] font-semibold leading-9 tracking-[-0.225px] text-[#1E244B]">
-                            <?php echo esc_html($item->label); ?>
-                        </h2>
-                        <div class="mt-8 h-px w-10 bg-[#FF9E66]" aria-hidden="true"></div>
-                    </div>
-
-                    <?php if (is_array($portal_cta) && ! empty($portal_cta['url']) && ! empty($portal_cta['title'])) : ?>
-                        <a
-                            href="<?php echo esc_url($portal_cta['url']); ?>"
-                            target="<?php echo esc_attr($portal_cta['target'] ?? '_self'); ?>"
-                            class="btn inline-flex h-11 w-fit items-center justify-center rounded-[6px] bg-[#80CCD9] px-8 text-sm font-medium leading-6 text-white transition-colors hover:bg-[#66c4d8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#80CCD9]"
-                        >
-                            <?php echo esc_html($portal_cta['title']); ?>
-                        </a>
-                    <?php endif; ?>
-                </div>
+                <?php
+                get_template_part('template-parts/header/navbar/mega-menu-header', null, [
+                    'title' => $item->label,
+                    'show_portal_cta' => true,
+                    'portal_cta' => $portal_cta,
+                ]);
+                ?>
 
                 <ul class="relative z-[1] flex w-[307px] shrink-0 flex-col gap-4" role="list">
                     <?php foreach ($item_children as $child_index => $child) : ?>
@@ -95,8 +75,8 @@ $section_id = 'about-us-mega-menu-' . $index;
                             <?php if ($has_panel) : ?>
                                 <a
                                     href="<?php echo esc_url($child->url); ?>"
-                                    class="flex gap-2.5 items-center w-full text-base font-medium leading-6 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
-                                    :class="activePanelIndex === <?php echo $child_index; ?> ? 'text-[#024B79] underline underline-offset-2' : 'text-[#001F33] hover:text-[#024B79]'"
+                                    class="flex gap-2.5 items-center w-full text-left font-primary text-base font-medium leading-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                                    :class="activePanelIndex === <?php echo $child_index; ?> ? 'text-[#024B79] underline decoration-1 underline-offset-[7px]' : 'text-[#001F33] hover:text-[#024B79] hover:underline hover:decoration-1 hover:underline-offset-[7px]'"
                                     aria-controls="<?php echo esc_attr($section_id); ?>-panel-<?php echo $child_index; ?>"
                                     :aria-expanded="activePanelIndex === <?php echo $child_index; ?> ? 'true' : 'false'"
                                     @mouseenter="activePanelIndex = <?php echo $child_index; ?>"
@@ -110,7 +90,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                             <?php else : ?>
                                 <a
                                     href="<?php echo esc_url($child->url); ?>"
-                                    class="inline-flex text-base font-medium leading-6 text-[#001F33] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79] <?php echo ! empty($child->active) ? 'text-[#024B79] underline underline-offset-2' : ''; ?>"
+                                    class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(! empty($child->active))); ?>"
                                     <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
                                     @mouseenter="activePanelIndex = -1"
                                 >
@@ -164,7 +144,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     <li>
                                         <a
                                             href="<?php echo esc_url($grandchild->url); ?>"
-                                            class="inline-flex text-base font-medium leading-6 text-[#001F33] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                                            class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(false)); ?>"
                                             <?php if (! empty($grandchild->target)) : ?>target="<?php echo esc_attr($grandchild->target); ?>"<?php endif; ?>
                                         >
                                             <?php echo esc_html($grandchild->label); ?>
@@ -177,7 +157,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                 <div class="pt-8">
                                     <a
                                         href="<?php echo esc_url($application_form_url); ?>"
-                                        class="btn inline-flex h-11 items-center justify-center rounded-[6px] bg-[#80CCD9] px-8 text-sm font-medium leading-6 text-white transition-colors hover:bg-[#66c4d8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#80CCD9]"
+                                        class="<?php echo esc_attr(matrix_get_nav_mega_menu_cta_class_names()); ?>"
                                     >
                                         Application form
                                     </a>

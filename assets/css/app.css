@@ -379,19 +379,19 @@ body {
 }
 
 .hamburger {
-  z-index: 9999999999999999;
+  z-index: 130;
 }
 
 .hamburger.is-active .hamburger-inner,
 .hamburger.is-active .hamburger-inner:after,
 .hamburger.is-active .hamburger-inner:before {
-  @apply bg-primary;
+  background-color: #08284B;
 }
 
 .hamburger-inner,
 .hamburger-inner:after,
 .hamburger-inner:before {
-  @apply bg-primary;
+  background-color: #08284B;
 }
 
 
@@ -874,6 +874,19 @@ blockquote.right {
   @apply float-right mr-0 ml-5 w-1/3 text-left;
 }
 
+
+/* Hero slider: prevent FOUC before Slick initialises */
+.hero-slider-container:not(.slick-initialized) .hero-slide:not(:first-child) {
+  display: none !important;
+}
+
+.hero-slider-container:not(.slick-initialized) {
+  overflow: hidden;
+}
+
+.hero-slider-container .slick-list {
+  overflow: hidden !important;
+}
 
 /* Tailwind classes for Slick's structure */
 .slick-slider {

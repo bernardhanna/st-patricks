@@ -6,11 +6,11 @@
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-refer-to-the-st-patricks-at-home-service.php
  */
 
-$post_id = (int) (get_page_by_path('make-a-referral-cta/refer-to-the-st-patricks-at-home-service')?->ID ?? 0);
+$post_id = (int) (get_page_by_path('make-a-referral/refer-to-the-st-patricks-at-home-service')?->ID ?? 0);
 
 if ($post_id === 0) {
     if (class_exists('WP_CLI')) {
-        WP_CLI::error('Could not find page at make-a-referral-cta/refer-to-the-st-patricks-at-home-service.');
+        WP_CLI::error('Could not find page at make-a-referral/refer-to-the-st-patricks-at-home-service.');
     }
 
     exit(1);

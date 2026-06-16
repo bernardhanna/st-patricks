@@ -40,22 +40,7 @@ $grid_classes = [
 ];
 
 // Padding classes
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen = get_sub_field('screen_size');
-    $pt     = get_sub_field('padding_top');
-    $pb     = get_sub_field('padding_bottom');
 
-    if ($screen !== '' && $pt !== '' && $pt !== null) {
-      $padding_classes[] = "{$screen}:pt-[{$pt}rem]";
-    }
-    if ($screen !== '' && $pb !== '' && $pb !== null) {
-      $padding_classes[] = "{$screen}:pb-[{$pb}rem]";
-    }
-  }
-}
 
 // sanitize heading tag
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
@@ -78,7 +63,7 @@ $resolve_link = function($link) {
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background-color: <?php echo esc_attr($bg_color); ?>;">
-  <div class="flex flex-col items-center w-full mx-auto max-w-container py-32 max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+  <div class="flex flex-col items-center w-full mx-auto max-w-container py-32 max-lg:px-5">
 
     <div class="w-full">
       <?php if ($heading_text !== ''): ?>

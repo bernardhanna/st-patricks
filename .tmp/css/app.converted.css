@@ -304,17 +304,17 @@ body {
  }
 }
 .hamburger {
- @apply z-[9999999999999999];
+ @apply z-[130];
 }
 .hamburger.is-active .hamburger-inner,
 .hamburger.is-active .hamburger-inner:after,
 .hamburger.is-active .hamburger-inner:before {
- @apply bg-primary;
+ @apply bg-[#08284B];
 }
 .hamburger-inner,
 .hamburger-inner:after,
 .hamburger-inner:before {
- @apply bg-primary;
+ @apply bg-[#08284B];
 }
 .nav_btn {
  @apply flex justify-center items-center px-6 h-12 rounded bg-primary hover:bg-secondary w-fit;
@@ -704,6 +704,17 @@ blockquote.right {
  @apply float-right mr-0 ml-5 w-1/3 text-left;
 }
 
+
+/* Hero slider: prevent FOUC before Slick initialises */
+.hero-slider-container:not(.slick-initialized) .hero-slide:not(:first-child) {
+ @apply hidden;
+}
+.hero-slider-container:not(.slick-initialized) {
+ @apply overflow-hidden;
+}
+.hero-slider-container .slick-list {
+ @apply overflow-hidden;
+}
 
 /* Tailwind classes for Slick's structure */
 .slick-slider {

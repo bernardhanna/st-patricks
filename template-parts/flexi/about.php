@@ -32,17 +32,7 @@ $text_color    = get_sub_field('text_color') ?: '#4A4B37';
 $btn_preset    = get_sub_field('buttons_style') ?: 'solid-dark';
 
 // Layout padding classes
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-  while (have_rows('padding_settings')) {
-    the_row();
-    $screen = get_sub_field('screen_size');
-    $pt     = get_sub_field('padding_top');
-    $pb     = get_sub_field('padding_bottom');
-    if ($screen && $pt !== '' && $pt !== null) $padding_classes[] = "{$screen}:pt-[{$pt}rem]";
-    if ($screen && $pb !== '' && $pb !== null) $padding_classes[] = "{$screen}:pb-[{$pb}rem]";
-  }
-}
+
 
 // helpers
 $img_parts = function($img, $alt_fallback='') {
@@ -84,7 +74,7 @@ if (!in_array($heading_tag, $allowed_tags, true)) $heading_tag = 'h2';
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-         class="relative overflow-hidden <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+         class="relative overflow-hidden"
          style="background: var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #FAFBF6 3.24%, #F1F8F9 90.88%));">
 
   <div class="px-6 py-24 mx-auto max-w-container">

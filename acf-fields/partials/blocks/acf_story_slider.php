@@ -160,44 +160,6 @@ $story_slider
                 'rounded-2xl' => 'rounded-2xl',
             ],
             'default_value' => 'rounded-md',
-        ])
-    ->addTab('layout_tab', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'instructions' => 'Customize padding for different screen sizes.',
-            'button_label' => 'Add Screen Size Padding',
-            'layout' => 'table',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'xxs' => 'xxs',
-                    'xs' => 'xs',
-                    'mob' => 'mob',
-                    'sm' => 'sm',
-                    'md' => 'md',
-                    'lg' => 'lg',
-                    'xl' => 'xl',
-                    'xxl' => 'xxl',
-                    'ultrawide' => 'ultrawide',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'instructions' => 'Set the top padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'instructions' => 'Set the bottom padding in rem.',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ]);
 
 return $story_slider;

@@ -126,7 +126,69 @@ function matrix_build_blog_filter_archive_page_url($base_url, $state, $page)
 
 function matrix_get_blog_filter_archive_chip_button_class_names()
 {
-    return 'btn inline-flex h-[36px] w-fit whitespace-nowrap items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors';
+    return 'btn inline-flex h-[36px] shrink-0 whitespace-nowrap items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors';
+}
+
+function matrix_get_blog_filter_archive_horizontal_scroll_class_names()
+{
+    return 'min-w-0 flex-1 overflow-x-auto overscroll-x-contain scroll-smooth cursor-grab active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden';
+}
+
+function matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names()
+{
+    return 'flex w-max min-w-full flex-nowrap gap-3';
+}
+
+function matrix_get_blog_filter_archive_pagination_class_names()
+{
+    return 'mt-10 flex w-full max-w-full flex-nowrap items-center justify-center gap-2 overflow-x-auto overscroll-x-contain scroll-smooth px-1 pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden';
+}
+
+/**
+ * @return array<int, array{type: string, page?: int}>
+ */
+function matrix_build_blog_filter_archive_pagination_items(int $current_page, int $total_pages, int $mid_size = 1, int $end_size = 1): array
+{
+    $current_page = max(1, $current_page);
+    $total_pages = max(1, $total_pages);
+
+    if ($total_pages <= 1) {
+        return [];
+    }
+
+    $pages_to_show = [];
+
+    for ($page = 1; $page <= min($end_size, $total_pages); $page++) {
+        $pages_to_show[$page] = true;
+    }
+
+    for ($page = max(1, $total_pages - $end_size + 1); $page <= $total_pages; $page++) {
+        $pages_to_show[$page] = true;
+    }
+
+    for ($page = max(1, $current_page - $mid_size); $page <= min($total_pages, $current_page + $mid_size); $page++) {
+        $pages_to_show[$page] = true;
+    }
+
+    ksort($pages_to_show);
+
+    $items = [];
+    $previous_page = 0;
+
+    foreach (array_keys($pages_to_show) as $page) {
+        if ($previous_page > 0 && $page > $previous_page + 1) {
+            $items[] = ['type' => 'ellipsis'];
+        }
+
+        $items[] = [
+            'type' => 'page',
+            'page' => $page,
+        ];
+
+        $previous_page = $page;
+    }
+
+    return $items;
 }
 
 function matrix_get_blog_post_category_badge_colors($category_name, $category_slug = '')

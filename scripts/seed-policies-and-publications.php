@@ -137,11 +137,11 @@ if (! function_exists('matrix_seed_policies_external_links')) {
 $home = home_url('/');
 $about_us_url = home_url('/about-us/');
 $policies_url = get_permalink($post_id) ?: home_url('/about-us/policies-and-publications/');
-$data_protection_url = home_url('/about-us/policies-and-publications/data-protection/');
-$privacy_notice_url = home_url('/privacy-notice/');
+$data_protection_url = home_url('/data-protection-policy/');
+$privacy_notice_url = home_url('/cookie-privacy-policy/');
 $our_strategy_url = home_url('/about-us/our-present-and-future/');
 $faqs_url = home_url('/service-users-and-visitors/frequently-asked-questions-faqs/');
-$referrals_url = home_url('/make-a-referral-cta/');
+$referrals_url = home_url('/make-a-referral/');
 
 $section_padding = [
     ['screen_size' => 'mob', 'padding_top' => '3', 'padding_bottom' => '3'],

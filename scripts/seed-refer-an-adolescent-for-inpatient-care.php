@@ -6,11 +6,11 @@
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-refer-an-adolescent-for-inpatient-care.php
  */
 
-$post_id = (int) (get_page_by_path('make-a-referral-cta/refer-an-adolescent-for-inpatient-care')?->ID ?? 0);
+$post_id = (int) (get_page_by_path('make-a-referral/refer-an-adolescent-for-inpatient-care')?->ID ?? 0);
 
 if ($post_id === 0) {
     if (class_exists('WP_CLI')) {
-        WP_CLI::error('Could not find page at make-a-referral-cta/refer-an-adolescent-for-inpatient-care.');
+        WP_CLI::error('Could not find page at make-a-referral/refer-an-adolescent-for-inpatient-care.');
     }
 
     exit(1);

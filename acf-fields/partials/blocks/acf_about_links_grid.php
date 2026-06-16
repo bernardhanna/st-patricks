@@ -83,11 +83,11 @@ $about_links_grid
         ])
         ->addColorPicker('heading_color', [
             'label' => 'Heading Color',
-            'default_value' => '#0B0B08',
+            'default_value' => '#1E244B',
         ])
         ->addColorPicker('intro_color', [
             'label' => 'Intro Text Color',
-            'default_value' => '#4A4B37',
+            'default_value' => '#08284B',
         ])
         ->addColorPicker('card_bg_color', [
             'label' => 'Card Background Color',
@@ -95,11 +95,11 @@ $about_links_grid
         ])
         ->addColorPicker('card_title_color', [
             'label' => 'Card Title Color',
-            'default_value' => '#0B0B08',
+            'default_value' => '#1E244B',
         ])
         ->addColorPicker('card_desc_color', [
             'label' => 'Card Description Color',
-            'default_value' => '#4A4B37',
+            'default_value' => '#08284B',
         ])
         ->addSelect('columns', [
             'label' => 'Grid Columns (Desktop)',
@@ -110,41 +110,6 @@ $about_links_grid
                 '4' => '4 Columns',
             ],
             'default_value' => '3',
-        ])
-
-    ->addTab('layout_tab', ['label' => 'Layout'])
-        ->addRepeater('padding_settings', [
-            'label' => 'Padding Settings',
-            'button_label' => 'Add Screen Size Padding',
-        ])
-            ->addSelect('screen_size', [
-                'label' => 'Screen Size',
-                'choices' => [
-                    'xxs' => 'xxs',
-                    'xs' => 'xs',
-                    'mob' => 'mob',
-                    'sm' => 'sm',
-                    'md' => 'md',
-                    'lg' => 'lg',
-                    'xl' => 'xl',
-                    'xxl' => 'xxl',
-                    'ultrawide' => 'ultrawide',
-                ],
-            ])
-            ->addNumber('padding_top', [
-                'label' => 'Padding Top',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-            ->addNumber('padding_bottom', [
-                'label' => 'Padding Bottom',
-                'min' => 0,
-                'max' => 20,
-                'step' => 0.01,
-                'append' => 'rem',
-            ])
-        ->endRepeater();
+        ]);
 
 return $about_links_grid;

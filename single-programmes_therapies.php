@@ -1,0 +1,39 @@
+<?php
+
+get_header();
+?>
+<main class="w-full overflow-hidden bg-white">
+    <?php while (have_posts()) { ?>
+        <?php the_post(); ?>
+
+        <?php get_template_part('template-parts/single/programme-therapy-hero'); ?>
+
+        <section class="bg-white">
+            <div class="mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 lg:px-0 lg:py-[100px]">
+                <div class="min-w-0 flex-1">
+                    <?php if (has_post_thumbnail()) { ?>
+                        <div class="mb-8 overflow-hidden rounded-[6px]">
+                            <?php
+                            the_post_thumbnail('large', [
+                                'class' => 'h-auto max-h-[387px] w-full object-cover',
+                            ]);
+                            ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if (trim(get_the_content()) !== '') { ?>
+                        <div class="relative min-w-0 w-full wp_editor">
+                            <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                                <?php the_content(); ?>
+                            </article>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </section>
+
+        <?php load_flexible_content_templates(); ?>
+    <?php } ?>
+</main>
+<?php
+get_footer();

@@ -52,7 +52,7 @@ if (! function_exists('matrix_migrate_frozen_path_prefixes')) {
             'current-research-projects',
             'directions-and-parking',
             'healthcare-professionals',
-            'make-a-referral-cta',
+            'make-a-referral',
             'news-and-events',
             'past-research-projects',
             'programmes-therapies',
@@ -320,7 +320,7 @@ if (! function_exists('matrix_migrate_classify_old_path')) {
             return 'skip';
         }
 
-        if (preg_match('#^media-centre/(blogs-articles|news|podcasts|videos)/\d{4}/[a-z]+/.+#', $path)) {
+        if (preg_match('#^media-centre/(blogs-articles|news|podcasts|videos|events|press-releases)/\d{4}/[a-z]+/.+#', $path)) {
             return 'post';
         }
 
@@ -334,6 +334,8 @@ if (! function_exists('matrix_migrate_classify_old_path')) {
             'media-centre/news',
             'media-centre/podcasts',
             'media-centre/videos',
+            'media-centre/press-releases',
+            'media-centre/events',
         ];
 
         if (in_array($path, $listing_pages, true)) {
@@ -357,6 +359,14 @@ if (! function_exists('matrix_migrate_post_category_for_path')) {
 
         if (preg_match('#^media-centre/videos/#', $path)) {
             return 'videos';
+        }
+
+        if (preg_match('#^media-centre/events/#', $path)) {
+            return 'events';
+        }
+
+        if (preg_match('#^media-centre/press-releases/#', $path)) {
+            return 'press-releases';
         }
 
         if (preg_match('#^st-patricks-mental-health-services-enewsletter/#', $path)) {
@@ -399,6 +409,391 @@ if (! function_exists('matrix_migrate_list_html_files')) {
         }
 
         return $items;
+    }
+}
+
+if (! function_exists('matrix_migrate_html_file_for_path')) {
+    function matrix_migrate_html_file_for_path(string $path): string
+    {
+        return matrix_migrate_html_dir() . '/original_https_www.stpatricks.ie_' . str_replace('/', '_', trim($path, '/')) . '.html';
+    }
+}
+
+if (! function_exists('matrix_migrate_fetch_html_for_path')) {
+    function matrix_migrate_fetch_html_for_path(string $path, bool $cache = true): string
+    {
+        $path = trim($path, '/');
+        $file = matrix_migrate_html_file_for_path($path);
+
+        if (is_readable($file)) {
+            return (string) file_get_contents($file);
+        }
+
+        $html = '';
+        $attempts = 3;
+
+        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+            $response = wp_remote_get(
+                matrix_migrate_live_url('/' . $path . '/'),
+                ['timeout' => 45, 'redirection' => 5]
+            );
+
+            if (is_wp_error($response)) {
+                if ($attempt < $attempts) {
+                    sleep(2);
+                }
+                continue;
+            }
+
+            $code = (int) wp_remote_retrieve_response_code($response);
+
+            if ($code >= 200 && $code < 300) {
+                $html = (string) wp_remote_retrieve_body($response);
+                break;
+            }
+
+            if ($attempt < $attempts) {
+                sleep(2);
+            }
+        }
+
+        if ($html === '') {
+            return '';
+        }
+
+        if ($cache && $html !== '') {
+            $dir = matrix_migrate_html_dir();
+
+            if (is_dir($dir) && is_writable($dir)) {
+                file_put_contents($file, $html);
+            }
+        }
+
+        return $html;
+    }
+}
+
+if (! function_exists('matrix_migrate_paths_from_csv')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_migrate_paths_from_csv(string $path_pattern): array
+    {
+        $csv = matrix_migrate_csv_path();
+
+        if (! is_readable($csv)) {
+            return [];
+        }
+
+        $paths = [];
+        $handle = fopen($csv, 'rb');
+
+        if ($handle === false) {
+            return [];
+        }
+
+        $regex = '#https://www\.stpatricks\.ie/(' . $path_pattern . ')#';
+
+        while (($line = fgets($handle)) !== false) {
+            if (! preg_match($regex, $line, $matches)) {
+                continue;
+            }
+
+            $paths[trim($matches[1], '/')] = true;
+        }
+
+        fclose($handle);
+
+        $list = array_keys($paths);
+        sort($list);
+
+        return $list;
+    }
+}
+
+if (! function_exists('matrix_migrate_extract_listing_paths_from_html')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_migrate_extract_listing_paths_from_html(string $html, string $section): array
+    {
+        $section = trim($section, '/');
+        $pattern = '#href=["\']/' . preg_quote($section, '#') . '/(\d{4}/[a-z]+/[^"\']+)["\']#i';
+        $paths = [];
+
+        if ($html === '' || ! preg_match_all($pattern, $html, $matches)) {
+            return [];
+        }
+
+        foreach ($matches[1] as $suffix) {
+            $paths[] = trim($section . '/' . trim((string) $suffix, '/'), '/');
+        }
+
+        return $paths;
+    }
+}
+
+if (! function_exists('matrix_migrate_cached_listing_file')) {
+    function matrix_migrate_cached_listing_file(string $section, int $page): ?string
+    {
+        $base = matrix_migrate_html_dir() . '/original_https_www.stpatricks.ie_' . str_replace('/', '_', trim($section, '/'));
+
+        if ($page === 1) {
+            $file = $base . '.html';
+
+            return is_readable($file) ? $file : null;
+        }
+
+        foreach ([
+            $base . '%3Fcat%3D%26page%3D' . $page . '.html',
+            $base . '%3Fpage%3D' . $page . '.html',
+        ] as $file) {
+            if (is_readable($file)) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('matrix_migrate_paths_from_cached_listing_pages')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_migrate_paths_from_cached_listing_pages(string $section, int $max_pages = 30): array
+    {
+        $paths = [];
+
+        for ($page = 1; $page <= $max_pages; $page++) {
+            $file = matrix_migrate_cached_listing_file($section, $page);
+
+            if ($file === null) {
+                if ($page === 1) {
+                    break;
+                }
+
+                continue;
+            }
+
+            $html = (string) file_get_contents($file);
+
+            foreach (matrix_migrate_extract_listing_paths_from_html($html, $section) as $path) {
+                $paths[$path] = true;
+            }
+        }
+
+        $list = array_keys($paths);
+        sort($list);
+
+        return $list;
+    }
+}
+
+if (! function_exists('matrix_migrate_paths_from_listing_pages')) {
+    /**
+     * Discover article paths from paginated Media Centre listing pages.
+     *
+     * @return array<int, string>
+     */
+    function matrix_migrate_paths_from_listing_pages(string $section, int $max_pages = 30): array
+    {
+        $section = trim($section, '/');
+        $paths = [];
+
+        for ($page = 1; $page <= $max_pages; $page++) {
+            $url = matrix_migrate_live_url('/' . $section . '/');
+
+            if ($page > 1) {
+                $url = add_query_arg('page', (string) $page, $url);
+            }
+
+            $html = '';
+            $attempts = 3;
+
+            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+                $response = wp_remote_get($url, ['timeout' => 45, 'redirection' => 5]);
+
+                if (is_wp_error($response)) {
+                    if ($attempt < $attempts) {
+                        sleep(2);
+                    }
+                    continue;
+                }
+
+                $code = (int) wp_remote_retrieve_response_code($response);
+
+                if ($code >= 200 && $code < 300) {
+                    $html = (string) wp_remote_retrieve_body($response);
+                    break;
+                }
+
+                if ($attempt < $attempts) {
+                    sleep(2);
+                }
+            }
+
+            if ($html === '') {
+                break;
+            }
+
+            $found_on_page = 0;
+
+            foreach (matrix_migrate_extract_listing_paths_from_html($html, $section) as $path) {
+                if (! isset($paths[$path])) {
+                    $paths[$path] = true;
+                    $found_on_page++;
+                }
+            }
+
+            if ($found_on_page === 0) {
+                break;
+            }
+        }
+
+        foreach (matrix_migrate_paths_from_cached_listing_pages($section, $max_pages) as $path) {
+            $paths[$path] = true;
+        }
+
+        $list = array_keys($paths);
+        sort($list);
+
+        return $list;
+    }
+}
+
+if (! function_exists('matrix_migrate_paths_from_stored_html')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_migrate_paths_from_stored_html(string $section): array
+    {
+        $section = trim($section, '/');
+        $paths = [];
+
+        foreach (matrix_migrate_list_html_files() as $item) {
+            if (preg_match('#^' . preg_quote($section, '#') . '/\d{4}/[a-z]+/.+#', $item['path'])) {
+                $paths[$item['path']] = true;
+            }
+        }
+
+        $list = array_keys($paths);
+        sort($list);
+
+        return $list;
+    }
+}
+
+if (! function_exists('matrix_migrate_media_centre_post_paths')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_migrate_media_centre_post_paths(string $section, string $csv_pattern, int $max_listing_pages = 30): array
+    {
+        $paths = [];
+
+        foreach (matrix_migrate_paths_from_csv($csv_pattern) as $path) {
+            $paths[$path] = true;
+        }
+
+        foreach (matrix_migrate_paths_from_listing_pages($section, $max_listing_pages) as $path) {
+            $paths[$path] = true;
+        }
+
+        foreach (matrix_migrate_paths_from_stored_html($section) as $path) {
+            $paths[$path] = true;
+        }
+
+        $list = array_keys($paths);
+        sort($list);
+
+        return $list;
+    }
+}
+
+if (! function_exists('matrix_migrate_import_media_post')) {
+    /**
+     * @param array<string, true> $slug_registry
+     * @return array{status: 'created'|'updated'|'failed', post_id?: int, slug?: string}
+     */
+    function matrix_migrate_import_media_post(
+        string $path,
+        int $category_id,
+        array &$slug_registry,
+        bool $trash_page_collisions = true
+    ): array {
+        $html = matrix_migrate_fetch_html_for_path($path);
+
+        if ($html === '') {
+            return ['status' => 'failed'];
+        }
+
+        $parsed = matrix_migrate_extract_parsed_page($html, $path);
+
+        if ($parsed === null) {
+            return ['status' => 'failed'];
+        }
+
+        $slug = matrix_migrate_unique_slug(basename($path), $path, $slug_registry);
+        $existing_id = matrix_migrate_find_by_old_path($path, 'post');
+
+        if ($existing_id === 0) {
+            $by_slug = get_page_by_path($slug, OBJECT, 'post');
+
+            if ($by_slug instanceof WP_Post) {
+                $existing_id = (int) $by_slug->ID;
+            }
+        }
+
+        if ($trash_page_collisions) {
+            $page = get_page_by_path($slug, OBJECT, 'page');
+
+            if ($page instanceof WP_Post && $page->post_status !== 'trash') {
+                wp_trash_post((int) $page->ID);
+            }
+        }
+
+        $postarr = [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'post_title' => (string) $parsed['title'],
+            'post_name' => $slug,
+            'post_content' => (string) $parsed['body_html'],
+            'post_excerpt' => (string) $parsed['meta_description'],
+            'post_date' => matrix_migrate_parse_post_date((string) $parsed['date_text'], $path),
+        ];
+
+        $created = $existing_id === 0;
+
+        if ($existing_id > 0) {
+            $postarr['ID'] = $existing_id;
+        }
+
+        $post_id = $created ? wp_insert_post($postarr, true) : wp_update_post($postarr, true);
+
+        if (is_wp_error($post_id) || ! $post_id) {
+            return ['status' => 'failed'];
+        }
+
+        $post_id = (int) $post_id;
+        update_post_meta($post_id, '_matrix_migrate_old_path', $path);
+        wp_set_post_categories($post_id, [$category_id], false);
+
+        $og_image = (string) ($parsed['og_image'] ?? '');
+
+        if ($og_image !== '') {
+            $attachment_id = matrix_migrate_attachment_id_for_source_path($og_image);
+
+            if ($attachment_id > 0) {
+                set_post_thumbnail($post_id, $attachment_id);
+            }
+        }
+
+        return [
+            'status' => $created ? 'created' : 'updated',
+            'post_id' => $post_id,
+            'slug' => $slug,
+        ];
     }
 }
 
@@ -696,18 +1091,41 @@ if (! function_exists('matrix_migrate_legacy_path_redirect_map')) {
             'care-treatment/our-services/depression-recovery-programme' => '/programmes-therapies/',
             'care-treatment/our-services/young-adult-service' => '/young-adults/',
             'care-treatment/our-services/addiction-and-dual-diagnosis' => '/addiction-dual-diagnosis/',
-            'mental-health/eating-disorders' => '/eating-disorders/',
-            'mental-health/anxiety' => '/anxiety/',
+            'depression' => '/mental-health/depression/',
+            'anxiety' => '/mental-health/anxiety/',
+            'bipolar-disorder' => '/mental-health/bipolar-disorder/',
+            'eating-disorders' => '/mental-health/eating-disorders/',
+            'personality-disorders' => '/mental-health/personality-disorders/',
+            'schizophrenia-psychosis' => '/mental-health/schizophrenia-psychosis/',
+            'addiction-dual-diagnosis' => '/mental-health/addiction-dual-diagnosis/',
+            'addiction-and-dual-diagnosis' => '/mental-health/addiction-dual-diagnosis/',
+            'young-adults' => '/mental-health/young-adults/',
+            'older-adults' => '/mental-health/older-adults/',
             'care-treatment/inpatient-hospital-care/homecare' => '/about-our-st-patricks-at-home-service/',
             'care-treatment/our-services/homecare-service' => '/about-our-st-patricks-at-home-service/',
-            'gps-referrals/referrals-admissions' => '/make-a-referral-cta/',
-            'getting-help/insurance-information' => '/health-insurance-plans/',
-            'getting-help/faqs' => '/faqs/',
-            'advocacy/public-education-anti-stigma-campaigns/youth-advocacy-service' => '/youth-advocacy/',
+            'gps-referrals/referrals-admissions' => '/referrals/referrals-admissions/',
+            'gps-referrals/involuntary-admissions' => '/referrals/involuntary-admissions/',
+            'gps-referrals/bed-vacancies' => '/referrals/bed-vacancies/',
+            'gps-referrals/online-gp-cpd' => '/referrals/online-gp-cpd/',
+            'gps-referrals/referrals-admissions/ereferral-guides-for-socrates-healthone-and-hpm' => '/referrals/ereferral-guides/',
+            'gps-referrals/service-information' => '/referrals/service-information/',
+            'gps-professionals/involuntary-admissions' => '/referrals/involuntary-admissions/',
+            'getting-help/insurance-information' => '/getting-help/insurance-information/',
+            'getting-help/faqs' => '/getting-help/faqs/',
+            'advocacy/public-education-anti-stigma-campaigns/youth-advocacy-service' => '/advocacy-services/youth-advocacy/',
             'advocacy/public-education-anti-stigma-campaigns/walk-in-my-shoes' => 'https://www.walkinmyshoes.ie/',
-            'advocacy/advocacy-services/youth-advocacy' => '/youth-advocacy/',
+            'advocacy/advocacy-services/youth-advocacy' => '/advocacy-services/youth-advocacy/',
             'advocacy/service-user-participation' => '/service-user-participation/',
-            'get-involved/service-user-participation/service-user-satisfaction-survey' => '/service-user-experience-survey/',
+            'get-involved' => '/get-involved/',
+            'get-involved/peer-support' => '/get-involved/peer-support/',
+            'get-involved/fundraising' => '/get-involved/fundraising/',
+            'get-involved/donations' => '/get-involved/donations/',
+            'get-involved/service-user-participation' => '/get-involved/service-user-participation/',
+            'get-involved/service-user-participation/news-for-service-users' => '/get-involved/service-user-participation/news-for-service-users/',
+            'get-involved/service-user-participation/service-user-advisory-network-suan' => '/get-involved/service-user-participation/service-user-advisory-network-suan/',
+            'get-involved/service-user-participation/service-user-and-supporters-council-suas' => '/get-involved/service-user-participation/service-user-and-supporters-council-suas/',
+            'get-involved/service-user-participation/service-user-satisfaction-survey' => '/get-involved/service-user-participation/service-user-experience-survey/',
+            'get-involved/service-user-participation/service-user-experience-survey' => '/get-involved/service-user-participation/service-user-experience-survey/',
             'nostigma/home' => '/nostigma/',
             'nostigma/shareyourexperience/guidelines' => '/shareyourexperience/',
             'getting-help/learning-resource-hub/2018/february/adhd-information-booklet' => '/information-centre/',
@@ -736,7 +1154,7 @@ if (! function_exists('matrix_migrate_old_path_permalink_map')) {
         $map = [];
 
         $posts = get_posts([
-            'post_type' => ['page', 'post', 'research_projects'],
+            'post_type' => ['page', 'post', 'research_projects', 'mental_health'],
             'post_status' => 'publish',
             'posts_per_page' => -1,
             'meta_key' => '_matrix_migrate_old_path',
@@ -905,6 +1323,56 @@ if (! function_exists('matrix_migrate_resolve_migrated_url')) {
             if ($research_posts !== [] && $research_posts[0] instanceof WP_Post) {
                 return (string) get_permalink($research_posts[0]);
             }
+        }
+
+        if (preg_match('#^care-treatment/programmes-therapies/our-programmes-and-therapies/([^/]+)$#', $path, $matches)) {
+            $programme_posts = get_posts([
+                'post_type' => 'programmes_therapies',
+                'name' => $matches[1],
+                'post_status' => 'publish',
+                'posts_per_page' => 1,
+            ]);
+
+            if ($programme_posts !== [] && $programme_posts[0] instanceof WP_Post) {
+                return (string) get_permalink($programme_posts[0]);
+            }
+        }
+
+        if (preg_match('#^mental-health/([^/]+)$#', $path, $matches)) {
+            $condition_posts = get_posts([
+                'post_type' => 'mental_health',
+                'name' => $matches[1],
+                'post_status' => 'publish',
+                'posts_per_page' => 1,
+            ]);
+
+            if ($condition_posts !== [] && $condition_posts[0] instanceof WP_Post) {
+                return (string) get_permalink($condition_posts[0]);
+            }
+        }
+
+        if (preg_match('#^(?:gps-referrals|referrals)/([^/]+)$#', $path, $matches)) {
+            $referral_posts = get_posts([
+                'post_type' => 'referrals',
+                'name' => $matches[1],
+                'post_status' => 'publish',
+                'posts_per_page' => 1,
+            ]);
+
+            if ($referral_posts !== [] && $referral_posts[0] instanceof WP_Post) {
+                return (string) get_permalink($referral_posts[0]);
+            }
+        }
+
+        $programme_posts = get_posts([
+            'post_type' => 'programmes_therapies',
+            'name' => $slug,
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+        ]);
+
+        if ($programme_posts !== [] && $programme_posts[0] instanceof WP_Post) {
+            return (string) get_permalink($programme_posts[0]);
         }
 
         return matrix_migrate_home_url_for_path($path);
@@ -1163,6 +1631,138 @@ if (function_exists('add_filter')) {
     add_filter('the_content', 'matrix_migrate_filter_fix_media_urls_in_content', 15);
 }
 
+if (! function_exists('matrix_migrate_find_mental_health_candidate')) {
+    /**
+     * Find an existing page or mental_health post for a condition slug.
+     */
+    function matrix_migrate_find_mental_health_candidate(string $old_path, string $slug): int
+    {
+        $old_path = trim($old_path, '/');
+
+        foreach (['mental_health', 'page'] as $post_type) {
+            $existing_id = matrix_migrate_find_by_old_path($old_path, $post_type);
+
+            if ($existing_id > 0) {
+                return $existing_id;
+            }
+        }
+
+        $candidates = get_posts([
+            'post_type' => ['mental_health', 'page'],
+            'post_status' => 'any',
+            'name' => $slug,
+            'posts_per_page' => -1,
+        ]);
+
+        if ($candidates === []) {
+            return 0;
+        }
+
+        usort($candidates, static function (WP_Post $a, WP_Post $b): int {
+            $a_blocks = count(get_field('flexible_content_blocks', $a->ID) ?: []);
+            $b_blocks = count(get_field('flexible_content_blocks', $b->ID) ?: []);
+            $a_old_path = get_post_meta($a->ID, '_matrix_migrate_old_path', true) !== '' ? 1 : 0;
+            $b_old_path = get_post_meta($b->ID, '_matrix_migrate_old_path', true) !== '' ? 1 : 0;
+
+            return [$b_old_path, $b_blocks, $b->ID] <=> [$a_old_path, $a_blocks, $a->ID];
+        });
+
+        return (int) $candidates[0]->ID;
+    }
+}
+
+if (! function_exists('matrix_migrate_import_mental_health_path')) {
+    /**
+     * Import or update one mental health condition as the mental_health CPT.
+     */
+    function matrix_migrate_import_mental_health_path(string $old_path, bool $dry_run = false): int
+    {
+        if (! function_exists('matrix_mental_health_slug_from_old_path')) {
+            require_once get_template_directory() . '/inc/mental-health-functions.php';
+        }
+
+        $old_path = trim($old_path, '/');
+        $slug = matrix_mental_health_slug_from_old_path($old_path);
+        $file = matrix_migrate_html_file_for_path($old_path);
+
+        if (! is_readable($file)) {
+            $html = matrix_migrate_fetch_html_for_path($old_path);
+
+            if ($html === '') {
+                return 0;
+            }
+        } else {
+            $html = (string) file_get_contents($file);
+        }
+
+        $parsed = matrix_migrate_extract_parsed_page($html, $old_path);
+
+        if ($parsed === null) {
+            return 0;
+        }
+
+        $parsed['old_path'] = $old_path;
+
+        $hero_image_id = 0;
+        $og_image = (string) ($parsed['og_image'] ?? '');
+
+        if ($og_image !== '') {
+            $hero_image_id = matrix_migrate_attachment_id_for_source_path($og_image);
+        }
+
+        $flexi_rows = matrix_migrate_page_flexi_rows($parsed, $hero_image_id, $html);
+        $existing_id = matrix_migrate_find_mental_health_candidate($old_path, $slug);
+
+        if ($dry_run) {
+            return $existing_id > 0 ? $existing_id : 1;
+        }
+
+        $postarr = [
+            'post_type' => 'mental_health',
+            'post_status' => 'publish',
+            'post_title' => (string) $parsed['title'],
+            'post_name' => $slug,
+            'post_content' => '',
+        ];
+
+        if ($existing_id > 0) {
+            $postarr['ID'] = $existing_id;
+            $post_id = wp_update_post($postarr, true);
+        } else {
+            $post_id = wp_insert_post($postarr, true);
+        }
+
+        if (is_wp_error($post_id) || ! $post_id) {
+            return 0;
+        }
+
+        $post_id = (int) $post_id;
+
+        update_post_meta($post_id, '_matrix_migrate_old_path', $old_path);
+        update_field('hero_content_blocks', [], $post_id);
+        update_field('flexible_content_blocks', $flexi_rows, $post_id);
+        update_post_meta($post_id, '_matrix_migrate_restyled', '1');
+
+        $duplicates = get_posts([
+            'post_type' => ['mental_health', 'page'],
+            'post_status' => 'any',
+            'name' => $slug,
+            'posts_per_page' => -1,
+            'exclude' => [$post_id],
+        ]);
+
+        foreach ($duplicates as $duplicate) {
+            if (! $duplicate instanceof WP_Post) {
+                continue;
+            }
+
+            wp_trash_post($duplicate->ID);
+        }
+
+        return $post_id;
+    }
+}
+
 if (! function_exists('matrix_migrate_find_by_old_path')) {
     function matrix_migrate_find_by_old_path(string $old_path, string $post_type): int
     {
@@ -1311,8 +1911,23 @@ if (! function_exists('matrix_migrate_frozen_redirect_map')) {
             'care-treatment/outpatient-clinics' => '/what-we-offer/outpatient-care-dean-clinics/',
             'care-treatment/st-patricks-at-home' => '/service-users-and-visitors/about-our-st-patricks-at-home-service/',
             'care-treatment/adolescent-mental-health-services/your-stay' => '/service-users-and-visitors/your-stay-in-hospital-as-an-adolescent/',
-            'getting-help/faqs' => '/service-users-and-visitors/frequently-asked-questions-faqs/',
-            'gps-referrals' => '/healthcare-professionals/',
+            'getting-help' => '/getting-help/',
+            'getting-help/faqs' => '/getting-help/faqs/',
+            'getting-help/concerned-about-yourself-or-someone-you-know' => '/getting-help/concerned-about-yourself-or-someone-you-know/',
+            'getting-help/information-centre' => '/getting-help/information-centre/',
+            'getting-help/carers-supporters' => '/getting-help/carers-supporters/',
+            'getting-help/insurance-information' => '/getting-help/insurance-information/',
+            'getting-help/learning-resource-hub' => '/getting-help/learning-resource-hub/',
+            'getting-help/support-groups-meetings' => '/getting-help/support-groups-meetings/',
+            'getting-help/support-information-service' => '/getting-help/support-information-service/',
+            'gps-referrals' => '/referrals/',
+            'gps-referrals/referrals-admissions' => '/referrals/referrals-admissions/',
+            'gps-referrals/involuntary-admissions' => '/referrals/involuntary-admissions/',
+            'gps-referrals/bed-vacancies' => '/referrals/bed-vacancies/',
+            'gps-referrals/online-gp-cpd' => '/referrals/online-gp-cpd/',
+            'gps-referrals/referrals-admissions/ereferral-guides-for-socrates-healthone-and-hpm' => '/referrals/ereferral-guides/',
+            'gps-referrals/service-information' => '/referrals/service-information/',
+            'gps-professionals/involuntary-admissions' => '/referrals/involuntary-admissions/',
             'media-centre/news' => '/news-and-events/',
             'research' => '/about-us/research/',
             'research/spire' => '/research/spire/',
@@ -1329,6 +1944,8 @@ if (! function_exists('matrix_migrate_frozen_redirect_map')) {
             'about-us/policies-and-publications' => '/about-us/policies-and-publications/',
             'about-us/media-queries' => '/about-us/media-queries/',
             'accessibility' => '/accessibility/',
+            'cookies' => '/cookie-privacy-policy/',
+            'cookies/cookies' => '/cookie-privacy-policy/',
             'privacy-notice' => '/cookie-privacy-policy/',
             'about-us/policies-and-publications/data-protection' => '/data-protection-policy/',
         ];

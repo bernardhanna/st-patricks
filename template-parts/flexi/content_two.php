@@ -11,24 +11,14 @@ $background_color = get_sub_field('background_color');
 $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
 
 // Get padding settings
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-        $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-    }
-}
+
 
 ?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-    class="relative flex overflow-hidden <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+    class="relative flex overflow-hidden"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
 >

@@ -12,22 +12,7 @@ $background_color = get_sub_field('background_color') ?: '#FFFFFF';
 $heading_color    = get_sub_field('heading_color') ?: '#1e293b';
 $show_card_style  = (bool) get_sub_field('show_card_style');
 
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size    = get_sub_field('screen_size');
-        $padding_top    = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 // Build heading tag safely
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
@@ -49,7 +34,7 @@ $logo_container = 'h-10 flex items-center justify-center';
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background-color: <?php echo esc_attr($background_color); ?>;">
-    <div class="flex flex-col items-center mx-auto w-full max-w-container_md p py-12 mob:py-[6rem] max-lg:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="flex flex-col items-center mx-auto w-full max-w-container_md p py-12 mob:py-[6rem] max-lg:px-5">
 
         <div class="flex flex-col gap-8 w-full lg:flex-row lg:items-center lg:justify-between lg:gap-10">
 

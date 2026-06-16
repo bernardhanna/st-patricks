@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Seed About Us > Media Queries (page 262) to match Figma frame 2780:3711.
+ * Seed About Us > Media Queries (page 262) with content from stpatricks.ie/media-centre.
+ * Preserves the existing 4-block layout and only updates copy, links, and spokespeople.
  *
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-about-us-media-queries.php
  */
+
+require_once __DIR__ . '/lib/page-seed-conventions.php';
 
 $post_id = (int) (get_page_by_path('about-us/media-queries')?->ID ?? 0);
 
@@ -257,10 +260,30 @@ if (! function_exists('matrix_seed_ensure_spokesperson')) {
     }
 }
 
+if (! function_exists('matrix_seed_mq_url')) {
+    function matrix_seed_mq_url(string $path): string
+    {
+        $path = trim($path, '/');
+        $post_id = url_to_postid(home_url('/' . $path . '/'));
+
+        if ($post_id > 0) {
+            return (string) get_permalink($post_id);
+        }
+
+        $page_id = matrix_seed_resolve_page_id_by_path($path);
+
+        if ($page_id > 0) {
+            return (string) get_permalink($page_id);
+        }
+
+        return home_url('/' . $path . '/');
+    }
+}
+
 $home = home_url('/');
 $about_us_url = home_url('/about-us/');
 $contact_url = home_url('/contact-us/');
-$news_url = home_url('/news-and-events/');
+$press_releases_url = matrix_seed_mq_url('press-releases');
 
 $figma = [
     'hero' => 'https://www.figma.com/api/mcp/asset/2fff4dfd-919a-406f-a0ae-57d778912fca',
@@ -294,36 +317,39 @@ $portrait_ids = [
 
 $spokespeople_term_id = matrix_seed_ensure_team_category('spokespeople', 'Spokespeople');
 
-$profile_teaser = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>';
-
 $spokespersons = [
     [
         'title' => 'John Creedon',
         'job_title' => 'Director of Nursing',
+        'profile_teaser' => '<p>John Creedon is Director of Nursing at St Patrick\'s Mental Health Services and can speak on nursing, inpatient care and service delivery.</p>',
         'seed_key' => 'media-queries-spokesperson-john-creedon',
         'image_index' => 0,
     ],
     [
         'title' => 'Paul Gilligan',
         'job_title' => 'CEO',
+        'profile_teaser' => '<p>Paul Gilligan is Chief Executive Officer of St Patrick\'s Mental Health Services and can speak on organisational leadership and mental health policy.</p>',
         'seed_key' => 'media-queries-spokesperson-paul-gilligan',
         'image_index' => 1,
     ],
     [
         'title' => 'Professor Paul Fearon',
         'job_title' => 'Medical Director',
+        'profile_teaser' => '<p>Professor Paul Fearon is Medical Director at St Patrick\'s Mental Health Services and can speak on clinical matters and mental health treatment.</p>',
         'seed_key' => 'media-queries-spokesperson-paul-fearon',
         'image_index' => 2,
     ],
     [
-        'title' => 'David OBrien',
+        'title' => 'David O\'Brien',
         'job_title' => 'Head of Communications',
+        'profile_teaser' => '<p>David O\'Brien leads the Communications Department and is the primary contact for media enquiries and interview requests.</p>',
         'seed_key' => 'media-queries-spokesperson-david-obrien',
         'image_index' => 1,
     ],
     [
         'title' => 'Sarah Nolan',
         'job_title' => 'Clinical Programme Lead',
+        'profile_teaser' => '<p>Sarah Nolan is a Clinical Programme Lead and can speak on programmes, therapies and recovery-focused care in SPMHS.</p>',
         'seed_key' => 'media-queries-spokesperson-sarah-nolan',
         'image_index' => 0,
     ],
@@ -335,69 +361,40 @@ foreach ($spokespersons as $spokesperson) {
     matrix_seed_ensure_spokesperson(
         $spokesperson['title'],
         $spokesperson['job_title'],
-        $profile_teaser,
+        $spokesperson['profile_teaser'],
         $image_id,
         $spokesperson['seed_key'],
         $spokespeople_term_id
     );
 }
 
-if ($spokespeople_term_id > 0) {
-    $current_spokespeople_count = (int) (new WP_Query([
-        'post_type' => 'team_members',
-        'post_status' => 'publish',
-        'posts_per_page' => -1,
-        'fields' => 'ids',
-        'tax_query' => [
-            [
-                'taxonomy' => 'team_member_category',
-                'field' => 'term_id',
-                'terms' => [$spokespeople_term_id],
-            ],
+$placeholder_posts = get_posts([
+    'post_type' => 'team_members',
+    'post_status' => 'any',
+    'posts_per_page' => -1,
+    'meta_query' => [
+        [
+            'key' => '_matrix_seed_key',
+            'value' => 'media-queries-spokesperson-placeholder-',
+            'compare' => 'LIKE',
         ],
-    ]))->found_posts;
+    ],
+]);
 
-    $placeholder_index = 1;
+foreach ($placeholder_posts as $placeholder_post) {
+    wp_delete_post((int) $placeholder_post->ID, true);
+}
 
-    while ($current_spokespeople_count < 9) {
-        while (get_posts([
-            'post_type' => 'team_members',
-            'post_status' => 'any',
-            'posts_per_page' => 1,
-            'fields' => 'ids',
-            'meta_query' => [
-                [
-                    'key' => '_matrix_seed_key',
-                    'value' => 'media-queries-spokesperson-placeholder-' . $placeholder_index,
-                ],
-            ],
-        ]) !== []) {
-            $placeholder_index++;
-        }
+$generic_placeholders = get_posts([
+    'post_type' => 'team_members',
+    'post_status' => 'any',
+    'posts_per_page' => -1,
+    'title' => 'Team member name',
+]);
 
-        matrix_seed_ensure_spokesperson(
-            'Team member name',
-            'Job title',
-            $profile_teaser,
-            $portrait_ids[$placeholder_index % 3] ?? 0,
-            'media-queries-spokesperson-placeholder-' . $placeholder_index,
-            $spokespeople_term_id
-        );
-
-        $placeholder_index++;
-        $current_spokespeople_count = (int) (new WP_Query([
-            'post_type' => 'team_members',
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'fields' => 'ids',
-            'tax_query' => [
-                [
-                    'taxonomy' => 'team_member_category',
-                    'field' => 'term_id',
-                    'terms' => [$spokespeople_term_id],
-                ],
-            ],
-        ]))->found_posts;
+foreach ($generic_placeholders as $generic_placeholder) {
+    if ($spokespeople_term_id > 0 && has_term($spokespeople_term_id, 'team_member_category', $generic_placeholder)) {
+        wp_delete_post((int) $generic_placeholder->ID, true);
     }
 }
 
@@ -427,110 +424,71 @@ foreach ($duplicate_seed_posts as $duplicate_post) {
     }
 }
 
-$lorem_hero = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.';
+$hero_intro = 'For media queries, interview requests or comment on mental health issues, please contact our Communications Department on <a href="tel:012493540">01 249 3540</a> or email <a href="mailto:communications@stpatricks.ie">communications@stpatricks.ie</a>. Our spokespeople are available to support accurate, informed reporting on mental health.';
 
 $hero_content = sprintf(
     '<p>%s</p><p><a class="btn inline-flex min-h-[36px] items-center justify-center rounded-[6px] bg-[#024B79] px-3 py-2 text-[14px] font-medium leading-[24px] text-white no-underline" href="%s">Contact Us</a></p>',
-    esc_html($lorem_hero),
+    $hero_intro,
     esc_url($contact_url)
 );
 
-$intro_paragraph = '<p><strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam.</strong></p>';
-$body_paragraph = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>';
+$intro_paragraph = '<p><strong>We encourage responsible reporting on mental health that respects the dignity of people experiencing mental health difficulties.</strong></p>';
+$body_paragraph = '<p>When reporting on mental health, we ask journalists to use person-first language, avoid sensationalist or stigmatising terms, and include appropriate help-seeking information where relevant. We are committed to working with media professionals to promote accurate, compassionate coverage of mental health issues in Ireland.</p>'
+    . '<p>You can find further guidance through organisations such as <a href="https://seechange.ie/" target="_blank" rel="noopener noreferrer">See Change</a> and the <a href="https://www.headstrong.ie/" target="_blank" rel="noopener noreferrer">Headstrong media guidelines</a>.</p>';
 
-$section_padding = [
-    [
-        'screen_size' => 'mob',
-        'padding_top' => '3',
-        'padding_bottom' => '3',
-    ],
-    [
-        'screen_size' => 'lg',
-        'padding_top' => '6.25',
-        'padding_bottom' => '6.25',
-    ],
-];
+$press_releases_term = get_term_by('slug', 'press-releases', 'category');
+$press_releases_term_id = $press_releases_term instanceof WP_Term ? (int) $press_releases_term->term_id : 0;
 
-$news_term = get_term_by('slug', 'news', 'category');
-$news_term_id = $news_term instanceof WP_Term ? (int) $news_term->term_id : 0;
+$rows = get_field('flexible_content_blocks', $post_id);
 
-$flexi_rows = [
-    [
-        'acf_fc_layout' => 'hero_with_breadcrumbs',
-        'layout_style' => 'image_split',
-        'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
-        'manual_breadcrumbs' => [
-            [
-                'breadcrumb_link' => [
-                    'title' => 'Home',
-                    'url' => $home,
-                    'target' => '',
-                ],
-            ],
-            [
-                'breadcrumb_link' => [
-                    'title' => 'About Us',
-                    'url' => $about_us_url,
-                    'target' => '',
-                ],
-            ],
-        ],
-        'current_crumb_label' => 'Media Queries',
-        'heading_tag' => 'h1',
-        'heading' => 'Media Queries',
-        'content' => $hero_content,
-        'hero_image' => $hero_image_id,
-        'background_color' => '#C6ECF4',
-        'breadcrumb_background_color' => '#F1F8F9',
-        'heading_color' => '#08284B',
-        'text_color' => '#08284B',
-    ],
-    [
-        'acf_fc_layout' => 'team_members',
-        'heading' => 'Spokespeople',
-        'heading_tag' => 'h2',
-        'layout_style' => 'spokespeople_grid',
-        'source_mode' => 'category',
-        'selected_team_categories' => $spokespeople_term_id > 0 ? [$spokespeople_term_id] : [],
-        'posts_per_page' => 9,
-        'section_background' => '#FFFFFF',
-        'spokespeople_card_background_color' => '#FBFAF7',
-        'padding_settings' => $section_padding,
-    ],
-    [
-        'acf_fc_layout' => 'latest_posts',
-        'heading' => 'Recent Press Releases',
-        'heading_tag' => 'h2',
-        'selected_categories' => $news_term_id > 0 ? [$news_term_id] : [],
-        'header_button_link' => [
+if (! is_array($rows) || $rows === []) {
+    if (class_exists('WP_CLI')) {
+        WP_CLI::error('Media Queries page has no flexible content blocks to update.');
+    }
+
+    exit(1);
+}
+
+foreach ($rows as &$row) {
+    $layout = $row['acf_fc_layout'] ?? '';
+
+    if ($layout === 'hero_with_breadcrumbs') {
+        $row['content'] = $hero_content;
+    }
+
+    if ($layout === 'team_members') {
+        $row['posts_per_page'] = 9;
+    }
+
+    if ($layout === 'latest_posts') {
+        $row['heading'] = 'Recent Press Releases';
+
+        if ($press_releases_term_id > 0) {
+            $row['selected_categories'] = [$press_releases_term_id];
+        }
+
+        $row['header_button_link'] = [
             'title' => 'View all press releases',
-            'url' => $news_url,
+            'url' => $press_releases_url,
             'target' => '',
-        ],
-        'empty_state_message' => 'No press releases are available yet.',
-        'background_color' => '#FBFAF7',
-        'heading_color' => '#1E244B',
-        'card_title_color' => '#1E244B',
-        'padding_settings' => $section_padding,
-    ],
-    [
-        'acf_fc_layout' => 'content',
-        'heading' => 'Responsible Reporting',
-        'heading_tag' => 'h2',
-        'accent_position' => 'below_heading',
-        'intro_text' => $intro_paragraph,
-        'content' => $body_paragraph,
-        'layout_style' => 'image_left',
-        'background_type' => 'gradient',
-        'background_gradient' => 'linear-gradient(-70.18deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
-        'image' => $responsible_reporting_image_id,
-        'padding_settings' => $section_padding,
-    ],
-];
+        ];
+        $row['empty_state_message'] = 'No press releases are available yet.';
+    }
+
+    if ($layout === 'content' && ($row['heading'] ?? '') === 'Responsible Reporting') {
+        $row['intro_text'] = $intro_paragraph;
+        $row['content'] = $body_paragraph;
+
+        if ($responsible_reporting_image_id > 0) {
+            $row['image'] = $responsible_reporting_image_id;
+        }
+    }
+}
+unset($row);
 
 update_field('hero_content_blocks', [], $post_id);
-update_field('flexible_content_blocks', $flexi_rows, $post_id);
+update_field('flexible_content_blocks', $rows, $post_id);
+update_post_meta($post_id, '_matrix_seed_key', 'about-us-media-queries-content');
 
 $saved_rows = get_field('flexible_content_blocks', $post_id);
 $saved_count = is_array($saved_rows) ? count($saved_rows) : 0;
@@ -552,20 +510,11 @@ $spokespeople_count = $spokespeople_term_id > 0
     : 0;
 
 if (class_exists('WP_CLI')) {
-    if ($saved_count === count($flexi_rows)) {
-        WP_CLI::success(sprintf(
-            'Seeded Media Queries page (%d) with %d flexi blocks and %d spokespeople.',
-            $post_id,
-            $saved_count,
-            $spokespeople_count
-        ));
-    } else {
-        WP_CLI::warning(sprintf(
-            'Updated page %d but expected %d blocks, found %d. Spokespeople count: %d.',
-            $post_id,
-            count($flexi_rows),
-            $saved_count,
-            $spokespeople_count
-        ));
-    }
+    WP_CLI::success(sprintf(
+        'Updated Media Queries page (%d) with %d flexi blocks and %d spokespeople.',
+        $post_id,
+        $saved_count,
+        $spokespeople_count
+    ));
+    WP_CLI::log('Press releases archive: ' . $press_releases_url);
 }

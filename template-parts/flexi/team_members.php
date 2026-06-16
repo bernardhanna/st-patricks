@@ -41,23 +41,7 @@ if ($spokespeople_card_background_color === '') {
     $spokespeople_card_background_color = '#FBFAF7';
 }
 
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $team_posts = [];
 
@@ -144,7 +128,7 @@ if ($layout_style === 'spokespeople_grid') {
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique(array_merge(['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'max-xl:px-5'], $padding_classes)))); ?>">
+    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names()); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
         >

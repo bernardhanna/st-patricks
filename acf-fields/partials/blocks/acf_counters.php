@@ -74,62 +74,6 @@ $counters
         'label' => 'Background Color',
         'instructions' => 'Set the background color for the counters section.',
         'default_value' => '#0c4a6e',
-    ])
-
-    ->addTab('layout_tab', ['label' => 'Layout'])
-
-    // Padding Settings
-    ->addRepeater('padding_settings', [
-        'label' => 'Padding Settings',
-        'instructions' => 'Customize padding for different screen sizes.',
-        'button_label' => 'Add Screen Size Padding',
-        'layout' => 'table',
-        'default_value' => [
-            [
-                'screen_size' => 'xxs',
-                'padding_top' => 5,
-                'padding_bottom' => 5,
-            ],
-            [
-                'screen_size' => 'lg',
-                'padding_top' => 8,
-                'padding_bottom' => 8,
-            ]
-        ]
-    ])
-        ->addSelect('screen_size', [
-            'label' => 'Screen Size',
-            'instructions' => 'Select the screen size for this padding setting.',
-            'choices' => [
-                'xxs' => 'XXS (320px+)',
-                'xs' => 'XS (480px+)',
-                'mob' => 'Mobile (575px+)',
-                'sm' => 'Small (640px+)',
-                'md' => 'Medium (768px+)',
-                'lg' => 'Large (1100px+)',
-                'xl' => 'XL (1280px+)',
-                'xxl' => 'XXL (1440px+)',
-                'ultrawide' => 'Ultrawide (1920px+)',
-            ],
-        ])
-        ->addNumber('padding_top', [
-            'label' => 'Padding Top',
-            'instructions' => 'Set the top padding in rem units.',
-            'min' => 0,
-            'max' => 20,
-            'step' => 0.01,
-            'append' => 'rem',
-            'default_value' => 5,
-        ])
-        ->addNumber('padding_bottom', [
-            'label' => 'Padding Bottom',
-            'instructions' => 'Set the bottom padding in rem units.',
-            'min' => 0,
-            'max' => 20,
-            'step' => 0.01,
-            'append' => 'rem',
-            'default_value' => 5,
-        ])
-    ->endRepeater();
+    ]);
 
 return $counters;

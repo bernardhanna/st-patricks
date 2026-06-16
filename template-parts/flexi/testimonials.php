@@ -79,23 +79,7 @@ if (!in_array($heading_tag, $allowed_tags, true)) {
     $heading_tag = 'h2';
 }
 
-$padding_classes = ['pt-5', 'pb-5'];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
 
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
-}
 
 $manual_items = [];
 if (is_array($manual_items_raw)) {
@@ -151,7 +135,7 @@ $tone_backgrounds = [
 >
     <div
         x-data="{ visibleCount: <?php echo esc_attr((string) $visible_initial_count); ?>, totalCount: <?php echo esc_attr((string) $testimonial_count); ?> }"
-        class="flex flex-col items-center w-full mx-auto max-w-[1018px] py-12 lg:py-[100px] max-xl:px-5 <?php echo esc_attr(implode(' ', $padding_classes)); ?>"
+        class="flex flex-col items-center w-full mx-auto max-w-[1018px] py-12 lg:py-[100px] max-xl:px-5"
     >
         <?php if ($background_image) { ?>
             <div class="absolute inset-0 pointer-events-none" aria-hidden="true">

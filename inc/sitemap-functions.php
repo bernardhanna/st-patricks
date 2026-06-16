@@ -24,6 +24,143 @@ function matrix_build_sitemap_page_node($page, array $pages_by_parent)
 }
 
 /**
+ * Curated top-level page paths for the HTML sitemap (site IA, not every root page).
+ *
+ * @return string[]
+ */
+function matrix_get_sitemap_hub_page_paths()
+{
+    /**
+     * Filter curated hub page paths shown as sitemap sections.
+     *
+     * @param string[] $paths
+     */
+    return apply_filters('matrix_sitemap_hub_page_paths', [
+        'about-us',
+        'what-we-offer',
+        'inpatient-care',
+        'programmes-therapies',
+        'healthcare-professionals',
+        'referrals',
+        'make-a-referral',
+        'service-users-and-visitors',
+        'getting-help',
+        'get-involved',
+        'news-and-events',
+        'careers',
+        'recruitment-and-useful-information',
+        'contact-us',
+        'your-portal',
+    ]);
+}
+
+/**
+ * Additional page paths merged under a hub section (siblings not in the page tree).
+ *
+ * @return array<string, string[]>
+ */
+function matrix_get_sitemap_hub_extra_children()
+{
+    /**
+     * Filter extra child page paths keyed by hub slug.
+     *
+     * @param array<string, string[]> $extra_children
+     */
+    return apply_filters('matrix_sitemap_hub_extra_children', [
+        'inpatient-care' => [
+            'service-users-and-visitors/your-stay-in-hospital-as-an-adult',
+            'make-a-referral',
+        ],
+        'your-portal' => [
+            'about-your-portal',
+            'register-for-your-portal',
+            'service-user-it-support',
+        ],
+        'contact-us' => [
+            'directions-and-parking',
+        ],
+        'service-users-and-visitors' => [
+            'directions-and-parking',
+            'about-your-portal',
+            'service-user-it-support',
+        ],
+    ]);
+}
+
+/**
+ * Specific CPT posts listed under a hub (in addition to full CPT archives).
+ *
+ * @return array<string, array<int, array{post_type: string, name: string}>>
+ */
+function matrix_get_sitemap_hub_extra_cpt_posts()
+{
+    /**
+     * @param array<string, array<int, array{post_type: string, name: string}>> $extra_posts
+     */
+    return apply_filters('matrix_sitemap_hub_extra_cpt_posts', [
+        'inpatient-care' => [
+            ['post_type' => 'locations', 'name' => 'st-patricks-university-hospital'],
+            ['post_type' => 'locations', 'name' => 'st-patricks-hospital-lucan'],
+            ['post_type' => 'locations', 'name' => 'willow-grove-adolescent-unit'],
+        ],
+    ]);
+}
+
+/**
+ * CPT archives whose published posts are listed under a hub section.
+ *
+ * @return array<string, string>
+ */
+function matrix_get_sitemap_hub_cpt_archives()
+{
+    /**
+     * @param array<string, string> $archives Hub slug => post type name.
+     */
+    return apply_filters('matrix_sitemap_hub_cpt_archives', [
+        'programmes-therapies' => 'programmes_therapies',
+        'referrals' => 'referrals',
+    ]);
+}
+
+/**
+ * Taxonomy term links shown under a hub (e.g. news categories on the posts page).
+ *
+ * @return array<string, array{taxonomy: string, query_var: string, all_label?: string}>
+ */
+function matrix_get_sitemap_hub_taxonomy_children()
+{
+    /**
+     * @param array<string, array{taxonomy: string, query_var: string, all_label?: string}> $sections
+     */
+    return apply_filters('matrix_sitemap_hub_taxonomy_children', [
+        'news-and-events' => [
+            'taxonomy' => 'category',
+            'query_var' => 'blog_category',
+            'all_label' => 'All',
+        ],
+    ]);
+}
+
+/**
+ * Standalone utility pages shown as their own sitemap section (no children).
+ *
+ * @return string[]
+ */
+function matrix_get_sitemap_utility_page_paths()
+{
+    /**
+     * Filter utility page paths appended after hub sections.
+     *
+     * @param string[] $paths
+     */
+    return apply_filters('matrix_sitemap_utility_page_paths', [
+        'cookie-privacy-policy',
+        'data-protection-policy',
+        'accessibility',
+    ]);
+}
+
+/**
  * Page IDs excluded from the sitemap tree by default.
  *
  * @return int[]
@@ -81,7 +218,276 @@ function matrix_build_sitemap_page_tree_from_pages(array $pages)
 }
 
 /**
- * Build the hierarchical page tree for the HTML sitemap.
+ * @param array<int, true> $exclude_lookup
+ * @return array<string, mixed>|null
+ */
+function matrix_build_sitemap_child_node_from_page_path($path, array $exclude_lookup)
+{
+    $page = get_page_by_path($path);
+
+    if (! $page instanceof WP_Post || isset($exclude_lookup[(int) $page->ID])) {
+        return null;
+    }
+
+    return [
+        'id' => (int) $page->ID,
+        'title' => (string) $page->post_title,
+        'url' => (string) get_permalink($page),
+        'children' => [],
+    ];
+}
+
+/**
+ * @param array<int, true> $exclude_lookup
+ * @return array<string, mixed>|null
+ */
+function matrix_build_sitemap_child_node_from_cpt_post(array $source, array $exclude_lookup)
+{
+    $post_type = sanitize_key((string) ($source['post_type'] ?? ''));
+    $name = sanitize_title((string) ($source['name'] ?? ''));
+
+    if ($post_type === '' || $name === '') {
+        return null;
+    }
+
+    $posts = get_posts([
+        'post_type' => $post_type,
+        'name' => $name,
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+    ]);
+
+    if ($posts === [] || ! $posts[0] instanceof WP_Post) {
+        return null;
+    }
+
+    $post = $posts[0];
+
+    if (isset($exclude_lookup[(int) $post->ID])) {
+        return null;
+    }
+
+    return [
+        'id' => (int) $post->ID,
+        'title' => (string) $post->post_title,
+        'url' => (string) get_permalink($post),
+        'children' => [],
+    ];
+}
+
+/**
+ * @param array<int, true> $exclude_lookup
+ * @return array<int, array<string, mixed>>
+ */
+function matrix_build_sitemap_cpt_archive_children($post_type, array $exclude_lookup)
+{
+    $post_type = sanitize_key((string) $post_type);
+
+    if ($post_type === '') {
+        return [];
+    }
+
+    $posts = get_posts([
+        'post_type' => $post_type,
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+    ]);
+
+    $children = [];
+
+    foreach (is_array($posts) ? $posts : [] as $post) {
+        if (! $post instanceof WP_Post || isset($exclude_lookup[(int) $post->ID])) {
+            continue;
+        }
+
+        $children[] = [
+            'id' => (int) $post->ID,
+            'title' => (string) $post->post_title,
+            'url' => (string) get_permalink($post),
+            'children' => [],
+        ];
+    }
+
+    return $children;
+}
+
+/**
+ * @return array<int, array<string, mixed>>
+ */
+function matrix_build_sitemap_taxonomy_children($base_url, array $config)
+{
+    $taxonomy = sanitize_key((string) ($config['taxonomy'] ?? ''));
+    $query_var = sanitize_key((string) ($config['query_var'] ?? ''));
+    $all_label = trim((string) ($config['all_label'] ?? 'All'));
+
+    if ($taxonomy === '' || $query_var === '' || $base_url === '') {
+        return [];
+    }
+
+    $terms = get_terms([
+        'taxonomy' => $taxonomy,
+        'hide_empty' => false,
+    ]);
+
+    if (is_wp_error($terms) || ! is_array($terms)) {
+        return [];
+    }
+
+    $children = [
+        [
+            'id' => 0,
+            'title' => $all_label,
+            'url' => (string) $base_url,
+            'children' => [],
+        ],
+    ];
+
+    foreach ($terms as $term) {
+        if (! $term instanceof WP_Term) {
+            continue;
+        }
+
+        $children[] = [
+            'id' => (int) $term->term_id,
+            'title' => html_entity_decode((string) $term->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'url' => (string) add_query_arg([$query_var => $term->slug], $base_url),
+            'children' => [],
+        ];
+    }
+
+    return $children;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $children
+ * @param array<string, mixed>|null         $child
+ */
+function matrix_append_sitemap_child(array &$children, array &$existing_urls, $child)
+{
+    if (! is_array($child)) {
+        return;
+    }
+
+    $url = trim((string) ($child['url'] ?? ''));
+
+    if ($url === '' || isset($existing_urls[$url])) {
+        return;
+    }
+
+    $children[] = $child;
+    $existing_urls[$url] = true;
+}
+
+/**
+ * Build a shallow sitemap node (direct children only).
+ *
+ * @param WP_Post|object $page
+ * @param array<int, true> $exclude_lookup
+ * @return array<string, mixed>
+ */
+function matrix_build_sitemap_shallow_page_node($page, array $exclude_lookup)
+{
+    $children = [];
+    $child_pages = get_pages([
+        'parent' => (int) $page->ID,
+        'post_status' => 'publish',
+        'sort_column' => 'menu_order,post_title',
+        'sort_order' => 'ASC',
+    ]);
+
+    foreach (is_array($child_pages) ? $child_pages : [] as $child) {
+        if (! $child instanceof WP_Post || isset($exclude_lookup[(int) $child->ID])) {
+            continue;
+        }
+
+        $children[] = [
+            'id' => (int) $child->ID,
+            'title' => (string) $child->post_title,
+            'url' => (string) get_permalink($child),
+            'children' => [],
+        ];
+    }
+
+    $hub_slug = (string) $page->post_name;
+    $extra_paths = matrix_get_sitemap_hub_extra_children()[$hub_slug] ?? [];
+    $existing_urls = array_flip(array_column($children, 'url'));
+
+    foreach ($extra_paths as $extra_path) {
+        matrix_append_sitemap_child(
+            $children,
+            $existing_urls,
+            matrix_build_sitemap_child_node_from_page_path($extra_path, $exclude_lookup)
+        );
+    }
+
+    foreach (matrix_get_sitemap_hub_extra_cpt_posts()[$hub_slug] ?? [] as $extra_cpt_post) {
+        matrix_append_sitemap_child(
+            $children,
+            $existing_urls,
+            matrix_build_sitemap_child_node_from_cpt_post($extra_cpt_post, $exclude_lookup)
+        );
+    }
+
+    $cpt_archive_post_type = matrix_get_sitemap_hub_cpt_archives()[$hub_slug] ?? '';
+
+    if ($cpt_archive_post_type !== '') {
+        foreach (matrix_build_sitemap_cpt_archive_children($cpt_archive_post_type, $exclude_lookup) as $cpt_child) {
+            matrix_append_sitemap_child($children, $existing_urls, $cpt_child);
+        }
+    }
+
+    $taxonomy_config = matrix_get_sitemap_hub_taxonomy_children()[$hub_slug] ?? null;
+
+    if (is_array($taxonomy_config)) {
+        foreach (matrix_build_sitemap_taxonomy_children((string) get_permalink($page), $taxonomy_config) as $taxonomy_child) {
+            matrix_append_sitemap_child($children, $existing_urls, $taxonomy_child);
+        }
+    }
+
+    usort($children, static function (array $left, array $right) {
+        return strcasecmp((string) ($left['title'] ?? ''), (string) ($right['title'] ?? ''));
+    });
+
+    return [
+        'id' => (int) $page->ID,
+        'title' => (string) $page->post_title,
+        'url' => (string) get_permalink($page),
+        'children' => $children,
+    ];
+}
+
+/**
+ * Build a sitemap section for a page path, or null when the page is missing.
+ *
+ * @param string           $path
+ * @param array<int, true> $exclude_lookup
+ * @param bool             $include_children
+ * @return array<string, mixed>|null
+ */
+function matrix_build_sitemap_section_for_path($path, array $exclude_lookup, $include_children = true)
+{
+    $page = get_page_by_path($path);
+
+    if (! $page instanceof WP_Post || isset($exclude_lookup[(int) $page->ID])) {
+        return null;
+    }
+
+    if (! $include_children) {
+        return [
+            'id' => (int) $page->ID,
+            'title' => (string) $page->post_title,
+            'url' => (string) get_permalink($page),
+            'children' => [],
+        ];
+    }
+
+    return matrix_build_sitemap_shallow_page_node($page, $exclude_lookup);
+}
+
+/**
+ * Build the curated page tree for the HTML sitemap.
  *
  * @param int[] $exclude_ids
  * @return array<int, array<string, mixed>>
@@ -92,121 +498,50 @@ function matrix_build_sitemap_page_tree(array $exclude_ids = [])
         $exclude_ids = matrix_get_sitemap_excluded_page_ids();
     }
 
-    $pages = get_pages([
-        'post_status' => 'publish',
-        'sort_column' => 'menu_order,post_title',
-        'sort_order' => 'ASC',
-        'exclude' => implode(',', $exclude_ids),
-    ]);
+    $exclude_lookup = array_fill_keys(array_map('intval', $exclude_ids), true);
+    $sections = [];
 
-    return matrix_build_sitemap_page_tree_from_pages(is_array($pages) ? $pages : []);
-}
+    foreach (matrix_get_sitemap_hub_page_paths() as $path) {
+        $section = matrix_build_sitemap_section_for_path($path, $exclude_lookup);
 
-/**
- * Build flat link rows for a post type archive section.
- *
- * @param string $post_type
- * @param int    $limit
- * @return array<int, array<string, string>>
- */
-function matrix_build_sitemap_post_type_links($post_type, $limit = 100)
-{
-    $posts = get_posts([
-        'post_type' => $post_type,
-        'post_status' => 'publish',
-        'posts_per_page' => $limit,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'no_found_rows' => true,
-    ]);
-
-    $links = [];
-
-    foreach ($posts as $post) {
-        if (! $post instanceof WP_Post) {
-            continue;
+        if ($section !== null) {
+            $sections[] = $section;
         }
-
-        $links[] = [
-            'title' => (string) get_the_title($post),
-            'url' => (string) get_permalink($post),
-        ];
     }
 
-    return $links;
+    foreach (matrix_get_sitemap_utility_page_paths() as $path) {
+        $section = matrix_build_sitemap_section_for_path($path, $exclude_lookup, false);
+
+        if ($section !== null) {
+            $sections[] = $section;
+        }
+    }
+
+    /**
+     * Filter curated sitemap sections before rendering.
+     *
+     * @param array<int, array<string, mixed>> $sections
+     * @param int[]                            $exclude_ids
+     */
+    return apply_filters('matrix_sitemap_page_sections', $sections, $exclude_ids);
 }
 
 /**
- * Build supplemental archive sections (posts and public CPTs).
+ * Build supplemental archive sections (landing pages only; no long post lists).
  *
  * @return array<int, array<string, mixed>>
  */
 function matrix_build_sitemap_archive_sections()
 {
-    $sections = [];
-    $definitions = [
-        'post' => [
-            'title' => 'News and events',
-            'path' => 'news-and-events/',
-        ],
-        'webinars' => [
-            'title' => 'Webinars',
-            'path' => 'webinars/',
-        ],
-        'careers' => [
-            'title' => 'Careers',
-            'path' => 'about-us/careers/',
-        ],
-        'faqs' => [
-            'title' => 'FAQs',
-            'path' => '',
-        ],
-        'team_members' => [
-            'title' => 'Team members',
-            'path' => '',
-        ],
-    ];
-
-    foreach ($definitions as $post_type => $definition) {
-        $post_type_object = get_post_type_object($post_type);
-
-        if (! $post_type_object instanceof WP_Post_Type || ! $post_type_object->public) {
-            continue;
-        }
-
-        $archive_url = '';
-
-        if ($post_type === 'post') {
-            $posts_page_id = (int) get_option('page_for_posts');
-
-            if ($posts_page_id > 0) {
-                $archive_url = (string) get_permalink($posts_page_id);
-            }
-        } elseif ($definition['path'] !== '') {
-            $archive_url = home_url('/' . ltrim($definition['path'], '/'));
-        } elseif ($post_type_object->has_archive) {
-            $archive_url = (string) get_post_type_archive_link($post_type);
-        }
-
-        $items = matrix_build_sitemap_post_type_links($post_type);
-
-        if ($archive_url === '' && $items === []) {
-            continue;
-        }
-
-        $sections[] = [
-            'title' => (string) $definition['title'],
-            'url' => $archive_url,
-            'items' => $items,
-        ];
-    }
-
     /**
      * Filter supplemental archive sections shown below the page tree.
      *
+     * Return sections with an optional `items` array of `{ title, url }` rows.
+     * The default is empty so the sitemap stays a concise overview of main sections.
+     *
      * @param array<int, array<string, mixed>> $sections
      */
-    return apply_filters('matrix_sitemap_archive_sections', $sections);
+    return apply_filters('matrix_sitemap_archive_sections', []);
 }
 
 /**
@@ -241,7 +576,7 @@ function matrix_prepare_sitemap_page($page_id = 0)
     }
 
     if ($intro === '') {
-        $intro = 'Browse all published pages, news, webinars, careers, FAQs, and team profiles across the St Patrick\'s Mental Health Services website.';
+        $intro = 'A quick overview of the main sections of the St Patrick\'s Mental Health Services website.';
     }
 
     return [
@@ -282,13 +617,8 @@ function matrix_render_sitemap_list(array $items, $depth = 0)
 
     $depth = max(0, (int) $depth);
 
-    $list_classes = $depth === 0
-        ? 'mt-4 flex flex-col gap-2'
-        : 'mt-2 flex flex-col gap-2 border-l border-[rgba(8,40,75,0.15)] pl-4';
-
-    $link_classes = $depth === 0
-        ? 'font-primary text-[16px] font-semibold leading-[28px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]'
-        : 'font-primary text-[16px] font-medium leading-[28px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]';
+    $list_classes = 'mt-4 flex flex-col gap-1.5';
+    $link_classes = 'font-primary text-[16px] font-normal leading-[26px] text-[#08284B] underline-offset-2 transition-colors hover:text-[#024B79] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]';
 
     $html = '<ul class="' . esc_attr($list_classes) . '" role="list">';
 
