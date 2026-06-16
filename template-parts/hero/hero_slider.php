@@ -15,6 +15,8 @@ if ($background_color === '' || $background_color === null) {
     $background_color = '#C6ECF4';
 }
 
+$hero_slider_gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);
+
 // Slides
 $slides = array();
 if (have_rows('slides')) {
@@ -119,7 +121,15 @@ $is_slider = count($slides) > 1;
                              title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
                              class="object-cover w-full h-auto rounded-none max-md:object-contain"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-                        <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none bg-gradient-to-b from-transparent via-[#C6ECF4]/70 to-[#C6ECF4]"></div>
+                        <div
+                            class="absolute inset-0 pointer-events-none"
+                            style="background: <?php echo esc_attr(matrix_build_hero_image_split_mobile_bottom_fade_gradient(
+                                $hero_slider_gradient_vars['gradient_clear'],
+                                $hero_slider_gradient_vars['gradient_soft'],
+                                $hero_slider_gradient_vars['gradient_solid']
+                            )); ?>;"
+                            aria-hidden="true"
+                        ></div>
                     </div>
                 <?php } ?>
 

@@ -140,7 +140,7 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
         <!-- Slider (no external lib) -->
         <div class="flex flex-col gap-8 items-center w-full lg:flex-1" data-slider-root>
           <div class="flex relative justify-center items-center w-full">
-            <div class="relative w-full max-w-[700px] h-[380px] md:h-[420px] lg:h-[460px] flex items-center justify-center" data-slider-stage>
+            <div class="relative w-full max-w-[700px] h-[380px] md:h-[420px] lg:h-[460px] flex items-center justify-center cursor-grab touch-pan-y select-none" data-slider-stage>
               <?php
               $count = count($slides);
               $active = 0;
@@ -272,6 +272,7 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
   if (!count) return;
 
   var idx = 0;
+  var suppressPlayClick = false;
 
   function setDotStyles() {
     if (!dots.length) return;
@@ -357,6 +358,10 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
   if (nextBtn) nextBtn.addEventListener('click', function(){ goTo(idx + 1); });
   if (playBtn && activeCardImg) {
     playBtn.addEventListener('click', function(e){
+      if (suppressPlayClick) {
+        e.preventDefault();
+        return;
+      }
       e.preventDefault();
       var slide = slides[idx];
       if (!slide) return;
@@ -384,6 +389,57 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
         dots[n].addEventListener('click', function(){ goTo(n); });
       })(d);
     }
+  }
+
+  var stage = root.querySelector('[data-slider-stage]');
+  if (stage && count > 1) {
+    var dragStartX = 0;
+    var dragStartY = 0;
+    var dragging = false;
+    var dragThreshold = 48;
+
+    stage.addEventListener('pointerdown', function(e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      stage.setPointerCapture(e.pointerId);
+      stage.classList.add('cursor-grabbing');
+      stage.classList.remove('cursor-grab');
+    });
+
+    function finishDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      stage.classList.remove('cursor-grabbing');
+      stage.classList.add('cursor-grab');
+
+      try {
+        stage.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+
+      var dx = e.clientX - dragStartX;
+      var dy = e.clientY - dragStartY;
+      if (Math.abs(dx) < dragThreshold || Math.abs(dx) < Math.abs(dy)) return;
+
+      suppressPlayClick = true;
+      window.setTimeout(function() {
+        suppressPlayClick = false;
+      }, 0);
+
+      if (dx > 0) {
+        goTo(idx - 1);
+      } else {
+        goTo(idx + 1);
+      }
+    }
+
+    stage.addEventListener('pointerup', finishDrag);
+    stage.addEventListener('pointercancel', function() {
+      dragging = false;
+      stage.classList.remove('cursor-grabbing');
+      stage.classList.add('cursor-grab');
+    });
   }
 
   updateCards();

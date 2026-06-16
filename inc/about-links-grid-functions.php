@@ -26,6 +26,20 @@ function matrix_get_about_links_grid_card_footer_background(string $card_tone, s
 }
 
 /**
+ * Normalize the About Links Grid layout style.
+ */
+function matrix_resolve_about_links_grid_layout_style($value = ''): string
+{
+    $value = trim((string) $value);
+
+    if ($value === 'compact_row') {
+        return 'compact_row';
+    }
+
+    return 'image_feature';
+}
+
+/**
  * Normalize the desktop column count for About Links Grid.
  */
 function matrix_resolve_about_links_grid_columns($value = ''): string

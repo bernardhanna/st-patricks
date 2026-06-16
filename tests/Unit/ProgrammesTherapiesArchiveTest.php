@@ -90,3 +90,8 @@ test('programmes therapies archive exposes filter group defaults', function () {
         ->and($filters['type_options'][0]['slug'])->toBe('all')
         ->and($filters['care_groups'])->toBe([]);
 });
+
+test('programmes therapies archive render returns empty for invalid archive', function () {
+    expect(matrix_render_programmes_therapies_archive_results_html([]))->toBe('')
+        ->and(matrix_render_programmes_therapies_archive_results_html('invalid'))->toBe('');
+});

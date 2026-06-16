@@ -239,26 +239,46 @@ $what_we_offer_services = [
     [
         'service_title' => 'Inpatient Care',
         'service_description' => '<p>We offer a multidisciplinary inpatient service through our three approved centres: St Patrick\'s University Hospital, St Patrick\'s Hospital Lucan, and Willow Grove Adolescent Unit.</p>',
+        'service_link' => [
+            'title' => 'Inpatient Care',
+            'url' => home_url('/inpatient-care/'),
+            'target' => '',
+        ],
         'accent_color' => '#6FC9C0',
-        'show_service_icon' => 0,
+        'show_service_icon' => 1,
     ],
     [
         'service_title' => "St Patrick's at Home",
         'service_description' => '<p>We provide a Homecare Service and remote access to our services through phone, video or online channels.</p>',
+        'service_link' => [
+            'title' => "St Patrick's at Home",
+            'url' => home_url('/what-we-offer/st-patricks-at-home/'),
+            'target' => '',
+        ],
         'accent_color' => '#C3DBAE',
-        'show_service_icon' => 0,
+        'show_service_icon' => 1,
     ],
     [
         'service_title' => 'Outpatient Care - Dean Clinics',
         'service_description' => '<p>We provide community and outpatient care through our Dean Clinics across Ireland.</p>',
+        'service_link' => [
+            'title' => 'Outpatient Care - Dean Clinics',
+            'url' => home_url('/what-we-offer/outpatient-care-dean-clinics/'),
+            'target' => '',
+        ],
         'accent_color' => '#B4A8CE',
-        'show_service_icon' => 0,
+        'show_service_icon' => 1,
     ],
     [
         'service_title' => 'Day Programmes',
         'service_description' => '<p>Day patient services are delivered through our Wellness and Recovery Centre.</p>',
+        'service_link' => [
+            'title' => 'Day Programmes',
+            'url' => home_url('/what-we-offer/day-programmes/'),
+            'target' => '',
+        ],
         'accent_color' => '#E4B8D6',
-        'show_service_icon' => 0,
+        'show_service_icon' => 1,
     ],
 ];
 

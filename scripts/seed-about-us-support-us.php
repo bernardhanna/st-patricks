@@ -243,6 +243,7 @@ $flexi_rows = [
         'heading_color' => '#0B0B08',
         'intro_color' => '#4A4B37',
         'columns' => '3',
+        'layout_style' => 'image_feature',
         'padding_settings' => $section_padding,
     ],
     [
@@ -267,6 +268,7 @@ $flexi_rows = [
         'heading_color' => '#0B0B08',
         'intro_color' => '#4A4B37',
         'columns' => '3',
+        'layout_style' => 'image_feature',
         'padding_settings' => $section_padding,
     ],
     [

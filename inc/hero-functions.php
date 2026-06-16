@@ -156,6 +156,69 @@ function matrix_get_hero_with_breadcrumbs_gradient_vars($background_color)
   ];
 }
 
+/**
+ * Mobile hero fade stops when the image sits above copy (Figma 2780:6668).
+ */
+function matrix_get_hero_image_split_mobile_bottom_fade_stops(): array
+{
+  return [
+    'clear_end' => 62,
+    'soft' => 80,
+    'solid' => 100,
+  ];
+}
+
+/**
+ * Mobile hero fade stops when the image sits below copy (wide stacked layout).
+ */
+function matrix_get_hero_image_split_stacked_image_fade_stops(): array
+{
+  return [
+    'solid_end' => 18,
+    'soft' => 36,
+    'clear' => 52,
+  ];
+}
+
+function matrix_build_hero_image_split_mobile_bottom_fade_gradient(
+  string $gradient_clear,
+  string $gradient_soft,
+  string $gradient_solid
+): string {
+  $stops = matrix_get_hero_image_split_mobile_bottom_fade_stops();
+
+  return sprintf(
+    'linear-gradient(to bottom, %s 0%%, %s %d%%, %s %d%%, %s %d%%)',
+    $gradient_clear,
+    $gradient_clear,
+    $stops['clear_end'],
+    $gradient_soft,
+    $stops['soft'],
+    $gradient_solid,
+    $stops['solid']
+  );
+}
+
+function matrix_build_hero_image_split_stacked_image_gradient(
+  string $gradient_clear,
+  string $gradient_soft,
+  string $gradient_solid
+): string {
+  $stops = matrix_get_hero_image_split_stacked_image_fade_stops();
+
+  return sprintf(
+    'linear-gradient(to bottom, %s 0%%, %s %d%%, %s %d%%, %s %d%%, %s 100%%)',
+    $gradient_solid,
+    $gradient_solid,
+    $stops['solid_end'],
+    $gradient_soft,
+    $stops['soft'],
+    $gradient_clear,
+    $stops['clear'],
+    $gradient_clear
+  );
+}
+
 function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max_width = 'default')
 {
   if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {

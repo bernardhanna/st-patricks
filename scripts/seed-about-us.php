@@ -356,6 +356,7 @@ $flexi_rows = [
         'heading_color' => '#1E244B',
         'intro_color' => '#4A4B37',
         'columns' => '3',
+        'layout_style' => 'image_feature',
         'padding_settings' => $grid_padding,
     ],
 ];

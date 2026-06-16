@@ -123,6 +123,31 @@ test('hero image split gradient vars derive rgba stops from hex background', fun
         ->and($gradient_vars['gradient_clear'])->toBe('rgba(198, 236, 244, 0)');
 });
 
+test('hero mobile bottom fade gradient matches figma 2780:6668 stops', function () {
+    $gradient = matrix_build_hero_image_split_mobile_bottom_fade_gradient(
+        'rgba(198, 236, 244, 0)',
+        'rgba(198, 236, 244, 0.9)',
+        '#C6ECF4'
+    );
+
+    expect($gradient)->toContain('rgba(198, 236, 244, 0) 0%')
+        ->and($gradient)->toContain('rgba(198, 236, 244, 0) 62%')
+        ->and($gradient)->toContain('rgba(198, 236, 244, 0.9) 80%')
+        ->and($gradient)->toContain('#C6ECF4 100%');
+});
+
+test('hero stacked image gradient keeps fade concentrated at the top edge', function () {
+    $gradient = matrix_build_hero_image_split_stacked_image_gradient(
+        'rgba(198, 236, 244, 0)',
+        'rgba(198, 236, 244, 0.9)',
+        '#C6ECF4'
+    );
+
+    expect($gradient)->toContain('#C6ECF4 0%')
+        ->and($gradient)->toContain('#C6ECF4 18%')
+        ->and($gradient)->toContain('rgba(198, 236, 244, 0) 52%');
+});
+
 test('auto breadcrumb mode falls back to auto breadcrumb data', function () {
     expect(function_exists('matrix_resolve_hero_breadcrumbs'))->toBeTrue();
 

@@ -409,3 +409,111 @@ function matrix_build_programmes_therapies_archive_page_url($base_url, $state, $
 
     return matrix_programmes_therapies_archive_add_query_args($params, $base_url);
 }
+
+function matrix_render_programmes_therapies_archive_results_html($archive)
+{
+    if (! is_array($archive) || $archive === []) {
+        return '';
+    }
+
+    ob_start();
+    get_template_part('template-parts/programmes-therapies/archive-results', null, [
+        'programmes_therapies_archive' => $archive,
+    ]);
+
+    return (string) ob_get_clean();
+}
+
+function matrix_fetch_programmes_therapies_archive_response(array $params)
+{
+    $posts_per_page = (int) ($params['posts_per_page'] ?? 0);
+    $empty_state_message = trim((string) ($params['empty_state_message'] ?? ''));
+
+    $archive = matrix_prepare_programmes_therapies_archive([
+        'request_state' => [
+            'pt_type' => (string) ($params['pt_type'] ?? 'all'),
+            'pt_care' => (string) ($params['pt_care'] ?? 'all'),
+            'pt_delivery' => (string) ($params['pt_delivery'] ?? 'all'),
+            'pt_page' => (string) ($params['pt_page'] ?? '1'),
+        ],
+        'posts_per_page' => $posts_per_page > 0 ? $posts_per_page : null,
+        'base_url' => (string) ($params['base_url'] ?? ''),
+        'empty_state_message' => $empty_state_message !== '' ? $empty_state_message : null,
+    ]);
+
+    return [
+        'html' => matrix_render_programmes_therapies_archive_results_html($archive),
+        'pagination' => $archive['pagination'] ?? [],
+        'state' => $archive['state'] ?? [],
+    ];
+}
+
+function matrix_ajax_programmes_therapies_archive()
+{
+    wp_send_json_success(matrix_fetch_programmes_therapies_archive_response($_REQUEST));
+}
+
+function matrix_rest_programmes_therapies_archive(WP_REST_Request $request)
+{
+    return new WP_REST_Response(matrix_fetch_programmes_therapies_archive_response([
+        'pt_type' => (string) $request->get_param('pt_type'),
+        'pt_care' => (string) $request->get_param('pt_care'),
+        'pt_delivery' => (string) $request->get_param('pt_delivery'),
+        'pt_page' => (string) $request->get_param('pt_page'),
+        'posts_per_page' => (int) $request->get_param('posts_per_page'),
+        'base_url' => (string) $request->get_param('base_url'),
+        'empty_state_message' => (string) $request->get_param('empty_state_message'),
+    ]), 200);
+}
+
+function matrix_register_programmes_therapies_archive_rest_route()
+{
+    register_rest_route('matrix/v1', '/programmes-therapies-archive', [
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => 'matrix_rest_programmes_therapies_archive',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'pt_type' => [
+                'type' => 'string',
+                'default' => 'all',
+                'sanitize_callback' => 'matrix_programmes_therapies_archive_sanitize_slug',
+            ],
+            'pt_care' => [
+                'type' => 'string',
+                'default' => 'all',
+                'sanitize_callback' => 'matrix_programmes_therapies_archive_sanitize_slug',
+            ],
+            'pt_delivery' => [
+                'type' => 'string',
+                'default' => 'all',
+                'sanitize_callback' => 'matrix_programmes_therapies_archive_sanitize_slug',
+            ],
+            'pt_page' => [
+                'type' => 'integer',
+                'default' => 1,
+                'minimum' => 1,
+            ],
+            'posts_per_page' => [
+                'type' => 'integer',
+                'default' => 10,
+                'minimum' => 1,
+            ],
+            'base_url' => [
+                'type' => 'string',
+                'required' => true,
+                'sanitize_callback' => 'esc_url_raw',
+            ],
+            'empty_state_message' => [
+                'type' => 'string',
+                'default' => '',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+        ],
+    ]);
+}
+
+if (function_exists('add_action')) {
+    add_action('wp_ajax_matrix_programmes_therapies_archive', 'matrix_ajax_programmes_therapies_archive');
+    add_action('wp_ajax_nopriv_matrix_programmes_therapies_archive', 'matrix_ajax_programmes_therapies_archive');
+    add_action('rest_api_init', 'matrix_register_programmes_therapies_archive_rest_route');
+}

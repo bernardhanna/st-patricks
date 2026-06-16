@@ -18,6 +18,13 @@ test('about links grid column count resolves stored values and labels', function
         ->and(matrix_resolve_about_links_grid_columns(''))->toBe('3');
 });
 
+test('about links grid layout style resolves to supported values', function () {
+    expect(matrix_resolve_about_links_grid_layout_style('compact_row'))->toBe('compact_row')
+        ->and(matrix_resolve_about_links_grid_layout_style('image_feature'))->toBe('image_feature')
+        ->and(matrix_resolve_about_links_grid_layout_style(''))->toBe('image_feature')
+        ->and(matrix_resolve_about_links_grid_layout_style('invalid'))->toBe('image_feature');
+});
+
 test('about links grid card footer resolves tone with fallback', function () {
     expect(matrix_get_about_links_grid_card_footer_background('bg3'))->toBe('#E5E1F3')
         ->and(matrix_get_about_links_grid_card_footer_background('unknown', '#F1F8F9'))->toBe('#F1F8F9');

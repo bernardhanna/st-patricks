@@ -49,7 +49,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
         </style>
         <div
           id="<?php echo esc_attr($section_id); ?>-track"
-          class="flex overflow-x-auto gap-3 pb-4 mb-4 scroll-smooth snap-x snap-mandatory"
+          class="flex overflow-x-auto gap-3 pb-4 mb-4 scroll-smooth snap-x snap-mandatory cursor-grab touch-pan-x select-none"
           role="region"
           aria-label="Stories (scroll horizontally)"
         >
@@ -125,7 +125,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
     <div class="hidden mx-auto w-full lg:block max-w-container_md">
       <div
         id="<?php echo esc_attr($section_id); ?>-desktop"
-        class="w-full stories-slider-desktop"
+        class="w-full stories-slider-desktop cursor-grab touch-pan-y select-none"
         role="region"
         aria-label="Stories carousel"
         aria-live="polite"
@@ -323,6 +323,51 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    if (slides.length > 1) {
+      var dragStartX = 0;
+      var dragStartY = 0;
+      var dragging = false;
+      var dragThreshold = 48;
+
+      wrap.addEventListener('pointerdown', function(e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        wrap.setPointerCapture(e.pointerId);
+        wrap.classList.add('cursor-grabbing');
+        wrap.classList.remove('cursor-grab');
+      });
+
+      function finishDesktopDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        wrap.classList.remove('cursor-grabbing');
+        wrap.classList.add('cursor-grab');
+
+        try {
+          wrap.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        var dx = e.clientX - dragStartX;
+        var dy = e.clientY - dragStartY;
+        if (Math.abs(dx) < dragThreshold || Math.abs(dx) < Math.abs(dy)) return;
+
+        if (dx > 0 && current > 0) {
+          show(current - 1);
+        } else if (dx < 0 && current < slides.length - 1) {
+          show(current + 1);
+        }
+      }
+
+      wrap.addEventListener('pointerup', finishDesktopDrag);
+      wrap.addEventListener('pointercancel', function() {
+        dragging = false;
+        wrap.classList.remove('cursor-grabbing');
+        wrap.classList.add('cursor-grab');
+      });
+    }
+
     show(0);
 
     window.addEventListener('resize', function(){
@@ -444,6 +489,47 @@ document.addEventListener('DOMContentLoaded', function() {
           updateUI();
         }
       });
+    });
+
+    // Mouse drag to scroll on touch/trackpad devices below lg
+    var dragScrollActive = false;
+    var dragScrollStartX = 0;
+    var dragScrollStartLeft = 0;
+
+    track.addEventListener('pointerdown', function(e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      dragScrollActive = true;
+      dragScrollStartX = e.clientX;
+      dragScrollStartLeft = track.scrollLeft;
+      track.setPointerCapture(e.pointerId);
+      track.classList.add('cursor-grabbing');
+      track.classList.remove('cursor-grab');
+    });
+
+    track.addEventListener('pointermove', function(e) {
+      if (!dragScrollActive) return;
+      track.scrollLeft = dragScrollStartLeft - (e.clientX - dragScrollStartX);
+    });
+
+    function endDragScroll(e) {
+      if (!dragScrollActive) return;
+      dragScrollActive = false;
+      track.classList.remove('cursor-grabbing');
+      track.classList.add('cursor-grab');
+
+      try {
+        track.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+
+      currentIndex = indexFromScroll();
+      updateUI();
+    }
+
+    track.addEventListener('pointerup', endDragScroll);
+    track.addEventListener('pointercancel', function() {
+      dragScrollActive = false;
+      track.classList.remove('cursor-grabbing');
+      track.classList.add('cursor-grab');
     });
 
     // Init

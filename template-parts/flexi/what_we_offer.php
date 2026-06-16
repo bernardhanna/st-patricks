@@ -200,49 +200,61 @@ if (!empty($services) && is_array($services)) {
                 <?php if ($service_rows !== []) : ?>
                     <div class="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 lg:grid-cols-2">
                         <?php foreach ($service_rows as $service) : ?>
-                            <article class="group flex min-h-[140px] gap-6">
-                                <?php matrix_render_what_we_offer_service_rail($service); ?>
+                            <article class="w-full">
+                                <?php if ($service['has_link']) : ?>
+                                    <a
+                                        href="<?php echo esc_url($service['link']['url']); ?>"
+                                        target="<?php echo esc_attr($service['link']['target'] ?? '_self'); ?>"
+                                        class="group flex min-h-[140px] gap-6 rounded transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                                        aria-label="<?php echo esc_attr($service['title'] ?: ($service['link']['title'] ?? 'View service')); ?>"
+                                        <?php if (($service['link']['target'] ?? '_self') === '_blank') { ?>
+                                            rel="noopener noreferrer"
+                                        <?php } ?>
+                                    >
+                                <?php else : ?>
+                                    <div class="group flex min-h-[140px] gap-6">
+                                <?php endif; ?>
 
-                                <div class="flex min-w-0 flex-1 flex-col justify-start">
-                                    <?php if ($service['title'] !== '') : ?>
-                                        <h3 class="text-2xl font-semibold leading-tight text-[#1E244B] max-sm:text-xl">
-                                            <?php if ($service['has_link']) : ?>
-                                                <a
-                                                    href="<?php echo esc_url($service['link']['url']); ?>"
-                                                    target="<?php echo esc_attr($service['link']['target'] ?? '_self'); ?>"
-                                                    class="rounded-[2px] text-inherit transition-colors duration-200 hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6FC9C0] focus-visible:ring-offset-4"
-                                                >
-                                                    <span><?php echo esc_html($service['title']); ?></span>
+                                    <?php matrix_render_what_we_offer_service_rail($service); ?>
 
-                                                    <?php if ($service['show_icon']) : ?>
-                                                        <svg
-                                                            width="24" height="24" viewBox="0 0 24 24"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            class="ml-2 inline-block h-6 w-6 align-middle text-[#001F33] transition-colors duration-200"
-                                                            aria-hidden="true"
-                                                        >
-                                                            <path
-                                                                d="M8 4L16 12L8 20"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                            />
-                                                        </svg>
-                                                    <?php endif; ?>
-                                                </a>
-                                            <?php else : ?>
-                                                <?php echo esc_html($service['title']); ?>
-                                            <?php endif; ?>
-                                        </h3>
-                                    <?php endif; ?>
+                                    <div class="flex min-w-0 flex-1 flex-col justify-start">
+                                        <?php if ($service['title'] !== '') : ?>
+                                            <div class="flex gap-2 items-center self-start text-2xl font-semibold leading-tight text-[#1E244B] max-sm:text-xl">
+                                                <h3 class="text-inherit transition-colors duration-200 group-hover:text-[#024B79]">
+                                                    <?php echo esc_html($service['title']); ?>
+                                                </h3>
 
-                                    <?php if ($service['description'] !== '') : ?>
-                                        <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
-                                            <?php echo matrix_kses_rich_text($service['description']); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
+                                                <?php if ($service['show_icon']) : ?>
+                                                    <svg
+                                                        width="24" height="24" viewBox="0 0 24 24"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-6 w-6 shrink-0 text-[#001F33] transition-colors duration-200 group-hover:text-[#024B79]"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <path
+                                                            d="M8 4L16 12L8 20"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                        />
+                                                    </svg>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if ($service['description'] !== '') : ?>
+                                            <div class="mt-4 text-base font-medium leading-7 text-[#08284B] wp_editor">
+                                                <?php echo matrix_kses_rich_text($service['description']); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                <?php if ($service['has_link']) : ?>
+                                    </a>
+                                <?php else : ?>
+                                    </div>
+                                <?php endif; ?>
                             </article>
                         <?php endforeach; ?>
                     </div>

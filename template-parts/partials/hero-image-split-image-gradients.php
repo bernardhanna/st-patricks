@@ -8,13 +8,13 @@ $layout = (string) ($args['layout'] ?? 'split');
 <?php if ($layout === 'stacked') { ?>
     <div
         class="absolute inset-0 pointer-events-none"
-        style="background: linear-gradient(to bottom, <?php echo esc_attr($gradient_solid); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 55%, <?php echo esc_attr($gradient_clear); ?> 100%);"
+        style="background: <?php echo esc_attr(matrix_build_hero_image_split_stacked_image_gradient($gradient_clear, $gradient_soft, $gradient_solid)); ?>;"
         aria-hidden="true"
     ></div>
 <?php } else { ?>
     <div
         class="absolute inset-0 pointer-events-none lg:hidden"
-        style="background: linear-gradient(to bottom, <?php echo esc_attr($gradient_clear); ?> 0%, <?php echo esc_attr($gradient_soft); ?> 55%, <?php echo esc_attr($gradient_solid); ?> 100%);"
+        style="background: <?php echo esc_attr(matrix_build_hero_image_split_mobile_bottom_fade_gradient($gradient_clear, $gradient_soft, $gradient_solid)); ?>;"
         aria-hidden="true"
     ></div>
     <div

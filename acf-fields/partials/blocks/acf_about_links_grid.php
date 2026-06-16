@@ -77,6 +77,16 @@ $about_links_grid
         ->endRepeater()
 
     ->addTab('design_tab', ['label' => 'Design'])
+        ->addSelect('layout_style', [
+            'label' => 'Layout Style',
+            'instructions' => 'Image feature matches the About Us landing grid (Figma 2780:3457). Compact row is a horizontal thumbnail alternative.',
+            'choices' => [
+                'image_feature' => 'Image Feature (large image)',
+                'compact_row' => 'Compact Row (thumbnail + title)',
+            ],
+            'default_value' => 'image_feature',
+            'ui' => 1,
+        ])
         ->addColorPicker('bg_color', [
             'label' => 'Background Color',
             'default_value' => '#FFFFFF',

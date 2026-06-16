@@ -430,6 +430,7 @@ if (! function_exists('matrix_seed_advocacy_landing_rows')) {
                 'heading_color' => '#1E244B',
                 'intro_color' => '#4A4B37',
                 'columns' => '3',
+                'layout_style' => 'image_feature',
             ]),
             matrix_page_seed_strip_padding([
                 'acf_fc_layout' => 'content_cta',
