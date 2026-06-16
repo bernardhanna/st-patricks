@@ -19,7 +19,9 @@ $card_bg_color    = (string) (get_sub_field('card_bg_color') ?: '#F1F8F9');
 $card_title_color = get_sub_field('card_title_color') ?: '#1E244B';
 $card_desc_color  = get_sub_field('card_desc_color') ?: '#08284B';
 $columns_raw      = (string) (get_sub_field('columns') ?: '3');
-$columns          = preg_match('/[234]/', $columns_raw, $matches) ? $matches[0] : '3';
+$columns          = function_exists('matrix_resolve_about_links_grid_columns')
+    ? matrix_resolve_about_links_grid_columns($columns_raw)
+    : (preg_match('/[234]/', $columns_raw, $matches) ? $matches[0] : '3');
 
 $allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
 if (! in_array($heading_tag, $allowed_tags, true)) {
@@ -123,12 +125,12 @@ $grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
                             <?php endif; ?>
 
                             <div
-                                class="flex flex-1 items-center p-6"
+                                class="flex flex-1 items-start p-6"
                                 style="background-color: <?php echo esc_attr($footer_background); ?>;"
                             >
                                 <div class="flex min-w-0 w-full flex-col gap-2">
                                     <?php if ($title) : ?>
-                                        <div class="flex w-full items-center justify-between gap-4">
+                                        <div class="flex w-full items-start justify-between gap-4">
                                             <h3 class="min-w-0 font-primary text-[20px] font-semibold leading-6 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]"
                                                 style="color: <?php echo esc_attr($card_title_color); ?>;">
                                                 <?php echo esc_html($title); ?>

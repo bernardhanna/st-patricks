@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * Pastel card backgrounds for the multidisciplinary team grid (Figma 4642:3295).
+ *
+ * @return array<string, string>
+ */
+function matrix_get_multidisciplinary_team_grid_tone_backgrounds(): array
+{
+    return [
+        'teal' => '#CDF1ED',
+        'green' => '#E3F3D5',
+        'lavender' => '#E8E2F7',
+        'pink' => '#F8E4F2',
+        'coral' => '#F9DBD8',
+        'yellow' => '#F8F1D1',
+    ];
+}
+
 function matrix_normalize_multidisciplinary_team_cards($cards)
 {
     $allowed_tones = ['teal', 'green', 'yellow', 'lavender', 'pink', 'coral'];

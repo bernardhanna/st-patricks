@@ -2,6 +2,17 @@
 
 require_once dirname(__DIR__, 2) . '/inc/team-grid-functions.php';
 
+test('multidisciplinary team grid tone backgrounds match figma 4642:3295', function () {
+    $backgrounds = matrix_get_multidisciplinary_team_grid_tone_backgrounds();
+
+    expect($backgrounds['teal'])->toBe('#CDF1ED')
+        ->and($backgrounds['green'])->toBe('#E3F3D5')
+        ->and($backgrounds['lavender'])->toBe('#E8E2F7')
+        ->and($backgrounds['pink'])->toBe('#F8E4F2')
+        ->and($backgrounds['coral'])->toBe('#F9DBD8')
+        ->and($backgrounds['yellow'])->toBe('#F8F1D1');
+});
+
 test('multidisciplinary team cards are normalized for template rendering', function () {
     expect(function_exists('matrix_normalize_multidisciplinary_team_cards'))->toBeTrue();
 

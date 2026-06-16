@@ -24,3 +24,21 @@ function matrix_get_about_links_grid_card_footer_background(string $card_tone, s
 
     return $fallback !== '' ? $fallback : '#F1F8F9';
 }
+
+/**
+ * Normalize the desktop column count for About Links Grid.
+ */
+function matrix_resolve_about_links_grid_columns($value = ''): string
+{
+    $value = trim((string) $value);
+
+    if (preg_match('/^([234])(?:\s*columns?)?$/i', $value, $matches)) {
+        return $matches[1];
+    }
+
+    if (in_array($value, ['2', '3', '4'], true)) {
+        return $value;
+    }
+
+    return '3';
+}

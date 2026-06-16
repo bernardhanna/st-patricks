@@ -295,23 +295,13 @@ function matrix_resolve_content_accordion_vertical_padding($value = '')
     return trim((string) $value) === 'bottom_only' ? 'bottom_only' : 'default';
 }
 
-function matrix_content_accordion_layout_uses_section_padding(string $layout_style): bool
-{
-    return in_array(matrix_resolve_content_accordion_layout_style($layout_style), ['policies_page', 'directions_page'], true);
-}
-
 function matrix_get_content_accordion_vertical_padding_classes(string $vertical_padding = 'default', string $layout_style = 'default'): string
 {
     $vertical_padding = matrix_resolve_content_accordion_vertical_padding($vertical_padding);
-    $uses_section_padding = matrix_content_accordion_layout_uses_section_padding($layout_style);
 
     if ($vertical_padding === 'bottom_only') {
         return 'pt-0 pb-12 xl:pt-0 xl:pb-[100px]';
     }
 
-    if ($uses_section_padding) {
-        return 'py-12 xl:py-[100px]';
-    }
-
-    return '';
+    return 'py-12 xl:py-[100px]';
 }

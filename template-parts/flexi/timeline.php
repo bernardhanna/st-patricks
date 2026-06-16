@@ -32,10 +32,9 @@ if ($items === []) {
 $heading_id = $section_id . '-heading';
 $allowed_item_tags = ['h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
 
-$wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
+$wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'py-12', 'lg:py-[100px]', 'max-xl:px-5', 'max-w-[63.625rem]'];
 
-
-$render_timeline_card = static function (array $item) use ($card_background_color, $allowed_item_tags) {
+$render_timeline_card = static function (array $item, bool $include_mobile_date = false) use ($card_background_color, $allowed_item_tags) {
     $item_heading_tag = $item['item_heading_tag'];
 
     if (! in_array($item_heading_tag, $allowed_item_tags, true)) {
@@ -59,6 +58,15 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
         class="flex h-full flex-col gap-[10px] rounded-[8px] p-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)] lg:p-8"
         style="background-color: <?php echo esc_attr($card_background_color); ?>;"
     >
+        <?php if ($include_mobile_date && $item['display_date'] !== '') { ?>
+            <time
+                datetime="<?php echo esc_attr($item['event_date']); ?>"
+                class="font-primary text-[3rem] font-semibold leading-[3.5rem] tracking-[-0.036rem] text-[#08284B] lg:hidden"
+            >
+                <?php echo esc_html($item['display_date']); ?>
+            </time>
+        <?php } ?>
+
         <?php if ($image_id > 0 || $image_url !== '') { ?>
             <div class="h-[161px] w-full overflow-hidden rounded-[6px] bg-[#F8F6F3]">
                 <?php
@@ -80,21 +88,12 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
             </div>
         <?php } ?>
 
-        <?php if ($item['display_date'] !== '') { ?>
-            <time
-                datetime="<?php echo esc_attr($item['event_date']); ?>"
-                class="font-primary text-[12px] font-semibold uppercase leading-[18px] tracking-[0.08em] text-[#08284B] md:hidden"
-            >
-                <?php echo esc_html($item['display_date']); ?>
-            </time>
-        <?php } ?>
-
-        <<?php echo esc_attr($item_heading_tag); ?> class="font-primary text-[24px] font-semibold leading-[32px] tracking-[-0.144px] text-[#1E244B]">
+        <<?php echo esc_attr($item_heading_tag); ?> class="font-primary text-[1.5rem] font-semibold leading-[1.75rem] tracking-[-0.009rem] text-[#1E244B] lg:text-[24px] lg:leading-[32px] lg:tracking-[-0.144px]">
             <?php echo esc_html($item['item_heading']); ?>
         </<?php echo esc_attr($item_heading_tag); ?>>
 
         <?php if (trim(strip_tags($item['item_text'])) !== '') { ?>
-            <div class="wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
+            <div class="wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[1rem] [&_p]:font-medium [&_p]:leading-[1.75rem] [&_p]:text-[#08284B]">
                 <?php echo matrix_kses_rich_text($item['item_text']); ?>
             </div>
         <?php } ?>
@@ -117,6 +116,20 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
     </article>
     <?php
 };
+
+$render_timeline_date = static function (array $item, string $classes = '') {
+    if ($item['display_date'] === '') {
+        return;
+    }
+    ?>
+    <time
+        datetime="<?php echo esc_attr($item['event_date']); ?>"
+        class="font-primary text-[3rem] font-semibold leading-[3.5rem] tracking-[-0.036rem] text-[#08284B] <?php echo esc_attr($classes); ?>"
+    >
+        <?php echo esc_html($item['display_date']); ?>
+    </time>
+    <?php
+};
 ?>
 
 <section
@@ -126,7 +139,7 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
     aria-labelledby="<?php echo esc_attr($heading_id); ?>"
 >
     <div class="<?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
-        <header class="flex w-full max-w-[690px] flex-col items-center text-center mx-auto">
+        <header class="mx-auto flex w-full max-w-[690px] flex-col items-center text-center">
             <<?php echo esc_attr($heading_tag); ?>
                 id="<?php echo esc_attr($heading_id); ?>"
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
@@ -146,44 +159,103 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
         <ol class="mt-12 flex w-full flex-col lg:mt-16">
             <?php foreach ($items as $index => $item) { ?>
                 <?php
+                $is_first = $index === 0;
                 $is_last = $index === count($items) - 1;
                 $side = $item['side'];
-                $card_column_class = $side === 'right' ? 'md:order-3' : 'md:order-1';
-                $date_column_class = $side === 'right' ? 'md:order-1 md:justify-start' : 'md:order-3 md:justify-end';
+                $has_footer_cta = is_array($footer_button_link);
+                $desktop_date_classes = $side === 'right'
+                    ? 'lg:justify-end lg:text-right'
+                    : 'lg:justify-start lg:text-left';
                 ?>
 
-                <li class="w-full <?php echo esc_attr($is_last ? '' : 'pb-8 lg:pb-16'); ?>">
-                    <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_100px_minmax(0,1fr)] md:items-stretch md:gap-8">
-                        <div class="w-full <?php echo esc_attr($card_column_class); ?>">
-                            <?php $render_timeline_card($item); ?>
-                        </div>
-
-                        <div class="relative hidden w-full md:order-2 md:flex md:flex-col md:items-center">
+                <li class="w-full <?php echo esc_attr($is_last && $has_footer_cta ? 'lg:pb-16' : ($is_last ? '' : 'lg:pb-16')); ?>">
+                    <?php /* Mobile / tablet: left spine + date above card (Figma 3279:15332) */ ?>
+                    <div class="grid w-full grid-cols-[31px_minmax(0,1fr)] lg:hidden">
+                        <div class="relative flex flex-col items-center self-stretch">
                             <span
-                                class="relative z-[2] inline-block h-5 w-5 rounded-full border-[3px] border-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
+                                class="absolute top-0 left-1/2 h-[50px] w-[2px] -translate-x-1/2"
+                                style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span
+                                class="relative z-[2] mt-[50px] inline-block h-5 w-5 shrink-0 rounded-full border-[3px] border-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
                                 style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
                                 aria-hidden="true"
                             ></span>
 
                             <?php if (! $is_last) { ?>
                                 <span
-                                    class="absolute left-1/2 top-5 h-[calc(100%+2rem)] w-px -translate-x-1/2 lg:h-[calc(100%+4rem)]"
+                                    class="absolute top-[4.375rem] bottom-0 left-1/2 w-[2px] -translate-x-1/2"
+                                    style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                    aria-hidden="true"
+                                ></span>
+                            <?php } elseif ($has_footer_cta) { ?>
+                                <span
+                                    class="absolute top-[4.375rem] -bottom-16 left-1/2 w-[2px] -translate-x-1/2"
                                     style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
                                     aria-hidden="true"
                                 ></span>
                             <?php } ?>
                         </div>
 
-                        <div class="hidden w-full md:flex md:items-start <?php echo esc_attr($date_column_class); ?>">
-                            <?php if ($item['display_date'] !== '') { ?>
-                                <time
-                                    datetime="<?php echo esc_attr($item['event_date']); ?>"
-                                    class="font-primary text-[40px] font-semibold leading-[48px] tracking-[-0.48px] text-[#08284B] lg:text-[48px] lg:leading-[56px] lg:tracking-[-0.576px]"
-                                >
-                                    <?php echo esc_html($item['display_date']); ?>
-                                </time>
+                        <div class="flex min-w-0 flex-col gap-2.5 pl-8 pt-8">
+                            <?php $render_timeline_date($item); ?>
+                            <?php $render_timeline_card($item); ?>
+                        </div>
+                    </div>
+
+                    <?php /* Desktop: alternating card/date around centre spine (Figma 3279:19849) */ ?>
+                    <div class="hidden w-full lg:grid lg:grid-cols-[minmax(0,1fr)_100px_minmax(0,1fr)] lg:items-start">
+                        <?php if ($side === 'left') { ?>
+                            <div class="w-full lg:col-start-1">
+                                <?php $render_timeline_card($item); ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="flex w-full lg:col-start-1 lg:items-start <?php echo esc_attr($desktop_date_classes); ?>">
+                                <?php $render_timeline_date($item); ?>
+                            </div>
+                        <?php } ?>
+
+                        <div class="relative flex flex-col items-center self-stretch lg:col-start-2">
+                            <?php if ($is_first) { ?>
+                                <span
+                                    class="absolute top-0 left-1/2 h-5 w-[2px] -translate-x-1/2"
+                                    style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                    aria-hidden="true"
+                                ></span>
+                            <?php } ?>
+
+                            <span
+                                class="relative z-[2] inline-block h-5 w-5 shrink-0 rounded-full border-[3px] border-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)] <?php echo esc_attr($is_first ? 'mt-5' : ''); ?>"
+                                style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                aria-hidden="true"
+                            ></span>
+
+                            <?php if (! $is_last) { ?>
+                                <span
+                                    class="absolute left-1/2 w-[2px] -translate-x-1/2 <?php echo esc_attr($is_first ? 'top-10' : 'top-5'); ?> h-[calc(100%+4rem)]"
+                                    style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                    aria-hidden="true"
+                                ></span>
+                            <?php } elseif ($has_footer_cta) { ?>
+                                <span
+                                    class="absolute -bottom-16 left-1/2 w-[2px] -translate-x-1/2 <?php echo esc_attr($is_first ? 'top-10' : 'top-5'); ?>"
+                                    style="background-color: <?php echo esc_attr($timeline_accent_color); ?>;"
+                                    aria-hidden="true"
+                                ></span>
                             <?php } ?>
                         </div>
+
+                        <?php if ($side === 'left') { ?>
+                            <div class="flex w-full lg:col-start-3 lg:items-start <?php echo esc_attr($desktop_date_classes); ?>">
+                                <?php $render_timeline_date($item); ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="w-full lg:col-start-3">
+                                <?php $render_timeline_card($item); ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </li>
             <?php } ?>
@@ -191,7 +263,7 @@ $render_timeline_card = static function (array $item) use ($card_background_colo
 
         <?php if (is_array($footer_button_link)) { ?>
             <?php $footer_target = (string) ($footer_button_link['target'] ?? '_self'); ?>
-            <div class="mt-12 flex w-full justify-center lg:mt-16">
+            <div class="flex w-full justify-center">
                 <a
                     href="<?php echo esc_url($footer_button_link['url']); ?>"
                     target="<?php echo esc_attr($footer_target); ?>"

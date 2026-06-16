@@ -9,12 +9,12 @@ $content_accordion = new FieldsBuilder('content_accordion', [
 $content_accordion
     ->addTab('Content', ['label' => 'Content'])
         ->addSelect('layout_style', [
-            'label' => 'Layout Style',
-            'instructions' => 'Use the directions page layout for location travel accordions with icon rows.',
+            'label' => 'Accordion layout',
+            'instructions' => 'Choose the layout that matches your content: general text sections, travel directions with icons, or policy pages with PDFs and download links.',
             'choices' => [
-                'default' => 'Default',
-                'directions_page' => 'Directions Page',
-                'policies_page' => 'Policies Page',
+                'default' => 'Standard — text sections (optional icons)',
+                'directions_page' => 'Travel & directions — icon rows (car, bus, train)',
+                'policies_page' => 'Documents & links — PDF grids and link cards',
             ],
             'default_value' => 'default',
             'ui' => 1,
@@ -41,7 +41,7 @@ $content_accordion
             ])
                 ->addSelect('row_type', [
                     'label' => 'Row Type',
-                    'instructions' => 'Used by the policies page layout for PDF grids and link lists.',
+                    'instructions' => 'Only used with the “Documents & links” layout for PDF grids and link lists.',
                     'choices' => [
                         'text' => 'Text',
                         'pdf_grid' => 'PDF Grid',
@@ -53,7 +53,7 @@ $content_accordion
                 ])
                 ->addSelect('icon_key', [
                     'label' => 'Icon',
-                    'instructions' => 'Used by the directions page layout when no custom icon image is uploaded.',
+                    'instructions' => 'Only used with the “Travel & directions” layout when no custom icon image is uploaded.',
                     'choices' => [
                         'car' => 'Car',
                         'map_pin' => 'Map pin',
@@ -181,7 +181,7 @@ $content_accordion
             'label' => 'Vertical Padding',
             'instructions' => 'Use “Bottom only” when this block should sit flush against the section above on desktop.',
             'choices' => [
-                'default' => 'Top & bottom (policies/directions layouts)',
+                'default' => 'Top & bottom',
                 'bottom_only' => 'Bottom only (no top padding)',
             ],
             'default_value' => 'default',

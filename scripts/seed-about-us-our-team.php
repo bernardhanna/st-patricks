@@ -197,7 +197,7 @@ $multidisciplinary_cards = [
     [
         'title' => 'Social Workers',
         'description' => '<p>Social work help is provided through information, advice, counselling and advocacy. It is often directed towards enabling service users to deal with social and emotional concerns and to access beneficial services and resources relevant to rehabilitation, social care, accommodation and welfare rights.</p>',
-        'card_tone' => 'lavender',
+        'card_tone' => 'pink',
         'link' => ['title' => 'Social Workers', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
@@ -209,19 +209,19 @@ $multidisciplinary_cards = [
     [
         'title' => 'Occupational Therapists',
         'description' => '<p>Occupational therapy is concerned with what we do in our daily lives and how this both affects and is affected by our health. Occupational therapists support you to take part in everyday activities that matter to you, contributing to your wellbeing, independence and satisfaction in daily life.</p>',
-        'card_tone' => 'pink',
+        'card_tone' => 'coral',
         'link' => ['title' => 'Occupational Therapists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Clinical Psychologists',
         'description' => '<p>In addition to clinical psychologists working within MDTs, the Clinical Psychology Department runs a number of psychology-based therapeutic programmes both at an inpatient and day service level.</p>',
-        'card_tone' => 'yellow',
+        'card_tone' => 'lavender',
         'link' => ['title' => 'Clinical Psychologists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
     [
         'title' => 'Pharmacists',
         'description' => '<p>Pharmacists work with our medical and nursing colleagues to promote safe and effective use of medicines. They discuss the most appropriate medicines for you, check prescriptions are safe, and provide information about new medicines that have been prescribed.</p>',
-        'card_tone' => 'coral',
+        'card_tone' => 'yellow',
         'link' => ['title' => 'Pharmacists', 'url' => $home . 'about-us/our-team/', 'target' => ''],
     ],
 ];

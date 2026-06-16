@@ -26,14 +26,7 @@ if ($cards === []) {
     return;
 }
 
-$tone_backgrounds = [
-    'teal' => '#D9F0F4',
-    'green' => '#E2EBCF',
-    'yellow' => '#F6E9CF',
-    'lavender' => '#E5E1F3',
-    'pink' => '#F3DDE8',
-    'coral' => '#F7DDD2',
-];
+$tone_backgrounds = matrix_get_multidisciplinary_team_grid_tone_backgrounds();
 ?>
 
 <section

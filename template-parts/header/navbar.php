@@ -319,7 +319,7 @@ document.addEventListener('alpine:init', () => {
     <?php if ($enable_search) : ?>
       <button
         type="button"
-        class="flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden lg:flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         @click.prevent="openSearch()"
         :aria-expanded="searchOpen ? 'true' : 'false'"
         aria-controls="navbar-search-modal"
