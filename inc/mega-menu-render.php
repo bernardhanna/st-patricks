@@ -147,7 +147,7 @@ if (! function_exists('matrix_render_nav_mega_menu_pointer_graphic')) {
         $filter_id = 'mega-menu-pointer-' . wp_unique_id();
 
         ?>
-        <svg xmlns="http://www.w3.org/2000/svg" width="76" height="48" viewBox="0 0 76 48" fill="none" class="block h-[48px] w-[76px] -translate-x-1/2" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="76" height="48" viewBox="0 0 76 48" fill="none" class="block h-[25px] w-[76px] -translate-x-1/2" aria-hidden="true">
             <g filter="url(#<?php echo esc_attr($filter_id); ?>)">
                 <path d="M12 5.74743e-07L36.5858 24.5858C37.3668 25.3668 38.6332 25.3668 39.4142 24.5858L64 0" fill="white"/>
             </g>

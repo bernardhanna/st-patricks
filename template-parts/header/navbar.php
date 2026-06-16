@@ -303,10 +303,10 @@ document.addEventListener('alpine:init', () => {
     </div>
 
     <div
-      class="pointer-events-none fixed z-[56] hidden lg:block"
+      class="pointer-events-none fixed top-[var(--site-header-height,120px)] z-[56] hidden lg:block"
       x-show="$store.navMega.activeKey"
       x-cloak
-      :style="'left:' + $store.navMega.pointerLeft + 'px; top: calc(var(--site-header-height, 120px) - 48px);'"
+      :style="'left:' + $store.navMega.pointerLeft + 'px;'"
       aria-hidden="true"
     >
       <?php matrix_render_nav_mega_menu_pointer_graphic(); ?>
