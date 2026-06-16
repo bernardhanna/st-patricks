@@ -215,7 +215,7 @@ document.addEventListener('alpine:init', () => {
   id="site-nav"
   x-data="navbarSearch()"
   x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1024) { closeSearch() } if (window.innerWidth >= 1200) { $store.nav.open = false } })"
-  x-effect="if ($store.nav.open) document.body.style.overflow = 'hidden'"
+  x-effect="$store.nav.open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
   class="overflow-visible bg-white"
   role="banner"
   @open-navbar-search="openSearch()"
@@ -324,19 +324,139 @@ document.addEventListener('alpine:init', () => {
   <div class="flex gap-4 items-center">
     <!-- Search -->
     <?php if ($enable_search) : ?>
-      <button
-        type="button"
-        class="hidden lg:flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-        @click.prevent="openSearch()"
-        :aria-expanded="searchOpen ? 'true' : 'false'"
-        aria-controls="navbar-search-modal"
-        aria-label="Open search"
+      <div
+        class="relative hidden lg:block"
+        @click.outside="closeSearch()"
+        @keydown.escape.window="searchOpen && closeSearch()"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M20.9999 21L16.6499 16.65" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+        <button
+          type="button"
+          class="flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+          @click.prevent="toggleSearch()"
+          :aria-expanded="searchOpen ? 'true' : 'false'"
+          aria-controls="navbar-search-panel"
+          aria-label="Open search"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20.9999 21L16.6499 16.65" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div
+          id="navbar-search-panel"
+          x-show="searchOpen"
+          x-cloak
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 -translate-y-1"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-150"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          class="absolute right-0 top-full z-[90] mt-2 w-[536px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl"
+          role="search"
+          aria-labelledby="navbar-search-title"
+        >
+          <h2 id="navbar-search-title" class="sr-only">Search and FAQ</h2>
+          <div class="flex justify-end px-3 pt-3 bg-white">
+            <button
+              type="button"
+              class="flex justify-center items-center w-8 h-8 rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
+              aria-label="Close search"
+              @click="closeSearch()"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <form role="search" class="relative border-b border-sky-100" @submit.prevent="submitSearch()">
+            <label for="navbar-search-input" class="sr-only">Search by keyword, symptom, or page</label>
+            <input
+              id="navbar-search-input"
+              x-ref="searchInput"
+              x-model="query"
+              @input="handleQueryChange()"
+              type="text"
+              placeholder="Search by keyword, symptom, or page"
+              class="pr-28 pl-5 w-full h-14 text-base text-gray-500 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            />
+
+            <button
+              type="submit"
+              class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white whitespace-nowrap rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+              aria-label="Search"
+            >
+              <span class="sr-only">Search</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 21L16.65 16.65" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Search</span>
+            </button>
+
+            <button
+              x-show="query.length > 0"
+              type="button"
+              class="flex absolute top-1/2 justify-center items-center w-6 h-6 -translate-y-1/2 right-[116px] rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
+              aria-label="Clear search"
+              @click="clearSearch(true)"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+
+          <section class="max-h-[min(70vh,420px)] overflow-y-auto bg-slate-50" aria-label="Search results and FAQ links">
+            <template x-if="query.trim().length >= 2">
+              <div>
+                <div x-show="loading" class="px-5 py-4 text-sm text-slate-600">Searching...</div>
+                <div x-show="!loading && error" class="px-5 py-4 text-sm text-red-600" x-text="error"></div>
+                <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
+                  <template x-for="item in results" :key="item.id + '-' + item.subtype">
+                    <li>
+                      <a
+                        :href="item.url"
+                        class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                      >
+                        <span class="text-base font-medium text-slate-900" x-text="item.title"></span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </li>
+                  </template>
+                </ul>
+                <div x-show="!loading && !error && !results.length" class="px-5 py-4 text-sm text-slate-600">
+                  No results found. Try a different keyword.
+                </div>
+              </div>
+            </template>
+
+            <template x-if="query.trim().length < 2">
+              <nav aria-label="FAQ categories">
+                <ul class="p-0 m-0 list-none">
+                  <template x-for="faq in faqLinks" :key="faq.title">
+                    <li>
+                      <a
+                        :href="faq.url"
+                        class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                      >
+                        <span class="text-base font-medium text-slate-900" x-text="faq.title"></span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </li>
+                  </template>
+                </ul>
+              </nav>
+            </template>
+          </section>
+        </div>
+      </div>
     <?php endif; ?>
 
     <!-- Looking for help -->
@@ -372,120 +492,4 @@ document.addEventListener('alpine:init', () => {
     <?php get_template_part('template-parts/header/navbar/mobile'); ?>
   </div>
 </nav>
-
-<?php if ($enable_search) : ?>
-  <div
-    id="navbar-search-modal"
-    x-show="searchOpen"
-    x-cloak
-    x-transition.opacity
-    @click.self="closeSearch()"
-    @keydown.escape.window="closeSearch()"
-    class="inset-0 z-[120] flex justify-center items-start p-4 pt-20 bg-black/40"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="navbar-search-title"
-  >
-    <div class="overflow-hidden w-full bg-white rounded-md shadow-xl max-w-[536px]">
-      <h2 id="navbar-search-title" class="sr-only">Search and FAQ</h2>
-      <div class="flex justify-end px-3 pt-3 bg-white">
-        <button
-          type="button"
-          class="flex justify-center items-center w-8 h-8 rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
-          aria-label="Close search"
-          @click="closeSearch()"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-
-      <form role="search" class="relative border-b border-sky-100" @submit.prevent="submitSearch()">
-        <label for="navbar-search-input" class="sr-only">Search by keyword, symptom, or page</label>
-        <input
-          id="navbar-search-input"
-          x-ref="searchInput"
-          x-model="query"
-          @input="handleQueryChange()"
-          type="text"
-          placeholder="Search by keyword, symptom, or page"
-          class="pr-28 pl-5 w-full h-14 text-base text-gray-500 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        />
-
-        <button
-          type="submit"
-          class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white whitespace-nowrap rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-          aria-label="Search"
-        >
-          <span class="sr-only">Search</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21 21L16.65 16.65" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span>Search</span>
-        </button>
-
-        <button
-          x-show="query.length > 0"
-          type="button"
-          class="flex absolute top-1/2 justify-center items-center w-6 h-6 -translate-y-1/2 right-[116px] rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
-          aria-label="Clear search"
-          @click="clearSearch(true)"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </form>
-
-      <section class="bg-slate-50" aria-label="Search results and FAQ links">
-        <template x-if="query.trim().length >= 2">
-          <div>
-            <div x-show="loading" class="px-5 py-4 text-sm text-slate-600">Searching...</div>
-            <div x-show="!loading && error" class="px-5 py-4 text-sm text-red-600" x-text="error"></div>
-            <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
-              <template x-for="item in results" :key="item.id + '-' + item.subtype">
-                <li>
-                  <a
-                    :href="item.url"
-                    class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
-                  >
-                    <span class="text-base font-medium text-slate-900" x-text="item.title"></span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </a>
-                </li>
-              </template>
-            </ul>
-            <div x-show="!loading && !error && !results.length" class="px-5 py-4 text-sm text-slate-600">
-              No results found. Try a different keyword.
-            </div>
-          </div>
-        </template>
-
-        <template x-if="query.trim().length < 2">
-          <nav aria-label="FAQ categories">
-            <ul class="p-0 m-0 list-none">
-              <template x-for="faq in faqLinks" :key="faq.title">
-                <li>
-                  <a
-                    :href="faq.url"
-                    class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
-                  >
-                    <span class="text-base font-medium text-slate-900" x-text="faq.title"></span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </a>
-                </li>
-              </template>
-            </ul>
-          </nav>
-        </template>
-      </section>
-    </div>
-  </div>
-<?php endif; ?>
 </section>
