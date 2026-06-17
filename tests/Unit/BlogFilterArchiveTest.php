@@ -99,3 +99,44 @@ test('blog filter archive pagination collapses large page counts', function () {
         ['type' => 'page', 'page' => 32],
     ]);
 });
+
+test('filter archive controls stack search above filters on mobile', function () {
+    expect(matrix_get_filter_archive_controls_class_names())->toContain('flex-col-reverse')
+        ->and(matrix_get_filter_archive_controls_class_names())->toContain('lg:items-center')
+        ->and(matrix_get_filter_archive_controls_class_names('start'))->toContain('lg:items-start');
+});
+
+test('filter archive card grid uses one column on the smallest screens', function () {
+    expect(matrix_get_filter_archive_card_grid_class_names())->toContain('grid-cols-1')
+        ->and(matrix_get_filter_archive_card_grid_class_names())->toContain('xxs:grid-cols-2')
+        ->and(matrix_get_filter_archive_card_grid_class_names())->toContain('xl:grid-cols-3');
+});
+
+test('filter archive pagination active page uses primary blue dark with white text', function () {
+    expect(matrix_build_filter_archive_pagination_active_inline_style())->toBe('border-color: #024B79; background-color: #024B79; color: #FFFFFF;');
+});
+
+test('filter archive pagination uses compact mobile item sets', function () {
+    $item_sets = matrix_build_filter_archive_pagination_item_sets(15, 32);
+
+    expect($item_sets['mobile'])->toBe([
+        ['type' => 'page', 'page' => 15],
+    ])->and($item_sets['desktop'])->toBe([
+        ['type' => 'page', 'page' => 1],
+        ['type' => 'ellipsis'],
+        ['type' => 'page', 'page' => 14],
+        ['type' => 'page', 'page' => 15],
+        ['type' => 'page', 'page' => 16],
+        ['type' => 'ellipsis'],
+        ['type' => 'page', 'page' => 32],
+    ]);
+});
+
+test('filter archive cards use compact mobile typography tokens', function () {
+    expect(matrix_get_filter_archive_card_title_class_names())->toContain('text-[1.125rem]')
+        ->and(matrix_get_filter_archive_card_title_class_names())->toContain('tracking-[-0.00675rem]')
+        ->and(matrix_get_filter_archive_card_date_class_names())->toContain('text-[0.875rem]')
+        ->and(matrix_get_filter_archive_card_date_class_names())->toContain('tracking-[-0.00525rem]')
+        ->and(matrix_get_filter_archive_card_excerpt_class_names())->toContain('text-[0.75rem]')
+        ->and(matrix_get_filter_archive_card_excerpt_class_names())->toContain('leading-4');
+});

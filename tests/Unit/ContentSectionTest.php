@@ -76,6 +76,16 @@ test('flexi section wrapper keeps standard max width and padding', function () {
         ->and(matrix_get_flexi_section_wrapper_class_names(['lg:grid']))->toContain('lg:grid');
 });
 
+test('shared section vertical padding resolves default standard and bottom only modes', function () {
+    expect(matrix_resolve_section_vertical_padding('bottom_only'))->toBe('bottom_only')
+        ->and(matrix_resolve_section_vertical_padding('standard'))->toBe('standard')
+        ->and(matrix_resolve_section_vertical_padding('unknown'))->toBe('default');
+
+    expect(matrix_get_section_vertical_padding_classes('default', 'lg:py-[100px]'))->toBe('py-12 lg:py-[100px]')
+        ->and(matrix_get_section_vertical_padding_classes('standard', 'lg:py-[100px]'))->toBe('py-12')
+        ->and(matrix_get_section_vertical_padding_classes('bottom_only', 'lg:py-24'))->toBe('pt-0 pb-12 lg:pt-0 lg:pb-24');
+});
+
 test('content background style supports preset and custom values', function () {
     expect(matrix_get_content_background_style('white'))->toBe('background-color: #FFFFFF;')
         ->and(matrix_get_content_background_style('cream'))->toBe('background-color: #FBF8F3;')
@@ -83,7 +93,17 @@ test('content background style supports preset and custom values', function () {
         ->and(matrix_get_content_background_style('navy'))->toBe('background-color: #024B79;')
         ->and(matrix_get_content_background_style('color', '#E9E2F7', ''))->toContain('#E9E2F7')
         ->and(matrix_get_content_background_style('gradient', '', 'linear-gradient(135deg, #fff 0%, #000 100%)'))
-        ->toContain('linear-gradient(135deg, #fff 0%, #000 100%)');
+        ->toContain('linear-gradient(135deg, #fff 0%, #000 100%)')
+        ->and(matrix_get_content_background_style('image', '#FBF8F3', ''))->toContain('#FBF8F3');
+});
+
+test('content background image overlay resolves opacity and rgba output', function () {
+    expect(matrix_resolve_content_background_image_overlay_opacity('25'))->toBe(25)
+        ->and(matrix_resolve_content_background_image_overlay_opacity(''))->toBe(50)
+        ->and(matrix_get_content_background_image_overlay_style('', 50))->toBe('')
+        ->and(matrix_get_content_background_image_overlay_style('#024B79', 0))->toBe('')
+        ->and(matrix_get_content_background_image_overlay_style('#024B79', 50))
+        ->toBe('background-color: rgba(2, 75, 121, 0.50);');
 });
 
 test('content color scheme resolves inverse for navy backgrounds', function () {

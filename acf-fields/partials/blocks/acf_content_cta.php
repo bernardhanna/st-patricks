@@ -39,6 +39,16 @@ $content_cta
         ])
 
     ->addTab('Design', ['label' => 'Design'])
+        ->addSelect('layout_style', [
+            'label' => 'Layout',
+            'instructions' => 'Layout 2 uses a full-width background image with a colour tint beneath it.',
+            'choices' => [
+                'default' => 'Layout 1 (solid / gradient)',
+                'image_background' => 'Layout 2 (image background)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ])
         ->addSelect('background_type', [
             'label' => 'Background Type',
             'choices' => [
@@ -46,6 +56,15 @@ $content_cta
                 'gradient' => 'Gradient',
             ],
             'default_value' => 'color',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'default',
+                    ],
+                ],
+            ],
         ])
         ->addColorPicker('background_color', [
             'label' => 'Background Color',
@@ -53,6 +72,11 @@ $content_cta
             'default_value' => '#E9E2F7',
             'conditional_logic' => [
                 [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'default',
+                    ],
                     [
                         'field' => 'background_type',
                         'operator' => '==',
@@ -68,9 +92,102 @@ $content_cta
             'conditional_logic' => [
                 [
                     [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'default',
+                    ],
+                    [
                         'field' => 'background_type',
                         'operator' => '==',
                         'value' => 'gradient',
+                    ],
+                ],
+            ],
+        ])
+        ->addImage('background_image', [
+            'label' => 'Background Image',
+            'instructions' => 'Full-width background image for Layout 2.',
+            'return_format' => 'id',
+            'preview_size' => 'medium',
+            'library' => 'all',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_background',
+                    ],
+                ],
+            ],
+        ])
+        ->addColorPicker('background_tint_color', [
+            'label' => 'Background Tint',
+            'instructions' => 'Solid colour shown beneath the background image.',
+            'default_value' => '#F1F3DE',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_background',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('background_image_opacity', [
+            'label' => 'Background Image Opacity',
+            'instructions' => 'How visible the background image appears over the tint.',
+            'choices' => [
+                '0' => 'None',
+                '25' => '25%',
+                '50' => '50%',
+                '75' => '75%',
+                '100' => '100%',
+            ],
+            'default_value' => '50',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_background',
+                    ],
+                ],
+            ],
+        ])
+        ->addColorPicker('background_image_overlay_color', [
+            'label' => 'Background Image Overlay',
+            'instructions' => 'Optional extra colour tint over the image to improve text contrast.',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_background',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('background_image_overlay_opacity', [
+            'label' => 'Background Image Overlay Opacity',
+            'instructions' => 'How strong the overlay tint appears over the image.',
+            'choices' => [
+                '0' => 'None',
+                '25' => '25%',
+                '50' => '50%',
+                '75' => '75%',
+            ],
+            'default_value' => '50',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'image_background',
+                    ],
+                    [
+                        'field' => 'background_image_overlay_color',
+                        'operator' => '!=empty',
                     ],
                 ],
             ],

@@ -60,7 +60,7 @@ if ($latest_posts_query->have_posts()) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px]">
+    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px] w-full max-w-[1018px] mx-auto max-xl:px-5">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div class="max-w-[680px]">
                 <<?php echo esc_attr($heading_tag); ?>
@@ -88,7 +88,7 @@ if ($latest_posts_query->have_posts()) {
         </div>
 
         <?php if ($latest_post_cards !== []) { ?>
-            <div class="grid grid-cols-2 gap-x-8 gap-y-12 mt-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-y-16">
+            <div class="grid grid-cols-1 xxs:grid-cols-2 gap-x-8 gap-y-12 mt-12 lg:mt-16 lg:grid-cols-3 lg:gap-y-16">
                 <?php foreach ($latest_post_cards as $card) { ?>
                     <a
                         href="<?php echo esc_url($card['permalink']); ?>"

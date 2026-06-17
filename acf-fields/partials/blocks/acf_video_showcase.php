@@ -49,6 +49,15 @@ $video_showcase
             ],
             'default_value' => 'default',
         ])
+        ->addSelect('text_max_width', [
+            'label' => 'Text Max Width',
+            'instructions' => 'Use full width for heading, intro, and slide captions to span the content area.',
+            'choices' => [
+                'default' => 'Default (narrow text column)',
+                'full' => 'Full width',
+            ],
+            'default_value' => 'default',
+        ])
         ->addRepeater('slides', [
             'label' => 'Slides',
             'button_label' => 'Add Slide',
@@ -108,6 +117,17 @@ $video_showcase
             'label' => 'Section Background / Gradient',
             'instructions' => 'Use a CSS color or paste a full CSS gradient string.',
             'default_value' => 'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)',
+        ])
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Standard” to drop extra desktop padding, or “Bottom only” when this block should sit flush against the section above.',
+            'choices' => [
+                'default' => 'Top & bottom (100px desktop)',
+                'standard' => 'Standard (48px all breakpoints)',
+                'bottom_only' => 'Bottom only (no top padding on desktop)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
         ]);
 
 return $video_showcase;

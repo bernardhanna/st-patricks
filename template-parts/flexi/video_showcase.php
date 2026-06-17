@@ -6,6 +6,8 @@ $heading_tag = (string) get_sub_field('heading_tag');
 $intro = get_sub_field('intro');
 $layout_style = matrix_resolve_video_showcase_layout_style(get_sub_field('layout_style'));
 $video_surface_size = matrix_resolve_video_showcase_surface_size(get_sub_field('video_surface_size'));
+$text_max_width = matrix_resolve_video_showcase_text_width(get_sub_field('text_max_width'));
+$vertical_padding = matrix_resolve_video_showcase_vertical_padding(get_sub_field('vertical_padding'));
 $section_background = (string) get_sub_field('section_background');
 
 $show_heading = $heading !== '';
@@ -42,14 +44,14 @@ $show_slider_controls = $layout_style !== 'feature_single' && $slide_count > 1;
 $initial_slide = $slides[0];
 $surface_width_class = matrix_get_video_showcase_surface_width_class($layout_style, $video_surface_size);
 $surface_height_class = matrix_get_video_showcase_surface_height_class($layout_style, $video_surface_size);
-$caption_width_class = matrix_get_video_showcase_caption_width_class($layout_style, $video_surface_size);
+$caption_width_class = matrix_get_video_showcase_caption_width_class($layout_style, $video_surface_size, $text_max_width);
 $section_background_style = matrix_get_video_showcase_section_background_style(
     $section_background,
     'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)'
 );
 $show_intro = is_string($intro) && trim(strip_tags($intro)) !== '';
 $show_header = $show_heading || $show_intro;
-$heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size);
+$heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size, $text_max_width);
 ?>
 
 <section
@@ -58,7 +60,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names()); ?>">
+    <div class="<?php echo esc_attr(matrix_get_video_showcase_section_wrapper_class_names($vertical_padding)); ?>">
         <?php if ($show_header) { ?>
             <div class="<?php echo esc_attr($heading_wrap_width_class); ?>">
                 <?php if ($show_heading) { ?>

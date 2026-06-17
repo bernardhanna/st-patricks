@@ -1,21 +1,21 @@
 <?php
 
-if (get_post_type() !== 'post') {
+if (! in_array(get_post_type(), ['post', 'webinars'], true)) {
     return;
 }
 
 $defaults = matrix_get_blog_single_defaults();
-$is_event_post = matrix_is_event_post();
-$previous_label = $is_event_post
+$uses_event_style = matrix_uses_event_style_single_layout();
+$previous_label = $uses_event_style
     ? (string) ($defaults['previous_label_event'] ?? 'Previous')
     : (string) ($defaults['previous_label'] ?? 'Previous article');
-$next_label = $is_event_post
+$next_label = $uses_event_style
     ? (string) ($defaults['next_label_event'] ?? 'Next')
     : (string) ($defaults['next_label'] ?? 'Next article');
 $author_name = matrix_get_blog_post_author_name();
 $share_links = matrix_get_blog_post_share_links();
-$previous_post = matrix_get_blog_adjacent_post_link('previous');
-$next_post = matrix_get_blog_adjacent_post_link('next');
+$previous_post = matrix_get_event_style_adjacent_post_link('previous');
+$next_post = matrix_get_event_style_adjacent_post_link('next');
 $copy_link_id = 'blog-share-copy-' . get_the_ID();
 ?>
 

@@ -17,9 +17,6 @@ if (have_rows('consent_items')) {
     }
 }
 
-$wrapper_classes = ['flex', 'w-full', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
-
-
 $form = matrix_prepare_contact_form([
     'section_id' => $section_id,
     'data_block' => str_replace('_', '-', get_row_layout()) . '-' . get_row_index(),
@@ -33,10 +30,10 @@ $form = matrix_prepare_contact_form([
     'bcc_email' => get_sub_field('bcc_email'),
     'save_to_db' => get_sub_field('save_to_db'),
     'date_of_birth_help' => get_sub_field('date_of_birth_help'),
+    'date_of_birth_show_info' => get_sub_field('date_of_birth_show_info'),
     'privacy_policy_link' => get_sub_field('privacy_policy_link'),
     'privacy_policy_label' => get_sub_field('privacy_policy_label'),
     'checkboxes' => $checkboxes,
-    'wrapper_classes' => implode(' ', array_unique($wrapper_classes)),
 ]);
 
 if ($form['form_style'] !== 'your_portal') {
@@ -52,10 +49,10 @@ $dob_help_id = $form['form_id'] . '-dob-help';
     class="flex overflow-hidden relative w-full"
     style="background-color: <?php echo esc_attr($form['background_color']); ?>;"
 >
-    <div class="<?php echo esc_attr($form['wrapper_classes']); ?> mx-auto max-w-[578px]">
+    <div class="<?php echo esc_attr($form['wrapper_classes']); ?>">
         <form
             id="<?php echo esc_attr($form['form_id']); ?>"
-            class="flex flex-col gap-6 w-full portal-contact-form"
+            class="<?php echo esc_attr(matrix_get_contact_form_form_class_names()); ?>"
             method="post"
             action="<?php echo esc_url(matrix_get_contact_form_action_url()); ?>"
             data-theme-form="contact-form"
@@ -108,48 +105,80 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                 />
             </div>
 
-            <div class="portal-contact-form__row">
-                <div class="portal-contact-form__field portal-contact-form__field--half">
+            <div class="<?php echo esc_attr(matrix_get_contact_form_row_class_names()); ?>">
+                <div class="portal-contact-form__field portal-contact-form__field--half portal-contact-form__field--dob">
                     <div class="portal-contact-form__label-row">
                         <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-dob">
                             Date Of Birth<span class="portal-contact-form__required" aria-hidden="true">*</span>
                         </label>
+                        <?php if ($form['show_date_of_birth_info'] && $form['date_of_birth_help'] !== '') { ?>
+                            <button
+                                type="button"
+                                class="portal-contact-form__info btn"
+                                data-portal-dob-info
+                                data-portal-dob-toast="<?php echo esc_attr($form['date_of_birth_help']); ?>"
+                                aria-describedby="<?php echo esc_attr($dob_help_id); ?>"
+                                aria-label="More information about date of birth"
+                                aria-controls="<?php echo esc_attr($dob_help_id); ?>-toast"
+                                aria-expanded="false"
+                            >
+                                <?php echo matrix_get_contact_form_date_of_birth_info_icon_svg(); ?>
+                            </button>
+                        <?php } ?>
+                        <?php if ($form['date_of_birth_help'] !== '') { ?>
+                            <p id="<?php echo esc_attr($dob_help_id); ?>" class="sr-only">
+                                <?php echo esc_html($form['date_of_birth_help']); ?>
+                            </p>
+                        <?php } ?>
+                    </div>
+                    <div class="portal-contact-form__date-field">
                         <button
                             type="button"
-                            class="portal-contact-form__info btn"
-                            aria-describedby="<?php echo esc_attr($dob_help_id); ?>"
-                            aria-label="More information about date of birth"
+                            class="portal-contact-form__date-trigger btn"
+                            data-portal-dob-picker-trigger
+                            aria-label="Open date of birth calendar"
                         >
-                            <span aria-hidden="true">i</span>
+                            <?php echo matrix_get_contact_form_date_of_birth_calendar_icon_svg(); ?>
                         </button>
-                    </div>
-                    <p id="<?php echo esc_attr($dob_help_id); ?>" class="sr-only">
-                        <?php echo esc_html($form['date_of_birth_help']); ?>
-                    </p>
-                    <div class="portal-contact-form__input-wrap">
                         <input
-                            class="portal-contact-form__input portal-contact-form__input--with-icon"
-                            type="date"
+                            class="portal-contact-form__input portal-contact-form__date-input"
+                            type="text"
                             id="<?php echo esc_attr($form['form_id']); ?>-dob"
                             name="date_of_birth"
+                            inputmode="numeric"
+                            autocomplete="bday"
+                            placeholder="DD/MM/YYYY"
+                            pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}"
                             required
+                            data-portal-dob-display
+                        />
+                        <input
+                            type="date"
+                            class="portal-contact-form__date-native"
+                            tabindex="-1"
+                            aria-hidden="true"
+                            max="<?php echo esc_attr(gmdate('Y-m-d')); ?>"
+                            data-portal-dob-picker
                         />
                     </div>
                 </div>
 
                 <div class="portal-contact-form__field portal-contact-form__field--half">
-                    <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-eircode">
-                        Your Eircode<span class="portal-contact-form__required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                        class="portal-contact-form__input"
-                        type="text"
-                        id="<?php echo esc_attr($form['form_id']); ?>-eircode"
-                        name="eircode"
-                        autocomplete="postal-code"
-                        placeholder="001 234 432"
-                        required
-                    />
+                    <div class="portal-contact-form__label-row">
+                        <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-eircode">
+                            Your Eircode<span class="portal-contact-form__required" aria-hidden="true">*</span>
+                        </label>
+                    </div>
+                    <div class="portal-contact-form__input-field">
+                        <input
+                            class="portal-contact-form__input"
+                            type="text"
+                            id="<?php echo esc_attr($form['form_id']); ?>-eircode"
+                            name="eircode"
+                            autocomplete="postal-code"
+                            required
+                        />
+                    </div>
                 </div>
             </div>
 

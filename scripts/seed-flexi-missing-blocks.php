@@ -86,56 +86,6 @@ if ($missing_layouts === []) {
 }
 
 $demo_blocks = [
-    'about' => [
-        'acf_fc_layout' => 'about',
-        'faded_logo' => matrix_seed_build_image_field($image_id, 'SPMHS logo watermark'),
-        'heading_tag' => 'h2',
-        'heading_text' => 'About us',
-        'description' => $lorem,
-        'image_left' => [
-            'image' => matrix_seed_build_image_field($image_id, 'Team photo left'),
-            'overlay_logo' => '',
-            'rotate_deg' => -6,
-        ],
-        'image_right' => [
-            'image' => matrix_seed_build_image_field($image_id, 'Team photo right'),
-            'overlay_logo' => '',
-        ],
-        'key_points' => [
-            [
-                'watermark' => '',
-                'value' => 95,
-                'suffix' => '%',
-                'title' => 'Patient satisfaction',
-                'text' => 'Lorem ipsum dolor sit amet sed do eiusmod tempor incididunt',
-            ],
-            [
-                'watermark' => '',
-                'value' => 75,
-                'suffix' => 'k',
-                'title' => 'People supported',
-                'text' => 'Lorem ipsum dolor sit amet sed do eiusmod tempor incididunt',
-            ],
-            [
-                'watermark' => '',
-                'value' => 455,
-                'suffix' => '',
-                'title' => 'Staff members',
-                'text' => 'Lorem ipsum dolor sit amet sed do eiusmod tempor incididunt',
-            ],
-        ],
-        'primary_cta' => ['title' => 'Careers', 'url' => home_url('/careers/'), 'target' => ''],
-        'secondary_cta' => ['title' => 'About us', 'url' => home_url('/about-us/'), 'target' => ''],
-        'bg_color' => '#ffffff',
-        'heading_color' => '#0B0B08',
-        'desc_color' => '#4A4B37',
-        'divider_color' => '#5F604B',
-        'value_color' => '#5F604B',
-        'title_color' => '#0B0B08',
-        'text_color' => '#4A4B37',
-        'buttons_style' => 'solid-dark',
-        'padding_settings' => $section_padding,
-    ],
     'about_links_grid' => [
         'acf_fc_layout' => 'about_links_grid',
         'heading_tag' => 'h2',
@@ -236,22 +186,6 @@ $demo_blocks = [
         'padding_settings' => [
             ['screen_size' => 'xxs', 'padding_top' => 5, 'padding_bottom' => 5],
             ['screen_size' => 'lg', 'padding_top' => 8, 'padding_bottom' => 8],
-        ],
-    ],
-    'cta_block' => [
-        'acf_fc_layout' => 'cta_block',
-        'title' => 'Child Safeguarding',
-        'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Learn more about our commitment to safeguarding children and young people.',
-        'button' => ['title' => 'Child Safeguarding', 'url' => home_url('/about-us/policies-and-publications/child-safeguarding-statement/'), 'target' => ''],
-        'show_icon' => 1,
-        'polaroid_image' => matrix_seed_build_image_field($image_id, 'Child safeguarding'),
-        'faded_logo' => '',
-        'watermark_logo' => '',
-        'divider_color' => '#D1D5DB',
-        'min_full_screen' => 0,
-        'section_classes' => '',
-        'padding_settings' => [
-            ['screen_size' => '', 'padding_top' => '16', 'padding_bottom' => '25'],
         ],
     ],
     'key_contact_info' => [
@@ -379,42 +313,6 @@ $demo_blocks = [
             'padding_settings' => $section_padding,
         ]
     ),
-    'services' => [
-        'acf_fc_layout' => 'services',
-        'heading_tag' => 'h2',
-        'heading_text' => 'Our Services',
-        'cards' => [
-            [
-                'link' => ['title' => 'Inpatient Care', 'url' => home_url('/inpatient-care/'), 'target' => ''],
-                'title' => 'Inpatient Care',
-                'image' => matrix_seed_build_image_field($image_id, 'Inpatient care service'),
-                'watermark' => '',
-            ],
-            [
-                'link' => ['title' => 'Outpatient Care', 'url' => home_url('/what-we-offer/outpatient-care-dean-clinics/'), 'target' => ''],
-                'title' => 'Outpatient Care',
-                'image' => matrix_seed_build_image_field($image_id, 'Outpatient care service'),
-                'watermark' => '',
-            ],
-            [
-                'link' => ['title' => 'Day Programmes', 'url' => home_url('/what-we-offer/day-programmes/'), 'target' => ''],
-                'title' => 'Day Programmes',
-                'image' => matrix_seed_build_image_field($image_id, 'Day programmes service'),
-                'watermark' => '',
-            ],
-        ],
-        'view_more_button' => ['title' => 'View all services', 'url' => home_url('/what-we-offer/'), 'target' => ''],
-        'background_color' => '#ffffff',
-        'heading_color' => '#2C2C21',
-        'title_color' => '#4A4B37',
-        'watermark_opacity' => 0.12,
-        'card_radius' => 'rounded-none',
-        'card_shadow' => 1,
-        'md_columns' => '2',
-        'lg_columns' => '3',
-        'xl_columns' => '3',
-        'padding_settings' => $section_padding,
-    ],
     'stories' => [
         'acf_fc_layout' => 'stories',
         'posts_per_slide' => 4,

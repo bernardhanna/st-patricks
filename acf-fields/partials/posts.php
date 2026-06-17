@@ -34,8 +34,8 @@ if (function_exists('acf_add_local_field_group')) {
             'media_upload' => 0,
         ])
         ->addTrueFalse('event_link_external_from_archive', [
-            'label' => 'Link Thumbnail Directly To External URL',
-            'instructions' => 'When enabled, the archive/index thumbnail links straight to the external event URL instead of this post.',
+            'label' => 'Link Archive Cards To External URL',
+            'instructions' => 'When enabled, news/events archive cards open the external event URL directly instead of this single post.',
             'ui' => 1,
             'default_value' => 0,
         ]);

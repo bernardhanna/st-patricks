@@ -11,6 +11,8 @@ $services       = get_sub_field('services');
 $main_image     = get_sub_field('main_image');
 $layout_style   = matrix_resolve_what_we_offer_layout_style(get_sub_field('layout_style'));
 $intro_text     = trim((string) get_sub_field('intro_text'));
+$vertical_padding = matrix_resolve_section_vertical_padding(get_sub_field('vertical_padding'));
+$section_padding_classes = matrix_get_what_we_offer_section_padding_classes($vertical_padding);
 
 // Main image alt from media
 $main_image_alt = '';
@@ -26,9 +28,6 @@ $background_gradient = get_sub_field('background_gradient');
 if ($background_gradient === '' || $background_gradient === null) {
     $background_gradient = 'var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #F8F6F3 3.24%, #F5F6ED 90.88%))';
 }
-
-// Padding settings
-
 
 // Sanitize heading tag
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
@@ -67,7 +66,7 @@ if (!empty($services) && is_array($services)) {
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background: <?php echo esc_attr($background_gradient); ?>;">
-    <div class="flex flex-col items-center w-full mx-auto max-w-container py-12 lg:py-24 max-lg:px-5 max-sm:px-6">
+    <div class="flex flex-col items-center w-full mx-auto max-w-container <?php echo esc_attr($section_padding_classes); ?> max-lg:px-5 max-sm:px-6">
 
         <!-- Header Section -->
         <?php if (!empty($heading)) : ?>

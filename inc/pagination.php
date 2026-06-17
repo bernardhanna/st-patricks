@@ -64,7 +64,7 @@ function my_custom_pagination()
               if (strpos($link, '<span') !== false) {
                 $link = str_replace(
                   '<span',
-                  '<span class="flex justify-center items-center my-auto w-12 h-12 border border-sky-900 border-solid min-h-[48px] rounded-[100px] text-teal-950"',
+                  '<span class="flex justify-center items-center my-auto w-12 h-12 border border-[#024B79] border-solid min-h-[48px] rounded-[100px] bg-[#024B79] text-white"',
                   $link
                 );
               } else {

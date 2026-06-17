@@ -1,7 +1,9 @@
 <?php
 
 $section_id = 'key-contact-info-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
-$columns = matrix_normalize_key_contact_info_columns(get_sub_field('columns'));
+$normalized_columns = matrix_normalize_key_contact_info_columns(get_sub_field('columns'));
+$columns = $normalized_columns['columns'];
+$initial_open_index = (int) $normalized_columns['initial_open_index'];
 $section_background = (string) get_sub_field('section_background');
 $closed_panel_background = (string) get_sub_field('closed_panel_background');
 $open_panel_background = (string) get_sub_field('open_panel_background');
@@ -26,7 +28,6 @@ $section_background_style = matrix_get_key_contact_info_background_style($sectio
 $closed_panel_background_style = matrix_get_key_contact_info_background_style($closed_panel_background, '#FBFAF7');
 $open_panel_background_style = matrix_get_key_contact_info_background_style($open_panel_background, 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)');
 
-
 ?>
 
 <section
@@ -35,105 +36,69 @@ $open_panel_background_style = matrix_get_key_contact_info_background_style($ope
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names(['gap-8', 'lg:grid', 'lg:grid-cols-3', 'lg:items-start'])); ?>">
-        <?php foreach ($columns as $column_index => $column) { ?>
-            <div
-                x-data="{ activeIndex: <?php echo esc_attr((string) $column['initial_open_index']); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-                class="flex flex-col gap-3 w-full"
-            >
-                <?php foreach ($column['items'] as $item_index => $item) { ?>
-                    <?php
-                    $button_id = $section_id . '-col-' . $column_index . '-button-' . $item_index;
-                    $panel_id = $section_id . '-col-' . $column_index . '-panel-' . $item_index;
-                    $has_panel_content = $item['bullet_items'] !== [] || $item['phone'] !== '' || $item['email'] !== '';
-                    ?>
-                    <div
-                        class="overflow-hidden rounded-[4px]"
-                        :style="activeIndex === <?php echo esc_attr((string) $item_index); ?> ? '<?php echo esc_js($open_panel_background_style); ?>' : '<?php echo esc_js($closed_panel_background_style); ?>'"
-                    >
-                        <button
-                            type="button"
-                            id="<?php echo esc_attr($button_id); ?>"
-                            class="btn flex min-h-[58px] w-full items-center justify-between gap-4 px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
-                            :aria-expanded="activeIndex === <?php echo esc_attr((string) $item_index); ?> ? 'true' : 'false'"
-                            <?php if ($has_panel_content) { ?>
-                                aria-controls="<?php echo esc_attr($panel_id); ?>"
-                            <?php } ?>
-                            @click="toggleItem(<?php echo esc_attr((string) $item_index); ?>)"
+    <div
+        x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
+        class="<?php echo esc_attr(matrix_get_key_contact_info_wrapper_class_names()); ?>"
+    >
+        <div class="<?php echo esc_attr(matrix_get_key_contact_info_grid_class_names()); ?>">
+            <?php foreach ($columns as $column_index => $column) { ?>
+                <div class="<?php echo esc_attr(matrix_get_key_contact_info_column_class_names()); ?>">
+                    <?php foreach ($column['items'] as $item_index => $item) { ?>
+                        <?php
+                        $flat_index = (int) ($item['flat_index'] ?? 0);
+                        $button_id = $section_id . '-button-' . $flat_index;
+                        $panel_id = $section_id . '-panel-' . $flat_index;
+                        $has_panel_content = matrix_key_contact_info_item_has_panel_content($item);
+                        ?>
+                        <div
+                            class="<?php echo esc_attr(matrix_get_key_contact_info_item_class_names()); ?>"
+                            :style="activeIndex === <?php echo esc_attr((string) $flat_index); ?> ? '<?php echo esc_js($open_panel_background_style); ?>' : '<?php echo esc_js($closed_panel_background_style); ?>'"
                         >
-                            <span class="font-primary text-[16px] font-semibold leading-[28px] text-[#08284B] lg:text-[18px]">
-                                <?php echo esc_html($item['title']); ?>
-                            </span>
+                            <button
+                                type="button"
+                                id="<?php echo esc_attr($button_id); ?>"
+                                class="<?php echo esc_attr(matrix_get_key_contact_info_header_class_names()); ?>"
+                                :aria-expanded="activeIndex === <?php echo esc_attr((string) $flat_index); ?> ? 'true' : 'false'"
+                                <?php if ($has_panel_content) { ?>
+                                    aria-controls="<?php echo esc_attr($panel_id); ?>"
+                                <?php } ?>
+                                @click="toggleItem(<?php echo esc_attr((string) $flat_index); ?>)"
+                            >
+                                <span class="<?php echo esc_attr(matrix_get_key_contact_info_title_class_names()); ?>">
+                                    <?php echo esc_html($item['title']); ?>
+                                </span>
+
+                                <?php if ($has_panel_content) { ?>
+                                    <span
+                                        class="shrink-0 text-[#1E244B] transition-transform duration-200"
+                                        :class="activeIndex === <?php echo esc_attr((string) $flat_index); ?> ? 'rotate-180' : ''"
+                                        aria-hidden="true"
+                                    >
+                                        <?php echo matrix_get_key_contact_info_chevron_svg(); ?>
+                                    </span>
+                                <?php } ?>
+                            </button>
 
                             <?php if ($has_panel_content) { ?>
-                                <span
-                                    class="shrink-0 text-[#08284B] transition-transform duration-200"
-                                    :class="activeIndex === <?php echo esc_attr((string) $item_index); ?> ? 'rotate-180' : ''"
-                                    aria-hidden="true"
+                                <div
+                                    id="<?php echo esc_attr($panel_id); ?>"
+                                    x-show="activeIndex === <?php echo esc_attr((string) $flat_index); ?>"
+                                    x-cloak
+                                    aria-labelledby="<?php echo esc_attr($button_id); ?>"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </span>
-                            <?php } ?>
-                        </button>
-
-                        <?php if ($has_panel_content) { ?>
-                            <div
-                                id="<?php echo esc_attr($panel_id); ?>"
-                                x-show="activeIndex === <?php echo esc_attr((string) $item_index); ?>"
-                                x-cloak
-                                aria-labelledby="<?php echo esc_attr($button_id); ?>"
-                                class="px-6 pb-4"
-                            >
-                                <div class="flex flex-col gap-2 pb-3">
-                                    <?php foreach ($item['bullet_items'] as $bullet_label) { ?>
-                                        <div class="flex gap-3 items-center">
-                                            <span class="flex size-6 shrink-0 items-center justify-center font-primary text-[16px] font-medium leading-[28px] text-[#08284B]" aria-hidden="true">-</span>
-                                            <span class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
-                                                <?php echo esc_html($bullet_label); ?>
-                                            </span>
-                                        </div>
-                                    <?php } ?>
-
-                                    <?php if ($item['phone'] !== '') { ?>
-                                        <div class="flex gap-3 items-center">
-                                            <span class="flex size-6 shrink-0 items-center justify-center text-[#08284B]" aria-hidden="true">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C10.85 21 3 13.15 3 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </span>
-                                            <a
-                                                href="<?php echo esc_url('tel:' . preg_replace('/\s+/', '', $item['phone'])); ?>"
-                                                class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                                            >
-                                                <?php echo esc_html($item['phone']); ?>
-                                            </a>
-                                        </div>
-                                    <?php } ?>
-
-                                    <?php if ($item['email'] !== '') { ?>
-                                        <div class="flex gap-3 items-center">
-                                            <span class="flex size-6 shrink-0 items-center justify-center text-[#08284B]" aria-hidden="true">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                                                    <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </span>
-                                            <a
-                                                href="<?php echo esc_url('mailto:' . sanitize_email($item['email'])); ?>"
-                                                class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                                            >
-                                                <?php echo esc_html($item['email']); ?>
-                                            </a>
-                                        </div>
-                                    <?php } ?>
+                                    <?php
+                                    get_template_part(
+                                        'template-parts/flexi/partials/key-contact-info-contact-details',
+                                        null,
+                                        ['item' => $item]
+                                    );
+                                    ?>
                                 </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                <?php } ?>
-            </div>
-        <?php } ?>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
     </div>
 </section>

@@ -32,7 +32,7 @@ foreach ($event_posts as $index => $post) {
         'Updated event fields on post %d (%s)%s',
         $post->ID,
         $post->post_name,
-        $index === 0 ? ' [archive thumbnail links externally]' : ''
+        $index === 0 ? ' [archive cards link externally]' : ''
     ));
 }
 

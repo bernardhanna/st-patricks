@@ -116,7 +116,7 @@ $nav_slide_config = [
 <div
     x-data="navSlide(<?php echo esc_attr(wp_json_encode($nav_slide_config, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)); ?>)"
     x-cloak
-    class="flex items-center gap-3 lg:hidden"
+    class="flex items-center gap-3 xl:hidden"
     @keydown.escape.window="close()"
 >
     <?php get_template_part('template-parts/header/navbar/cart'); ?>
@@ -508,7 +508,7 @@ function navSlide(config) {
                 return;
             }
 
-            window.location.href = `${window.location.origin}/?s=${encodeURIComponent(term)}`;
+            window.location.href = `${window.location.origin}/search/?s=${encodeURIComponent(term)}`;
         },
         clearSearchState() {
             this.searchFocused = false;

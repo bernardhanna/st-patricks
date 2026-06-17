@@ -296,3 +296,63 @@ function matrix_get_careers_single_back_url(): string
 
     return is_string($archive) && $archive !== '' ? $archive : home_url('/careers/');
 }
+
+/**
+ * Resolve the first taxonomy term name assigned to a careers post.
+ */
+function matrix_get_career_first_term_name(int $post_id, string $taxonomy): string
+{
+    $terms = function_exists('get_the_terms') ? get_the_terms($post_id, $taxonomy) : false;
+
+    if (is_array($terms)) {
+        foreach ($terms as $term) {
+            if ($term instanceof WP_Term) {
+                return $term->name;
+            }
+        }
+    }
+
+    return '';
+}
+
+/**
+ * Ordered key/value meta rows shown in the careers single hero.
+ *
+ * @return array<int, array{label: string, value: string}>
+ */
+function matrix_get_career_hero_meta(int $post_id): array
+{
+    $area = function_exists('get_field') ? trim((string) get_field('career_area', $post_id)) : '';
+    $location = matrix_get_career_first_term_name($post_id, 'career_location');
+    $job_type = function_exists('get_field') ? trim((string) get_field('career_job_type', $post_id)) : '';
+    $category = function_exists('get_field') ? trim((string) get_field('career_category', $post_id)) : '';
+
+    if ($category === '') {
+        $category = matrix_get_career_first_term_name($post_id, 'career_department');
+    }
+
+    $rows = [
+        ['label' => 'Area', 'value' => $area],
+        ['label' => 'Location', 'value' => $location],
+        ['label' => 'Job Type', 'value' => $job_type],
+        ['label' => 'Category', 'value' => $category],
+    ];
+
+    return array_values(array_filter($rows, static fn (array $row): bool => $row['value'] !== ''));
+}
+
+/**
+ * Share links for a careers vacancy. Mirrors the blog single share links.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function matrix_get_career_share_links(int $post_id = 0): array
+{
+    $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? (int) get_the_ID() : 0));
+
+    if (function_exists('matrix_get_blog_post_share_links')) {
+        return matrix_get_blog_post_share_links($post_id);
+    }
+
+    return [];
+}

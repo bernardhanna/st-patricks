@@ -176,3 +176,51 @@ if (function_exists('add_filter')) {
     add_filter('the_content', 'matrix_filter_external_links_in_content', 25);
     add_filter('acf/format_value/type=link', 'matrix_filter_acf_link_target', 20);
 }
+
+if (! function_exists('matrix_get_theme_path_redirect_map')) {
+    /**
+     * @return array<string, string>
+     */
+    function matrix_get_theme_path_redirect_map(): array
+    {
+        return [
+            'make-a-referral/refer-an-adult-for-inpatient-care' => '/healthcare-professionals/refer-an-adult-for-inpatient-care/',
+            'make-a-referral/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent-for-inpatient-care/',
+            'make-a-referral/refer-to-the-st-patricks-at-home-service' => '/healthcare-professionals/refer-to-the-st-patricks-at-home-service/',
+            'make-a-referral/refer-for-outpatient-care' => '/healthcare-professionals/refer-for-outpatient-care/',
+            'make-a-referral/refer-to-a-day-programme' => '/healthcare-professionals/refer-to-a-day-programme/',
+        ];
+    }
+}
+
+if (! function_exists('matrix_maybe_redirect_theme_paths')) {
+    function matrix_maybe_redirect_theme_paths(): void
+    {
+        $request_uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+        $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
+        $home_path = trim((string) (function_exists('wp_parse_url') ? wp_parse_url(home_url('/'), PHP_URL_PATH) : parse_url(home_url('/'), PHP_URL_PATH)), '/');
+
+        if ($home_path !== '' && str_starts_with($path, $home_path . '/')) {
+            $path = trim(substr($path, strlen($home_path)), '/');
+        }
+
+        foreach (matrix_get_theme_path_redirect_map() as $old_path => $destination) {
+            if ($path !== trim($old_path, '/')) {
+                continue;
+            }
+
+            $target = str_starts_with($destination, 'http')
+                ? $destination
+                : home_url($destination);
+
+            if (function_exists('wp_safe_redirect')) {
+                wp_safe_redirect($target, 301);
+                exit;
+            }
+        }
+    }
+}
+
+if (function_exists('add_action')) {
+    add_action('template_redirect', 'matrix_maybe_redirect_theme_paths', 1);
+}

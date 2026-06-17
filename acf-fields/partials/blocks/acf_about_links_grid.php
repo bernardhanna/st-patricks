@@ -79,9 +79,10 @@ $about_links_grid
     ->addTab('design_tab', ['label' => 'Design'])
         ->addSelect('layout_style', [
             'label' => 'Layout Style',
-            'instructions' => 'Image feature matches the About Us landing grid (Figma 2780:3457). Compact row is a horizontal thumbnail alternative.',
+            'instructions' => 'Image feature matches the About Us landing grid (Figma 2780:3457). Layout 2 uses a flush full-width image with a title-only footer (Figma 3279:18939, careers useful links). Compact row is a horizontal thumbnail alternative.',
             'choices' => [
-                'image_feature' => 'Image Feature (large image)',
+                'image_feature' => 'Layout 1 (image feature)',
+                'flush_image' => 'Layout 2 (flush image)',
                 'compact_row' => 'Compact Row (thumbnail + title)',
             ],
             'default_value' => 'image_feature',

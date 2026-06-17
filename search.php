@@ -7,7 +7,7 @@ if (function_exists('wp_unslash')) {
     $search_request = wp_unslash($search_request);
 }
 
-$query_var_keys = ['s', 'paged', 'search_type', 'search_sort'];
+$query_var_keys = ['s', 'paged', 'search_type', 'search_sort', 'matrix_search'];
 
 foreach ($query_var_keys as $query_var_key) {
     $query_var_value = function_exists('get_query_var')

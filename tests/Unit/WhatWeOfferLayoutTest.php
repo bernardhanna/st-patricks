@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/content-section-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/what-we-offer-functions.php';
 
 test('what we offer layout style falls back to image_feature', function () {
@@ -44,8 +45,9 @@ test('what we offer intro two column icon svg returns markup for default and hov
     $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover', '#6FC9C0');
 
     expect($default)->toContain('<svg')
-        ->and($default)->toContain('fill="#6FC9C0"')
-        ->and($default)->toContain('opacity="1"')
+        ->and($default)->toContain('viewBox="0 0 32 32"')
+        ->and($default)->toContain('fill="white"')
+        ->and($default)->toContain('opacity="0.25"')
         ->and($hover)->toContain('<svg')
         ->and($hover)->toContain('fill="white"')
         ->and($hover)->toContain('opacity="1"');
@@ -58,4 +60,10 @@ test('what we offer intro two column icon background maps accent to pastel tint'
         ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#E4F4D6')
         ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#E9E2F7')
         ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#F9E5F2');
+});
+
+test('what we offer vertical padding supports standard and bottom only modes', function () {
+    expect(matrix_get_what_we_offer_section_padding_classes('default'))->toBe('py-12 lg:py-24')
+        ->and(matrix_get_what_we_offer_section_padding_classes('standard'))->toBe('py-12')
+        ->and(matrix_get_what_we_offer_section_padding_classes('bottom_only'))->toBe('pt-0 pb-12 lg:pt-0 lg:pb-24');
 });

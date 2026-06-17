@@ -14,6 +14,14 @@ if (function_exists('acf_add_local_field_group')) {
             'instructions' => 'Facility or service area shown in the vacancies table, e.g. Dean Clinic.',
             'required' => 1,
         ])
+        ->addText('career_job_type', [
+            'label' => 'Job type',
+            'instructions' => 'Employment type shown in the vacancy hero, e.g. Permanent Full-Time.',
+        ])
+        ->addText('career_category', [
+            'label' => 'Category',
+            'instructions' => 'Role category shown in the vacancy hero, e.g. Nursing.',
+        ])
         ->addWysiwyg('career_job_description', [
             'label' => 'Job description',
             'instructions' => 'Full job detail shown on the vacancy page. Falls back to post content when empty.',

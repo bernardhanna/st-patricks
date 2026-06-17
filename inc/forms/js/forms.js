@@ -163,6 +163,140 @@
       form.after(div);
       setTimeout(() => div.remove(), 6000);
     }
+
+    function formatPortalDobDisplay(iso) {
+      if (!iso) return '';
+      const [year, month, day] = iso.split('-');
+      if (!year || !month || !day) return '';
+      return `${day}/${month}/${year}`;
+    }
+
+    function parsePortalDobDisplay(value) {
+      const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (!match) return '';
+
+      const day = Number(match[1]);
+      const month = Number(match[2]);
+      const year = Number(match[3]);
+      const date = new Date(year, month - 1, day);
+
+      if (
+        date.getFullYear() !== year
+        || date.getMonth() !== month - 1
+        || date.getDate() !== day
+      ) {
+        return '';
+      }
+
+      return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    function maskPortalDobInput(value) {
+      const digits = value.replace(/\D/g, '').slice(0, 8);
+      if (digits.length <= 2) return digits;
+      if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+      return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+    }
+
+    function validatePortalDobDisplay(displayInput, picker) {
+      const value = displayInput.value.trim();
+      if (!value) {
+        displayInput.setCustomValidity('');
+        if (picker instanceof HTMLInputElement) picker.value = '';
+        return true;
+      }
+
+      const iso = parsePortalDobDisplay(value);
+      if (!iso) {
+        displayInput.setCustomValidity('Enter a valid date in DD/MM/YYYY format.');
+        return false;
+      }
+
+      displayInput.setCustomValidity('');
+      if (picker instanceof HTMLInputElement) picker.value = iso;
+      return true;
+    }
+
+    function openPortalDobPicker(picker) {
+      if (!(picker instanceof HTMLInputElement)) return;
+
+      if (typeof picker.showPicker === 'function') {
+        try {
+          picker.showPicker();
+          return;
+        } catch (e) { }
+      }
+
+      picker.focus();
+      picker.click();
+    }
+
+    document.querySelectorAll('[data-portal-dob-display]').forEach(displayInput => {
+      if (!(displayInput instanceof HTMLInputElement)) return;
+
+      const field = displayInput.closest('.portal-contact-form__date-field');
+      if (!field) return;
+
+      const picker = field.querySelector('[data-portal-dob-picker]');
+      const trigger = field.querySelector('[data-portal-dob-picker-trigger]');
+      const form = displayInput.closest('form');
+
+      trigger?.addEventListener('click', () => openPortalDobPicker(picker));
+
+      displayInput.addEventListener('input', () => {
+        const cursor = displayInput.selectionStart;
+        const before = displayInput.value;
+        displayInput.value = maskPortalDobInput(before);
+        if (cursor !== null) {
+          const delta = displayInput.value.length - before.length;
+          displayInput.setSelectionRange(cursor + delta, cursor + delta);
+        }
+        validatePortalDobDisplay(displayInput, picker);
+      });
+
+      displayInput.addEventListener('blur', () => {
+        validatePortalDobDisplay(displayInput, picker);
+      });
+
+      if (picker instanceof HTMLInputElement) {
+        picker.addEventListener('change', () => {
+          displayInput.value = formatPortalDobDisplay(picker.value);
+          validatePortalDobDisplay(displayInput, picker);
+        });
+      }
+
+      form?.addEventListener('submit', () => {
+        validatePortalDobDisplay(displayInput, picker);
+      }, { capture: true });
+    });
+
+    document.querySelectorAll('[data-portal-dob-info]').forEach(button => {
+      button.addEventListener('click', () => {
+        const message = (button.getAttribute('data-portal-dob-toast') || '').trim();
+        if (!message) return;
+
+        const field = button.closest('.portal-contact-form__label-row');
+        if (!field) return;
+
+        const toastId = `${button.getAttribute('aria-controls') || 'portal-dob-help'}-toast`;
+        field.querySelectorAll('.portal-contact-form__toast').forEach(el => el.remove());
+
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = 'portal-contact-form__toast is-visible';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        toast.textContent = message;
+        field.appendChild(toast);
+        button.setAttribute('aria-expanded', 'true');
+
+        window.clearTimeout(button._portalDobToastTimer);
+        button._portalDobToastTimer = window.setTimeout(() => {
+          toast.remove();
+          button.setAttribute('aria-expanded', 'false');
+        }, 6000);
+      });
+    });
   });
 
   // === NEWSLETTER (Brevo) ===

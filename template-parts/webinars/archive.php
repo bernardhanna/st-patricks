@@ -42,6 +42,12 @@ $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
 $search_input_id = 'webinars-archive-search-' . (function_exists('wp_rand') ? wp_rand(1000, 999999) : mt_rand(1000, 999999));
 $has_posts = $query instanceof WP_Query && $query->have_posts();
+$grid_classes = matrix_get_webinars_archive_card_grid_class_names();
+$search_row_classes = matrix_get_webinars_archive_search_row_class_names();
+$search_button_classes = matrix_get_webinars_archive_search_button_class_names();
+$chip_scroll_classes = matrix_get_blog_filter_archive_horizontal_scroll_class_names();
+$chip_group_classes = matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names();
+$chip_button_classes = matrix_get_blog_filter_archive_chip_button_class_names();
 
 $format_date_label = static function ($raw_date) {
     $raw_date = trim((string) $raw_date);
@@ -100,11 +106,57 @@ $format_time_label = static function ($raw_time) {
         <div
             x-data="{
                 type: '<?php echo esc_js((string) $state['type']); ?>',
+                isDragging: false,
+                startX: 0,
+                scrollStart: 0,
+                moved: false,
                 submitType(slug) {
                     this.type = slug;
                     this.$refs.typeInput.value = slug;
                     this.$refs.pageInput.value = 1;
                     this.$refs.form.submit();
+                },
+                onChipScrollPointerDown(event) {
+                    if (event.pointerType === 'mouse' && event.button !== 0) {
+                        return;
+                    }
+
+                    this.isDragging = true;
+                    this.moved = false;
+                    this.startX = event.clientX;
+                    this.scrollStart = this.$refs.chipScroll.scrollLeft;
+                    this.$refs.chipScroll.setPointerCapture?.(event.pointerId);
+                },
+                onChipScrollPointerMove(event) {
+                    if (! this.isDragging) {
+                        return;
+                    }
+
+                    const distance = event.clientX - this.startX;
+
+                    if (Math.abs(distance) > 3) {
+                        this.moved = true;
+                    }
+
+                    this.$refs.chipScroll.scrollLeft = this.scrollStart - distance;
+                },
+                onChipScrollPointerUp(event) {
+                    if (! this.isDragging) {
+                        return;
+                    }
+
+                    this.isDragging = false;
+                    this.$refs.chipScroll.releasePointerCapture?.(event.pointerId);
+                },
+                onChipClick(event, slug) {
+                    if (this.moved) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.moved = false;
+                        return;
+                    }
+
+                    this.submitType(slug);
                 }
             }"
             class="w-full"
@@ -120,7 +172,7 @@ $format_time_label = static function ($raw_time) {
                 <input type="hidden" name="webinar_page" x-ref="pageInput" value="<?php echo esc_attr((string) $current_page); ?>" />
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                    <div class="flex w-full max-w-[384px] flex-col gap-3 sm:flex-row">
+                    <div class="<?php echo esc_attr($search_row_classes); ?>">
                         <div class="flex-1">
                             <label for="<?php echo esc_attr($search_input_id); ?>" class="sr-only">
                                 <?php echo esc_html($search_placeholder); ?>
@@ -137,7 +189,7 @@ $format_time_label = static function ($raw_time) {
 
                         <button
                             type="submit"
-                            class="btn inline-flex h-[40px] items-center justify-center gap-2 rounded-[6px] bg-[#08284B] px-4 text-[14px] font-medium leading-[24px] text-white sm:w-auto"
+                            class="<?php echo esc_attr($search_button_classes); ?>"
                         >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
                         <path d="M6.99935 12.6667C9.94487 12.6667 12.3327 10.2789 12.3327 7.33333C12.3327 4.38781 9.94487 2 6.99935 2C4.05383 2 1.66602 4.38781 1.66602 7.33333C1.66602 10.2789 4.05383 12.6667 6.99935 12.6667Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -147,32 +199,42 @@ $format_time_label = static function ($raw_time) {
                         </button>
                     </div>
 
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-end lg:gap-8">
-                        <p class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
+                    <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:justify-end lg:gap-8">
+                        <p class="shrink-0 font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
                             <?php echo esc_html($filter_label); ?>
                         </p>
 
                         <?php if ($chips !== []) { ?>
-                            <div class="flex flex-wrap gap-3" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
-                                <?php foreach ($chips as $chip) { ?>
-                                    <?php
-                                    $chip_slug = matrix_webinars_archive_sanitize_slug((string) ($chip['slug'] ?? ''));
-                                    $chip_label = trim((string) ($chip['label'] ?? ''));
+                            <div
+                                x-ref="chipScroll"
+                                class="<?php echo esc_attr($chip_scroll_classes); ?>"
+                                @pointerdown="onChipScrollPointerDown($event)"
+                                @pointermove="onChipScrollPointerMove($event)"
+                                @pointerup="onChipScrollPointerUp($event)"
+                                @pointercancel="onChipScrollPointerUp($event)"
+                                @pointerleave="onChipScrollPointerUp($event)"
+                            >
+                                <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
+                                    <?php foreach ($chips as $chip) { ?>
+                                        <?php
+                                        $chip_slug = matrix_webinars_archive_sanitize_slug((string) ($chip['slug'] ?? ''));
+                                        $chip_label = trim((string) ($chip['label'] ?? ''));
 
-                                    if ($chip_slug === '' || $chip_label === '') {
-                                        continue;
-                                    }
-                                    ?>
-                                    <button
-                                        type="button"
-                                        class="btn inline-flex min-h-[36px] items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors"
-                                        :aria-pressed="type === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
-                                        :style="type === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: #80CCD9; background-color: #80CCD9; color: #08284B;' : 'border-color: #08284B; background-color: #FFFFFF; color: #08284B;'"
-                                        @click="submitType('<?php echo esc_js($chip_slug); ?>')"
-                                    >
-                                        <?php echo esc_html($chip_label); ?>
-                                    </button>
-                                <?php } ?>
+                                        if ($chip_slug === '' || $chip_label === '') {
+                                            continue;
+                                        }
+                                        ?>
+                                        <button
+                                            type="button"
+                                            class="<?php echo esc_attr($chip_button_classes); ?>"
+                                            :aria-pressed="type === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
+                                            :style="type === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: #80CCD9; background-color: #80CCD9; color: #08284B;' : 'border-color: #08284B; background-color: #FFFFFF; color: #08284B;'"
+                                            @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
+                                        >
+                                            <?php echo esc_html($chip_label); ?>
+                                        </button>
+                                    <?php } ?>
+                                </div>
                             </div>
                         <?php } ?>
                     </div>
@@ -180,13 +242,13 @@ $format_time_label = static function ($raw_time) {
             </form>
 
             <?php if ($has_posts) { ?>
-                <div class="grid grid-cols-1 gap-4 mt-8 lg:mt-10 lg:grid-cols-2">
+                <div class="<?php echo esc_attr($grid_classes); ?>">
                     <?php while ($query->have_posts()) { ?>
                         <?php
                         $query->the_post();
                         $post_id = get_the_ID();
                         $title = get_the_title($post_id);
-                        $permalink = get_permalink($post_id);
+                        $card_link = matrix_get_blog_post_link_target($post_id, 'archive');
                         $terms = get_the_terms($post_id, 'webinar_type');
                         $display_term = (is_array($terms) && count($terms) === 1 && $terms[0] instanceof WP_Term) ? $terms[0] : null;
                         $type_slug = $display_term instanceof WP_Term ? $display_term->slug : 'all';
@@ -203,46 +265,48 @@ $format_time_label = static function ($raw_time) {
                             $summary = wp_trim_words(wp_strip_all_tags((string) get_post_field('post_content', $post_id)), 28, '...');
                         }
                         ?>
-                        <article
-                            class="flex h-full flex-col gap-4 rounded-[8px] p-6 shadow-sm"
-                            style="background-color: <?php echo esc_attr($theme['card_background']); ?>;"
-                        >
-                            <?php if ($display_term instanceof WP_Term) { ?>
-                                <span
-                                    class="inline-flex h-[30px] w-fit items-center justify-center rounded-full px-4 text-[14px] font-medium leading-[24px] text-[#08284B]"
-                                    style="background-color: <?php echo esc_attr($theme['badge_background']); ?>;"
-                                >
-                                    <?php echo esc_html($display_term->name); ?>
-                                </span>
-                            <?php } ?>
+                        <article class="h-full">
+                            <a
+                                href="<?php echo esc_url($card_link['url']); ?>"
+                                <?php if ($card_link['target'] === '_blank') { ?>
+                                    target="_blank"
+                                    rel="<?php echo esc_attr($card_link['rel']); ?>"
+                                <?php } ?>
+                                class="flex h-full flex-col gap-4 rounded-[8px] p-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                                style="background-color: <?php echo esc_attr($theme['card_background']); ?>;"
+                            >
+                                <?php if ($display_term instanceof WP_Term) { ?>
+                                    <span
+                                        class="inline-flex h-[30px] w-fit items-center justify-center rounded-full px-4 text-[14px] font-medium leading-[24px] text-[#08284B]"
+                                        style="background-color: <?php echo esc_attr($theme['badge_background']); ?>;"
+                                    >
+                                        <?php echo esc_html($display_term->name); ?>
+                                    </span>
+                                <?php } ?>
 
-                            <h3 class="font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px] text-[#1E244B]">
-                                <a
-                                    href="<?php echo esc_url($permalink); ?>"
-                                    class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                                >
+                                <h3 class="font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px] text-[#1E244B]">
                                     <?php echo esc_html($title); ?>
                                     <span aria-hidden="true"> &rarr;</span>
-                                </a>
-                            </h3>
+                                </h3>
 
-                            <?php if ($date_label !== '' || $time_label !== '') { ?>
-                                <div class="grid gap-1 text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-[#1E244B]">
-                                    <?php if ($date_label !== '') { ?>
-                                        <p>Date: <?php echo esc_html($date_label); ?></p>
-                                    <?php } ?>
+                                <?php if ($date_label !== '' || $time_label !== '') { ?>
+                                    <div class="grid gap-1 text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-[#1E244B]">
+                                        <?php if ($date_label !== '') { ?>
+                                            <p>Date: <?php echo esc_html($date_label); ?></p>
+                                        <?php } ?>
 
-                                    <?php if ($time_label !== '') { ?>
-                                        <p>Time: <?php echo esc_html($time_label); ?></p>
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
+                                        <?php if ($time_label !== '') { ?>
+                                            <p>Time: <?php echo esc_html($time_label); ?></p>
+                                        <?php } ?>
+                                    </div>
+                                <?php } ?>
 
-                            <?php if ($summary !== '') { ?>
-                                <p class="text-[14px] leading-[24px] text-[#1E244B]">
-                                    <?php echo esc_html($summary); ?>
-                                </p>
-                            <?php } ?>
+                                <?php if ($summary !== '') { ?>
+                                    <p class="text-[14px] leading-[24px] text-[#1E244B]">
+                                        <?php echo esc_html($summary); ?>
+                                    </p>
+                                <?php } ?>
+                            </a>
                         </article>
                     <?php } ?>
                     <?php wp_reset_postdata(); ?>
@@ -253,54 +317,19 @@ $format_time_label = static function ($raw_time) {
                 </p>
             <?php } ?>
 
-            <?php if ($total_pages > 1) { ?>
-                <nav class="flex flex-wrap gap-6 justify-center items-center mt-10" aria-label="Webinars archive pagination">
-                    <?php if ($current_page > 1) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_webinars_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                            class="btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white text-[#08284B]"
-                            aria-label="Go to previous page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M8.75 3.5L5.25 7L8.75 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-
-                    <div class="flex flex-wrap gap-2 justify-center items-center">
-                        <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
-                            <?php if ($page === $current_page) { ?>
-                                <span
-                                    class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#024B79] text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-white"
-                                    aria-current="page"
-                                >
-                                    <?php echo esc_html((string) $page); ?>
-                                </span>
-                            <?php } else { ?>
-                                <a
-                                    href="<?php echo esc_url(matrix_build_webinars_archive_page_url($base_url, $state, $page)); ?>"
-                                    class="btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white text-[15px] font-semibold leading-[16px] tracking-[-0.09px] text-[#08284B]"
-                                    aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
-                                >
-                                    <?php echo esc_html((string) $page); ?>
-                                </a>
-                            <?php } ?>
-                        <?php } ?>
-                    </div>
-
-                    <?php if ($current_page < $total_pages) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_webinars_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                            class="btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white text-[#08284B]"
-                            aria-label="Go to next page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-                </nav>
-            <?php } ?>
+            <?php
+            get_template_part('template-parts/partials/archive-pagination', null, [
+                'archive_pagination' => [
+                    'current_page' => $current_page,
+                    'total_pages' => $total_pages,
+                    'aria_label' => 'Webinars archive pagination',
+                    'variant' => 'pill',
+                    'build_page_url' => static function (int $page) use ($base_url, $state): string {
+                        return matrix_build_webinars_archive_page_url($base_url, $state, $page);
+                    },
+                ],
+            ]);
+            ?>
         </div>
     </div>
 </section>

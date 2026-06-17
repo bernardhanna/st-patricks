@@ -1948,6 +1948,11 @@ if (! function_exists('matrix_migrate_frozen_redirect_map')) {
             'cookies/cookies' => '/cookie-privacy-policy/',
             'privacy-notice' => '/cookie-privacy-policy/',
             'about-us/policies-and-publications/data-protection' => '/data-protection-policy/',
+            'make-a-referral/refer-an-adult-for-inpatient-care' => '/healthcare-professionals/refer-an-adult-for-inpatient-care/',
+            'make-a-referral/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent-for-inpatient-care/',
+            'make-a-referral/refer-to-the-st-patricks-at-home-service' => '/healthcare-professionals/refer-to-the-st-patricks-at-home-service/',
+            'make-a-referral/refer-for-outpatient-care' => '/healthcare-professionals/refer-for-outpatient-care/',
+            'make-a-referral/refer-to-a-day-programme' => '/healthcare-professionals/refer-to-a-day-programme/',
         ];
     }
 }

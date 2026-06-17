@@ -227,21 +227,23 @@ if (! function_exists('matrix_seed_careers_vacancies')) {
                 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)',
                 'department' => $department_clinical,
                 'location' => $location_dublin,
+                'job_type' => 'Permanent Full-Time',
+                'category' => 'Nursing',
                 'excerpt' => 'We are hiring registered psychiatric nurses for both adult and adolescent services.',
                 'content' => $real_vacancy_content,
                 'update_existing' => true,
             ],
-            ['title' => 'Clinical Nurse Manager', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_clinical, 'location' => $location_dublin],
-            ['title' => 'Occupational Therapist', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan],
-            ['title' => 'Healthcare Assistant', 'area' => 'Willow Grove Adolescent Unit', 'department' => $department_clinical, 'location' => $location_dublin],
-            ['title' => 'Psychologist', 'area' => 'Dean Clinic', 'department' => $department_clinical, 'location' => $location_dublin],
-            ['title' => 'Medical Secretary', 'area' => 'Dean Clinic', 'department' => $department_admin, 'location' => $location_lucan],
-            ['title' => 'Social Worker', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_clinical, 'location' => $location_dublin],
-            ['title' => 'Pharmacy Technician', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan],
-            ['title' => 'Facilities Coordinator', 'area' => 'Willow Grove Adolescent Unit', 'department' => $department_admin, 'location' => $location_dublin],
-            ['title' => 'Speech and Language Therapist', 'area' => 'Dean Clinic', 'department' => $department_clinical, 'location' => $location_dublin],
-            ['title' => 'HR Administrator', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_admin, 'location' => $location_dublin],
-            ['title' => 'Dietitian', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan],
+            ['title' => 'Clinical Nurse Manager', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_clinical, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Nursing'],
+            ['title' => 'Occupational Therapist', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan, 'job_type' => 'Permanent Full-Time', 'category' => 'Health & Social Care'],
+            ['title' => 'Healthcare Assistant', 'area' => 'Willow Grove Adolescent Unit', 'department' => $department_clinical, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Healthcare Assistant'],
+            ['title' => 'Psychologist', 'area' => 'Dean Clinic', 'department' => $department_clinical, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Psychology'],
+            ['title' => 'Medical Secretary', 'area' => 'Dean Clinic', 'department' => $department_admin, 'location' => $location_lucan, 'job_type' => 'Permanent Full-Time', 'category' => 'Administration'],
+            ['title' => 'Social Worker', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_clinical, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Health & Social Care'],
+            ['title' => 'Pharmacy Technician', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan, 'job_type' => 'Permanent Full-Time', 'category' => 'Pharmacy'],
+            ['title' => 'Facilities Coordinator', 'area' => 'Willow Grove Adolescent Unit', 'department' => $department_admin, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Facilities'],
+            ['title' => 'Speech and Language Therapist', 'area' => 'Dean Clinic', 'department' => $department_clinical, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Health & Social Care'],
+            ['title' => 'HR Administrator', 'area' => 'St Patrick' . chr(39) . 's University Hospital (SPUH)', 'department' => $department_admin, 'location' => $location_dublin, 'job_type' => 'Permanent Full-Time', 'category' => 'Administration'],
+            ['title' => 'Dietitian', 'area' => 'St Patrick' . chr(39) . 's Hospital Lucan', 'department' => $department_clinical, 'location' => $location_lucan, 'job_type' => 'Permanent Full-Time', 'category' => 'Health & Social Care'],
         ];
 
         $placeholder_content = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
@@ -292,6 +294,8 @@ if (! function_exists('matrix_seed_careers_vacancies')) {
             }
 
             update_field('career_area', $vacancy['area'], $career_id);
+            update_field('career_job_type', (string) ($vacancy['job_type'] ?? ''), $career_id);
+            update_field('career_category', (string) ($vacancy['category'] ?? ''), $career_id);
 
             if ($vacancy['department'] > 0) {
                 wp_set_object_terms($career_id, [(int) $vacancy['department']], 'career_department', false);
@@ -504,10 +508,12 @@ $flexi_rows = [
         'heading_tag' => 'h2',
         'heading_text' => 'Useful links',
         'intro_text' => '',
+        'layout_style' => 'flush_image',
         'links' => $about_links,
         'bg_color' => '#E9E2F7',
         'heading_color' => '#1E244B',
         'intro_color' => '#4A4B37',
+        'card_bg_color' => '#F1F8F9',
         'columns' => '3',
         'padding_settings' => $section_padding,
     ],

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Seed Medication page from https://www.stpatricks.ie/care-treatment/medication
+ * Seed Medication page (Figma 3279:19636) with production copy from stpatricks.ie.
  *
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-medication.php
  */
@@ -79,6 +79,46 @@ if (! function_exists('matrix_seed_import_scraped_image')) {
     }
 }
 
+if (! function_exists('matrix_seed_import_figma_image')) {
+    function matrix_seed_import_figma_image(string $url, string $title, string $cache_key): int
+    {
+        if ($url === '') {
+            return 0;
+        }
+
+        $existing = get_posts([
+            'post_type' => 'attachment',
+            'post_status' => 'inherit',
+            'posts_per_page' => 1,
+            'meta_query' => [
+                [
+                    'key' => '_matrix_seed_figma_key',
+                    'value' => $cache_key,
+                ],
+            ],
+        ]);
+
+        if ($existing !== []) {
+            return (int) $existing[0]->ID;
+        }
+
+        return matrix_seed_import_scraped_image($url, $title, 'figma-' . $cache_key);
+    }
+}
+
+if (! function_exists('matrix_seed_med_attachment_id')) {
+    function matrix_seed_med_attachment_id(string $source_path, string $fallback_url, string $cache_key, string $title): int
+    {
+        $attachment_id = matrix_migrate_attachment_id_for_source_path($source_path);
+
+        if ($attachment_id > 0) {
+            return $attachment_id;
+        }
+
+        return matrix_seed_import_scraped_image($fallback_url, $title, $cache_key);
+    }
+}
+
 if (! function_exists('matrix_seed_med_attachment_url')) {
     function matrix_seed_med_attachment_url(string $source_path): string
     {
@@ -136,6 +176,24 @@ if (! function_exists('matrix_seed_med_post_url')) {
     }
 }
 
+if (! function_exists('matrix_seed_accordion_item')) {
+    function matrix_seed_accordion_item(string $title, string $content, bool $starts_open = false): array
+    {
+        return [
+            'title' => $title,
+            'starts_open' => $starts_open ? 1 : 0,
+            'content_rows' => [
+                [
+                    'row_type' => 'text',
+                    'icon_key' => '',
+                    'icon' => '',
+                    'content' => $content,
+                ],
+            ],
+        ];
+    }
+}
+
 $home = home_url('/');
 $service_users_url = home_url('/service-users-and-visitors/');
 $mdt_url = home_url('/about-us/multidisciplinary-teams/');
@@ -156,24 +214,75 @@ $medication_choices_url = matrix_seed_med_post_url('mental-health-medication-cho
 $what_to_expect_url = matrix_seed_med_post_url('what-to-expect-from-mental-health-medication');
 $side_effects_url = matrix_seed_med_post_url('side-effects-of-medication');
 
+$cravings_pdf_url = 'https://www.stpatricks.ie/media/1590/spmhs-meds-and-cravings.pdf';
+
+$figma = [
+    'video_poster' => 'https://www.figma.com/api/mcp/asset/d62b785b-08eb-4596-a2ce-320033009b27',
+    'image_left' => 'https://www.figma.com/api/mcp/asset/be27514d-8a2e-426a-9991-9a803365b88b',
+    'image_right' => 'https://www.figma.com/api/mcp/asset/d37a2333-262f-4977-a9e3-c1653b65e163',
+];
+
 $hero_intro = 'You may be recommended to take medication to manage your mental health symptoms and support your journey of recovery.';
 
-$main_body = '<p>At St Patrick\'s Mental Health Services, we are committed to giving you the information you need to help you make informed choices about your care and treatment. Your <a href="' . esc_url($mdt_url) . '">multidisciplinary team</a> (MDT) will share this information with you, including about your medication.</p>'
-    . '<p><strong>Always ask a nurse, doctor or pharmacist – all of whom are members of your MDT – if you have any questions or queries about your medication.</strong></p>'
+$cravings_body = '<p>It can be difficult to control your weight, especially if you are on medication which can increase your appetite. Some medication can cause you to be thirsty or have a false appetite. These feelings are called cravings.</p>'
+    . '<p>If you eat too many sugary or fatty foods, or drink too many sugary drinks to satisfy these cravings, you will gain weight. Instead of filling up on these foods and drinks, choose from the list below. Over time the cravings will disappear.</p>';
+
+$mdt_intro = '<p><strong>Always ask a nurse, doctor or pharmacist – all of whom are members of your MDT – if you have any questions or queries about your medication.</strong></p>';
+
+$mdt_body = '<p>At St Patrick\'s Mental Health Services, we are committed to giving you the information you need to help you make informed choices about your care and treatment. Your <a href="' . esc_url($mdt_url) . '">multidisciplinary team</a> (MDT) will share this information with you, including about your medication.</p>'
     . '<p>Your MDT will ensure that medication you are prescribed is the most suited and effective for you. Your medication may change over time as different circumstances can impact what is appropriate for you. For example, you may need to adapt your medication to allow for other treatments you have been prescribed; to avoid allergies or reactions; or to be suitable when <a href="' . esc_url($maternal_url) . '">planning or during pregnancy</a>.</p>'
     . '<p>If you would like to know more about the medication you are taking or to understand other medication options available to you, the independent <a href="' . esc_url($choice_url) . '" target="_blank" rel="noopener noreferrer">Choice and Medication website</a> provides clear, updated information on all the medication we use in your care.</p>';
 
 $valproate_body = '<p>It is important to be aware that the medication valproate (brand name Epilim®) can have a harmful effect on an unborn baby. The <a href="' . esc_url($prevent_url) . '" target="_blank" rel="noopener noreferrer">Prevent programme</a> aims to reduce these risks, and, if you are being prescribed medication containing valproate, your MDT will talk you through everything you need to know. If you are a woman of childbearing potential or if you are planning or going through pregnancy, you can find out more information about valproate from <a href="' . esc_url($medicines_ie_url) . '" target="_blank" rel="noopener noreferrer">Medicines.ie</a>, the <a href="' . esc_url($hpra_url) . '" target="_blank" rel="noopener noreferrer">Health Products Regulatory Authority</a> or <a href="' . esc_url($choice_url) . '" target="_blank" rel="noopener noreferrer">Choice and Medication</a>.</p>';
 
-$hero_image_id = matrix_migrate_attachment_id_for_source_path('/media/1770/st-patricks-mental-health-services-mh-medication.jpg');
+$supports_intro = '<p><a href="' . esc_url($learning_hub_url) . '">Visit our Learning and Resource Hub</a> for brochures on your mental health and treatment.</p>';
 
-if ($hero_image_id <= 0) {
-    $hero_image_id = matrix_seed_import_scraped_image(
-        'https://www.stpatricks.ie/media/1770/st-patricks-mental-health-services-mh-medication.jpg',
-        'Medication',
-        'medication-scraped-hero'
-    );
-}
+$benzo_body = '<p>Guidance for people who are reducing or stopping benzodiazepine or Z-drug medication, including practical tips and what to expect during the process.</p>';
+
+$hero_image_id = matrix_seed_med_attachment_id(
+    '/media/1770/st-patricks-mental-health-services-mh-medication.jpg',
+    'https://www.stpatricks.ie/media/1770/st-patricks-mental-health-services-mh-medication.jpg',
+    'medication-scraped-hero',
+    'Medication'
+);
+
+$cravings_image_id = matrix_seed_med_attachment_id(
+    '/media/1617/medication-cravings.png',
+    'https://www.stpatricks.ie/media/1617/medication-cravings.png',
+    'medication-cravings-image',
+    'Medication and Cravings'
+);
+
+$benzo_image_id = matrix_seed_med_attachment_id(
+    '/media/1601/coming-off-benzodiazepines-or-z-drugs.png',
+    'https://www.stpatricks.ie/media/1601/coming-off-benzodiazepines-or-z-drugs.png',
+    'medication-benzo-image',
+    'Coming off Benzodiazepine or Z Drugs'
+);
+
+$video_poster_id = matrix_seed_import_figma_image(
+    $figma['video_poster'],
+    'Pregnancy and Valproate video poster',
+    'medication-video-3279-19636'
+);
+
+$figma_image_left_id = matrix_seed_import_figma_image(
+    $figma['image_left'],
+    'Medication section image',
+    'medication-image-left-3279-19636'
+);
+
+$figma_image_right_id = matrix_seed_import_figma_image(
+    $figma['image_right'],
+    'Medication section image two',
+    'medication-image-right-3279-19636'
+);
+
+$cravings_pdf_link = [
+    'title' => 'Medication & Cravings (324.3 kB)',
+    'url' => $cravings_pdf_url,
+    'target' => '_blank',
+];
 
 $safety_series_cards = [
     matrix_seed_med_grid_card(
@@ -193,21 +302,6 @@ $safety_series_cards = [
         '/media/3666/medicines.png',
         $side_effects_url,
         'bg3'
-    ),
-];
-
-$support_cards = [
-    matrix_seed_med_grid_card(
-        'Medication & Cravings',
-        '/media/1617/medication-cravings.png',
-        $medication_cravings_url,
-        'bg1'
-    ),
-    matrix_seed_med_grid_card(
-        'Coming off Benzodiazepine or \'Z\' Drugs',
-        '/media/1601/coming-off-benzodiazepines-or-z-drugs.png',
-        $benzo_url,
-        'bg2'
     ),
 ];
 
@@ -242,27 +336,15 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
         'text_color' => '#08284B',
     ],
     [
-        'acf_fc_layout' => 'useful_links',
-        'heading_tag' => matrix_page_seed_heading(2),
-        'heading' => 'In this section',
-        'variant' => 'flexi',
-        'links' => [
-            ['link' => ['title' => 'Medication', 'url' => get_permalink($post_id), 'target' => '']],
-            ['link' => ['title' => 'Lithium Learning Module', 'url' => $lithium_url, 'target' => '']],
-            ['link' => ['title' => 'Medication Safety Newsletter', 'url' => $newsletter_url, 'target' => '']],
-        ],
-        'background_color' => '#F1F8F9',
-    ],
-    [
         'acf_fc_layout' => 'content',
-        'heading' => '',
+        'heading' => 'Medication & Cravings',
         'heading_tag' => matrix_page_seed_heading(2),
         'accent_position' => 'below_heading',
         'intro_text' => '',
-        'content' => $main_body,
-        'column_layout' => 'one_column',
+        'content' => $cravings_body,
+        'document_link' => $cravings_pdf_link,
+        'image' => $cravings_image_id,
         'layout_style' => 'image_left',
-        'text_width' => 'wide',
         'background_type' => 'color',
         'background_color' => '#FFFFFF',
     ],
@@ -274,7 +356,7 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
         'layout_style' => 'feature_single',
         'slides' => [
             [
-                'poster_image' => '',
+                'poster_image' => $video_poster_id,
                 'video_source_type' => 'embed_url',
                 'video_embed_url' => 'https://www.youtube.com/watch?v=9fTMEZW03lg',
                 'caption' => '',
@@ -284,10 +366,25 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
         'section_background' => 'linear-gradient(-76.52deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
     ],
     [
+        'acf_fc_layout' => 'content',
+        'heading' => '',
+        'heading_tag' => matrix_page_seed_heading(2),
+        'accent_position' => 'below_heading',
+        'intro_text' => $mdt_intro,
+        'content' => $mdt_body,
+        'image' => '',
+        'layout_style' => 'image_left',
+        'column_layout' => 'one_column',
+        'text_width' => 'wide',
+        'background_type' => 'color',
+        'background_color' => '#FFFFFF',
+    ],
+    [
         'acf_fc_layout' => 'about_links_grid',
         'heading_tag' => matrix_page_seed_heading(2),
         'heading_text' => 'See our medication safety series',
         'intro_text' => '<p>Get insights from our Pharmacy Department on how to make decisions about your mental health medication, what to expect from your medication, and what you should be aware of around medication safety.</p>',
+        'layout_style' => 'image_feature',
         'links' => $safety_series_cards,
         'bg_color' => '#FFFFFF',
         'heading_color' => '#1E244B',
@@ -295,15 +392,39 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
         'columns' => '3',
     ],
     [
-        'acf_fc_layout' => 'about_links_grid',
+        'acf_fc_layout' => 'content',
+        'heading' => 'More information and supports',
         'heading_tag' => matrix_page_seed_heading(2),
-        'heading_text' => 'More information and supports',
-        'intro_text' => '<p><a href="' . esc_url($learning_hub_url) . '">Visit our Learning and Resource Hub</a> for brochures on your mental health and treatment.</p>',
-        'links' => $support_cards,
-        'bg_color' => '#F1F8F9',
-        'heading_color' => '#1E244B',
-        'intro_color' => '#08284B',
-        'columns' => '2',
+        'accent_position' => 'below_heading',
+        'intro_text' => $supports_intro,
+        'content' => '<p>Our brochures explain how to manage cravings linked to medication and offer practical tips for healthier choices.</p>',
+        'document_link' => $cravings_pdf_link,
+        'image' => $figma_image_left_id > 0 ? $figma_image_left_id : $cravings_image_id,
+        'layout_style' => 'image_left',
+        'background_type' => 'color',
+        'background_color' => '#FBF8F3',
+        'primary_button' => [
+            'title' => 'Medication & Cravings',
+            'url' => $medication_cravings_url,
+            'target' => '',
+        ],
+    ],
+    [
+        'acf_fc_layout' => 'content',
+        'heading' => 'Coming off Benzodiazepine or \'Z\' Drugs',
+        'heading_tag' => matrix_page_seed_heading(2),
+        'accent_position' => 'below_heading',
+        'intro_text' => '',
+        'content' => $benzo_body,
+        'image' => $figma_image_right_id > 0 ? $figma_image_right_id : $benzo_image_id,
+        'layout_style' => 'image_right',
+        'background_type' => 'color',
+        'background_color' => '#FFFFFF',
+        'primary_button' => [
+            'title' => 'Read the brochure',
+            'url' => $benzo_url,
+            'target' => '',
+        ],
     ],
     [
         'acf_fc_layout' => 'video_showcase',
@@ -327,11 +448,64 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
         'heading_tag' => matrix_page_seed_heading(2),
         'heading_text' => 'Meet our pharmacy team',
         'intro_text' => '',
+        'layout_style' => 'image_feature',
         'links' => $pharmacy_cards,
         'bg_color' => '#FBFAF7',
         'heading_color' => '#1E244B',
         'intro_color' => '#08284B',
-        'columns' => '2',
+        'columns' => '1',
+    ],
+    [
+        'acf_fc_layout' => 'useful_links',
+        'heading_tag' => matrix_page_seed_heading(2),
+        'heading' => 'In this section',
+        'variant' => 'flexi',
+        'links' => [
+            ['link' => ['title' => 'Medication', 'url' => home_url('/service-users-and-visitors/medication/'), 'target' => '']],
+            ['link' => ['title' => 'Lithium Learning Module', 'url' => $lithium_url, 'target' => '']],
+            ['link' => ['title' => 'Medication Safety Newsletter', 'url' => $newsletter_url, 'target' => '']],
+        ],
+        'background_color' => '#E9E2F7',
+        'heading_color' => '#1E244B',
+        'link_color' => '#1E244B',
+    ],
+    [
+        'acf_fc_layout' => 'content',
+        'heading' => 'Frequently Asked Questions',
+        'heading_tag' => matrix_page_seed_heading(2),
+        'accent_position' => 'below_heading',
+        'intro_text' => '',
+        'content' => '',
+        'image' => '',
+        'layout_style' => 'image_left',
+        'background_type' => 'color',
+        'background_color' => '#FBFAF7',
+    ],
+    [
+        'acf_fc_layout' => 'content_accordion',
+        'layout_style' => 'default',
+        'section_background' => '#FBFAF7',
+        'panel_background' => '#FFFFFF',
+        'open_panel_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
+        'items' => [
+            matrix_seed_accordion_item(
+                'Who can I ask about my medication?',
+                '<p>Always ask a nurse, doctor or pharmacist – all of whom are members of your multidisciplinary team (MDT) – if you have any questions or queries about your medication.</p>'
+            ),
+            matrix_seed_accordion_item(
+                'Where can I find independent information about my medication?',
+                '<p>The <a href="' . esc_url($choice_url) . '" target="_blank" rel="noopener noreferrer">Choice and Medication website</a> provides clear, updated information on all the medication we use in your care.</p>'
+            ),
+            matrix_seed_accordion_item(
+                'What should I know about valproate and pregnancy?',
+                $valproate_body,
+                true
+            ),
+            matrix_seed_accordion_item(
+                'Where can I find more brochures and supports?',
+                '<p><a href="' . esc_url($learning_hub_url) . '">Visit our Learning and Resource Hub</a> for brochures on your mental health and treatment, including guidance on medication and cravings.</p>'
+            ),
+        ],
     ],
     [
         'acf_fc_layout' => 'content_cta',
@@ -358,7 +532,7 @@ $saved_count = is_array($saved_rows) ? count($saved_rows) : 0;
 if (class_exists('WP_CLI')) {
     if ($saved_count === count($flexi_rows)) {
         WP_CLI::success(sprintf(
-            'Seeded Medication page (%d) with %d flexi blocks from stpatricks.ie content.',
+            'Seeded Medication page (%d) with %d flexi blocks (Figma 3279:19636 layout + production copy).',
             $post_id,
             $saved_count
         ));

@@ -81,18 +81,7 @@ function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', 
         return str_replace('opacity="0.25"', 'opacity="1"', $svg);
     }
 
-    $accent_color = trim((string) $accent_color);
-    if ($accent_color === '') {
-        $accent_color = '#6FC9C0';
-    }
-
-    $safe_accent = function_exists('esc_attr')
-        ? esc_attr($accent_color)
-        : htmlspecialchars($accent_color, ENT_QUOTES, 'UTF-8');
-
-    $svg = str_replace('fill="white"', 'fill="' . $safe_accent . '"', $svg);
-
-    return str_replace('opacity="0.25"', 'opacity="1"', $svg);
+    return $svg;
 }
 
 /**
@@ -127,4 +116,12 @@ function matrix_render_what_we_offer_service_rail(array $service): void
         </div>
     </div>
     <?php
+}
+
+function matrix_get_what_we_offer_section_padding_classes($vertical_padding = 'default')
+{
+    return matrix_get_section_vertical_padding_classes(
+        matrix_resolve_section_vertical_padding($vertical_padding),
+        'lg:py-24'
+    );
 }

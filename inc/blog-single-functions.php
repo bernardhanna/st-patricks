@@ -58,15 +58,24 @@ function matrix_get_event_post_fields($post_id = null)
     ];
 }
 
-function matrix_should_link_event_thumbnail_externally($post_id = null)
+function matrix_should_link_event_archive_externally($post_id = null)
 {
-    if (! matrix_is_event_post($post_id)) {
+    if (function_exists('matrix_uses_event_style_single_layout')) {
+        if (! matrix_uses_event_style_single_layout($post_id)) {
+            return false;
+        }
+    } elseif (! matrix_is_event_post($post_id)) {
         return false;
     }
 
     $fields = matrix_get_event_post_fields($post_id);
 
     return $fields['link_external_from_archive'] && $fields['external_url'] !== '';
+}
+
+function matrix_should_link_event_thumbnail_externally($post_id = null)
+{
+    return matrix_should_link_event_archive_externally($post_id);
 }
 
 function matrix_get_blog_post_card_url($post_id = null, $context = 'default')
@@ -77,7 +86,10 @@ function matrix_get_blog_post_card_url($post_id = null, $context = 'default')
         return '';
     }
 
-    if ($context === 'thumbnail' && matrix_should_link_event_thumbnail_externally($post_id)) {
+    if (
+        matrix_should_link_event_archive_externally($post_id)
+        && in_array($context, ['thumbnail', 'archive'], true)
+    ) {
         return matrix_get_event_post_fields($post_id)['external_url'];
     }
 
@@ -87,8 +99,11 @@ function matrix_get_blog_post_card_url($post_id = null, $context = 'default')
 function matrix_get_blog_post_link_target($post_id = null, $context = 'default')
 {
     $url = matrix_get_blog_post_card_url($post_id, $context);
-    $is_external = ($context === 'thumbnail' && matrix_should_link_event_thumbnail_externally($post_id) && $url !== '')
-        || matrix_is_external_url($url);
+    $is_external = (
+        in_array($context, ['thumbnail', 'archive'], true)
+        && matrix_should_link_event_archive_externally($post_id)
+        && $url !== ''
+    ) || matrix_is_external_url($url);
     $target = matrix_normalize_link_target($url);
 
     return [
@@ -97,6 +112,17 @@ function matrix_get_blog_post_link_target($post_id = null, $context = 'default')
         'rel' => matrix_external_link_rel($target),
         'is_external' => $is_external,
     ];
+}
+
+function matrix_get_event_style_featured_image_placeholder_label($post_id = null)
+{
+    $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? get_the_ID() : 0));
+
+    if ($post_id < 1) {
+        return '';
+    }
+
+    return function_exists('get_the_title') ? (string) get_the_title($post_id) : '';
 }
 
 function matrix_get_blog_index_url()
@@ -118,11 +144,16 @@ function matrix_get_blog_index_url()
     return home_url('/resources/');
 }
 
+function matrix_get_post_date_display_format()
+{
+    return 'd/m/y';
+}
+
 function matrix_format_blog_post_date($post_id = null)
 {
     $post_id = $post_id ?: get_the_ID();
 
-    return get_the_date('d/m/y', $post_id);
+    return get_the_date(matrix_get_post_date_display_format(), $post_id);
 }
 
 function matrix_get_blog_post_intro($post_id = null)

@@ -6,6 +6,8 @@
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-about-our-st-patricks-at-home-service.php
  */
 
+require_once __DIR__ . '/lib/service-users-visitors-page-layout.php';
+
 $post_id = (int) (get_page_by_path('service-users-and-visitors/about-our-st-patricks-at-home-service')?->ID ?? 0);
 
 if ($post_id === 0) {
@@ -164,20 +166,7 @@ $useful_links_defaults = function_exists('matrix_get_search_results_useful_links
     ? matrix_get_search_results_useful_links_defaults()
     : ['links' => []];
 
-$section_padding = [
-    [
-        'screen_size' => 'mob',
-        'padding_top' => '3',
-        'padding_bottom' => '3',
-    ],
-    [
-        'screen_size' => 'lg',
-        'padding_top' => '6.25',
-        'padding_bottom' => '6.25',
-    ],
-];
-
-$flexi_rows = [
+$flexi_rows = matrix_apply_service_users_visitors_flexi_layout([
     [
         'acf_fc_layout' => 'hero_with_breadcrumbs',
         'layout_style' => 'image_split',
@@ -217,7 +206,6 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'content',
         'heading' => 'Placeholders',
-        'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
         'intro_text' => $placeholders_intro,
         'content' => $placeholders_body,
@@ -225,12 +213,10 @@ $flexi_rows = [
         'layout_style' => 'image_left',
         'background_type' => 'color',
         'background_color' => '#FFFFFF',
-        'padding_settings' => $section_padding,
     ],
     [
         'acf_fc_layout' => 'content',
         'heading' => 'What to expect',
-        'heading_tag' => 'h2',
         'accent_position' => 'below_heading',
         'intro_text' => '',
         'content' => $what_to_expect_intro,
@@ -238,22 +224,9 @@ $flexi_rows = [
         'layout_style' => 'image_left',
         'background_type' => 'color',
         'background_color' => '#FBFAF7',
-        'padding_settings' => [
-            [
-                'screen_size' => 'mob',
-                'padding_top' => '3',
-                'padding_bottom' => '1',
-            ],
-            [
-                'screen_size' => 'lg',
-                'padding_top' => '6.25',
-                'padding_bottom' => '1',
-            ],
-        ],
     ],
     [
         'acf_fc_layout' => 'content_accordion',
-        'layout_style' => 'default',
         'section_background' => '#FBFAF7',
         'panel_background' => '#FFFFFF',
         'open_panel_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
@@ -265,41 +238,24 @@ $flexi_rows = [
             matrix_seed_accordion_item('Sit amet lorem consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
             matrix_seed_accordion_item('Lorem ipsum dolor sit amet consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
         ],
-        'padding_settings' => [
-            [
-                'screen_size' => 'mob',
-                'padding_top' => '1',
-                'padding_bottom' => '3',
-            ],
-            [
-                'screen_size' => 'lg',
-                'padding_top' => '1',
-                'padding_bottom' => '6.25',
-            ],
-        ],
     ],
     [
         'acf_fc_layout' => 'video_showcase',
-        'heading_tag' => 'h2',
         'heading' => 'Title, slider',
         'intro' => $video_intro,
-        'layout_style' => 'feature_slider',
         'slides' => $video_slides,
         'section_background' => 'linear-gradient(-80.44deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
-        'padding_settings' => $section_padding,
     ],
     [
         'acf_fc_layout' => 'useful_links',
         'heading' => 'Useful links (all placeholder/suggestions)',
-        'heading_tag' => 'h2',
         'variant' => 'search',
         'background_color' => '#E9E2F7',
         'heading_color' => '#1E244B',
         'link_color' => '#1E244B',
         'links' => $useful_links_defaults['links'] ?? [],
-        'padding_settings' => $section_padding,
     ],
-];
+]);
 
 update_field('hero_content_blocks', [], $post_id);
 update_field('flexible_content_blocks', $flexi_rows, $post_id);

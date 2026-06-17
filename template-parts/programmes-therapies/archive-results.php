@@ -69,52 +69,21 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
     </p>
 <?php } ?>
 
-<?php if ($total_pages > 1) { ?>
-    <nav class="flex flex-wrap gap-2 justify-center items-center mt-10" aria-label="Programmes and therapies pagination">
-        <?php if ($current_page > 1) { ?>
-            <a
-                href="<?php echo esc_url(matrix_build_programmes_therapies_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                data-pt-page="<?php echo esc_attr((string) ($current_page - 1)); ?>"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white text-[#08284B] transition-colors duration-200 hover:border-[#024B79] hover:bg-[#F1F8F9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                aria-label="Go to previous page"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path d="M8.75 3.5L5.25 7L8.75 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-        <?php } ?>
-
-        <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
-            <?php if ($page === $current_page) { ?>
-                <span
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#08284B] font-primary text-[14px] font-semibold text-white"
-                    aria-current="page"
-                >
-                    <?php echo esc_html((string) $page); ?>
-                </span>
-            <?php } else { ?>
-                <a
-                    href="<?php echo esc_url(matrix_build_programmes_therapies_archive_page_url($base_url, $state, $page)); ?>"
-                    data-pt-page="<?php echo esc_attr((string) $page); ?>"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white font-primary text-[14px] font-semibold text-[#08284B] transition-colors duration-200 hover:border-[#024B79] hover:bg-[#F1F8F9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                    aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
-                >
-                    <?php echo esc_html((string) $page); ?>
-                </a>
-            <?php } ?>
-        <?php } ?>
-
-        <?php if ($current_page < $total_pages) { ?>
-            <a
-                href="<?php echo esc_url(matrix_build_programmes_therapies_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                data-pt-page="<?php echo esc_attr((string) ($current_page + 1)); ?>"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#C6ECF4] bg-white text-[#08284B] transition-colors duration-200 hover:border-[#024B79] hover:bg-[#F1F8F9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                aria-label="Go to next page"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-        <?php } ?>
-    </nav>
-<?php } ?>
+<?php
+get_template_part('template-parts/partials/archive-pagination', null, [
+    'archive_pagination' => [
+        'current_page' => $current_page,
+        'total_pages' => $total_pages,
+        'aria_label' => 'Programmes and therapies pagination',
+        'variant' => 'pill',
+        'build_page_url' => static function (int $page) use ($base_url, $state): string {
+            return matrix_build_programmes_therapies_archive_page_url($base_url, $state, $page);
+        },
+        'link_attributes_callback' => static function (int $page): array {
+            return [
+                'data-pt-page' => (string) $page,
+            ];
+        },
+    ],
+]);
+?>

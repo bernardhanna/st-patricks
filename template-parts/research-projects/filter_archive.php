@@ -66,6 +66,8 @@ $colors = array_merge([
     'inactive_chip_background' => '#FFFFFF',
     'active_chip_background' => '#80CCD9',
     'active_chip_text' => '#08284B',
+    'active_pagination_background' => '#024B79',
+    'active_pagination_text' => '#FFFFFF',
     'search_input_text' => '#08284B',
     'search_input_border' => '#E2E8F0',
     'search_button_background' => '#08284B',
@@ -78,10 +80,9 @@ $colors = array_merge([
 
 $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
-$controls_classes = 'flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between';
+$controls_classes = matrix_get_filter_archive_controls_class_names('start');
 $chip_group_classes = 'flex flex-wrap gap-3';
-$grid_classes = 'mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:mt-10 xl:grid-cols-3 xl:gap-8';
-$pagination_classes = 'mt-10 flex flex-wrap items-center justify-center gap-2';
+$grid_classes = matrix_get_filter_archive_card_grid_class_names();
 $search_input_id = 'research-project-archive-search-' . wp_rand(1000, 999999);
 $researcher_select_id = 'research-project-archive-researcher-' . wp_rand(1000, 999999);
 $has_posts = $query instanceof WP_Query && $query->have_posts();
@@ -359,7 +360,7 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                                     </div>
                                 <?php } ?>
 
-                                <h3 class="font-primary text-[24px] font-semibold leading-[30px] tracking-[-0.18px]">
+                                <h3 class="<?php echo esc_attr(matrix_get_filter_archive_card_title_class_names()); ?>">
                                     <a
                                         href="<?php echo esc_url($permalink); ?>"
                                         class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
@@ -370,17 +371,17 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                                 </h3>
 
                                 <p
-                                    class="mt-3 font-primary text-[14px] font-medium leading-[20px]"
+                                    class="<?php echo esc_attr(matrix_get_filter_archive_card_date_class_names()); ?>"
                                     style="color: <?php echo esc_attr($colors['card_meta']); ?>;"
                                 >
                                     <time datetime="<?php echo esc_attr(get_the_date('c', $post_id)); ?>">
-                                        <?php echo esc_html(get_the_date('j F Y', $post_id)); ?>
+                                        <?php echo esc_html(matrix_format_blog_post_date($post_id)); ?>
                                     </time>
                                 </p>
 
                                 <?php if ($excerpt !== '') { ?>
                                     <p
-                                        class="mt-4 font-primary text-[16px] leading-[28px]"
+                                        class="<?php echo esc_attr(matrix_get_filter_archive_card_excerpt_class_names()); ?>"
                                         style="color: <?php echo esc_attr($colors['card_excerpt']); ?>;"
                                     >
                                         <?php echo esc_html($excerpt); ?>
@@ -400,56 +401,19 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                 </p>
             <?php } ?>
 
-            <?php if ($total_pages > 1) { ?>
-                <nav class="<?php echo esc_attr($pagination_classes); ?>" aria-label="Archive pagination">
-                    <?php if ($current_page > 1) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_research_project_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
-                            style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                            aria-label="Go to previous page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M8.75 3.5L5.25 7L8.75 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-
-                    <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
-                        <?php if ($page === $current_page) { ?>
-                            <span
-                                class="inline-flex h-11 w-11 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                style="border-color: <?php echo esc_attr($colors['active_chip_background']); ?>; background-color: <?php echo esc_attr($colors['active_chip_background']); ?>; color: <?php echo esc_attr($colors['active_chip_text']); ?>;"
-                                aria-current="page"
-                            >
-                                <?php echo esc_html((string) $page); ?>
-                            </span>
-                        <?php } else { ?>
-                            <a
-                                href="<?php echo esc_url(matrix_build_research_project_archive_page_url($base_url, $state, $page)); ?>"
-                                class="btn inline-flex h-11 w-11 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                                aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
-                            >
-                                <?php echo esc_html((string) $page); ?>
-                            </a>
-                        <?php } ?>
-                    <?php } ?>
-
-                    <?php if ($current_page < $total_pages) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_research_project_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                            class="inline-flex justify-center items-center w-11 h-11 rounded-full border btn"
-                            style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                            aria-label="Go to next page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-                </nav>
-            <?php } ?>
+            <?php
+            get_template_part('template-parts/partials/archive-pagination', null, [
+                'archive_pagination' => [
+                    'current_page' => $current_page,
+                    'total_pages' => $total_pages,
+                    'aria_label' => 'Archive pagination',
+                    'colors' => $colors,
+                    'build_page_url' => static function (int $page) use ($base_url, $state): string {
+                        return matrix_build_research_project_archive_page_url($base_url, $state, $page);
+                    },
+                ],
+            ]);
+            ?>
         </div>
     </div>
 </section>

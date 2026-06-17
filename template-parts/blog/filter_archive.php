@@ -77,6 +77,8 @@ $colors = array_merge([
     'inactive_chip_background' => '#FFFFFF',
     'active_chip_background' => '#80CCD9',
     'active_chip_text' => '#08284B',
+    'active_pagination_background' => '#024B79',
+    'active_pagination_text' => '#FFFFFF',
     'search_input_text' => '#08284B',
     'search_input_border' => '#E2E8F0',
     'search_button_background' => '#08284B',
@@ -89,12 +91,10 @@ $colors = array_merge([
 
 $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
-$controls_classes = 'flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between';
+$controls_classes = matrix_get_filter_archive_controls_class_names();
 $chip_scroll_classes = matrix_get_blog_filter_archive_horizontal_scroll_class_names();
 $chip_group_classes = matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names();
-$grid_classes = 'mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:mt-10 xl:grid-cols-3 xl:gap-8';
-$pagination_classes = matrix_get_blog_filter_archive_pagination_class_names();
-$pagination_items = matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages);
+$grid_classes = matrix_get_filter_archive_card_grid_class_names();
 $search_input_id = 'blog-filter-archive-search-' . wp_rand(1000, 999999);
 $has_posts = $query instanceof WP_Query && $query->have_posts();
 ?>
@@ -269,8 +269,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         $query->the_post();
                         $post_id = get_the_ID();
                         $title = get_the_title($post_id);
-                        $permalink = matrix_get_blog_post_card_url($post_id);
-                        $thumbnail_link = matrix_get_blog_post_link_target($post_id, 'thumbnail');
+                        $card_link = matrix_get_blog_post_link_target($post_id, 'archive');
                         $thumbnail_id = get_post_thumbnail_id($post_id);
                         $categories = get_the_category($post_id);
                         $primary_category = ($categories && $categories[0] instanceof WP_Term) ? $categories[0] : null;
@@ -295,10 +294,10 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             style="background-color: <?php echo esc_attr($colors['card_background']); ?>;"
                         >
                             <a
-                                href="<?php echo esc_url($thumbnail_link['url']); ?>"
-                                <?php if ($thumbnail_link['target'] === '_blank') { ?>
+                                href="<?php echo esc_url($card_link['url']); ?>"
+                                <?php if ($card_link['target'] === '_blank') { ?>
                                     target="_blank"
-                                    rel="<?php echo esc_attr($thumbnail_link['rel']); ?>"
+                                    rel="<?php echo esc_attr($card_link['rel']); ?>"
                                 <?php } ?>
                                 class="block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
                             >
@@ -334,9 +333,13 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                     </div>
                                 <?php } ?>
 
-                                <h3 class="font-primary text-[24px] font-semibold leading-[30px] tracking-[-0.18px]">
+                                <h3 class="<?php echo esc_attr(matrix_get_filter_archive_card_title_class_names()); ?>">
                                     <a
-                                        href="<?php echo esc_url($permalink); ?>"
+                                        href="<?php echo esc_url($card_link['url']); ?>"
+                                        <?php if ($card_link['target'] === '_blank') { ?>
+                                            target="_blank"
+                                            rel="<?php echo esc_attr($card_link['rel']); ?>"
+                                        <?php } ?>
                                         class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
                                         style="color: <?php echo esc_attr($colors['card_title']); ?>;"
                                     >
@@ -345,17 +348,17 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                 </h3>
 
                                 <p
-                                    class="mt-3 font-primary text-[14px] font-medium leading-[20px]"
+                                    class="<?php echo esc_attr(matrix_get_filter_archive_card_date_class_names()); ?>"
                                     style="color: <?php echo esc_attr($colors['card_meta']); ?>;"
                                 >
                                     <time datetime="<?php echo esc_attr(get_the_date('c', $post_id)); ?>">
-                                        <?php echo esc_html(get_the_date('j F Y', $post_id)); ?>
+                                        <?php echo esc_html(matrix_format_blog_post_date($post_id)); ?>
                                     </time>
                                 </p>
 
                                 <?php if ($excerpt !== '') { ?>
                                     <p
-                                        class="mt-4 font-primary text-[16px] leading-[28px]"
+                                        class="<?php echo esc_attr(matrix_get_filter_archive_card_excerpt_class_names()); ?>"
                                         style="color: <?php echo esc_attr($colors['card_excerpt']); ?>;"
                                     >
                                         <?php echo esc_html($excerpt); ?>
@@ -375,67 +378,19 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                 </p>
             <?php } ?>
 
-            <?php if ($total_pages > 1) { ?>
-                <nav class="<?php echo esc_attr($pagination_classes); ?>" aria-label="Archive pagination">
-                    <?php if ($current_page > 1) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page - 1)); ?>"
-                            class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border"
-                            style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                            aria-label="Go to previous page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M8.75 3.5L5.25 7L8.75 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-
-                    <?php foreach ($pagination_items as $pagination_item) { ?>
-                        <?php if (($pagination_item['type'] ?? '') === 'ellipsis') { ?>
-                            <span
-                                class="inline-flex h-11 w-11 shrink-0 items-center justify-center font-primary text-[14px] font-semibold"
-                                style="color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                                aria-hidden="true"
-                            >
-                                …
-                            </span>
-                        <?php } elseif (($pagination_item['type'] ?? '') === 'page') { ?>
-                            <?php $page = max(1, (int) ($pagination_item['page'] ?? 1)); ?>
-                            <?php if ($page === $current_page) { ?>
-                                <span
-                                    class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                    style="border-color: <?php echo esc_attr($colors['active_chip_background']); ?>; background-color: <?php echo esc_attr($colors['active_chip_background']); ?>; color: <?php echo esc_attr($colors['active_chip_text']); ?>;"
-                                    aria-current="page"
-                                >
-                                    <?php echo esc_html((string) $page); ?>
-                                </span>
-                            <?php } else { ?>
-                                <a
-                                    href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $page)); ?>"
-                                    class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-primary text-[14px] font-semibold"
-                                    style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                                    aria-label="Go to page <?php echo esc_attr((string) $page); ?>"
-                                >
-                                    <?php echo esc_html((string) $page); ?>
-                                </a>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } ?>
-
-                    <?php if ($current_page < $total_pages) { ?>
-                        <a
-                            href="<?php echo esc_url(matrix_build_blog_filter_archive_page_url($base_url, $state, $current_page + 1)); ?>"
-                            class="btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border"
-                            style="border-color: <?php echo esc_attr($colors['chip_border']); ?>; color: <?php echo esc_attr($colors['chip_text']); ?>;"
-                            aria-label="Go to next page"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <path d="M5.25 3.5L8.75 7L5.25 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    <?php } ?>
-                </nav>
-            <?php } ?>
+            <?php
+            get_template_part('template-parts/partials/archive-pagination', null, [
+                'archive_pagination' => [
+                    'current_page' => $current_page,
+                    'total_pages' => $total_pages,
+                    'aria_label' => 'Archive pagination',
+                    'colors' => $colors,
+                    'build_page_url' => static function (int $page) use ($base_url, $state): string {
+                        return matrix_build_blog_filter_archive_page_url($base_url, $state, $page);
+                    },
+                ],
+            ]);
+            ?>
         </div>
     </div>
 </section>

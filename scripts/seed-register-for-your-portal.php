@@ -17,7 +17,7 @@ if ($post_id === 0) {
 }
 
 $home = home_url('/');
-$your_portal_url = home_url('/your-portal/');
+$portal_login_url = 'https://eu.patientsknowbest.com/?team=stpatricksmhs';
 $privacy_policy_url = home_url('/cookie-privacy-policy/');
 
 $hero_intro = 'Your Portal is a secure, online platform that you can access on your computer, smartphone or tablet to support your path to mental health recovery. Register using the form below or log-in if you already have an account.';
@@ -43,9 +43,10 @@ $flexi_rows = [
         'aside_heading' => 'Already registered?',
         'primary_button' => [
             'title' => 'Log In',
-            'url' => $your_portal_url,
+            'url' => $portal_login_url,
             'target' => '_blank',
         ],
+        'primary_button_show_icon' => 1,
         'background_color' => '#FFFFFF',
         'heading_color' => '#08284B',
         'text_color' => '#08284B',

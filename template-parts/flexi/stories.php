@@ -55,7 +55,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
         >
           <?php if (!empty($posts)) : foreach ($posts as $p) :
             setup_postdata($p);
-            $post_date  = get_the_date('j M Y', $p->ID);
+            $post_date  = matrix_format_blog_post_date($p->ID);
             $post_title = get_the_title($p->ID);
             $post_excerpt = get_the_excerpt($p->ID);
             $mobile_excerpt = !empty($post_excerpt)
@@ -140,7 +140,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
             <div class="flex w-full max-w-full items-stretch justify-between gap-3">
               <?php foreach ($slide_posts as $card_index => $sp):
                 setup_postdata($sp);
-                $post_date  = get_the_date('j M Y', $sp->ID);
+                $post_date  = matrix_format_blog_post_date($sp->ID);
                 $post_title = get_the_title($sp->ID);
                 $post_excerpt = get_the_excerpt($sp->ID);
                 $post_url   = get_permalink($sp->ID);

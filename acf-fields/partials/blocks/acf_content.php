@@ -120,7 +120,7 @@ $content_safeguarding
     ])
         ->addSelect('background_type', [
             'label' => 'Background Type',
-            'instructions' => 'Choose a preset background or use a custom color/gradient.',
+            'instructions' => 'Choose a preset background or use a custom color, gradient, or image.',
             'choices' => [
                 'gradient' => 'Default Gradient',
                 'white' => 'White',
@@ -128,12 +128,13 @@ $content_safeguarding
                 'light_blue' => 'Light Blue',
                 'navy' => 'Navy Blue (#024B79)',
                 'color' => 'Custom Color',
+                'image' => 'Image',
             ],
             'default_value' => 'gradient',
         ])
         ->addColorPicker('background_color', [
             'label' => 'Background Color',
-            'instructions' => 'Select a custom background color (only used when Background Type is Custom Color).',
+            'instructions' => 'Custom background colour, or fallback behind a background image.',
             'default_value' => '#FFFFFF',
             'conditional_logic' => [
                 [
@@ -141,6 +142,13 @@ $content_safeguarding
                         'field' => 'background_type',
                         'operator' => '==',
                         'value' => 'color',
+                    ],
+                ],
+                [
+                    [
+                        'field' => 'background_type',
+                        'operator' => '==',
+                        'value' => 'image',
                     ],
                 ],
             ],
@@ -155,6 +163,59 @@ $content_safeguarding
                         'field' => 'background_type',
                         'operator' => '==',
                         'value' => 'gradient',
+                    ],
+                ],
+            ],
+        ])
+        ->addImage('background_image', [
+            'label' => 'Background Image',
+            'instructions' => 'Full-width background image for this section.',
+            'return_format' => 'id',
+            'preview_size' => 'medium',
+            'library' => 'all',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'background_type',
+                        'operator' => '==',
+                        'value' => 'image',
+                    ],
+                ],
+            ],
+        ])
+        ->addColorPicker('background_image_overlay_color', [
+            'label' => 'Background Image Overlay',
+            'instructions' => 'Optional colour tint over the background image to improve text contrast.',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'background_type',
+                        'operator' => '==',
+                        'value' => 'image',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('background_image_overlay_opacity', [
+            'label' => 'Background Image Overlay Opacity',
+            'instructions' => 'How strong the overlay tint appears over the image.',
+            'choices' => [
+                '0' => 'None',
+                '25' => '25%',
+                '50' => '50%',
+                '75' => '75%',
+            ],
+            'default_value' => '50',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'background_type',
+                        'operator' => '==',
+                        'value' => 'image',
+                    ],
+                    [
+                        'field' => 'background_image_overlay_color',
+                        'operator' => '!=empty',
                     ],
                 ],
             ],

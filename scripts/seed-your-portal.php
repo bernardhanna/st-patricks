@@ -136,9 +136,15 @@ $register_url = home_url('/register-for-your-portal/');
 
 $figma = [
     'video' => 'https://www.figma.com/api/mcp/asset/ea3dcbe5-e8ed-4486-be48-1bc8644bc58a',
+    'login_cta_background' => 'https://s3-alpha-sig.figma.com/img/6a0d/d8cb/b23bd7dcaca834ceca678b25ebcfc359?Expires=1782691200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=paaJEgGPkHX48vVqkBWEJAKmR~6HL8XXUgHnJtiiQiQLIZeU~8t9BWTA9W2NogEUHImMgkeA3a63cwubk3zbSYE0lUHTCObfmnUT1iEEcrgpD~iv-dvZfjkGWjrJlIT~cY13Q0Q2F-B71FRqrYu6H4zBqQNGkuBHk3~eE2dTDKe5q0LqJCghAvNoTJgqgioBBrdjI0w-WlxYnuVQPHl0Ux8tsEQLxYLSyDm~k~ohRAVijQfvyik9f2951YIGRkpizjbyUsOPqUGogS68A64LWvIMPmyqrKiBtiE~~nEGY1PeM1diaXk5Lr6S29QD9qmMOr0-uTUM1LlScroln-GDTA__',
 ];
 
 $video_poster_id = matrix_seed_resolve_image($figma['video'], 'your-portal-video-2888-3250', 'Your Portal video guide');
+$login_cta_background_id = matrix_seed_resolve_image(
+    $figma['login_cta_background'],
+    'your-portal-login-cta-2888-3253',
+    'Your Portal login CTA background'
+);
 
 $hero_intro = 'Your Portal is a secure, online platform that you can access on your computer, smartphone or tablet to support your path to mental health recovery.';
 $login_body = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
@@ -205,8 +211,10 @@ $flexi_rows = [
             'url' => $home . 'your-portal/',
             'target' => '_self',
         ],
-        'background_type' => 'color',
-        'background_color' => '#F1F3DE',
+        'layout_style' => 'image_background',
+        'background_image' => $login_cta_background_id,
+        'background_tint_color' => '#F1F3DE',
+        'background_image_opacity' => '50',
         'padding_settings' => $section_padding,
     ],
     [

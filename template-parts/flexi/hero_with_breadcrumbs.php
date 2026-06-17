@@ -10,6 +10,7 @@ matrix_render_hero_with_breadcrumbs([
     'heading_tag' => get_sub_field('heading_tag'),
     'content' => get_sub_field('content'),
     'primary_button' => get_sub_field('primary_button'),
+    'primary_button_show_icon' => get_sub_field('primary_button_show_icon'),
     'hero_image' => get_sub_field('hero_image'),
     'show_breadcrumbs' => (bool) get_sub_field('show_breadcrumbs'),
     'breadcrumb_source' => get_sub_field('breadcrumb_source'),
@@ -22,4 +23,5 @@ matrix_render_hero_with_breadcrumbs([
     'accent_color' => get_sub_field('accent_color'),
     'aside_heading' => get_sub_field('aside_heading'),
     'text_max_width' => get_sub_field('text_max_width'),
+    'heading_max_width' => get_sub_field('heading_max_width'),
 ], get_the_ID());

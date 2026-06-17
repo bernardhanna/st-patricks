@@ -292,7 +292,17 @@ function matrix_normalize_content_accordion_items($items, $layout_style = 'defau
 
 function matrix_resolve_content_accordion_vertical_padding($value = '')
 {
-    return trim((string) $value) === 'bottom_only' ? 'bottom_only' : 'default';
+    $value = trim((string) $value);
+
+    if ($value === 'bottom_only') {
+        return 'bottom_only';
+    }
+
+    if ($value === 'small_top_large_bottom') {
+        return 'small_top_large_bottom';
+    }
+
+    return 'default';
 }
 
 function matrix_get_content_accordion_vertical_padding_classes(string $vertical_padding = 'default', string $layout_style = 'default'): string
@@ -301,6 +311,10 @@ function matrix_get_content_accordion_vertical_padding_classes(string $vertical_
 
     if ($vertical_padding === 'bottom_only') {
         return 'pt-0 pb-12 xl:pt-0 xl:pb-[100px]';
+    }
+
+    if ($vertical_padding === 'small_top_large_bottom') {
+        return 'pt-8 pb-[100px]';
     }
 
     return 'py-12 xl:py-[100px]';

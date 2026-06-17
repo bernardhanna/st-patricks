@@ -1,12 +1,23 @@
 <?php
 
-if (get_post_type() !== 'post') {
+if (! in_array(get_post_type(), ['post', 'webinars'], true)) {
     return;
 }
 
 $defaults = matrix_get_blog_single_defaults();
 $related_count = (int) ($defaults['related_count'] ?? 3);
-$related_query = matrix_get_blog_related_posts(null, $related_count);
+
+if (get_post_type() === 'webinars') {
+    $related_query = matrix_get_webinar_related_posts(null, $related_count);
+    $map_related_card = static function (int $post_id): array {
+        return matrix_map_webinar_related_post_card($post_id);
+    };
+} else {
+    $related_query = matrix_get_blog_related_posts(null, $related_count);
+    $map_related_card = static function (int $post_id): array {
+        return matrix_map_blog_related_post_card($post_id);
+    };
+}
 
 if (! $related_query->have_posts()) {
     return;
@@ -28,30 +39,24 @@ $heading = (string) ($defaults['related_heading'] ?? 'Related Links');
             <?php while ($related_query->have_posts()) { ?>
                 <?php
                 $related_query->the_post();
-                $card = matrix_map_blog_related_post_card(get_the_ID());
+                $card = $map_related_card(get_the_ID());
                 ?>
                 <article class="flex flex-col gap-6 rounded-[8px] bg-[#FBFAF7] p-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
-                    <?php if ($card['image_id'] > 0) { ?>
-                        <a
-                            href="<?php echo esc_url((string) ($card['thumbnail_href'] ?? $card['permalink'])); ?>"
-                            <?php if (($card['thumbnail_target'] ?? '_self') === '_blank') { ?>
-                                target="_blank"
-                                rel="<?php echo esc_attr((string) ($card['thumbnail_rel'] ?? 'noopener noreferrer')); ?>"
-                            <?php } ?>
-                            class="block overflow-hidden rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                        >
-                            <?php
-                            echo wp_get_attachment_image($card['image_id'], 'medium_large', false, [
-                                'class' => 'h-[186px] w-full object-cover',
-                                'alt' => $card['image_alt'] !== '' ? $card['image_alt'] : $card['title'],
-                            ]);
-                            ?>
-                        </a>
-                    <?php } ?>
+                    <?php
+                    get_template_part('template-parts/single/partials/event-style-related-image', null, [
+                        'card' => $card,
+                    ]);
+                    ?>
 
                     <div class="flex flex-col gap-4">
                         <?php if ($card['category_name'] !== '') { ?>
-                            <span class="inline-flex h-[30px] w-fit items-center justify-center rounded-full bg-[#F9E5F2] px-4 font-primary text-[14px] font-medium leading-[24px] text-[#08284B]">
+                            <?php
+                            $badge_background = (string) ($card['badge_background'] ?? '#F9E5F2');
+                            ?>
+                            <span
+                                class="inline-flex h-[30px] w-fit items-center justify-center rounded-full px-4 font-primary text-[14px] font-medium leading-[24px] text-[#08284B]"
+                                style="background-color: <?php echo esc_attr($badge_background); ?>;"
+                            >
                                 <?php echo esc_html($card['category_name']); ?>
                             </span>
                         <?php } ?>

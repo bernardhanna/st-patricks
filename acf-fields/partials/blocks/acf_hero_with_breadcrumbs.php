@@ -15,6 +15,7 @@ $hero_with_breadcrumbs
                 'image_split' => 'Image Split',
                 'title_accent' => 'Title + Accent',
                 'register_intro' => 'Register Intro',
+                'breadcrumbs_only' => 'Breadcrumbs Only',
             ],
             'default_value' => 'image_split',
             'ui' => 1,
@@ -101,11 +102,29 @@ $hero_with_breadcrumbs
                 'p' => 'Paragraph',
             ],
             'default_value' => 'h1',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ])
         ->addText('heading', [
             'label' => 'Heading',
             'instructions' => 'Main hero heading.',
             'default_value' => 'About Us landing page title',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ])
         ->addWysiwyg('content', [
             'label' => 'Content',
@@ -114,6 +133,15 @@ $hero_with_breadcrumbs
             'media_upload' => 0,
             'tabs' => 'all',
             'toolbar' => 'full',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ])
         ->addText('aside_heading', [
             'label' => 'Aside Heading',
@@ -141,6 +169,21 @@ $hero_with_breadcrumbs
                         'value' => 'image_split',
                     ],
                 ],
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '==',
+                        'value' => 'register_intro',
+                    ],
+                ],
+            ],
+        ])
+        ->addTrueFalse('primary_button_show_icon', [
+            'label' => 'Show Button Icon',
+            'instructions' => 'Optional external-link icon before the register intro button label.',
+            'ui' => 1,
+            'default_value' => 1,
+            'conditional_logic' => [
                 [
                     [
                         'field' => 'layout_style',
@@ -193,10 +236,28 @@ $hero_with_breadcrumbs
         ->addColorPicker('heading_color', [
             'label' => 'Heading Color',
             'default_value' => '#08284B',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ])
         ->addColorPicker('text_color', [
             'label' => 'Text Color',
             'default_value' => '#08284B',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ])
         ->addSelect('text_max_width', [
             'label' => 'Heading & Text Max Width',
@@ -207,6 +268,34 @@ $hero_with_breadcrumbs
             ],
             'default_value' => 'default',
             'ui' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
+        ])
+        ->addSelect('heading_max_width', [
+            'label' => 'Heading Max Width',
+            'instructions' => 'Use full width when the hero heading should span the full text column.',
+            'choices' => [
+                'default' => 'Match text width',
+                'full' => 'Full width (100%)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'layout_style',
+                        'operator' => '!=',
+                        'value' => 'breadcrumbs_only',
+                    ],
+                ],
+            ],
         ]);
 
 return $hero_with_breadcrumbs;

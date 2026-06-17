@@ -175,6 +175,36 @@ if (! function_exists('matrix_seed_ensure_location')) {
             update_field('listing_summary', (string) $args['listing_summary'], $post_id);
         }
 
+        if (array_key_exists('address', $args)) {
+            update_field('address', (string) ($args['address'] ?? ''), $post_id);
+        }
+
+        if (array_key_exists('phone', $args)) {
+            update_field('phone', (string) ($args['phone'] ?? ''), $post_id);
+        }
+
+        if (array_key_exists('email', $args)) {
+            update_field('email', (string) ($args['email'] ?? ''), $post_id);
+        }
+
+        if (array_key_exists('latitude', $args) && $args['latitude'] !== null && $args['latitude'] !== '') {
+            update_field('latitude', (float) $args['latitude'], $post_id);
+        }
+
+        if (array_key_exists('longitude', $args) && $args['longitude'] !== null && $args['longitude'] !== '') {
+            update_field('longitude', (float) $args['longitude'], $post_id);
+        }
+
+        if (array_key_exists('show_on_contact_map', $args)) {
+            update_field('show_on_contact_map', ! empty($args['show_on_contact_map']) ? 1 : 0, $post_id);
+        } else {
+            update_field('show_on_contact_map', 1, $post_id);
+        }
+
+        if (! empty($args['opening_hours']) && is_array($args['opening_hours'])) {
+            update_field('opening_hours', $args['opening_hours'], $post_id);
+        }
+
         if (! empty($args['featured_image_id'])) {
             set_post_thumbnail($post_id, (int) $args['featured_image_id']);
         }
@@ -268,6 +298,15 @@ $visiting_url = home_url('/service-users-and-visitors/your-stay-in-hospital-as-a
 $hospital_term_id = matrix_seed_ensure_term('location_type', 'Hospital', 'hospital');
 $clinic_term_id = matrix_seed_ensure_term('location_type', 'Dean Clinic', 'dean-clinic');
 
+$default_visiting_hours = [
+    ['day_label' => 'Mon - Fri', 'hours' => '2pm - 5pm'],
+    ['day_label' => 'Mon - Fri', 'hours' => '6pm - 8.30pm'],
+];
+
+$default_clinic_hours = [
+    ['day_label' => 'Mon - Fri', 'hours' => '09:00 - 17:00'],
+];
+
 $base_media = 'https://www.stpatricks.ie';
 
 $image_ids = [
@@ -308,6 +347,9 @@ $locations = [
         'listing_summary' => 'Find out more about our Dublin 8 hospital',
         'address' => 'St Patrick\'s University Hospital, James\' Street, Dublin 8, D08 K7YW, Ireland',
         'phone' => '01 249 3200',
+        'latitude' => 53.3439,
+        'longitude' => -6.2940,
+        'opening_hours' => $default_visiting_hours,
         'visiting' => '2pm to 5pm and 6pm to 8.30pm',
         'intro' => 'Our main campus on James\' Street, Dublin 8.',
         'card_image_id' => $image_ids['spuh'],
@@ -323,6 +365,9 @@ $locations = [
         'listing_summary' => 'See our Lucan hospital',
         'address' => 'St Patrick\'s Hospital Lucan (St Edmundsbury), Old Lucan Road, Lucan, County Dublin, Ireland',
         'phone' => '01 621 8200',
+        'latitude' => 53.3579,
+        'longitude' => -6.4489,
+        'opening_hours' => $default_visiting_hours,
         'visiting' => '2pm to 5pm and 6pm to 8.30pm',
         'intro' => 'Our Lucan campus provides inpatient care and day services.',
         'card_image_id' => $image_ids['lucan'],
@@ -338,6 +383,9 @@ $locations = [
         'listing_summary' => 'Inpatient adolescent mental health services',
         'address' => 'St Patrick\'s University Hospital, James\' Street, Dublin 8, D08 K7YW, Ireland',
         'phone' => '01 249 3687',
+        'latitude' => 53.3435,
+        'longitude' => -6.2935,
+        'opening_hours' => $default_visiting_hours,
         'visiting' => 'Contact Willow Grove for visiting',
         'intro' => 'Our adolescent unit on the Dublin 8 campus.',
         'card_image_id' => $image_ids['willow_grove'],
@@ -352,6 +400,9 @@ $locations = [
         'listing_summary' => 'Outpatient care in Cork',
         'address' => 'Citygate, Mahon, Cork, Ireland',
         'phone' => '01 249 3502',
+        'latitude' => 51.8970,
+        'longitude' => -8.3980,
+        'opening_hours' => $default_clinic_hours,
         'visiting' => '',
         'intro' => 'Community-based outpatient mental health services in Cork.',
         'card_image_id' => $image_ids['dean_clinic'],
@@ -366,6 +417,9 @@ $locations = [
         'listing_summary' => 'Outpatient care in Galway',
         'address' => 'Merchant\'s Road, Galway',
         'phone' => '091 513 540',
+        'latitude' => 53.2761,
+        'longitude' => -9.0554,
+        'opening_hours' => $default_clinic_hours,
         'visiting' => '',
         'intro' => 'Community-based outpatient mental health services in Galway.',
         'card_image_id' => $image_ids['dean_clinic'],
@@ -380,6 +434,9 @@ $locations = [
         'listing_summary' => 'Outpatient care in Lucan',
         'address' => 'Lucan, County Dublin',
         'phone' => '01 249 3590',
+        'latitude' => 53.3582,
+        'longitude' => -6.4495,
+        'opening_hours' => $default_clinic_hours,
         'visiting' => '',
         'intro' => 'Outpatient services on the grounds of St Patrick\'s Hospital Lucan.',
         'card_image_id' => $image_ids['dean_clinic'],
@@ -394,6 +451,9 @@ $locations = [
         'listing_summary' => 'Outpatient care in Dublin 8',
         'address' => 'James\' Street, Dublin 8',
         'phone' => '01 249 3590',
+        'latitude' => 53.3437,
+        'longitude' => -6.2942,
+        'opening_hours' => $default_clinic_hours,
         'visiting' => '',
         'intro' => 'Outpatient services on the Dublin 8 campus.',
         'card_image_id' => $image_ids['dean_clinic'],
@@ -408,6 +468,9 @@ $locations = [
         'listing_summary' => 'Outpatient adolescent mental health services',
         'address' => 'St Patrick\'s University Hospital, Dublin 8',
         'phone' => '01 249 3590',
+        'latitude' => 53.3436,
+        'longitude' => -6.2938,
+        'opening_hours' => $default_clinic_hours,
         'visiting' => '',
         'intro' => 'Assessment and therapy for young people at an outpatient level.',
         'card_image_id' => $image_ids['dean_clinic'],
@@ -430,6 +493,12 @@ foreach ($locations as $location) {
         'term_id' => $location['term_id'],
         'card_image' => matrix_seed_build_image_field($card_image_id, $location['title']),
         'featured_image_id' => $hero_image_id,
+        'address' => (string) ($location['address'] ?? ''),
+        'phone' => (string) ($location['phone'] ?? ''),
+        'latitude' => $location['latitude'] ?? null,
+        'longitude' => $location['longitude'] ?? null,
+        'opening_hours' => $location['opening_hours'] ?? [],
+        'show_on_contact_map' => true,
     ];
 
     if (empty($location['preserve_existing_flexi'])) {

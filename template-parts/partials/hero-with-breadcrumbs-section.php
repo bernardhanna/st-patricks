@@ -14,9 +14,13 @@ extract($hero, EXTR_SKIP);
     <?php if (($data_matrix_block ?? '') !== '') { ?>
         data-matrix-block="<?php echo esc_attr($data_matrix_block); ?>"
     <?php } ?>
-    class="flex overflow-hidden relative flex-col"
-    style="background-color: <?php echo esc_attr($background_color); ?>;"
-    aria-labelledby="<?php echo esc_attr($hero_heading_id); ?>"
+    class="flex overflow-hidden relative flex-col <?php echo empty($has_body_content) ? 'hero-with-breadcrumbs--breadcrumbs-only' : ''; ?>"
+    <?php if (! empty($has_body_content)) { ?>
+        style="background-color: <?php echo esc_attr($background_color); ?>;"
+        aria-labelledby="<?php echo esc_attr($hero_heading_id); ?>"
+    <?php } else { ?>
+        aria-label="<?php echo esc_attr__('Breadcrumb', 'matrix-starter'); ?>"
+    <?php } ?>
 >
     <?php if ($show_breadcrumbs && (! empty($breadcrumb_items) || ($breadcrumb_current_label ?? '') !== '')) { ?>
         <?php
@@ -27,15 +31,16 @@ extract($hero, EXTR_SKIP);
         ]);
         ?>
     <?php } ?>
-    <div class="flex flex-col items-center w-full mx-auto max-w-[1280px]">
+    <?php if (! empty($has_body_content)) { ?>
+    <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_container_class_names()); ?>">
 
         <?php if ($layout_style === 'register_intro') { ?>
-            <div class="w-full max-w-[1018px] px-5 max-xl:mx-auto lg:px-0">
-                <div class="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-                    <div class="flex flex-col gap-8 <?php echo esc_attr($text_max_width_class); ?>">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names()); ?>">
+                <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_layout_class_names()); ?>">
+                    <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_text_column_class_names()); ?>">
                         <<?php echo esc_attr($heading_tag); ?>
                             id="<?php echo esc_attr($hero_heading_id); ?>"
-                            class="font-primary text-[36px] font-bold leading-[40px] tracking-[-0.432px] text-[#08284B] lg:text-[48px] lg:leading-[48px] lg:tracking-[-0.576px]"
+                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_heading_class_names()); ?>"
                             style="color: <?php echo esc_attr($heading_color); ?>;"
                         >
                             <?php echo esc_html($heading); ?>
@@ -43,7 +48,7 @@ extract($hero, EXTR_SKIP);
 
                         <?php if (! empty($content)) { ?>
                             <div
-                                class="font-primary text-[16px] font-medium leading-[28px] wp_editor [&_p:last-child]:mb-0"
+                                class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_content_class_names()); ?>"
                                 style="color: <?php echo esc_attr($text_color); ?>;"
                             >
                                 <?php echo matrix_kses_rich_text($content); ?>
@@ -52,9 +57,9 @@ extract($hero, EXTR_SKIP);
                     </div>
 
                     <?php if ($aside_heading !== '' || $primary_button) { ?>
-                        <aside class="flex flex-col gap-3 items-start w-full lg:w-auto lg:items-end">
+                        <aside class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_aside_class_names()); ?>">
                             <?php if ($aside_heading !== '') { ?>
-                                <p class="font-primary text-[16px] font-bold leading-[28px] text-[#08284B]">
+                                <p class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_aside_heading_class_names()); ?>">
                                     <?php echo esc_html($aside_heading); ?>
                                 </p>
                             <?php } ?>
@@ -63,16 +68,17 @@ extract($hero, EXTR_SKIP);
                                 <?php
                                 $button_target = $primary_button['target'] !== '' ? $primary_button['target'] : '_self';
                                 $opens_external = $button_target === '_blank';
+                                $show_button_icon = ! empty($show_primary_button_icon);
                                 ?>
                                 <a
                                     href="<?php echo esc_url($primary_button['url']); ?>"
                                     target="<?php echo esc_attr($button_target); ?>"
-                                    class="btn inline-flex h-10 w-full items-center justify-center gap-2 rounded-[6px] bg-[#024B79] px-3 text-[14px] font-medium leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79] lg:w-auto"
+                                    class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_button_class_names()); ?>"
                                     <?php if ($opens_external) { ?>
                                         rel="noopener noreferrer"
                                     <?php } ?>
                                 >
-                                    <?php if ($opens_external && function_exists('matrix_get_hero_external_link_icon_svg')) { ?>
+                                    <?php if ($show_button_icon && function_exists('matrix_get_hero_external_link_icon_svg')) { ?>
                                         <?php echo matrix_get_hero_external_link_icon_svg(); ?>
                                     <?php } ?>
                                     <span><?php echo esc_html($primary_button['title']); ?></span>
@@ -87,7 +93,7 @@ extract($hero, EXTR_SKIP);
                 <div class="flex flex-col gap-8 max-w-[1018px]">
                     <<?php echo esc_attr($heading_tag); ?>
                         id="<?php echo esc_attr($hero_heading_id); ?>"
-                        class="<?php echo esc_attr($text_max_width_class); ?> font-primary text-[24px] not-italic font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
+                        class="<?php echo esc_attr($heading_max_width_class); ?> font-primary text-[24px] not-italic font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
                         style="color: <?php echo esc_attr($heading_color); ?>;"
                     >
                         <?php echo esc_html($heading); ?>
@@ -145,7 +151,7 @@ extract($hero, EXTR_SKIP);
                     <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()); ?>">
                         <<?php echo esc_attr($heading_tag); ?>
                             id="<?php echo esc_attr($hero_heading_id); ?>"
-                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names($text_max_width)); ?>"
+                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names($text_max_width, $heading_max_width)); ?>"
                             style="color: <?php echo esc_attr($heading_color); ?>;"
                         >
                             <?php echo esc_html($heading); ?>
@@ -177,4 +183,5 @@ extract($hero, EXTR_SKIP);
             </div>
         <?php } ?>
     </div>
+    <?php } ?>
 </section>

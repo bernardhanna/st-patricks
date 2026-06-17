@@ -254,6 +254,18 @@ function matrix_get_content_background_style($background_type, $background_color
 {
     $background_type = is_string($background_type) ? trim($background_type) : 'gradient';
 
+    if ($background_type === 'image') {
+        $color = trim((string) $background_color);
+
+        if ($color === '') {
+            $color = '#FFFFFF';
+        }
+
+        return function_exists('matrix_get_faq_background_style')
+            ? matrix_get_faq_background_style($color)
+            : 'background-color: ' . $color . ';';
+    }
+
     if ($background_type === 'white') {
         return 'background-color: #FFFFFF;';
     }
@@ -291,6 +303,41 @@ function matrix_get_content_background_style($background_type, $background_color
     return function_exists('matrix_get_faq_background_style')
         ? matrix_get_faq_background_style($color)
         : 'background-color: ' . $color . ';';
+}
+
+function matrix_resolve_content_background_image_overlay_opacity($value)
+{
+    $value = trim((string) $value);
+
+    if (in_array($value, ['0', '25', '50', '75'], true)) {
+        return (int) $value;
+    }
+
+    return 50;
+}
+
+function matrix_get_content_background_image_overlay_style(string $overlay_color, $overlay_opacity = 50): string
+{
+    $overlay_color = trim($overlay_color);
+    $overlay_opacity = matrix_resolve_content_background_image_overlay_opacity($overlay_opacity);
+
+    if ($overlay_color === '' || $overlay_opacity <= 0) {
+        return '';
+    }
+
+    if (preg_match('/^#([A-Fa-f0-9]{6})$/', $overlay_color, $matches)) {
+        $hex = $matches[1];
+        $red = hexdec(substr($hex, 0, 2));
+        $green = hexdec(substr($hex, 2, 2));
+        $blue = hexdec(substr($hex, 4, 2));
+        $alpha = number_format($overlay_opacity / 100, 2, '.', '');
+
+        return 'background-color: rgba(' . $red . ', ' . $green . ', ' . $blue . ', ' . $alpha . ');';
+    }
+
+    return function_exists('matrix_get_faq_background_style')
+        ? matrix_get_faq_background_style($overlay_color)
+        : 'background-color: ' . $overlay_color . ';';
 }
 
 function matrix_get_content_button_class_names($variant = 'filled', $color_scheme = 'default')
@@ -358,6 +405,38 @@ function matrix_get_flexi_section_wrapper_class_names(array $extra = []): string
         'py-12',
         'lg:py-[100px]',
     ], $extra)));
+}
+
+function matrix_resolve_section_vertical_padding($value = '')
+{
+    $value = trim((string) $value);
+
+    if (in_array($value, ['standard', 'bottom_only'], true)) {
+        return $value;
+    }
+
+    return 'default';
+}
+
+function matrix_get_section_vertical_padding_classes(
+    string $vertical_padding = 'default',
+    string $desktop_padding = 'lg:py-[100px]',
+    string $desktop_bottom_padding = ''
+): string {
+    $vertical_padding = matrix_resolve_section_vertical_padding($vertical_padding);
+    $desktop_bottom_padding = $desktop_bottom_padding !== ''
+        ? $desktop_bottom_padding
+        : (string) preg_replace('/\bpy-/', 'pb-', $desktop_padding);
+
+    if ($vertical_padding === 'standard') {
+        return 'py-12';
+    }
+
+    if ($vertical_padding === 'bottom_only') {
+        return "pt-0 pb-12 lg:pt-0 {$desktop_bottom_padding}";
+    }
+
+    return "py-12 {$desktop_padding}";
 }
 
 function matrix_resolve_content_vertical_padding($value = '')

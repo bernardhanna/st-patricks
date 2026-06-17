@@ -9,6 +9,7 @@
  */
 
 require_once __DIR__ . '/lib/page-seed-conventions.php';
+require_once __DIR__ . '/lib/healthcare-faqs-seed.php';
 
 $post_id = matrix_seed_resolve_page_id_by_path('healthcare-professionals/contact-numbers');
 
@@ -135,7 +136,14 @@ $healthcare_url = home_url('/healthcare-professionals/');
 $faqs_url = home_url('/healthcare-professionals/frequently-asked-questions/');
 
 $figma_hero = 'https://www.figma.com/api/mcp/asset/9f265cc3-6a87-409a-910a-33366708aa0c';
-$hero_image_id = matrix_seed_resolve_image($figma_hero, 'contact-numbers-hero-2780-4290', 'Contact numbers hero');
+// Reuse the Healthcare Professionals hero asset (same Figma image for Contact Numbers).
+$hero_image_id = matrix_seed_resolve_image(
+    $figma_hero,
+    'healthcare-professionals-hero-2780-4288',
+    'Contact numbers hero'
+);
+
+$faq_ids = matrix_seed_hp_faq_landing_ids();
 
 $hero_content = sprintf(
     '<p>Below, you can find some of the key contacts and visiting information for our campuses and services here in St Patrick\'s Mental Health Services.</p>'
@@ -229,6 +237,26 @@ $flexi_rows = [
         'open_panel_background' => 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
         'padding_settings' => $section_padding,
     ],
+    [
+        'acf_fc_layout' => 'faqs',
+        'heading' => 'Frequently Asked Questions',
+        'heading_tag' => matrix_page_seed_heading(2),
+        'show_heading' => 1,
+        'layout_style' => 'default',
+        'source_mode' => $faq_ids !== [] ? 'selected' : 'category',
+        'selected_faqs' => $faq_ids,
+        'selected_faq_categories' => $faq_ids === []
+            ? [matrix_seed_hp_faq_ensure_term('healthcare-professionals', 'Healthcare Professionals')]
+            : [],
+        'section_background' => '#FBFAF7',
+        'heading_color' => '#1E244B',
+        'underline_color' => '#6FC9C0',
+        'item_background' => '#FFFFFF',
+        'open_item_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
+        'question_color' => '#1E244B',
+        'answer_color' => '#08284B',
+        'padding_settings' => $section_padding,
+    ],
 ];
 
 update_field('hero_content_blocks', [], $post_id);
@@ -240,9 +268,10 @@ $saved_count = is_array($saved_rows) ? count($saved_rows) : 0;
 if (class_exists('WP_CLI')) {
     if ($saved_count === count($flexi_rows)) {
         WP_CLI::success(sprintf(
-            'Seeded Contact Numbers page (%d) with %d flexi blocks.',
+            'Seeded Contact Numbers page (%d) with %d flexi blocks and %d FAQs.',
             $post_id,
-            $saved_count
+            $saved_count,
+            count($faq_ids)
         ));
     } else {
         WP_CLI::warning(sprintf(

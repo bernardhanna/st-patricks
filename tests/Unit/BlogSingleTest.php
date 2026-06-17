@@ -4,7 +4,8 @@ require_once dirname(__DIR__, 2) . '/inc/migrate-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/blog-single-functions.php';
 
 test('blog single formats post dates for display', function () {
-    expect(function_exists('matrix_format_blog_post_date'))->toBeTrue();
+    expect(function_exists('matrix_format_blog_post_date'))->toBeTrue()
+        ->and(matrix_get_post_date_display_format())->toBe('d/m/y');
 });
 
 test('blog single builds share links with encoded title and url', function () {
@@ -99,10 +100,11 @@ test('event post helpers return safe defaults without a post context', function 
         ->and($fields['link_external_from_archive'])->toBeFalse();
 });
 
-test('event archive thumbnail links expose target metadata when external', function () {
-    expect(function_exists('matrix_get_blog_post_link_target'))->toBeTrue();
+test('event archive card links expose target metadata when external', function () {
+    expect(function_exists('matrix_get_blog_post_link_target'))->toBeTrue()
+        ->and(function_exists('matrix_should_link_event_archive_externally'))->toBeTrue();
 
-    $link = matrix_get_blog_post_link_target(0, 'thumbnail');
+    $link = matrix_get_blog_post_link_target(0, 'archive');
 
     expect($link)->toHaveKeys(['url', 'target', 'rel', 'is_external'])
         ->and($link['url'])->toBe('')

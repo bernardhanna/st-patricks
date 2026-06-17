@@ -183,6 +183,7 @@ $content_accordion
             'choices' => [
                 'default' => 'Top & bottom',
                 'bottom_only' => 'Bottom only (no top padding)',
+                'small_top_large_bottom' => 'Small top / large bottom (2rem top, 100px bottom)',
             ],
             'default_value' => 'default',
             'ui' => 1,

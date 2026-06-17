@@ -53,6 +53,21 @@ function matrix_get_webinars_archive_default_wrapper_classes()
     return 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]';
 }
 
+function matrix_get_webinars_archive_card_grid_class_names()
+{
+    return 'mt-8 grid grid-cols-1 gap-4 lg:mt-10 lg:grid-cols-2';
+}
+
+function matrix_get_webinars_archive_search_row_class_names()
+{
+    return 'flex w-full max-w-[384px] flex-col gap-3 min-[420px]:flex-row min-[420px]:items-center';
+}
+
+function matrix_get_webinars_archive_search_button_class_names()
+{
+    return 'btn inline-flex h-[40px] w-full items-center justify-center gap-2 rounded-[6px] bg-[#08284B] px-4 text-[14px] font-medium leading-[24px] text-white min-[420px]:w-auto';
+}
+
 function matrix_resolve_webinars_archive_base_url($preferred_base_url = '')
 {
     $preferred_base_url = trim((string) $preferred_base_url);

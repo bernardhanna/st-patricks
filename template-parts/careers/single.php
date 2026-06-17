@@ -4,19 +4,7 @@ while (have_posts()) {
     the_post();
 
     $post_id = get_the_ID();
-    $area = function_exists('get_field') ? trim((string) get_field('career_area', $post_id)) : '';
-    $location_terms = function_exists('get_the_terms') ? get_the_terms($post_id, 'career_location') : false;
-    $location_label = '';
-
-    if (is_array($location_terms)) {
-        foreach ($location_terms as $term) {
-            if ($term instanceof WP_Term) {
-                $location_label = $term->name;
-                break;
-            }
-        }
-    }
-
+    $hero_meta = matrix_get_career_hero_meta($post_id);
     $job_description = matrix_get_career_job_description_html($post_id);
     $show_application_form = matrix_career_shows_application_form($post_id);
     $back_url = matrix_get_careers_single_back_url();
@@ -37,18 +25,26 @@ while (have_posts()) {
                     <?php the_title(); ?>
                 </h1>
 
-                <?php if ($area !== '' || $location_label !== '') { ?>
-                    <dl class="flex flex-col gap-2 font-primary text-[16px] leading-6 text-[#08284B] sm:flex-row sm:flex-wrap sm:gap-x-8">
-                        <?php if ($area !== '') { ?>
-                            <div class="flex gap-2">
-                                <dt class="font-bold">Area:</dt>
-                                <dd><?php echo esc_html($area); ?></dd>
-                            </div>
-                        <?php } ?>
-                        <?php if ($location_label !== '') { ?>
-                            <div class="flex gap-2">
-                                <dt class="font-bold">Location:</dt>
-                                <dd><?php echo esc_html($location_label); ?></dd>
+                <?php
+                $hero_meta_values = array_column($hero_meta, 'value', 'label');
+                $hero_meta_columns = [
+                    ['Area', 'Category'],
+                    ['Location', 'Job Type'],
+                ];
+                $hero_meta_has_values = array_filter($hero_meta_values, static fn ($value): bool => $value !== '');
+                ?>
+                <?php if ($hero_meta_has_values !== []) { ?>
+                    <dl class="grid grid-cols-1 gap-x-8 gap-y-4 font-primary text-[16px] leading-6 text-[#08284B] sm:grid-cols-2">
+                        <?php foreach ($hero_meta_columns as $column_labels) { ?>
+                            <div class="flex flex-col gap-2">
+                                <?php foreach ($column_labels as $label) { ?>
+                                    <?php if (($hero_meta_values[$label] ?? '') !== '') { ?>
+                                        <div class="flex gap-2">
+                                            <dt class="font-bold"><?php echo esc_html($label); ?>:</dt>
+                                            <dd><?php echo esc_html((string) $hero_meta_values[$label]); ?></dd>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </dl>
@@ -66,6 +62,12 @@ while (have_posts()) {
             </div>
         </section>
     <?php } ?>
+
+    <?php
+    get_template_part('template-parts/careers/share', null, [
+        'post_id' => $post_id,
+    ]);
+    ?>
 
     <?php if ($show_application_form) { ?>
         <?php

@@ -644,11 +644,15 @@ body {
 }
 
 .portal-contact-form__field--half {
-  @apply flex-1 min-w-0;
+  @apply min-w-0;
 }
 
 .portal-contact-form__row {
-  @apply flex flex-col gap-6 w-full lg:flex-row lg:gap-6;
+  @apply grid w-full grid-cols-2 gap-x-3 lg:gap-x-6;
+}
+
+.portal-contact-form__row .portal-contact-form__field--half {
+  @apply flex flex-col gap-1.5;
 }
 
 .portal-contact-form__label {
@@ -656,7 +660,15 @@ body {
 }
 
 .portal-contact-form__label-row {
-  @apply flex gap-2.5 items-center;
+  @apply relative flex min-h-7 items-center gap-2.5;
+}
+
+.portal-contact-form__row .portal-contact-form__label-row {
+  @apply h-7 min-h-7;
+}
+
+.portal-contact-form__row .portal-contact-form__label {
+  @apply text-[12px] leading-5 lg:text-[14px];
 }
 
 .portal-contact-form__required {
@@ -665,11 +677,24 @@ body {
 
 .portal-contact-form__input,
 .portal-contact-form__select {
-  @apply w-full rounded-[6px] border border-[#024B79] bg-white px-3 py-2 font-primary text-[16px] leading-6 text-[#08284B] placeholder:text-[#08284B]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+  @apply box-border h-10 min-h-[40px] w-full rounded-[6px] border border-[#024B79] bg-white px-3 py-2 font-primary text-[16px] leading-6 text-[#08284B] placeholder:text-[#08284B]/30 focus-visible:border-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79];
 }
 
-.portal-contact-form__input--with-icon {
-  @apply min-h-[40px];
+.portal-contact-form__date-field,
+.portal-contact-form__input-field {
+  @apply relative w-full;
+}
+
+.portal-contact-form__date-trigger {
+  @apply absolute left-0 top-0 z-10 inline-flex h-10 w-10 items-center justify-center border-0 bg-transparent p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+
+.portal-contact-form__date-input {
+  @apply pl-10;
+}
+
+.portal-contact-form__date-native {
+  @apply pointer-events-none absolute h-px w-px overflow-hidden opacity-0;
 }
 
 .portal-contact-form__phone-row {
@@ -689,11 +714,23 @@ body {
 }
 
 .portal-contact-form__info {
-  @apply inline-flex h-7 w-6 items-center justify-center rounded-full text-[12px] font-bold text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+  @apply inline-flex h-7 w-6 shrink-0 items-center justify-center border-0 bg-transparent p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+
+.portal-contact-form__toast {
+  @apply absolute left-0 top-full z-20 mt-2 max-w-[min(100%,18rem)] rounded-[6px] bg-[#08284B] px-3 py-2 font-primary text-[14px] font-medium leading-5 text-white shadow-[0_8px_24px_rgba(8,40,75,0.24)];
+}
+
+.portal-contact-form__toast.is-visible {
+  @apply block;
 }
 
 .portal-contact-form__consent {
   @apply flex gap-2 items-start;
+}
+
+.portal-contact-form__consent-copy {
+  @apply min-w-0 flex-1 pt-0;
 }
 
 .portal-contact-form__checkbox {
@@ -702,11 +739,11 @@ body {
 
 .portal-contact-form__consent-title,
 .portal-contact-form__consent-label {
-  @apply font-primary text-[12px] font-bold leading-4 text-[#08284B];
+  @apply m-0 block font-primary text-[12px] font-bold leading-none text-[#08284B];
 }
 
 .portal-contact-form__consent-description {
-  @apply mt-0 font-primary text-[12px] font-medium leading-4 text-[#08284B];
+  @apply mt-1 font-primary text-[12px] font-medium leading-4 text-[#08284B];
 }
 
 .portal-contact-form__link {
@@ -739,6 +776,86 @@ body {
 
 .portal-contact-form__file {
   @apply w-full rounded-[6px] border border-[#024B79] bg-white px-3 py-2 font-primary text-[14px] leading-6 text-[#08284B] file:mr-3 file:rounded-[4px] file:border-0 file:bg-[#024B79] file:px-3 file:py-1 file:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79];
+}
+
+.locations-map-panel__item {
+  @apply cursor-pointer scroll-mt-6;
+}
+
+.locations-map-panel__location-title {
+  margin-left: -0.75rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid transparent;
+  transition: color 140ms linear, border-color 140ms linear;
+}
+
+.locations-map-panel__item--active .locations-map-panel__location-title {
+  color: #024B79;
+  border-left-color: #6FC9C0;
+}
+
+.locations-map-panel {
+  scrollbar-width: none;
+}
+
+.locations-map-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.locations-map-panel-card {
+  border-radius: 4px;
+}
+
+.locations-map-panel__scrollbar-thumb {
+  min-height: 7rem;
+  transition: transform 120ms linear, height 120ms linear;
+}
+
+.locations-map-leaflet.leaflet-container {
+  background: #66C2E0;
+}
+
+.locations-map-leaflet.locations-map-leaflet--jawg .leaflet-tile-pane {
+  filter: none;
+}
+
+.locations-map-leaflet.locations-map-leaflet--jawg .leaflet-tile-pane .leaflet-tile {
+  opacity: 1;
+}
+
+.locations-map-leaflet .leaflet-tile-pane {
+  filter: hue-rotate(34deg) saturate(1.35) brightness(1.04) contrast(0.82);
+}
+
+.locations-map-leaflet .leaflet-tile-pane .leaflet-tile {
+  opacity: 0.96;
+}
+
+.locations-map-leaflet .leaflet-control-attribution {
+  @apply bg-transparent text-[10px] leading-4 text-[#024B79]/60;
+  margin: 0 10px 8px 0;
+}
+
+.locations-map-marker.leaflet-interactive {
+  @apply border-0 bg-transparent;
+}
+
+.locations-map-marker svg {
+  display: block;
+  width: 24px;
+  height: 29px;
+  transform-origin: bottom center;
+  transition: transform 140ms ease, filter 140ms ease;
+  filter: drop-shadow(0 1px 1px rgba(2, 6, 23, 0.12));
+}
+
+.locations-map-marker--active {
+  z-index: 1000 !important;
+}
+
+.locations-map-marker--active svg {
+  transform: scale(1.3);
+  filter: drop-shadow(0 6px 8px rgba(2, 6, 23, 0.32));
 }
 
 .careers-job-description h2,

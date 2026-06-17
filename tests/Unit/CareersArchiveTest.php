@@ -103,3 +103,9 @@ test('careers archive layout helpers match figma vacancies styling', function ()
         ->and(matrix_get_careers_archive_view_detail_button_class_names())->toContain('bg-[#024B79]')
         ->and(matrix_get_careers_archive_view_detail_button_class_names())->toContain('whitespace-nowrap');
 });
+
+test('careers archive render helper returns empty string for invalid archive', function () {
+    expect(function_exists('matrix_render_careers_archive_results_html'))->toBeTrue()
+        ->and(matrix_render_careers_archive_results_html([]))->toBe('')
+        ->and(matrix_render_careers_archive_results_html('invalid'))->toBe('');
+});

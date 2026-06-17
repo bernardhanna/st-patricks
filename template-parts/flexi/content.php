@@ -18,6 +18,9 @@ $text_max_width_classes = matrix_get_content_text_max_width_class_names($text_wi
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
+$background_image = get_sub_field('background_image');
+$background_image_overlay_color = (string) get_sub_field('background_image_overlay_color');
+$background_image_overlay_opacity = get_sub_field('background_image_overlay_opacity');
 $color_scheme = matrix_resolve_content_color_scheme(
     get_sub_field('color_scheme'),
     $background_type
@@ -65,6 +68,16 @@ if ($image_alt === '') {
 
 $heading_id = $section_id . '-heading';
 $background_style = matrix_get_content_background_style($background_type, $background_color, $background_gradient);
+$uses_background_image = $background_type === 'image' && (bool) $background_image;
+$background_image_overlay_style = $uses_background_image
+    ? matrix_get_content_background_image_overlay_style(
+        $background_image_overlay_color,
+        $background_image_overlay_opacity
+    )
+    : '';
+$background_image_alt = $uses_background_image
+    ? (string) get_post_meta($background_image, '_wp_attachment_image_alt', true)
+    : '';
 $image_column_class = matrix_get_content_image_column_class_names($layout_style, $column_layout);
 $content_column_class = matrix_get_content_content_column_class_names($layout_style, $column_layout);
 
@@ -84,7 +97,22 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
         aria-labelledby="<?php echo esc_attr($heading_id); ?>"
     <?php } ?>
 >
-    <div class="<?php echo esc_attr($wrapper_classes); ?>">
+    <?php if ($uses_background_image) { ?>
+        <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <?php
+            echo wp_get_attachment_image($background_image, 'full', false, [
+                'alt' => esc_attr($background_image_alt),
+                'class' => 'h-full w-full object-cover',
+                'loading' => 'lazy',
+            ]);
+            ?>
+            <?php if ($background_image_overlay_style !== '') { ?>
+                <div class="absolute inset-0" style="<?php echo esc_attr($background_image_overlay_style); ?>"></div>
+            <?php } ?>
+        </div>
+    <?php } ?>
+
+    <div class="<?php echo esc_attr($wrapper_classes . ($uses_background_image ? ' relative z-[1]' : '')); ?>">
         <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout)); ?>">
             <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
                 <?php if ($show_heading) { ?>

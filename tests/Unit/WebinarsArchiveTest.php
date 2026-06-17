@@ -85,3 +85,10 @@ test('webinars archive returns term-based card styles', function () {
         ->and(matrix_get_webinars_archive_card_theme('webinars')['card_background'])->toBe('#E9E2F7')
         ->and(matrix_get_webinars_archive_card_theme('all')['card_background'])->toBe('#E9E2F7');
 });
+
+test('webinars archive uses single-column mobile grid and row search until 420px', function () {
+    expect(matrix_get_webinars_archive_card_grid_class_names())->toBe('mt-8 grid grid-cols-1 gap-4 lg:mt-10 lg:grid-cols-2')
+        ->and(matrix_get_webinars_archive_card_grid_class_names())->not->toContain('xxs:grid-cols-2')
+        ->and(matrix_get_webinars_archive_search_row_class_names())->toContain('min-[420px]:flex-row')
+        ->and(matrix_get_webinars_archive_search_button_class_names())->toContain('min-[420px]:w-auto');
+});

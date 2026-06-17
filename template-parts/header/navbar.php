@@ -205,7 +205,7 @@ document.addEventListener('alpine:init', () => {
     submitSearch() {
       const term = this.query.trim();
       if (!term) return;
-      window.location.href = `${window.location.origin}/?s=${encodeURIComponent(term)}`;
+      window.location.href = `${window.location.origin}/search/?s=${encodeURIComponent(term)}`;
     },
   }));
 });
@@ -214,7 +214,7 @@ document.addEventListener('alpine:init', () => {
 <section
   id="site-nav"
   x-data="navbarSearch()"
-  x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1024) { closeSearch() } if (window.innerWidth >= 1200) { $store.nav.open = false } })"
+  x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1280) { closeSearch() } if (window.innerWidth >= 1280) { $store.nav.open = false } })"
   x-effect="$store.nav.open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
   class="overflow-visible bg-white"
   role="banner"
@@ -251,7 +251,7 @@ document.addEventListener('alpine:init', () => {
     <?php $primary_nav_items = $primary_navigation->toArray(); ?>
     <ul
       id="primary-menu"
-      class="hidden relative z-[80] gap-1 items-center lg:flex"
+      class="hidden relative z-[80] shrink-0 gap-0.5 items-center xl:gap-1 xl:flex"
       role="menubar"
       @mouseenter="$store.navMega.cancelClose()"
     >
@@ -266,7 +266,7 @@ document.addEventListener('alpine:init', () => {
         >
           <a
             href="<?php echo esc_url($item->url); ?>"
-            class="flex gap-1 items-center px-2 py-1 text-sm font-semibold leading-5 rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer"
+            class="flex gap-1 items-center px-1.5 py-1 text-sm font-semibold leading-5 whitespace-nowrap rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer xl:px-2"
             role="menuitem"
             aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
             <?php if ($item->children) : ?>
@@ -288,7 +288,7 @@ document.addEventListener('alpine:init', () => {
       <?php endforeach; ?>
     </ul>
 
-    <div class="hidden lg:contents" aria-hidden="true">
+    <div class="hidden xl:contents" aria-hidden="true">
       <?php foreach ($primary_nav_items as $index => $item) : ?>
         <?php if (! $item->children) : ?>
           <?php continue; ?>
@@ -310,7 +310,7 @@ document.addEventListener('alpine:init', () => {
     </div>
 
     <div
-      class="pointer-events-none fixed top-[var(--site-header-height,120px)] z-[56] hidden lg:block"
+      class="pointer-events-none fixed top-[var(--site-header-height,120px)] z-[56] hidden xl:block"
       x-show="$store.navMega.activeKey"
       x-cloak
       :style="'left:' + $store.navMega.pointerLeft + 'px;'"
@@ -321,11 +321,11 @@ document.addEventListener('alpine:init', () => {
   <?php endif; ?>
 
   <!-- Right Side: Search + Buttons + Mobile trigger -->
-  <div class="flex gap-4 items-center">
+  <div class="flex gap-2 items-center shrink-0 xl:gap-4">
     <!-- Search -->
     <?php if ($enable_search) : ?>
       <div
-        class="relative hidden lg:block"
+        class="relative hidden shrink-0 xl:block"
         @click.outside="closeSearch()"
         @keydown.escape.window="searchOpen && closeSearch()"
       >
@@ -353,25 +353,13 @@ document.addEventListener('alpine:init', () => {
           x-transition:leave="transition ease-in duration-150"
           x-transition:leave-start="opacity-100 translate-y-0"
           x-transition:leave-end="opacity-0 -translate-y-1"
-          class="absolute right-0 top-full z-[90] mt-2 w-[536px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl"
+          class="absolute right-0 top-full z-[90] mt-2 w-[536px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md"
           role="search"
           aria-labelledby="navbar-search-title"
         >
           <h2 id="navbar-search-title" class="sr-only">Search and FAQ</h2>
-          <div class="flex justify-end px-3 pt-3 bg-white">
-            <button
-              type="button"
-              class="flex justify-center items-center w-8 h-8 rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
-              aria-label="Close search"
-              @click="closeSearch()"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
 
-          <form role="search" class="relative border-b border-sky-100" @submit.prevent="submitSearch()">
+          <form role="search" class="flex gap-2 items-center px-3 py-2.5" @submit.prevent="submitSearch()">
             <label for="navbar-search-input" class="sr-only">Search by keyword, symptom, or page</label>
             <input
               id="navbar-search-input"
@@ -380,15 +368,14 @@ document.addEventListener('alpine:init', () => {
               @input="handleQueryChange()"
               type="text"
               placeholder="Search by keyword, symptom, or page"
-              class="pr-28 pl-5 w-full h-14 text-base text-gray-500 bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              class="flex-1 min-w-0 px-1 text-sm leading-5 bg-transparent border-0 text-slate-950 placeholder:text-slate-950/50 focus:outline-none focus:ring-0"
             />
 
             <button
               type="submit"
-              class="flex absolute right-3 top-1/2 gap-2 items-center px-6 py-2 text-sm font-medium text-white whitespace-nowrap rounded-md -translate-y-1/2 bg-sky-950 hover:bg-sky-900 focus-visible:bg-sky-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+              class="flex flex-shrink-0 gap-2 items-center px-3 h-9 text-sm font-medium leading-6 text-white whitespace-nowrap rounded-md transition-colors bg-[#024B79] hover:bg-[#013A5E] focus-visible:bg-[#013A5E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
               aria-label="Search"
             >
-              <span class="sr-only">Search</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M21 21L16.65 16.65" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -397,31 +384,30 @@ document.addEventListener('alpine:init', () => {
             </button>
 
             <button
-              x-show="query.length > 0"
               type="button"
-              class="flex absolute top-1/2 justify-center items-center w-6 h-6 -translate-y-1/2 right-[116px] rounded hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
-              aria-label="Clear search"
-              @click="clearSearch(true)"
+              class="flex flex-shrink-0 justify-center items-center w-8 h-8 rounded transition-colors text-slate-950/50 hover:text-slate-950 hover:bg-gray-100 focus-visible:bg-gray-100 focus:outline-none"
+              aria-label="Close search"
+              @click="closeSearch()"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </form>
 
-          <section class="max-h-[min(70vh,420px)] overflow-y-auto bg-slate-50" aria-label="Search results and FAQ links">
+          <section class="max-h-[min(70vh,420px)] overflow-y-auto border-t border-slate-200 bg-white" aria-label="Search results and FAQ links">
             <template x-if="query.trim().length >= 2">
               <div>
-                <div x-show="loading" class="px-5 py-4 text-sm text-slate-600">Searching...</div>
-                <div x-show="!loading && error" class="px-5 py-4 text-sm text-red-600" x-text="error"></div>
+                <div x-show="loading" class="px-3 py-2.5 text-sm text-slate-600">Searching...</div>
+                <div x-show="!loading && error" class="px-3 py-2.5 text-sm text-red-600" x-text="error"></div>
                 <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
                   <template x-for="item in results" :key="item.id + '-' + item.subtype">
                     <li>
                       <a
                         :href="item.url"
-                        class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
                       >
-                        <span class="text-base font-medium text-slate-900" x-text="item.title"></span>
+                        <span class="text-sm font-normal text-slate-950" x-text="item.title"></span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                           <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -429,7 +415,7 @@ document.addEventListener('alpine:init', () => {
                     </li>
                   </template>
                 </ul>
-                <div x-show="!loading && !error && !results.length" class="px-5 py-4 text-sm text-slate-600">
+                <div x-show="!loading && !error && !results.length" class="px-3 py-2.5 text-sm text-slate-600">
                   No results found. Try a different keyword.
                 </div>
               </div>
@@ -442,9 +428,9 @@ document.addEventListener('alpine:init', () => {
                     <li>
                       <a
                         :href="faq.url"
-                        class="flex justify-between items-center px-5 py-4 w-full no-underline border-b transition-colors border-slate-200 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
                       >
-                        <span class="text-base font-medium text-slate-900" x-text="faq.title"></span>
+                        <span class="text-sm font-normal text-slate-950" x-text="faq.title"></span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                           <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -464,7 +450,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($help_btn['url']); ?>"
         target="<?php echo esc_attr($help_btn['target'] ?: '_self'); ?>"
-        class="hidden btn gap-2 items-center px-3 h-9 bg-[#024B79] text-white rounded-md transition-colors sm:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden btn gap-2 items-center px-3 h-9 bg-[#024B79] text-white whitespace-nowrap rounded-md transition-colors shrink-0 lg:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         aria-label="<?php echo esc_attr($help_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">
@@ -478,7 +464,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($referral_btn['url']); ?>"
         target="<?php echo esc_attr($referral_btn['target'] ?: '_self'); ?>"
-        class="flex btn items-center px-3 h-9 rounded-md border border-[#024B79] text-[#08284B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden btn items-center px-3 h-9 rounded-md border border-[#024B79] text-[#08284B] whitespace-nowrap transition-colors shrink-0 mob:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         role="button"
         aria-label="<?php echo esc_attr($referral_btn['title']); ?>"
       >

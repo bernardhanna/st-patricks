@@ -80,6 +80,29 @@ function matrix_render_search_results_template_for_test($search_results)
     return (string) ob_get_clean();
 }
 
+test('search queries slugify into clean path urls', function () {
+    expect(function_exists('matrix_search_query_to_slug'))->toBeTrue();
+
+    expect(matrix_search_query_to_slug('how to make a referral'))->toBe('how-to-make-a-referral')
+        ->and(matrix_search_slug_to_query('how-to-make-a-referral'))->toBe('how to make a referral');
+});
+
+test('search results resolve state from pretty search paths', function () {
+    $state = matrix_resolve_search_results_state([
+        'matrix_search' => 'how-to-make-a-referral',
+        'search_type' => 'page',
+        'search_sort' => 'date',
+        'paged' => '2',
+    ]);
+
+    expect($state)->toMatchArray([
+        'query' => 'how to make a referral',
+        'type' => 'page',
+        'sort' => 'date',
+        'paged' => 2,
+    ]);
+});
+
 test('search results resolve state from native and custom query vars', function () {
     expect(function_exists('matrix_resolve_search_results_state'))->toBeTrue();
 
@@ -150,7 +173,7 @@ test('search results pagination urls preserve search state', function () {
     expect(function_exists('matrix_build_search_results_page_url'))->toBeTrue();
 
     $url = matrix_build_search_results_page_url(
-        'http://localhost:10034/?s=referral',
+        'http://localhost:10034/search/',
         [
             'query' => 'referral',
             'type' => 'page',
@@ -160,10 +183,10 @@ test('search results pagination urls preserve search state', function () {
         4
     );
 
-    expect($url)->toContain('s=referral')
+    expect($url)->toContain('/search/referral/page/4/')
         ->and($url)->toContain('search_type=page')
         ->and($url)->toContain('search_sort=date')
-        ->and($url)->toContain('paged=4');
+        ->and($url)->not->toContain('s=referral');
 });
 
 test('search results expose heading copy for results and empty states', function () {
@@ -206,9 +229,30 @@ test('search results type labels map to display labels', function () {
         ->and(matrix_get_search_results_type_label('webinars'))->toBe('Webinar');
 });
 
+test('search results cards use grid below desktop and list layout at lg', function () {
+    expect(matrix_get_search_results_cards_layout_class_names())->toContain('mob:grid-cols-2')
+        ->and(matrix_get_search_results_cards_layout_class_names())->toContain('lg:flex lg:flex-col')
+        ->and(matrix_get_search_results_cards_layout_class_names())->not->toContain('lg:grid-cols-3')
+        ->and(matrix_get_search_results_card_class_names())->toContain('lg:flex-row')
+        ->and(matrix_get_search_results_card_image_class_names())->toContain('lg:w-[280px]');
+});
+
+test('search results type badges use distinct background colors', function () {
+    expect(matrix_get_search_results_type_badge_colors('post'))->toBe([
+        'background' => '#FADBD8',
+        'text' => '#08284B',
+    ])->and(matrix_get_search_results_type_badge_colors('page'))->toBe([
+        'background' => '#C6ECF4',
+        'text' => '#08284B',
+    ])->and(matrix_get_search_results_type_badge_colors('webinars'))->toBe([
+        'background' => '#C3DBAE',
+        'text' => '#08284B',
+    ]);
+});
+
 test('search results pagination urls canonicalize invalid type and sort values', function () {
     $url = matrix_build_search_results_page_url(
-        'http://localhost:10034/?s=referral',
+        'http://localhost:10034/search/',
         [
             'query' => 'referral',
             'type' => 'Unknown Type',
@@ -218,10 +262,9 @@ test('search results pagination urls canonicalize invalid type and sort values',
         2
     );
 
-    expect($url)->toContain('s=referral')
-        ->and($url)->toContain('search_type=all')
-        ->and($url)->toContain('search_sort=relevance')
-        ->and($url)->toContain('paged=2');
+    expect($url)->toContain('/search/referral/page/2/')
+        ->and($url)->not->toContain('search_type=')
+        ->and($url)->not->toContain('search_sort=');
 });
 
 test('search results no-results form does not preserve hidden filter state', function () {
@@ -238,7 +281,7 @@ test('search results no-results form does not preserve hidden filter state', fun
             'prefix' => "We couldn\u{2019}t find a match for",
             'query' => 'zzzz-no-match-zzzz',
         ],
-        'base_url' => 'http://localhost:10034/',
+        'base_url' => 'http://localhost:10034/search/',
         'useful_links' => matrix_prepare_useful_links_section(),
     ]);
 
@@ -250,6 +293,43 @@ test('search results no-results form does not preserve hidden filter state', fun
         ->and($output)->toContain('Useful links')
         ->and($output)->toContain('Day Programmes')
         ->and($output)->toContain('data-matrix-block="search-results-useful-links"');
+});
+
+test('search results extract hero image from flexible content rows', function () {
+    $rows = [
+        [
+            'acf_fc_layout' => 'hero_with_breadcrumbs',
+            'hero_image' => 0,
+        ],
+        [
+            'acf_fc_layout' => 'wysiwyg',
+            'text_content' => '<p>Body copy</p>',
+        ],
+    ];
+
+    expect(matrix_extract_search_results_hero_image_from_rows($rows))->toBe(0);
+
+    $rows[0]['hero_image'] = 42;
+
+    expect(matrix_extract_search_results_hero_image_from_rows($rows))->toBe(42)
+        ->and(matrix_normalize_search_results_attachment_id(['ID' => 99]))->toBe(99)
+        ->and(matrix_normalize_search_results_attachment_id(['id' => 17]))->toBe(17);
+});
+
+test('search results extract first text from flexible content rows', function () {
+    $rows = [
+        [
+            'acf_fc_layout' => 'hero_with_breadcrumbs',
+            'content' => '<p>Referral pathways for healthcare professionals.</p>',
+        ],
+        [
+            'acf_fc_layout' => 'wysiwyg',
+            'text_content' => '<p>Later block copy.</p>',
+        ],
+    ];
+
+    expect(matrix_extract_search_results_text_from_row($rows[0]))->toBe('Referral pathways for healthcare professionals.')
+        ->and(matrix_trim_search_results_excerpt(str_repeat('word ', 30)))->toEndWith('...');
 });
 
 test('search results useful links defaults include nine suggested destinations', function () {

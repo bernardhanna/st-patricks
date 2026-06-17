@@ -129,6 +129,40 @@ function matrix_get_blog_filter_archive_chip_button_class_names()
     return 'btn inline-flex h-[36px] shrink-0 whitespace-nowrap items-center justify-center rounded-full border px-6 text-[14px] font-medium leading-[24px] transition-colors';
 }
 
+function matrix_get_filter_archive_controls_class_names($vertical_align = 'center')
+{
+    $align_class = $vertical_align === 'start' ? 'lg:items-start' : 'lg:items-center';
+
+    return 'flex flex-col-reverse gap-6 lg:flex-row ' . $align_class . ' lg:justify-between';
+}
+
+function matrix_get_filter_archive_card_grid_class_names()
+{
+    return 'mt-8 grid grid-cols-1 xxs:grid-cols-2 gap-4 xxs:gap-6 xl:mt-10 xl:grid-cols-3 xl:gap-8';
+}
+
+function matrix_get_filter_archive_pagination_active_colors()
+{
+    return [
+        'active_pagination_background' => '#024B79',
+        'active_pagination_text' => '#FFFFFF',
+    ];
+}
+
+function matrix_build_filter_archive_pagination_active_inline_style(array $colors = [])
+{
+    $defaults = matrix_get_filter_archive_pagination_active_colors();
+    $background = (string) ($colors['active_pagination_background'] ?? $defaults['active_pagination_background']);
+    $text = (string) ($colors['active_pagination_text'] ?? $defaults['active_pagination_text']);
+
+    return sprintf(
+        'border-color: %s; background-color: %s; color: %s;',
+        $background,
+        $background,
+        $text
+    );
+}
+
 function matrix_get_blog_filter_archive_horizontal_scroll_class_names()
 {
     return 'min-w-0 flex-1 overflow-x-auto overscroll-x-contain scroll-smooth cursor-grab active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden';
@@ -141,7 +175,44 @@ function matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names()
 
 function matrix_get_blog_filter_archive_pagination_class_names()
 {
-    return 'mt-10 flex w-full max-w-full flex-nowrap items-center justify-center gap-2 overflow-x-auto overscroll-x-contain scroll-smooth px-1 pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden';
+    return 'mt-10 flex w-full max-w-full flex-wrap items-center justify-center gap-2 px-1 pb-1 lg:flex-nowrap lg:overflow-x-auto lg:overscroll-x-contain lg:scroll-smooth lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden';
+}
+
+/**
+ * @return array{mobile: array<int, array{type: string, page?: int}>, desktop: array<int, array{type: string, page?: int}>}
+ */
+function matrix_build_filter_archive_pagination_item_sets(int $current_page, int $total_pages): array
+{
+    return [
+        'mobile' => matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages, 0, 0),
+        'desktop' => matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages, 1, 1),
+    ];
+}
+
+function matrix_get_filter_archive_pagination_viewport_nav_class_names(string $viewport): string
+{
+    $base = 'mt-10 w-full max-w-full items-center justify-center gap-2 px-1 pb-1';
+
+    if ($viewport === 'mobile') {
+        return $base . ' flex flex-wrap lg:hidden';
+    }
+
+    return $base . ' hidden flex-nowrap overflow-x-auto overscroll-x-contain scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:flex';
+}
+
+function matrix_get_filter_archive_card_title_class_names()
+{
+    return 'font-primary text-[1.125rem] font-semibold leading-6 tracking-[-0.00675rem] lg:text-[24px] lg:leading-[30px] lg:tracking-[-0.18px]';
+}
+
+function matrix_get_filter_archive_card_date_class_names()
+{
+    return 'mt-3 font-primary text-[0.875rem] font-semibold leading-4 tracking-[-0.00525rem] lg:text-[14px] lg:font-medium lg:leading-[20px] lg:tracking-normal';
+}
+
+function matrix_get_filter_archive_card_excerpt_class_names()
+{
+    return 'mt-4 font-primary text-[0.75rem] font-medium leading-4 lg:text-[16px] lg:leading-[28px]';
 }
 
 /**

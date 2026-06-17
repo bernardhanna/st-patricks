@@ -126,6 +126,17 @@ $what_we_offer
             'label' => 'Section Background Gradient',
             'instructions' => 'CSS background value. Leave empty to use the default gradient.',
             'default_value' => 'var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #F6EDE0 3.24%, #F4F5DE 90.88%))',
+        ])
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Standard” to drop extra desktop padding, or “Bottom only” when this block should sit flush against the section above.',
+            'choices' => [
+                'default' => 'Top & bottom (96px desktop)',
+                'standard' => 'Standard (48px all breakpoints)',
+                'bottom_only' => 'Bottom only (no top padding on desktop)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
         ]);
 
 return $what_we_offer;

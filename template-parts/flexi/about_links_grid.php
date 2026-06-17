@@ -31,12 +31,15 @@ if (! in_array($heading_tag, $allowed_tags, true)) {
     $heading_tag = 'h2';
 }
 
-$column_classes = [
-    '2' => 'lg:grid-cols-2',
-    '3' => 'lg:grid-cols-3',
-    '4' => 'lg:grid-cols-4',
-];
-$grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
+$grid_classes = function_exists('matrix_get_about_links_grid_grid_class_names')
+    ? matrix_get_about_links_grid_grid_class_names($layout_style, $columns)
+    : 'grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-4';
+
+$card_partial = function_exists('matrix_get_about_links_grid_card_partial')
+    ? matrix_get_about_links_grid_card_partial($layout_style)
+    : ($layout_style === 'compact_row'
+        ? 'template-parts/flexi/partials/about-links-grid-card-compact-row'
+        : 'template-parts/flexi/partials/about-links-grid-card-image-feature');
 
 $padding_classes = [];
 if (have_rows('padding_settings')) {
@@ -57,14 +60,11 @@ if (have_rows('padding_settings')) {
     }
 }
 
-$card_partial = $layout_style === 'compact_row'
-    ? 'template-parts/flexi/partials/about-links-grid-card-compact-row'
-    : 'template-parts/flexi/partials/about-links-grid-card-image-feature';
-
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
+    data-about-links-grid-layout="<?php echo esc_attr($layout_style); ?>"
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($bg_color); ?>;">
 
@@ -90,7 +90,7 @@ $card_partial = $layout_style === 'compact_row'
         <?php endif; ?>
 
         <?php if (! empty($links)) : ?>
-            <div class="grid grid-cols-1 gap-4 <?php echo esc_attr($grid_columns); ?> lg:gap-x-8 lg:gap-y-4">
+            <div class="<?php echo esc_attr($grid_classes); ?>">
                 <?php foreach ($links as $item) :
                     $icon = $item['icon'] ?? null;
                     $image_url = trim((string) ($item['image_url'] ?? ''));
@@ -98,7 +98,9 @@ $card_partial = $layout_style === 'compact_row'
                     $description = trim((string) ($item['description'] ?? ''));
                     $link = $item['link'] ?? null;
                     $card_tone = trim((string) ($item['card_tone'] ?? ''));
-                    $footer_background = matrix_get_about_links_grid_card_footer_background($card_tone, $card_bg_color);
+                    $footer_background = function_exists('matrix_get_about_links_grid_card_background')
+                        ? matrix_get_about_links_grid_card_background($layout_style, $card_tone, $card_bg_color)
+                        : matrix_get_about_links_grid_card_footer_background($card_tone, $card_bg_color);
 
                     $has_link = is_array($link) && ! empty($link['url']);
                     $link_url = $has_link ? $link['url'] : '';

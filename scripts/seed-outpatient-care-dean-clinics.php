@@ -160,7 +160,7 @@ if (! function_exists('matrix_seed_dean_location_card')) {
 }
 
 $healthcare_url = matrix_seed_dean_url('healthcare-professionals');
-$refer_outpatient_url = matrix_seed_dean_url('make-a-referral/refer-for-outpatient-care');
+$refer_outpatient_url = matrix_seed_dean_url('healthcare-professionals/refer-for-outpatient-care');
 $locations_url = matrix_seed_dean_url('about-us/our-locations');
 $attending_url = matrix_seed_dean_url('service-users-and-visitors/attending-a-dean-clinic');
 $insurance_url = matrix_seed_dean_url('getting-help/insurance-information');

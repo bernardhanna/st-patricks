@@ -32,8 +32,15 @@ $contact_form
         ])
         ->addTextarea('date_of_birth_help', [
             'label' => 'Date Of Birth Help Text',
+            'instructions' => 'Shown in a toast when the info icon is clicked.',
             'default_value' => $defaults['date_of_birth_help'],
             'rows' => 2,
+        ])
+        ->addTrueFalse('date_of_birth_show_info', [
+            'label' => 'Show Date Of Birth Info Icon',
+            'instructions' => 'Optional. Displays the info icon and toast for the date of birth field.',
+            'ui' => 1,
+            'default_value' => $defaults['date_of_birth_show_info'] ? 1 : 0,
         ])
         ->addLink('privacy_policy_link', [
             'label' => 'Privacy Policy Link',

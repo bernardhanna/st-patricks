@@ -1,6 +1,6 @@
 <?php
 
-if (get_post_type() !== 'post' || ! matrix_is_event_post()) {
+if (! matrix_uses_event_style_single_layout()) {
     return;
 }
 
@@ -34,15 +34,7 @@ $show_cta_box = $has_cta_summary || $has_external_url;
                 </div>
             <?php } ?>
 
-            <?php if (has_post_thumbnail()) { ?>
-                <div class="mb-8 overflow-hidden rounded-[6px]">
-                    <?php
-                    the_post_thumbnail('large', [
-                        'class' => 'h-auto max-h-[387px] w-full object-cover',
-                    ]);
-                    ?>
-                </div>
-            <?php } ?>
+            <?php get_template_part('template-parts/single/partials/event-style-featured-image'); ?>
 
             <?php if (trim(get_the_content()) !== '') { ?>
                 <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>

@@ -17,7 +17,7 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
 ?>
 
 <main class="w-full">
-    <section class="w-full bg-[#C6ECF4]">
+    <section class="w-full bg-[#F1F8F9]">
         <div class="mx-auto w-full max-w-[1280px]">
             <?php
             get_template_part('template-parts/partials/hero-breadcrumbs-nav', null, [
@@ -40,9 +40,14 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
         </div>
     </section>
 
-    <section class="bg-white">
-        <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-5 py-12 xl:px-0 xl:py-[100px]">
-            <form action="<?php echo esc_url($base_url); ?>" method="get" class="flex flex-col gap-8">
+    <section class="overflow-x-clip bg-white">
+        <div class="mx-auto flex w-full min-w-0 max-w-[1018px] flex-col gap-8 px-5 py-12 xl:px-0 xl:py-[100px]">
+            <form
+                action="<?php echo esc_url($base_url); ?>"
+                method="get"
+                class="flex w-full min-w-0 flex-col gap-8"
+                data-matrix-search-results-form
+            >
                 <?php
                 get_template_part('template-parts/partials/search-results-intro', null, [
                     'search_base_url' => $base_url,
@@ -52,18 +57,19 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                     'render_form_tag' => false,
                 ]);
                 ?>
-                <input type="hidden" name="paged" value="1" />
+                <input type="hidden" name="paged" value="1" data-matrix-search-results-paged />
 
                 <?php if ($has_results) { ?>
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-                            <label for="search-results-sort" class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
+                    <div class="flex w-full min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+                        <div class="flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
+                            <label for="search-results-sort" class="shrink-0 font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
                                 Sort by:
                             </label>
                             <select
                                 id="search-results-sort"
                                 name="search_sort"
-                                class="min-h-[40px] min-w-[213px] rounded-[6px] border border-[#E2E8F0] bg-white px-3 py-2 font-primary text-[16px] leading-[24px] text-[#08284B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
+                                class="min-h-[40px] w-full min-w-0 max-w-full rounded-[6px] border border-[#E2E8F0] bg-white px-3 py-2 font-primary text-[16px] leading-[24px] text-[#08284B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] lg:w-[213px] lg:max-w-none"
+                                data-matrix-search-results-filter
                             >
                                 <?php foreach ($sort_options as $option) { ?>
                                     <option value="<?php echo esc_attr((string) ($option['value'] ?? '')); ?>" <?php selected((string) ($state['sort'] ?? 'relevance'), (string) ($option['value'] ?? '')); ?>>
@@ -73,14 +79,15 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                             </select>
                         </div>
 
-                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-                            <label for="search-results-filter" class="font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
+                        <div class="flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:gap-4 lg:justify-end">
+                            <label for="search-results-filter" class="shrink-0 font-primary text-[16px] font-medium leading-[28px] text-[#08284B]">
                                 Filter by:
                             </label>
                             <select
                                 id="search-results-filter"
                                 name="search_type"
-                                class="min-h-[40px] min-w-[213px] rounded-[6px] border border-[#E2E8F0] bg-white px-3 py-2 font-primary text-[16px] leading-[24px] text-[#08284B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
+                                class="min-h-[40px] w-full min-w-0 max-w-full rounded-[6px] border border-[#E2E8F0] bg-white px-3 py-2 font-primary text-[16px] leading-[24px] text-[#08284B] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79] lg:w-[213px] lg:max-w-none"
+                                data-matrix-search-results-filter
                             >
                                 <?php foreach ($type_options as $option) { ?>
                                     <option value="<?php echo esc_attr((string) ($option['value'] ?? '')); ?>" <?php selected((string) ($state['type'] ?? 'all'), (string) ($option['value'] ?? '')); ?>>
@@ -94,14 +101,16 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
             </form>
 
             <?php if ($has_results) { ?>
-                <div class="flex flex-col gap-4">
+                <div class="<?php echo esc_attr(matrix_get_search_results_cards_layout_class_names()); ?>">
                     <?php foreach ($items as $item) { ?>
                         <?php
                         $item_title = trim((string) ($item['title'] ?? ''));
                         $item_url = (string) ($item['url'] ?? '');
                         $item_image = (int) ($item['image'] ?? 0);
                         $item_image_alt = trim((string) ($item['image_alt'] ?? ''));
+                        $item_type_key = trim((string) ($item['type_key'] ?? ''));
                         $item_type_label = trim((string) ($item['type_label'] ?? ''));
+                        $item_type_badge_colors = matrix_get_search_results_type_badge_colors($item_type_key);
                         $item_date_label = trim((string) ($item['date_label'] ?? ''));
                         $item_excerpt = trim((string) ($item['excerpt'] ?? ''));
 
@@ -109,11 +118,11 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                             continue;
                         }
                         ?>
-                        <article class="flex flex-col gap-6 rounded-[8px] bg-[#FBFAF7] p-6 shadow-sm lg:flex-row lg:items-start">
+                        <article class="<?php echo esc_attr(matrix_get_search_results_card_class_names()); ?>">
                             <?php if ($item_image > 0) { ?>
                                 <a
                                     href="<?php echo esc_url($item_url); ?>"
-                                    class="block h-[186px] w-full overflow-hidden rounded-[6px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79] lg:w-[280px] lg:flex-shrink-0"
+                                    class="<?php echo esc_attr(matrix_get_search_results_card_image_class_names()); ?>"
                                 >
                                     <?php
                                     echo wp_get_attachment_image($item_image, 'medium_large', false, [
@@ -124,9 +133,12 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                                 </a>
                             <?php } ?>
 
-                            <div class="flex min-w-0 flex-1 flex-col gap-4">
+                            <div class="flex flex-col flex-1 gap-4 min-w-0">
                                 <?php if ($item_type_label !== '') { ?>
-                                    <span class="inline-flex w-fit rounded-full bg-[#FADBD8] px-4 py-1 text-[14px] font-medium leading-[24px] text-[#08284B]">
+                                    <span
+                                        class="inline-flex w-fit rounded-full px-4 py-1 text-[14px] font-medium leading-[24px]"
+                                        style="background-color: <?php echo esc_attr($item_type_badge_colors['background']); ?>; color: <?php echo esc_attr($item_type_badge_colors['text']); ?>;"
+                                    >
                                         <?php echo esc_html($item_type_label); ?>
                                     </span>
                                 <?php } ?>
@@ -156,26 +168,19 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                     <?php } ?>
                 </div>
 
-                <?php if ($total_pages > 1) { ?>
-                    <nav class="flex flex-wrap items-center justify-center gap-2" aria-label="Search results pagination">
-                        <?php for ($page = 1; $page <= $total_pages; $page++) { ?>
-                            <?php
-                            $is_current_page = $page === $current_page;
-                            $page_link_classes = 'flex h-8 w-8 items-center justify-center rounded-full border text-[14px] leading-[20px]';
-                            $page_link_classes .= $is_current_page
-                                ? ' border-[#024B79] bg-[#024B79] text-white'
-                                : ' border-[#C6ECF4] text-[#08284B]';
-                            ?>
-                            <a
-                                href="<?php echo esc_url(matrix_build_search_results_page_url($base_url, $state, $page)); ?>"
-                                class="<?php echo esc_attr($page_link_classes); ?>"
-                                <?php if ($is_current_page) { ?>aria-current="page"<?php } ?>
-                            >
-                                <?php echo esc_html((string) $page); ?>
-                            </a>
-                        <?php } ?>
-                    </nav>
-                <?php } ?>
+                <?php
+                get_template_part('template-parts/partials/archive-pagination', null, [
+                    'archive_pagination' => [
+                        'current_page' => $current_page,
+                        'total_pages' => $total_pages,
+                        'aria_label' => 'Search results pagination',
+                        'variant' => 'pill',
+                        'build_page_url' => static function (int $page) use ($base_url, $state): string {
+                            return matrix_build_search_results_page_url($base_url, $state, $page);
+                        },
+                    ],
+                ]);
+                ?>
             <?php } else { ?>
                 <div class="flex flex-col gap-6">
                     <a
@@ -198,4 +203,25 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
         }
     }
     ?>
+    <script>
+    (function () {
+        var form = document.querySelector('[data-matrix-search-results-form]');
+
+        if (!form) {
+            return;
+        }
+
+        form.querySelectorAll('[data-matrix-search-results-filter]').forEach(function (control) {
+            control.addEventListener('change', function () {
+                var paged = form.querySelector('[data-matrix-search-results-paged]');
+
+                if (paged) {
+                    paged.value = '1';
+                }
+
+                HTMLFormElement.prototype.submit.call(form);
+            });
+        });
+    })();
+    </script>
 </main>

@@ -184,5 +184,8 @@ test('content accordion vertical padding supports default and bottom-only spacin
         ->and(matrix_get_content_accordion_vertical_padding_classes('bottom_only', 'default'))
         ->toBe('pt-0 pb-12 xl:pt-0 xl:pb-[100px]')
         ->and(matrix_get_content_accordion_vertical_padding_classes('bottom_only', 'directions_page'))
-        ->toBe('pt-0 pb-12 xl:pt-0 xl:pb-[100px]');
+        ->toBe('pt-0 pb-12 xl:pt-0 xl:pb-[100px]')
+        ->and(matrix_resolve_content_accordion_vertical_padding('small_top_large_bottom'))->toBe('small_top_large_bottom')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('small_top_large_bottom', 'default'))
+        ->toBe('pt-8 pb-[100px]');
 });
