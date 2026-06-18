@@ -36,13 +36,11 @@ while (have_posts()) {
                 <?php if ($hero_meta_has_values !== []) { ?>
                     <dl class="grid grid-cols-1 gap-x-8 gap-y-4 font-primary text-[16px] leading-6 text-[#08284B] sm:grid-cols-2">
                         <?php foreach ($hero_meta_columns as $column_labels) { ?>
-                            <div class="flex flex-col gap-2">
+                            <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-2">
                                 <?php foreach ($column_labels as $label) { ?>
                                     <?php if (($hero_meta_values[$label] ?? '') !== '') { ?>
-                                        <div class="flex gap-2">
-                                            <dt class="font-bold"><?php echo esc_html($label); ?>:</dt>
-                                            <dd><?php echo esc_html((string) $hero_meta_values[$label]); ?></dd>
-                                        </div>
+                                        <dt class="font-bold"><?php echo esc_html($label); ?>:</dt>
+                                        <dd><?php echo esc_html((string) $hero_meta_values[$label]); ?></dd>
                                     <?php } ?>
                                 <?php } ?>
                             </div>

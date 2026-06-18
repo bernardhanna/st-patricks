@@ -2,6 +2,9 @@
 node_modules/
 tests/playwright-report/
 tests/pw-artifacts/
+tests/a11y-report/
+tests/a11y/urls.json
+tests/a11y/a11y-summary.json
 tests/lhci-report/
 tests/.lighthouseci/
 tests/link-report/

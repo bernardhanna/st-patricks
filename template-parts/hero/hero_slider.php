@@ -162,7 +162,7 @@ $is_slider = count($slides) > 1;
                                         class="w-3 h-3 rounded-full transition-colors slider-dot"
                                         data-slide="<?php echo esc_attr($d); ?>"
                                         aria-label="<?php echo esc_attr('Go to slide ' . ($d + 1)); ?>"
-                                        aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
+                                        <?php echo $is_active ? 'aria-current="true"' : ''; ?>
                                         style="background-color: <?php echo esc_attr($dot_color); ?>;">
                                     </button>
                                 <?php } ?>
@@ -274,7 +274,7 @@ $is_slider = count($slides) > 1;
                                 class="w-3 h-3 rounded-full transition-colors slider-dot"
                                 data-slide="<?php echo esc_attr($d); ?>"
                                 aria-label="<?php echo esc_attr('Go to slide ' . ($d + 1)); ?>"
-                                aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
+                                <?php echo $is_active ? 'aria-current="true"' : ''; ?>
                                 style="background-color: <?php echo esc_attr($dot_color); ?>;">
                             </button>
                         <?php } ?>
@@ -343,10 +343,10 @@ $is_slider = count($slides) > 1;
                 var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
                 if (dotIndex === next) {
                     d.style.backgroundColor = '#0f172a';
-                    d.setAttribute('aria-selected', 'true');
+                    d.setAttribute('aria-current', 'true');
                 } else {
                     d.style.backgroundColor = '#7ED0E0';
-                    d.setAttribute('aria-selected', 'false');
+                    d.removeAttribute('aria-current');
                 }
             });
         });

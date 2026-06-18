@@ -59,10 +59,61 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_iframe_title_for_src')) {
+    /**
+     * Derive an accessible title for an embedded iframe based on its source.
+     */
+    function matrix_iframe_title_for_src(string $src): string
+    {
+        $host = strtolower((string) parse_url($src, PHP_URL_HOST));
+
+        if ($host === '') {
+            return 'Embedded content';
+        }
+
+        $map = [
+            'youtube' => 'YouTube video',
+            'youtu.be' => 'YouTube video',
+            'vimeo' => 'Vimeo video',
+            'facebook' => 'Facebook post',
+            'instagram' => 'Instagram post',
+            'twitter' => 'X (Twitter) post',
+            'x.com' => 'X (Twitter) post',
+            'spotify' => 'Spotify player',
+            'soundcloud' => 'SoundCloud player',
+            'mixcloud' => 'Mixcloud player',
+            'audioboom' => 'Audioboom player',
+            'anchor.fm' => 'Podcast player',
+            'google.com/maps' => 'Google Map',
+            'maps.google' => 'Google Map',
+            'podbean' => 'Podcast player',
+            'buzzsprout' => 'Podcast player',
+        ];
+
+        $needle = $host . (string) parse_url($src, PHP_URL_PATH);
+
+        foreach ($map as $key => $label) {
+            if (str_contains($host, $key) || str_contains($needle, $key)) {
+                return $label;
+            }
+        }
+
+        $host = preg_replace('/^www\./', '', $host);
+
+        return 'Embedded content from ' . $host;
+    }
+}
+
 if (! function_exists('matrix_process_external_links_in_html')) {
     function matrix_process_external_links_in_html(string $html): string
     {
-        if ($html === '' || ! str_contains($html, '<a')) {
+        if (
+            $html === ''
+            || (! str_contains($html, '<a')
+                && ! str_contains($html, '<iframe')
+                && ! str_contains($html, '<ul')
+                && ! str_contains($html, '<ol'))
+        ) {
             return $html;
         }
 
@@ -84,6 +135,20 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             return $html;
         }
 
+        foreach (iterator_to_array($dom->getElementsByTagName('iframe')) as $iframe) {
+            if (! $iframe instanceof DOMElement) {
+                continue;
+            }
+
+            $existing_title = trim($iframe->getAttribute('title'));
+
+            if ($existing_title !== '') {
+                continue;
+            }
+
+            $iframe->setAttribute('title', matrix_iframe_title_for_src(trim($iframe->getAttribute('src'))));
+        }
+
         foreach ($dom->getElementsByTagName('a') as $anchor) {
             if (! $anchor instanceof DOMElement) {
                 continue;
@@ -102,6 +167,84 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             $rel_parts = array_values(array_unique(array_merge($rel_parts, ['noopener', 'noreferrer'])));
 
             $anchor->setAttribute('rel', implode(' ', $rel_parts));
+        }
+
+        // Ensure links have a discernible accessible name (WCAG link-name).
+        foreach ($dom->getElementsByTagName('a') as $anchor) {
+            if (! $anchor instanceof DOMElement) {
+                continue;
+            }
+
+            $has_name = trim($anchor->textContent) !== ''
+                || trim($anchor->getAttribute('aria-label')) !== ''
+                || trim($anchor->getAttribute('title')) !== '';
+
+            if ($has_name) {
+                continue;
+            }
+
+            foreach ($anchor->getElementsByTagName('img') as $img) {
+                if ($img instanceof DOMElement && trim($img->getAttribute('alt')) !== '') {
+                    $has_name = true;
+                    break;
+                }
+            }
+
+            if ($has_name) {
+                continue;
+            }
+
+            $href = trim($anchor->getAttribute('href'));
+            $host = strtolower((string) parse_url($href, PHP_URL_HOST));
+            $host = preg_replace('/^www\./', '', (string) $host);
+
+            $anchor->setAttribute('aria-label', $host !== '' ? $host : 'Link');
+        }
+
+        // Normalise malformed lists so <ul>/<ol> only directly contain <li>
+        // (WCAG "list"). Stray inline/block content gets wrapped in an <li>.
+        $lists = array_merge(
+            iterator_to_array($dom->getElementsByTagName('ul')),
+            iterator_to_array($dom->getElementsByTagName('ol'))
+        );
+
+        foreach ($lists as $list) {
+            if (! $list instanceof DOMElement) {
+                continue;
+            }
+
+            $allowed = ['li', 'script', 'template'];
+            $group = [];
+
+            $flush = static function () use (&$group, $list, $dom): void {
+                if ($group === []) {
+                    return;
+                }
+
+                $li = $dom->createElement('li');
+                $list->insertBefore($li, $group[0]);
+
+                foreach ($group as $node) {
+                    $li->appendChild($node);
+                }
+
+                $group = [];
+            };
+
+            foreach (iterator_to_array($list->childNodes) as $child) {
+                if ($child instanceof DOMElement && in_array(strtolower($child->tagName), $allowed, true)) {
+                    $flush();
+                    continue;
+                }
+
+                if ($child instanceof DOMText && trim($child->wholeText) === '') {
+                    continue;
+                }
+
+                $group[] = $child;
+            }
+
+            $flush();
         }
 
         $processed = '';
