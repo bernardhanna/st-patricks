@@ -1,13 +1,10 @@
 <?php
 
-if (! function_exists('home_url')) {
-    function home_url(string $path = ''): string
-    {
-        return 'https://www.stpatricks.ie' . $path;
-    }
-}
-
 require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
+
+beforeEach(function () {
+    __wp_stub('home_url', fn ($path = '') => 'https://www.stpatricks.ie' . $path);
+});
 
 test('matrix_is_external_url detects off-site http links', function () {
     expect(matrix_is_external_url('https://www.walkinmyshoes.ie/'))->toBeTrue()

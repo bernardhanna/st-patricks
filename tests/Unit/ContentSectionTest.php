@@ -4,6 +4,10 @@ require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/faq-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/content-section-functions.php';
 
+beforeEach(function () {
+    __wp_stub('home_url', fn ($path = '') => 'https://example.com' . $path);
+});
+
 test('content layout style resolves image positions and falls back to reverse layout', function () {
     expect(matrix_resolve_content_layout_style('image_left'))->toBe('image_left')
         ->and(matrix_resolve_content_layout_style('image_right'))->toBe('image_right')

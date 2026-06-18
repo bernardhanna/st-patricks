@@ -3,37 +3,9 @@
 require_once dirname(__DIR__, 2) . '/inc/search-results-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/useful-links-functions.php';
 
-if (! function_exists('home_url')) {
-    function home_url($path = '/')
-    {
-        return 'http://localhost:10034' . $path;
-    }
-}
-
-if (! function_exists('esc_url')) {
-    function esc_url($value)
-    {
-        return (string) $value;
-    }
-}
-
-if (! function_exists('esc_attr')) {
-    function esc_attr($value)
-    {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    }
-}
-
-if (! function_exists('esc_html')) {
-    function esc_html($value)
-    {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    }
-}
-
-if (! function_exists('get_template_part')) {
-    function get_template_part($slug, $name = null, $args = [])
-    {
+beforeEach(function () {
+    __wp_stub('home_url', fn ($path = '/') => 'http://localhost:10034' . $path);
+    __wp_stub('get_template_part', function ($slug, $name = null, $args = []) {
         $templates = [];
 
         if ($name !== null) {
@@ -54,21 +26,8 @@ if (! function_exists('get_template_part')) {
 
             return;
         }
-    }
-}
-
-if (! function_exists('selected')) {
-    function selected($selected, $current = true, $echo = true)
-    {
-        $result = ((string) $selected === (string) $current) ? ' selected="selected"' : '';
-
-        if ($echo) {
-            echo $result;
-        }
-
-        return $result;
-    }
-}
+    });
+});
 
 function matrix_render_search_results_template_for_test($search_results)
 {

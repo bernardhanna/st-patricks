@@ -2,42 +2,29 @@
 
 require_once dirname(__DIR__, 2) . '/inc/sitemap-functions.php';
 
-if (! function_exists('get_permalink')) {
-    function get_permalink($post = 0)
-    {
+beforeEach(function () {
+    $GLOBALS['matrix_test_sitemap_post_fields'] = [];
+
+    __wp_stub('get_permalink', function ($post = 0) {
         $id = is_object($post) ? (int) $post->ID : (int) $post;
 
         return 'http://localhost:10034/?p=' . $id;
-    }
-}
+    });
+    __wp_stub('home_url', fn ($path = '/') => 'http://localhost:10034/' . ltrim((string) $path, '/'));
+    __wp_stub('get_pages', []);
+    __wp_stub('get_page_by_path', null);
+    __wp_stub('get_posts', []);
+    __wp_stub('get_post_type_object', null);
+    __wp_stub('get_option', '');
+    __wp_stub('get_the_title', function ($post = 0) {
+        $post_id = is_object($post) ? (int) ($post->ID ?? 0) : (int) $post;
 
-if (! function_exists('home_url')) {
-    function home_url($path = '/')
-    {
-        return 'http://localhost:10034/' . ltrim((string) $path, '/');
-    }
-}
-
-if (! function_exists('esc_attr')) {
-    function esc_attr($value)
-    {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    }
-}
-
-if (! function_exists('esc_url')) {
-    function esc_url($value)
-    {
-        return (string) $value;
-    }
-}
-
-if (! function_exists('esc_html')) {
-    function esc_html($value)
-    {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    }
-}
+        return (string) ($GLOBALS['matrix_test_sitemap_post_fields'][$post_id]['post_title'] ?? 'Sitemap');
+    });
+    __wp_stub('get_post_field', function ($field, $post_id = null) {
+        return $GLOBALS['matrix_test_sitemap_post_fields'][(int) $post_id][$field] ?? '';
+    });
+});
 
 test('sitemap page tree nests children from page objects', function () {
     $about = (object) ['ID' => 194, 'post_parent' => 0, 'post_name' => 'about-us', 'post_title' => 'About Us'];
@@ -69,64 +56,6 @@ test('sitemap list renderer outputs nested accessible links', function () {
     expect($html)->toContain('Overview');
     expect($html)->toContain('role="list"');
 });
-
-if (! function_exists('get_pages')) {
-    function get_pages($args = [])
-    {
-        return [];
-    }
-}
-
-if (! function_exists('get_page_by_path')) {
-    function get_page_by_path($path)
-    {
-        return null;
-    }
-}
-
-if (! function_exists('get_posts')) {
-    function get_posts($args = [])
-    {
-        return [];
-    }
-}
-
-if (! function_exists('get_post_type_object')) {
-    function get_post_type_object($post_type)
-    {
-        return null;
-    }
-}
-
-if (! function_exists('get_option')) {
-    function get_option($option)
-    {
-        return '';
-    }
-}
-
-if (! function_exists('apply_filters')) {
-    function apply_filters($tag, $value)
-    {
-        return $value;
-    }
-}
-
-if (! function_exists('get_the_title')) {
-    function get_the_title($post = 0)
-    {
-        $post_id = is_object($post) ? (int) ($post->ID ?? 0) : (int) $post;
-
-        return (string) ($GLOBALS['matrix_test_sitemap_post_fields'][$post_id]['post_title'] ?? 'Sitemap');
-    }
-}
-
-if (! function_exists('get_post_field')) {
-    function get_post_field($field, $post_id)
-    {
-        return $GLOBALS['matrix_test_sitemap_post_fields'][$post_id][$field] ?? '';
-    }
-}
 
 test('sitemap page view model includes breadcrumbs and default intro', function () {
     $GLOBALS['matrix_test_sitemap_post_fields'][213] = [

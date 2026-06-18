@@ -46,7 +46,7 @@ test('webinar date label formats ymd values', function () {
 });
 
 test('event style layout includes webinars post type', function () {
-    if (! function_exists('get_post_type')) {
+    if (! function_exists('wp_insert_post')) {
         expect(true)->toBeTrue();
 
         return;

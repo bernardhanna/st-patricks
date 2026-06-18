@@ -2,19 +2,9 @@
 
 require_once dirname(__DIR__, 2) . '/inc/hero-functions.php';
 
-if (! function_exists('home_url')) {
-    function home_url($path = '')
-    {
-        return 'https://example.com' . $path;
-    }
-}
-
-if (! function_exists('esc_html')) {
-    function esc_html($text)
-    {
-        return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
-    }
-}
+beforeEach(function () {
+    __wp_stub('home_url', fn ($path = '') => 'https://example.com' . $path);
+});
 
 test('manual breadcrumb mode returns manual items and current label', function () {
     expect(function_exists('matrix_resolve_hero_breadcrumbs'))->toBeTrue();

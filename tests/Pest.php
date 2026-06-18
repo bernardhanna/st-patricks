@@ -12,6 +12,14 @@
 
 // uses(Tests\TestCase::class)->in('Feature');
 
+require_once __DIR__ . '/wp-stubs.php';
+
+// Reset the WordPress stub registry before every unit test so stubbed
+// functions never leak from one test (or file) into the next.
+uses()->beforeEach(function () {
+    __wp_stub_reset();
+})->in('Unit');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
