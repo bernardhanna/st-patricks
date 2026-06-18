@@ -201,60 +201,24 @@ $is_slider = count($slides) > 1;
                     <div class="flex flex-row flex-wrap gap-4">
                         <?php
                         if (!empty($sl['pbtn']['url'])) {
-                            $primary_class        = 'hero-slider-primary-btn-' . $section_id . '-' . $i;
-                            $primary_hover_bg     = '#024B79'; // dark primary
-                            $primary_hover_text   = '#FFFFFF';
-                            $primary_hover_border = '#024B79';
                             ?>
                             <a href="<?php echo esc_url($sl['pbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['pbtn']['target'] ? $sl['pbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['pbtn']['title'] ? $sl['pbtn']['title'] : 'Primary action'); ?>"
-                               class="btn <?php echo esc_attr($primary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
+                               class="btn flex h-[44px] items-center justify-center gap-2.5 rounded-md bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
                                 <?php echo esc_html($sl['pbtn']['title']); ?>
                             </a>
-                            <style>
-                                .<?php echo esc_attr($primary_class); ?>:hover,
-                                .<?php echo esc_attr($primary_class); ?>:focus {
-                                    background-color: <?php echo esc_attr($primary_hover_bg); ?> !important;
-                                    color: <?php echo esc_attr($primary_hover_text); ?> !important;
-                                    border-color: <?php // echo esc_attr($primary_hover_border); ?> !important;
-                                    /* outline: 2px solid <?php //echo esc_attr($primary_hover_border); ?>; */
-                                    /* outline-offset: 2px; */
-                                }
-                                .<?php echo esc_attr($primary_class); ?>:hover svg path,
-                                .<?php echo esc_attr($primary_class); ?>:focus svg path {
-                                    stroke: <?php echo esc_attr($primary_hover_text); ?>;
-                                }
-                            </style>
                         <?php
                         }
 
                         if (!empty($sl['sbtn']['url'])) {
-                            $secondary_class        = 'hero-slider-secondary-btn-' . $section_id . '-' . $i;
-                            $secondary_hover_bg     = '#024B79';
-                            $secondary_hover_text   = '#FFFFFF';
-                            $secondary_hover_border = '#024B79';
                             ?>
                             <a href="<?php echo esc_url($sl['sbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['sbtn']['target'] ? $sl['sbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['sbtn']['title'] ? $sl['sbtn']['title'] : 'Secondary action'); ?>"
-                               class="btn <?php echo esc_attr($secondary_class); ?> flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
+                               class="btn flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
                                 <?php echo esc_html($sl['sbtn']['title']); ?>
                             </a>
-                            <style>
-                                .<?php echo esc_attr($secondary_class); ?>:hover,
-                                .<?php echo esc_attr($secondary_class); ?>:focus {
-                                    background-color: <?php echo esc_attr($secondary_hover_bg); ?> !important;
-                                    color: <?php echo esc_attr($secondary_hover_text); ?> !important;
-                                    border-color: <?php //echo esc_attr($secondary_hover_border); ?> !important;
-                                    /* outline: 2px solid <?php echo esc_attr($secondary_hover_border); ?>; */
-                                    /* outline-offset: 2px; */
-                                }
-                                .<?php echo esc_attr($secondary_class); ?>:hover svg path,
-                                .<?php echo esc_attr($secondary_class); ?>:focus svg path {
-                                    stroke: <?php echo esc_attr($secondary_hover_text); ?>;
-                                }
-                            </style>
                         <?php
                         }
                         ?>

@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/research-cards-grid-functions.php';
 
 test('research cards grid normalizes valid cards and skips incomplete rows', function () {

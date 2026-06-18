@@ -30,40 +30,17 @@ test('contact directory normalizes manual items with opening hours', function ()
 });
 
 test('contact directory merges location fields when item source is location', function () {
-    if (! function_exists('get_post_type')) {
-        function get_post_type($post = null)
-        {
-            return 'locations';
-        }
-    }
-
-    if (! function_exists('get_the_title')) {
-        function get_the_title($post = 0)
-        {
-            return 'Adolescent Dean Clinic';
-        }
-    }
-
-    if (! function_exists('get_field')) {
-        function get_field(string $field, $post_id = false)
-        {
-            return match ($field) {
-                'phone' => '01 249 3590',
-                'email' => '',
-                'opening_hours' => [
-                    ['day_label' => 'Mon - Fri', 'hours' => '09:00 - 17:00'],
-                ],
-                default => null,
-            };
-        }
-    }
-
-    if (! function_exists('get_permalink')) {
-        function get_permalink($post = 0)
-        {
-            return 'https://example.com/locations/adolescent-dean-clinic/';
-        }
-    }
+    __wp_stub('get_post_type', 'locations');
+    __wp_stub('get_the_title', 'Adolescent Dean Clinic');
+    __wp_stub('get_field', fn ($field, $post_id = false) => match ($field) {
+        'phone' => '01 249 3590',
+        'email' => '',
+        'opening_hours' => [
+            ['day_label' => 'Mon - Fri', 'hours' => '09:00 - 17:00'],
+        ],
+        default => null,
+    });
+    __wp_stub('get_permalink', 'https://example.com/locations/adolescent-dean-clinic/');
 
     $normalized = matrix_normalize_contact_directory_columns([
         [

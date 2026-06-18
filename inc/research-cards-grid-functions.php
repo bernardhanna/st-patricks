@@ -90,27 +90,32 @@ function matrix_build_research_cards_grid_query_args($source_mode, $args = [])
 
 function matrix_normalize_research_cards_grid_card_from_post($post)
 {
+    // A plain data array already carries the fields we need, so use them
+    // directly. This keeps the helper deterministic regardless of which
+    // WordPress functions happen to be loaded.
+    if (is_array($post)) {
+        return matrix_build_research_cards_grid_card_from_data($post);
+    }
+
     $post_id = 0;
 
     if ($post instanceof WP_Post) {
         $post_id = (int) $post->ID;
     } elseif (is_numeric($post)) {
         $post_id = (int) $post;
-    } elseif (is_array($post)) {
-        $post_id = (int) ($post['ID'] ?? $post['id'] ?? 0);
     }
 
     if ($post_id < 1) {
         return null;
     }
 
-    $title = function_exists('get_the_title') ? trim((string) get_the_title($post_id)) : trim((string) ($post['post_title'] ?? ''));
+    $title = function_exists('get_the_title') ? trim((string) get_the_title($post_id)) : '';
 
     if ($title === '') {
         return null;
     }
 
-    $summary = function_exists('get_the_excerpt') ? trim((string) get_the_excerpt($post_id)) : trim((string) ($post['post_excerpt'] ?? ''));
+    $summary = function_exists('get_the_excerpt') ? trim((string) get_the_excerpt($post_id)) : '';
 
     if ($summary === '' && function_exists('get_post_field')) {
         $content = (string) get_post_field('post_content', $post_id);
@@ -120,15 +125,15 @@ function matrix_normalize_research_cards_grid_card_from_post($post)
     }
 
     $image = null;
-    $image_id = function_exists('get_post_thumbnail_id') ? (int) get_post_thumbnail_id($post_id) : (int) ($post['image_id'] ?? 0);
+    $image_id = function_exists('get_post_thumbnail_id') ? (int) get_post_thumbnail_id($post_id) : 0;
 
     if ($image_id > 0) {
         $image_url = function_exists('wp_get_attachment_image_url')
             ? (string) wp_get_attachment_image_url($image_id, 'medium_large')
-            : (string) ($post['image_url'] ?? '');
+            : '';
         $image_alt = function_exists('get_post_meta')
             ? trim((string) get_post_meta($image_id, '_wp_attachment_image_alt', true))
-            : trim((string) ($post['image_alt'] ?? ''));
+            : '';
 
         if ($image_alt === '') {
             $image_alt = $title;
@@ -141,15 +146,60 @@ function matrix_normalize_research_cards_grid_card_from_post($post)
         ];
     }
 
-    $permalink = function_exists('get_permalink') ? (string) get_permalink($post_id) : (string) ($post['permalink'] ?? '');
+    $permalink = function_exists('get_permalink') ? (string) get_permalink($post_id) : '';
 
-    return [
+    return matrix_build_research_cards_grid_card([
         'title' => $title,
         'summary' => $summary,
         'image' => $image,
+        'permalink' => $permalink,
+    ]);
+}
+
+function matrix_build_research_cards_grid_card_from_data(array $post)
+{
+    $post_id = (int) ($post['ID'] ?? $post['id'] ?? 0);
+
+    if ($post_id < 1) {
+        return null;
+    }
+
+    $title = trim((string) ($post['post_title'] ?? ''));
+
+    if ($title === '') {
+        return null;
+    }
+
+    $image = null;
+    $image_id = (int) ($post['image_id'] ?? 0);
+
+    if ($image_id > 0) {
+        $image_alt = trim((string) ($post['image_alt'] ?? ''));
+
+        $image = [
+            'ID' => $image_id,
+            'url' => (string) ($post['image_url'] ?? ''),
+            'alt' => $image_alt !== '' ? $image_alt : $title,
+        ];
+    }
+
+    return matrix_build_research_cards_grid_card([
+        'title' => $title,
+        'summary' => trim((string) ($post['post_excerpt'] ?? '')),
+        'image' => $image,
+        'permalink' => (string) ($post['permalink'] ?? ''),
+    ]);
+}
+
+function matrix_build_research_cards_grid_card(array $parts)
+{
+    return [
+        'title' => $parts['title'],
+        'summary' => $parts['summary'],
+        'image' => $parts['image'],
         'link' => matrix_normalize_research_cards_grid_link([
-            'url' => $permalink,
-            'title' => $title,
+            'url' => $parts['permalink'],
+            'title' => $parts['title'],
             'target' => '_self',
         ]),
     ];

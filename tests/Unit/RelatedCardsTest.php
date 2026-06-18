@@ -1,12 +1,5 @@
 <?php
 
-if (! function_exists('__')) {
-    function __(string $text, ?string $domain = null): string
-    {
-        return $text;
-    }
-}
-
 require_once dirname(__DIR__, 2) . '/inc/related-cards-functions.php';
 
 test('related cards normalization skips invalid links and keeps valid cards', function () {
