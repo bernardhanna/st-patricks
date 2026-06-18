@@ -122,7 +122,7 @@ document.addEventListener('alpine:init', () => {
       { title: "Healthcare FAQ's", url: '<?php echo esc_url( home_url( '/healthcare-professionals/frequently-asked-questions/' ) ); ?>' },
       { title: 'Our locations and parking', url: '<?php echo esc_url( home_url( '/about-us/our-locations/' ) ); ?>' },
       { title: "Service user FAQ's", url: '<?php echo esc_url( home_url( '/service-users-and-visitors/frequently-asked-questions-faqs/' ) ); ?>' },
-      { title: 'Make a payment', url: '<?php echo esc_url( home_url( '/service-users-and-visitors/make-a-payment-external-link-to-stripe/' ) ); ?>' },
+      { title: 'Make a payment', url: 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00', target: '_blank' },
     ],
 
     openSearch() {
@@ -428,6 +428,8 @@ document.addEventListener('alpine:init', () => {
                     <li>
                       <a
                         :href="faq.url"
+                        :target="faq.target || '_self'"
+                        :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
                         class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
                       >
                         <span class="text-sm font-normal text-slate-950" x-text="faq.title"></span>

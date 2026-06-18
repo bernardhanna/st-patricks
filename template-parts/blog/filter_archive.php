@@ -115,7 +115,9 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
         <div
             x-data="{
                 category: '<?php echo esc_js((string) $state['category']); ?>',
-                isDragging: false,
+                pointerDown: false,
+                dragging: false,
+                dragThreshold: 10,
                 startX: 0,
                 scrollStart: 0,
                 moved: false,
@@ -130,32 +132,42 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         return;
                     }
 
-                    this.isDragging = true;
+                    this.pointerDown = true;
+                    this.dragging = false;
                     this.moved = false;
                     this.startX = event.clientX;
                     this.scrollStart = this.$refs.chipScroll.scrollLeft;
-                    this.$refs.chipScroll.setPointerCapture?.(event.pointerId);
                 },
                 onChipScrollPointerMove(event) {
-                    if (! this.isDragging) {
+                    if (! this.pointerDown) {
                         return;
                     }
 
                     const distance = event.clientX - this.startX;
 
-                    if (Math.abs(distance) > 3) {
+                    // Only treat the gesture as a drag once it clears the threshold,
+                    // so a normal click/tap with minor pointer jitter still fires.
+                    if (! this.dragging && Math.abs(distance) > this.dragThreshold) {
+                        this.dragging = true;
                         this.moved = true;
+                        this.$refs.chipScroll.setPointerCapture?.(event.pointerId);
                     }
 
-                    this.$refs.chipScroll.scrollLeft = this.scrollStart - distance;
+                    if (this.dragging) {
+                        this.$refs.chipScroll.scrollLeft = this.scrollStart - distance;
+                    }
                 },
                 onChipScrollPointerUp(event) {
-                    if (! this.isDragging) {
+                    if (! this.pointerDown) {
                         return;
                     }
 
-                    this.isDragging = false;
-                    this.$refs.chipScroll.releasePointerCapture?.(event.pointerId);
+                    this.pointerDown = false;
+
+                    if (this.dragging) {
+                        this.dragging = false;
+                        this.$refs.chipScroll.releasePointerCapture?.(event.pointerId);
+                    }
                 },
                 onChipClick(event, slug) {
                     if (this.moved) {

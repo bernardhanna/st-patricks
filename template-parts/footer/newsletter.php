@@ -52,7 +52,7 @@ $priv_target  = !empty($privacy_link['target'])? esc_attr($privacy_link['target'
 $admin_ajax  = esc_url(admin_url('admin-ajax.php'));
 $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 ?>
-<section id="<?php echo esc_attr($section_id); ?>" class="relative overflow-hidden" style="background-color: <?php echo esc_attr($bg_color); ?>;">
+<section id="<?php echo esc_attr($section_id); ?>" class="overflow-hidden relative" style="background-color: <?php echo esc_attr($bg_color); ?>;">
       <!-- Decorative Background Images -->
     <div class="relative w-full h-full">
 
@@ -159,7 +159,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
             <!-- Terms -->
             <?php if ($require_tc): ?>
               <div class="flex items-center gap-3 w-full min-h-[38px]">
-                <div class="flex flex-1 gap-2 items-start">
+                <div class="flex flex-1 gap-2 items-center">
                   <input
                     id="<?php echo esc_attr($section_id); ?>-terms"
                     type="checkbox"

@@ -61,7 +61,13 @@ function matrix_get_search_results_useful_links_defaults()
             $link('Inpatient Care', 'inpatient-care/'),
             $link('Outpatient Care - Dean Clinics', 'what-we-offer/outpatient-care-dean-clinics/'),
             $link('About Your Portal', 'about-your-portal/'),
-            $link('Make a Payment', 'service-users-and-visitors/make-a-payment-external-link-to-stripe/'),
+            [
+                'link' => [
+                    'title' => 'Make a Payment',
+                    'url' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00',
+                    'target' => '_blank',
+                ],
+            ],
             $link('Directions and Parking', 'directions-and-parking/'),
             $link('Clinician Insights', 'healthcare-professionals/clinician-insights/'),
             $link('Sitemap (All website links)', 'sitemap/'),

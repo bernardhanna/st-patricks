@@ -98,7 +98,7 @@ $faq_links = [
     ['title' => "Healthcare FAQ's", 'url' => home_url('/healthcare-professionals/frequently-asked-questions/')],
     ['title' => 'Our locations and parking', 'url' => home_url('/about-us/our-locations/')],
     ['title' => "Service user FAQ's", 'url' => home_url('/service-users-and-visitors/frequently-asked-questions-faqs/')],
-    ['title' => 'Make a payment', 'url' => home_url('/service-users-and-visitors/make-a-payment-external-link-to-stripe/')],
+    ['title' => 'Make a payment', 'url' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00', 'target' => '_blank'],
 ];
 
 $logo_id = get_theme_mod('custom_logo');
@@ -212,6 +212,8 @@ $nav_slide_config = [
                                 <li class="border-b border-[#E2E8F0] last:border-b-0">
                                     <a
                                         :href="faq.url"
+                                        :target="faq.target || '_self'"
+                                        :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
                                         class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
                                         @click="close()"
                                         @mousedown.prevent
