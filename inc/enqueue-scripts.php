@@ -11,6 +11,17 @@ function matrix_starter_enqueue_scripts()
   // Ensure jQuery is present early
   wp_enqueue_script('jquery');
 
+  // Swallow the benign View Transitions API rejection. When a view transition
+  // is superseded (e.g. a fast second navigation/interaction) the browser
+  // rejects its promise with AbortError "Transition was skipped". It's expected
+  // and harmless, but otherwise shows as an "Uncaught (in promise)" error (and
+  // in the webpack dev overlay). Registered in <head> so it is active early.
+  wp_add_inline_script(
+    'jquery',
+    "window.addEventListener('unhandledrejection',function(e){var r=e&&e.reason;var m=(r&&(r.message||(typeof r==='string'?r:'')))||'';if((r&&r.name==='AbortError'&&m.indexOf('Transition')!==-1)||m.indexOf('Transition was skipped')!==-1){e.preventDefault();}});",
+    'after'
+  );
+
   // Dev/prod assets
   $is_dev = defined('WP_ENV') && WP_ENV === 'development';
   $base   = get_template_directory_uri();

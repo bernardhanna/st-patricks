@@ -75,6 +75,13 @@ module.exports = {
           if (!error || error.message === 'Script error.') {
             return false;
           }
+          // Benign View Transitions API rejection — a transition that gets
+          // superseded/interrupted rejects with AbortError "Transition was
+          // skipped". It's expected and not actionable, so don't surface it.
+          const message = (error && error.message) || '';
+          if (error.name === 'AbortError' || message.indexOf('Transition was skipped') !== -1) {
+            return false;
+          }
           if (!error.filename && !error.stack) {
             return false;
           }
