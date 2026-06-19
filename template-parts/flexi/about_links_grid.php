@@ -19,6 +19,7 @@ $card_bg_color    = (string) (get_sub_field('card_bg_color') ?: '#F1F8F9');
 $card_title_color = get_sub_field('card_title_color') ?: '#1E244B';
 $card_desc_color  = get_sub_field('card_desc_color') ?: '#08284B';
 $columns_raw      = (string) (get_sub_field('columns') ?: '3');
+$allow_title_wrap = (bool) get_sub_field('allow_title_wrap');
 $layout_style     = function_exists('matrix_resolve_about_links_grid_layout_style')
     ? matrix_resolve_about_links_grid_layout_style(get_sub_field('layout_style'))
     : 'image_feature';
@@ -128,6 +129,7 @@ if (have_rows('padding_settings')) {
                             'footer_background' => $footer_background,
                             'card_title_color' => $card_title_color,
                             'card_desc_color' => $card_desc_color,
+                            'allow_title_wrap' => $allow_title_wrap,
                         ],
                     ]);
                 endforeach; ?>

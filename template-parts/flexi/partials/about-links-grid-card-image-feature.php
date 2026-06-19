@@ -22,6 +22,7 @@ $link_title = (string) ($card['link_title'] ?? $title);
 $footer_background = (string) ($card['footer_background'] ?? '#F1F8F9');
 $card_title_color = (string) ($card['card_title_color'] ?? '#1E244B');
 $card_desc_color = (string) ($card['card_desc_color'] ?? '#08284B');
+$allow_title_wrap = ! empty($card['allow_title_wrap']);
 
 $card_tag = $has_link ? 'a' : 'div';
 $card_attrs = $has_link
@@ -35,7 +36,7 @@ $card_attrs = $has_link
 
 $title_classes = 'min-w-0 font-primary text-[20px] font-semibold leading-8 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]';
 
-if ($description === '') {
+if ($description === '' && ! $allow_title_wrap) {
     $title_classes .= ' lg:whitespace-nowrap';
 }
 ?>

@@ -18,6 +18,13 @@ $link_title = (string) ($card['link_title'] ?? $title);
 $footer_background = (string) ($card['footer_background'] ?? '#F1F8F9');
 $card_title_color = (string) ($card['card_title_color'] ?? '#1E244B');
 $card_desc_color = (string) ($card['card_desc_color'] ?? '#08284B');
+$allow_title_wrap = ! empty($card['allow_title_wrap']);
+
+$title_classes = 'font-primary text-[18px] font-semibold leading-7 tracking-[-0.12px] text-[#1E244B] transition-colors group-hover:text-[#024B79] lg:text-[20px] lg:leading-8';
+
+if (! $allow_title_wrap) {
+    $title_classes .= ' lg:whitespace-nowrap';
+}
 
 $card_tag = $has_link ? 'a' : 'div';
 $card_attrs = $has_link
@@ -67,7 +74,7 @@ $card_attrs = $has_link
             <div class="min-w-0 flex-1">
                 <?php if ($title !== '') { ?>
                     <h3
-                        class="font-primary text-[18px] font-semibold leading-7 tracking-[-0.12px] text-[#1E244B] transition-colors group-hover:text-[#024B79] lg:text-[20px] lg:leading-8 lg:whitespace-nowrap"
+                        class="<?php echo esc_attr($title_classes); ?>"
                         style="color: <?php echo esc_attr($card_title_color); ?>;"
                     >
                         <?php echo esc_html($title); ?>

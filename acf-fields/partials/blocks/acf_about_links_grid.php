@@ -121,6 +121,12 @@ $about_links_grid
                 '4' => '4 Columns',
             ],
             'default_value' => '3',
+        ])
+        ->addTrueFalse('allow_title_wrap', [
+            'label' => 'Allow long titles to wrap onto two lines',
+            'instructions' => 'On larger screens, card titles normally stay on a single line. Turn this on if a longer title looks cramped or is being cut off, so it can flow onto a second line instead.',
+            'ui' => 1,
+            'default_value' => 0,
         ]);
 
 return $about_links_grid;
