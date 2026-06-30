@@ -9,7 +9,7 @@ $heading_tag      = get_sub_field('heading_tag') ?: 'h2';
 $heading_text     = get_sub_field('heading_text') ?: '';
 $partners         = get_sub_field('partners');
 $background_color = get_sub_field('background_color') ?: '#FFFFFF';
-$heading_color    = get_sub_field('heading_color') ?: '#1e293b';
+$heading_color    = get_sub_field('heading_color') ?: '#EF4444';
 $show_card_style  = (bool) get_sub_field('show_card_style');
 
 
