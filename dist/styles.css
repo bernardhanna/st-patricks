@@ -818,9 +818,9 @@ input:where([type='file']):focus {
   a.button:hover,
   a.btn:hover,
   .nav_btn:hover a {
-    background: #FF9E66 !important;
+    background: #C3DBAE !important;
     color: #1E244B !important;
-    border-color: #FF9E66 !important;
+    border-color: #C3DBAE !important;
   }
 .entry-content h1 {
   font-family: "Le Monde Courrier Std", serif;
@@ -4659,7 +4659,7 @@ input:where([type='file']):focus {
 }
 .bg-secondary {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 136 102 / var(--tw-bg-opacity, 1));
+  background-color: rgb(195 219 174 / var(--tw-bg-opacity, 1));
 }
 .bg-sky-200 {
   --tw-bg-opacity: 1;
@@ -8612,7 +8612,7 @@ input:where([type='file']):focus {
 }
 .text-secondary {
   --tw-text-opacity: 1;
-  color: rgb(255 136 102 / var(--tw-text-opacity, 1));
+  color: rgb(195 219 174 / var(--tw-text-opacity, 1));
 }
 .text-secondary-darker {
   --tw-text-opacity: 1;
@@ -8965,7 +8965,7 @@ input:where([type='file']):focus {
 }
 .hover\:bg-secondary:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 136 102 / var(--tw-bg-opacity, 1));
+  background-color: rgb(195 219 174 / var(--tw-bg-opacity, 1));
 }
 .hover\:bg-sky-900:hover {
   --tw-bg-opacity: 1;
@@ -9017,7 +9017,7 @@ input:where([type='file']):focus {
 }
 .hover\:text-secondary:hover {
   --tw-text-opacity: 1;
-  color: rgb(255 136 102 / var(--tw-text-opacity, 1));
+  color: rgb(195 219 174 / var(--tw-text-opacity, 1));
 }
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
@@ -9133,7 +9133,7 @@ input:where([type='file']):focus {
 }
 .focus\:ring-secondary:focus {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(255 136 102 / var(--tw-ring-opacity, 1));
+  --tw-ring-color: rgb(195 219 174 / var(--tw-ring-opacity, 1));
 }
 .focus\:ring-slate-900:focus {
   --tw-ring-color: rgba(15, 23, 42, 1);
@@ -45468,7 +45468,7 @@ body {
 
 .nav_btn:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 136 102 / var(--tw-bg-opacity, 1));
+  background-color: rgb(195 219 174 / var(--tw-bg-opacity, 1));
 }
 
 .nav_btn.current-item .active-item {
@@ -46767,7 +46767,7 @@ blockquote.right {
 
 .slick-dots li.slick-active button {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 136 102 / var(--tw-bg-opacity, 1)); /* Active state using Tailwind's secondary color */
+  background-color: rgb(195 219 174 / var(--tw-bg-opacity, 1)); /* Active state using Tailwind's secondary color */
 }
 
 .slick-dots li {

@@ -45,7 +45,7 @@ $cards = [
         'link'         => get_sub_field('card_1_link'),
     ],
     [
-        'bg_color'     => '#E9E2F7',
+        'bg_color'     => '#E4F4D6',
         'title'        => get_sub_field('card_2_title'),
         'text'         => get_sub_field('card_2_text'),
         'link'         => get_sub_field('card_2_link'),

@@ -35,8 +35,8 @@ module.exports = {
           olive: '#5F604B',
         },
         secondary: {
-          DEFAULT: '#FF8866',
-          light: '#FF8866',
+          DEFAULT: '#C3DBAE',
+          light: '#C3DBAE',
           dark: '#2C2C21',
           darker: '#1E244B',
           200: '#F0C5A5',
