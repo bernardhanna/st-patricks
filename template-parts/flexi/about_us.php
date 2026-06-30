@@ -98,7 +98,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                 <?php echo esc_html($heading_text); ?>
             </<?php echo esc_attr($heading_tag); ?>>
 
-        <div class="mt-4 w-10  bg-[#6FC9C0] h-[4px]"
+        <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"
                  role="presentation"
                  aria-hidden="true"></div>
         </div>
