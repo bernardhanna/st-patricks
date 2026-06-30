@@ -77,7 +77,7 @@ text-decoration-line: underline
 }
 .entry-content a:hover {
 --tw-text-opacity: 1;
-color: rgb(255 136 102 / var(--tw-text-opacity, 1))
+color: rgb(195 219 174 / var(--tw-text-opacity, 1))
 }
 .entry-content blockquote {
 margin-top: 1rem;

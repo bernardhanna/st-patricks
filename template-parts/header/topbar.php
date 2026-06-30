@@ -25,7 +25,7 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
   style="background-color: <?php echo esc_attr( $topbar_bg_color ?: '#08284B' ); ?>;"
 >
   <div
-    class="box-border flex justify-between items-center px-5 py-0   h-[52px] mx-auto w-full max-w-container"
+    class="box-border flex justify-between items-center px-6 py-0 h-[52px] mx-auto w-full max-w-container"
   >
 
     <!-- Left: Menu Links -->

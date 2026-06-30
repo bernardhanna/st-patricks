@@ -40,9 +40,9 @@ body {
   a.button:hover,
   a.btn:hover,
   .nav_btn:hover a {
-    background: #FF9E66 !important;
+    background: #C3DBAE !important;
     color: #1E244B !important;
-    border-color: #FF9E66 !important;
+    border-color: #C3DBAE !important;
   }
 }
 

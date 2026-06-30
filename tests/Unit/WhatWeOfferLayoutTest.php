@@ -53,13 +53,13 @@ test('what we offer intro two column icon svg returns markup for default and hov
         ->and($hover)->toContain('opacity="1"');
 });
 
-test('what we offer intro two column icon background maps accent to pastel tint', function () {
+test('what we offer intro two column icon background maps accent to brand secondary color', function () {
     expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_background'))->toBeTrue();
 
-    expect(matrix_get_what_we_offer_intro_two_column_icon_background('#6FC9C0'))->toBe('#CEF2EE')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#E4F4D6')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#E9E2F7')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#F9E5F2');
+    expect(matrix_get_what_we_offer_intro_two_column_icon_background('#6FC9C0'))->toBe('#6FC9C0')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#C3DBAE')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#B4A8CE')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#E4B8D6');
 });
 
 test('what we offer vertical padding supports standard and bottom only modes', function () {

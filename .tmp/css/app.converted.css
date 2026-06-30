@@ -32,8 +32,8 @@ body {
   a.button:hover,
   a.btn:hover,
   .nav_btn:hover a {
-  @apply text-secondary-darker border-[#FF9E66];
-  background: #FF9E66 !important;
+  @apply text-secondary-darker border-secondary-light;
+  background: #C3DBAE !important;
  }
 }
 
