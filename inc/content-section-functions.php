@@ -250,6 +250,125 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
     return implode(' ', $classes);
 }
 
+function matrix_wysiwyg_should_use_policy_section_layout($html): bool
+{
+    $html = is_string($html) ? $html : '';
+
+    return preg_match('/<h2\b/i', $html) === 1
+        && preg_match('/<p\b[^>]*class=["\'][^"\']*\bintro\b/i', $html) === 1;
+}
+
+function matrix_get_dom_node_html(DOMDocument $document, DOMNode $node): string
+{
+    $html = $document->saveHTML($node);
+
+    return is_string($html) ? $html : '';
+}
+
+function matrix_get_dom_node_inner_html(DOMDocument $document, DOMNode $node): string
+{
+    $html = '';
+
+    foreach ($node->childNodes as $child_node) {
+        $html .= matrix_get_dom_node_html($document, $child_node);
+    }
+
+    return $html;
+}
+
+function matrix_policy_wysiwyg_node_has_visible_content(DOMNode $node): bool
+{
+    return trim($node->textContent) !== '';
+}
+
+function matrix_get_policy_wysiwyg_fragment_html(DOMDocument $document, DOMNode $node): string
+{
+    if ($node instanceof DOMElement && strtolower($node->tagName) === 'div') {
+        $class_name = ' ' . $node->getAttribute('class') . ' ';
+
+        if (strpos($class_name, ' section-head ') !== false) {
+            return matrix_get_dom_node_inner_html($document, $node);
+        }
+    }
+
+    return matrix_get_dom_node_html($document, $node);
+}
+
+/**
+ * Split migrated policy WYSIWYG markup into content-style sections.
+ *
+ * @return array<int, array{heading: string, content: string}>
+ */
+function matrix_prepare_policy_wysiwyg_sections($html): array
+{
+    $html = is_string($html) ? trim($html) : '';
+
+    if ($html === '' || ! class_exists('DOMDocument')) {
+        return [];
+    }
+
+    $previous_errors = libxml_use_internal_errors(true);
+    $document = new DOMDocument('1.0', 'UTF-8');
+    $loaded = $document->loadHTML(
+        '<?xml encoding="UTF-8"><div id="matrix-policy-wysiwyg-root">' . $html . '</div>',
+        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
+
+    if (! $loaded) {
+        return [];
+    }
+
+    $root = $document->getElementById('matrix-policy-wysiwyg-root');
+
+    if (! $root instanceof DOMElement) {
+        return [];
+    }
+
+    $sections = [];
+    $current_section = null;
+    $intro_html = '';
+
+    foreach ($root->childNodes as $node) {
+        if ($node instanceof DOMElement && strtolower($node->tagName) === 'h2') {
+            if (is_array($current_section) && trim(strip_tags($current_section['content'])) !== '') {
+                $sections[] = $current_section;
+            }
+
+            $current_section = [
+                'heading' => trim($node->textContent),
+                'content' => $intro_html,
+            ];
+            $intro_html = '';
+            continue;
+        }
+
+        if (! matrix_policy_wysiwyg_node_has_visible_content($node)) {
+            continue;
+        }
+
+        $fragment_html = matrix_get_policy_wysiwyg_fragment_html($document, $node);
+
+        if ($current_section === null) {
+            $intro_html .= $fragment_html;
+            continue;
+        }
+
+        $current_section['content'] .= $fragment_html;
+    }
+
+    if (is_array($current_section) && trim(strip_tags($current_section['content'])) !== '') {
+        $sections[] = $current_section;
+    }
+
+    return array_values(array_filter($sections, static function ($section) {
+        return is_array($section)
+            && trim((string) ($section['heading'] ?? '')) !== ''
+            && trim(strip_tags((string) ($section['content'] ?? ''))) !== '';
+    }));
+}
+
 function matrix_get_content_background_style($background_type, $background_color = '', $background_gradient = '')
 {
     $background_type = is_string($background_type) ? trim($background_type) : 'gradient';

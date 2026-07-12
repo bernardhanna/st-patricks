@@ -134,6 +134,22 @@ test('content rich text wrapper includes paragraph spacing classes', function ()
         ->and(matrix_get_content_rich_text_wrapper_class_names('bold', ''))->toContain('font-bold');
 });
 
+test('policy wysiwyg helper splits intro and h2 sections into formatted blocks', function () {
+    $html = '<div class="section-head hide-for-side"><p class="intro">Intro copy.</p></div>'
+        . '<h2>Privacy Notice</h2><p>First paragraph.</p>'
+        . '<h2>Terms used in this Privacy Notice</h2><p>Second paragraph.</p>';
+
+    $sections = matrix_prepare_policy_wysiwyg_sections($html);
+
+    expect(matrix_wysiwyg_should_use_policy_section_layout($html))->toBeTrue()
+        ->and($sections)->toHaveCount(2)
+        ->and($sections[0]['heading'])->toBe('Privacy Notice')
+        ->and($sections[0]['content'])->toContain('Intro copy.')
+        ->and($sections[0]['content'])->not->toContain('section-head')
+        ->and($sections[1]['heading'])->toBe('Terms used in this Privacy Notice')
+        ->and(matrix_wysiwyg_should_use_policy_section_layout('<h2>Plain section</h2><p>Body.</p>'))->toBeFalse();
+});
+
 test('content button helpers normalize links and class names', function () {
     expect(matrix_normalize_content_link([
         'title' => ' Support Us ',
