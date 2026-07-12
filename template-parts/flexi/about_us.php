@@ -312,6 +312,11 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
         border-color: var(--card-bg);
     }
 
+    #<?php echo esc_attr($section_id); ?> .mental-health-card > a,
+    #<?php echo esc_attr($section_id); ?> .mental-health-card > div {
+        background-color: inherit;
+    }
+
     #<?php echo esc_attr($section_id); ?> .mental-health-card--interactive:hover,
     #<?php echo esc_attr($section_id); ?> .mental-health-card--interactive:focus-within {
         background-color: #ffffff;
