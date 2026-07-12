@@ -138,7 +138,7 @@ $is_slider = count($slides) > 1;
 
                     <?php if ($is_slider) { ?>
                         <!-- MOBILE-ONLY CONTROLS: below image, above text -->
-                        <div class="flex gap-6 justify-center items-center mb-4 lg:hidden">
+                        <div class="flex w-full justify-between items-center mb-4 lg:hidden">
 
                             <!-- Mobile Prev -->
                             <button
@@ -156,7 +156,7 @@ $is_slider = count($slides) > 1;
                             <div class="flex gap-2">
                                 <?php for ($d = 0; $d < count($slides); $d++) {
                                     $is_active = $d === 0;
-                                    $dot_color = $is_active ? '#0f172a' : '#7ED0E0'; // active vs primary
+                                    $dot_color = $is_active ? '#80CCD9' : '#7ED0E0';
                                     ?>
                                     <button
                                         class="w-3 h-3 rounded-full transition-colors slider-dot"
@@ -342,7 +342,7 @@ $is_slider = count($slides) > 1;
             dots.forEach(function(d) {
                 var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
                 if (dotIndex === next) {
-                    d.style.backgroundColor = '#0f172a';
+                    d.style.backgroundColor = '#80CCD9';
                     d.setAttribute('aria-current', 'true');
                 } else {
                     d.style.backgroundColor = '#7ED0E0';
