@@ -383,7 +383,7 @@ function matrix_get_hero_with_breadcrumbs_image_split_column_class_names($text_m
     return 'order-1 flex w-full flex-col gap-5 px-4 lg:gap-6 lg:px-0';
   }
 
-  return 'order-2 flex w-full flex-col gap-5 px-4 py-4 lg:order-1 lg:gap-6 lg:pl-[52px] lg:pr-8 lg:py-0';
+  return 'order-2 flex w-full flex-col gap-5 px-4 py-4 lg:order-1 lg:gap-6 lg:pl-0 lg:pr-8 lg:py-0';
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_gradient_layout($text_max_width = 'default')
