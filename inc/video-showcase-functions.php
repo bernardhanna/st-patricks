@@ -192,7 +192,7 @@ function matrix_get_video_showcase_caption_width_class($layout_style, $video_sur
 
     return matrix_resolve_video_showcase_layout_style($layout_style) === 'compact_slider'
         ? 'max-w-[780px]'
-        : 'max-w-[880px]';
+        : 'max-w-[1018px]';
 }
 
 function matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size = 'default', $text_max_width = 'default')
