@@ -41,3 +41,16 @@ test('matrix_normalize_acf_link forces external acf links to open in a new tab',
         'rel' => 'noopener noreferrer',
     ]);
 });
+
+test('newsletter subtext formatter links plain click here copy', function () {
+    $html = matrix_format_newsletter_subtext('<p>For healthcare newsletter click here</p>');
+
+    expect($html)->toContain('<a href="https://www.stpatricks.ie/subscribe-to-our-gp-enewsletter/">click here</a>')
+        ->and($html)->toContain('<p>For healthcare newsletter');
+});
+
+test('newsletter subtext formatter keeps editor supplied anchors', function () {
+    $html = '<p>For healthcare newsletter <a href="/custom/">click here</a></p>';
+
+    expect(matrix_format_newsletter_subtext($html))->toBe($html);
+});
