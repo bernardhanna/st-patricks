@@ -321,8 +321,8 @@ $tone_backgrounds = [
                         <button
                             x-show="visibleCount < totalCount"
                             x-on:click="visibleCount = Math.min(visibleCount + 4, totalCount)"
-                            class="btn <?php echo esc_attr($load_more_class); ?> w-fit whitespace-nowrap inline-flex items-center justify-center rounded-md border px-4 py-2 text-[14px] not-italic font-medium leading-[24px] transition-colors duration-200"
-                            style="border-color: <?php echo esc_attr($button_border_color); ?>; color: <?php echo esc_attr($button_text_color); ?>;"
+                            class="btn <?php echo esc_attr($load_more_class); ?> w-fit whitespace-nowrap inline-flex items-center justify-center rounded-md px-4 py-2 text-[14px] not-italic font-medium leading-[24px] transition-colors duration-200"
+                            style="color: <?php echo esc_attr($button_text_color); ?>;"
                             type="button"
                         >
                             <?php echo esc_html($load_more_button_text); ?>
@@ -331,7 +331,7 @@ $tone_backgrounds = [
                             .<?php echo esc_attr($load_more_class); ?>:hover,
                             .<?php echo esc_attr($load_more_class); ?>:focus-visible {
                                 background-color: <?php echo esc_attr($button_border_color); ?>;
-                                color: #ffffff !important;
+                                color: <?php echo esc_attr($button_text_color); ?> !important;
                             }
                         </style>
                     <?php } else {
