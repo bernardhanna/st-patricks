@@ -132,6 +132,15 @@ test('filter archive pagination uses compact mobile item sets', function () {
     ]);
 });
 
+test('filter archive mobile pagination shows both pages when only two pages exist', function () {
+    $item_sets = matrix_build_filter_archive_pagination_item_sets(2, 2);
+
+    expect($item_sets['mobile'])->toBe([
+        ['type' => 'page', 'page' => 1],
+        ['type' => 'page', 'page' => 2],
+    ]);
+});
+
 test('filter archive cards use compact mobile typography tokens', function () {
     expect(matrix_get_filter_archive_card_title_class_names())->toContain('text-[1.125rem]')
         ->and(matrix_get_filter_archive_card_title_class_names())->toContain('tracking-[-0.00675rem]')

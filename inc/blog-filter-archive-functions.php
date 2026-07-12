@@ -184,7 +184,7 @@ function matrix_get_blog_filter_archive_pagination_class_names()
 function matrix_build_filter_archive_pagination_item_sets(int $current_page, int $total_pages): array
 {
     return [
-        'mobile' => matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages, 0, 0),
+        'mobile' => matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages, 0, $total_pages <= 2 ? 1 : 0),
         'desktop' => matrix_build_blog_filter_archive_pagination_items($current_page, $total_pages, 1, 1),
     ];
 }
