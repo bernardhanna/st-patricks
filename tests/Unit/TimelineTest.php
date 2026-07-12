@@ -68,3 +68,12 @@ test('timeline drops empty items and normalizes footer cta', function () {
         'target' => '_self',
     ]);
 });
+
+test('timeline footer cta uses the general button hover treatment', function () {
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/flexi/timeline.php');
+
+    expect($template)->toContain('btn inline-flex h-[36px]')
+        ->and($template)->toContain('hover:bg-[#C3DBAE]')
+        ->and($template)->toContain('hover:text-[#1E244B]')
+        ->and($template)->not->toContain('hover:bg-[#08284B]');
+});
