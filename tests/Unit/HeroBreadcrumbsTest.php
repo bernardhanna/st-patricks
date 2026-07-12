@@ -135,6 +135,11 @@ test('hero image split layout helpers add spacing before embedded and primary bu
         ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names())->toContain('text-[28px]');
 });
 
+test('hero image split default text column aligns with breadcrumbs on desktop', function () {
+    expect(matrix_get_hero_with_breadcrumbs_image_split_column_class_names())
+        ->not->toContain('lg:pl-[52px]');
+});
+
 test('hero with breadcrumbs text max width resolves wide and default classes', function () {
     expect(matrix_get_hero_with_breadcrumbs_text_max_width_class('wide'))->toBe('max-w-[52rem]')
         ->and(matrix_get_hero_with_breadcrumbs_text_max_width_class('default'))->toBe('max-w-[599px]')
