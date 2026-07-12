@@ -98,7 +98,7 @@ $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt
                             </div>
                         <?php } ?>
 
-                        <div class="bg-[#FBFAF7] p-6">
+                        <div class="bg-[#FBFAF7] flex-1 p-6">
                             <h3 class="font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px] text-[#1E244B]">
                                 <?php echo esc_html($card['title']); ?>
                             </h3>
