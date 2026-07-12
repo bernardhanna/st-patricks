@@ -83,8 +83,8 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Subtitle -->
             <?php if (!empty($subtext)): ?>
-              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor">
-                <?php echo matrix_kses_rich_text($subtext); ?>
+              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor [&_a]:text-primary [&_a]:underline">
+                <?php echo matrix_kses_rich_text(matrix_prepare_newsletter_subtext($subtext)); ?>
               </div>
             <?php endif; ?>
           </div>

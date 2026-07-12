@@ -45242,6 +45242,10 @@ input:where([type='file']):focus {
   --tw-text-opacity: 1;
   color: rgb(2 75 121 / var(--tw-text-opacity, 1));
 }
+.\[\&_a\]\:text-primary a {
+  --tw-text-opacity: 1;
+  color: rgb(126 208 224 / var(--tw-text-opacity, 1));
+}
 .\[\&_a\]\:text-white a {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
