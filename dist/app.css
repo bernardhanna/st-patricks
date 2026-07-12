@@ -32332,6 +32332,33 @@ input:where([type='file']):focus {
   .lg\:\[scrollbar-width\:none\] {
     scrollbar-width: none;
   }
+
+  .lg\:hover\:bg-\[\#001F33\]:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 31 51 / var(--tw-bg-opacity, 1));
+  }
+
+  .lg\:focus\:bg-\[\#001F33\]:focus {
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 31 51 / var(--tw-bg-opacity, 1));
+  }
+
+  .lg\:active\:bg-black:active {
+    --tw-bg-opacity: 1;
+    background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+  }
+
+  .group:hover .lg\:group-hover\:stroke-white {
+    stroke: #fff;
+  }
+
+  .group:focus .lg\:group-focus\:stroke-white {
+    stroke: #fff;
+  }
+
+  .group:active .lg\:group-active\:stroke-white {
+    stroke: #fff;
+  }
 }
 @media (min-width: 1280px) {
 

@@ -224,10 +224,10 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
 
           <!-- Navigation -->
           <?php if ($count > 1): ?>
-          <div class="flex gap-6 items-center" data-controls>
-            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]" aria-label="Previous story" data-prev>
+          <div class="flex gap-6 justify-between items-center w-full lg:w-auto lg:justify-center" data-controls>
+            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Previous story" data-prev>
               <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
 
@@ -237,9 +237,9 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
               <?php endfor; ?>
             </div>
 
-            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]" aria-label="Next story" data-next>
+            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Next story" data-next>
               <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
