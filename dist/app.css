@@ -45232,6 +45232,9 @@ input:where([type='file']):focus {
 .\[\&_a\.btn\]\:inline-flex a.btn {
   display: inline-flex;
 }
+.\[\&_a\:hover\]\:underline a:hover {
+  text-decoration-line: underline;
+}
 .\[\&_a\:hover\]\:no-underline a:hover {
   text-decoration-line: none;
 }
@@ -45241,6 +45244,10 @@ input:where([type='file']):focus {
 .\[\&_a\]\:text-\[\#024B79\] a {
   --tw-text-opacity: 1;
   color: rgb(2 75 121 / var(--tw-text-opacity, 1));
+}
+.\[\&_a\]\:text-\[\#7ED0E0\] a {
+  --tw-text-opacity: 1;
+  color: rgb(126 208 224 / var(--tw-text-opacity, 1));
 }
 .\[\&_a\]\:text-white a {
   --tw-text-opacity: 1;
