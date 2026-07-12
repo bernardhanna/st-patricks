@@ -59,6 +59,25 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
+    function matrix_link_newsletter_subtext_click_here(string $html): string
+    {
+        if ($html === '' || stripos($html, 'click here') === false || stripos($html, '<a') !== false) {
+            return $html;
+        }
+
+        $href = esc_url(home_url('/campaigns/subscribe-to-our-gp-enewsletter/'));
+        $linked = preg_replace(
+            '/\bclick here\b/i',
+            '<a href="' . $href . '">$0</a>',
+            $html,
+            1
+        );
+
+        return is_string($linked) ? $linked : $html;
+    }
+}
+
 if (! function_exists('matrix_iframe_title_for_src')) {
     /**
      * Derive an accessible title for an embedded iframe based on its source.
