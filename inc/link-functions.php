@@ -268,6 +268,26 @@ if (! function_exists('matrix_kses_rich_text')) {
     }
 }
 
+if (! function_exists('matrix_format_newsletter_subtext')) {
+    function matrix_format_newsletter_subtext(string $html): string
+    {
+        if ($html === '' || stripos($html, '<a') !== false || stripos($html, 'click here') === false) {
+            return $html;
+        }
+
+        $newsletter_url = home_url('/subscribe-to-our-gp-enewsletter/');
+
+        return preg_replace_callback(
+            '/\bclick here\b/i',
+            static function (array $matches) use ($newsletter_url): string {
+                return '<a href="' . esc_url($newsletter_url) . '">' . esc_html($matches[0]) . '</a>';
+            },
+            $html,
+            1
+        ) ?? $html;
+    }
+}
+
 if (! function_exists('matrix_filter_external_links_in_content')) {
     function matrix_filter_external_links_in_content(string $content): string
     {
