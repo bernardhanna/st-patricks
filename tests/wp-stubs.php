@@ -92,6 +92,13 @@ if (! function_exists('esc_url_raw')) {
     }
 }
 
+if (! function_exists('wp_kses_post')) {
+    function wp_kses_post($value)
+    {
+        return (string) $value;
+    }
+}
+
 if (! function_exists('__')) {
     function __($text, $domain = 'default')
     {
