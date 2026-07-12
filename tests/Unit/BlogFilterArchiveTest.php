@@ -108,7 +108,7 @@ test('filter archive controls stack search above filters on mobile', function ()
 
 test('filter archive card grid uses one column on the smallest screens', function () {
     expect(matrix_get_filter_archive_card_grid_class_names())->toContain('grid-cols-1')
-        ->and(matrix_get_filter_archive_card_grid_class_names())->toContain('xxs:grid-cols-2')
+        ->and(matrix_get_filter_archive_card_grid_class_names())->toContain('sm:grid-cols-2')
         ->and(matrix_get_filter_archive_card_grid_class_names())->toContain('xl:grid-cols-3');
 });
 
