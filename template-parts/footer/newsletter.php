@@ -25,6 +25,15 @@ $bg_left_op = ($bg_left_op === '' || $bg_left_op === null) ? 0.03 : (float) $bg_
 // Content
 $heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, and Expert advice from SPMHS';
 $subtext = get_field('newsletter_subtext', 'option'); // WYSIWYG
+if (is_string($subtext) && stripos($subtext, '<a') === false && preg_match('/healthcare newsletter\s+click here/i', strip_tags($subtext))) {
+  $healthcare_newsletter_url = esc_url(home_url('/subscribe-to-our-gp-enewsletter/'));
+  $subtext = preg_replace(
+    '/\b(click here)\b/i',
+    '<a href="' . $healthcare_newsletter_url . '" class="text-primary hover:underline">$1</a>',
+    $subtext,
+    1
+  );
+}
 
 // Form
 $action      = trim((string) get_field('newsletter_action', 'option')); // if empty → Brevo AJAX
@@ -83,7 +92,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Subtitle -->
             <?php if (!empty($subtext)): ?>
-              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor">
+              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor [&_a]:text-primary [&_a:hover]:underline">
                 <?php echo matrix_kses_rich_text($subtext); ?>
               </div>
             <?php endif; ?>
