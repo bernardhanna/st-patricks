@@ -24,7 +24,7 @@ $bg_left_op = ($bg_left_op === '' || $bg_left_op === null) ? 0.03 : (float) $bg_
 
 // Content
 $heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, and Expert advice from SPMHS';
-$subtext = get_field('newsletter_subtext', 'option'); // WYSIWYG
+$subtext = matrix_prepare_newsletter_subtext((string) get_field('newsletter_subtext', 'option')); // WYSIWYG
 
 // Form
 $action      = trim((string) get_field('newsletter_action', 'option')); // if empty → Brevo AJAX
@@ -83,7 +83,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Subtitle -->
             <?php if (!empty($subtext)): ?>
-              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor">
+              <div class="<?php echo esc_attr(matrix_get_newsletter_subtext_class_names()); ?>">
                 <?php echo matrix_kses_rich_text($subtext); ?>
               </div>
             <?php endif; ?>

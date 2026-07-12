@@ -55,6 +55,7 @@ require_once get_template_directory() . '/inc/enqueue-fonts.php';
 require_once get_template_directory() . '/inc/enqueue-scripts.php';
 // load the helper functions
 require_once get_template_directory() . '/inc/link-functions.php';
+require_once get_template_directory() . '/inc/newsletter-functions.php';
 require_once get_template_directory() . '/inc/callout-bar-functions.php';
 require_once get_template_directory() . '/inc/content-cta-functions.php';
 require_once get_template_directory() . '/inc/content-section-functions.php';
