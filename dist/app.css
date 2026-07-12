@@ -29783,6 +29783,10 @@ input:where([type='file']):focus {
     padding-bottom: 9rem;
   }
 
+  .lg\:pl-0 {
+    padding-left: 0px;
+  }
+
   .lg\:pl-\[100rem\] {
     padding-left: 100rem;
   }
@@ -29973,10 +29977,6 @@ input:where([type='file']):focus {
 
   .lg\:pl-\[51rem\] {
     padding-left: 51rem;
-  }
-
-  .lg\:pl-\[52px\] {
-    padding-left: 52px;
   }
 
   .lg\:pl-\[52rem\] {

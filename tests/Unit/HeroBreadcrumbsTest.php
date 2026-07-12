@@ -135,6 +135,13 @@ test('hero image split layout helpers add spacing before embedded and primary bu
         ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names())->toContain('text-[28px]');
 });
 
+test('hero image split desktop copy aligns with breadcrumb left edge', function () {
+    $previousDesktopOffsetClass = 'lg:pl-' . '[52px]';
+
+    expect(matrix_get_hero_with_breadcrumbs_image_split_column_class_names())->toContain('lg:pl-0')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names())->not->toContain($previousDesktopOffsetClass);
+});
+
 test('hero with breadcrumbs text max width resolves wide and default classes', function () {
     expect(matrix_get_hero_with_breadcrumbs_text_max_width_class('wide'))->toBe('max-w-[52rem]')
         ->and(matrix_get_hero_with_breadcrumbs_text_max_width_class('default'))->toBe('max-w-[599px]')
@@ -162,13 +169,15 @@ test('hero with breadcrumbs heading max width can span full column width', funct
 });
 
 test('hero image split wide text max width uses single column stacked layout', function () {
+    $previousDesktopOffsetClass = 'lg:pl-' . '[52px]';
+
     expect(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->toBe('mx-auto flex w-full max-w-[1160px] flex-col py-16 max-xl:px-0')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->not->toContain('lg:grid')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->toContain('order-2')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->not->toContain('lg:border-l-2')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->toContain('order-1')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->not->toContain('max-w-')
-        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->not->toContain('lg:pl-[52px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names('wide'))->not->toContain($previousDesktopOffsetClass)
         ->and(matrix_get_hero_with_breadcrumbs_image_split_gradient_layout('wide'))->toBe('stacked')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_gradient_layout('default'))->toBe('split');
 });
