@@ -85,6 +85,13 @@ if (! function_exists('esc_url')) {
     }
 }
 
+if (! function_exists('esc_js')) {
+    function esc_js($value)
+    {
+        return addslashes((string) $value);
+    }
+}
+
 if (! function_exists('esc_url_raw')) {
     function esc_url_raw($value)
     {
@@ -153,6 +160,13 @@ if (! function_exists('apply_filters')) {
     }
 }
 
+if (! function_exists('wp_kses_post')) {
+    function wp_kses_post($value)
+    {
+        return (string) $value;
+    }
+}
+
 /* -------------------------------------------------------------------------
  | WordPress data getters (registry-backed, default to "WordPress absent")
  | ------------------------------------------------------------------------- */
@@ -161,6 +175,20 @@ if (! function_exists('home_url')) {
     function home_url($path = '')
     {
         return __wp_stub_value('home_url', (string) $path, [$path]);
+    }
+}
+
+if (! function_exists('admin_url')) {
+    function admin_url($path = '')
+    {
+        return __wp_stub_value('admin_url', '/wp-admin/' . ltrim((string) $path, '/'), [$path]);
+    }
+}
+
+if (! function_exists('wp_create_nonce')) {
+    function wp_create_nonce($action = -1)
+    {
+        return __wp_stub_value('wp_create_nonce', 'test-nonce', [$action]);
     }
 }
 
