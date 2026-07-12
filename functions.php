@@ -59,6 +59,7 @@ require_once get_template_directory() . '/inc/callout-bar-functions.php';
 require_once get_template_directory() . '/inc/content-cta-functions.php';
 require_once get_template_directory() . '/inc/content-section-functions.php';
 require_once get_template_directory() . '/inc/content-accordion-functions.php';
+require_once get_template_directory() . '/inc/newsletter-functions.php';
 require_once get_template_directory() . '/inc/key-contact-info-functions.php';
 require_once get_template_directory() . '/inc/faq-functions.php';
 require_once get_template_directory() . '/inc/hero-functions.php';
