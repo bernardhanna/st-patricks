@@ -105,7 +105,7 @@ if (!empty($services) && is_array($services)) {
                 </<?php echo esc_attr($heading_tag); ?>>
             <?php endif; ?>
 
-            <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]"
+            <div class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"
                  role="presentation"
                  aria-hidden="true"></div>
             </div>
