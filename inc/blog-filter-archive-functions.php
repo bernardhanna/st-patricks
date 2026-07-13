@@ -138,7 +138,7 @@ function matrix_get_filter_archive_controls_class_names($vertical_align = 'cente
 
 function matrix_get_filter_archive_card_grid_class_names()
 {
-    return 'mt-8 grid grid-cols-1 xxs:grid-cols-2 gap-4 xxs:gap-6 xl:mt-10 xl:grid-cols-3 xl:gap-8';
+    return 'mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:mt-10 xl:grid-cols-3 xl:gap-8';
 }
 
 function matrix_get_filter_archive_pagination_active_colors()
