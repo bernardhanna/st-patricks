@@ -94,3 +94,17 @@ test('editorial featured layout groups testimonials into two-up rows plus one fe
         ->and($rows[1]['standard_items'])->toHaveCount(1)
         ->and($rows[1]['featured_item'])->toBeNull();
 });
+
+test('load more button keeps dark hover text and renders without a border', function () {
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/flexi/testimonials.php');
+
+    preg_match('/<button\s+.*?class="btn <\?php echo esc_attr\(\$load_more_class\); \?> (?P<classes>[^"]+)".*?style="(?P<style>[^"]+)"/s', $template, $button_matches);
+    preg_match('/\.<\?php echo esc_attr\(\$load_more_class\); \?>:hover,.*?\{(?P<rules>.*?)\}/s', $template, $hover_matches);
+
+    expect($button_matches)->not->toBeEmpty()
+        ->and($button_matches['classes'])->not->toContain('border')
+        ->and($button_matches['style'])->not->toContain('border-color')
+        ->and($hover_matches)->not->toBeEmpty()
+        ->and($hover_matches['rules'])->toContain('color: <?php echo esc_attr($button_text_color); ?> !important;')
+        ->and($hover_matches['rules'])->not->toContain('#ffffff');
+});
