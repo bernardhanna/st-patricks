@@ -9,7 +9,6 @@ $heading_tag      = get_sub_field('heading_tag') ?: 'h2';
 $heading_text     = get_sub_field('heading_text') ?: '';
 $partners         = get_sub_field('partners');
 $background_color = get_sub_field('background_color') ?: '#FFFFFF';
-$heading_color    = get_sub_field('heading_color') ?: '#1e293b';
 $show_card_style  = (bool) get_sub_field('show_card_style');
 
 
@@ -42,8 +41,7 @@ $logo_container = 'h-10 flex items-center justify-center';
             <div class="w-full lg:max-w-[295px]">
                 <?php if (!empty($heading_text)) : ?>
                     <<?php echo tag_escape($heading_tag); ?>
-                        class="text-[18px] mob:text-xl font-medium tracking-normal leading-7 text-left"
-                        style="color: <?php echo esc_attr($heading_color); ?>;">
+                        class="text-[18px] mob:text-xl font-medium tracking-normal leading-7 text-left text-red-50">
                         <?php echo esc_html($heading_text); ?>
                     </<?php echo tag_escape($heading_tag); ?>>
                 <?php endif; ?>
