@@ -138,15 +138,15 @@ $is_slider = count($slides) > 1;
 
                     <?php if ($is_slider) { ?>
                         <!-- MOBILE-ONLY CONTROLS: below image, above text -->
-                        <div class="flex gap-6 justify-center items-center mb-4 lg:hidden">
+                        <div class="flex justify-between items-center w-full mb-4 lg:hidden">
 
                             <!-- Mobile Prev -->
                             <button
-                                class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
+                                class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0]"
                                 aria-label="Previous slide">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
                                     <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
-                                          class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                          class="stroke-[#020617] transition-colors"
                                           stroke-width="1.5"
                                           stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
@@ -170,11 +170,11 @@ $is_slider = count($slides) > 1;
 
                             <!-- Mobile Next -->
                             <button
-                                class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
+                                class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0]"
                                 aria-label="Next slide">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
                                     <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
-                                          class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
+                                          class="stroke-[#020617] transition-colors"
                                           stroke-width="1.5"
                                           stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
