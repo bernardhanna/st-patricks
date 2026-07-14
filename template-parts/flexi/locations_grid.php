@@ -47,7 +47,7 @@ $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt
                     <?php
                     $card_tag = $card['is_linked'] ? 'a' : 'article';
                     $card_target = (string) ($card['link']['target'] ?? '_self');
-                    $card_classes = 'group flex h-full flex-col overflow-hidden rounded-[8px] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]';
+                    $card_classes = 'group flex h-full flex-col overflow-hidden rounded-[8px] bg-[#FBFAF7] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]';
 
                     if ($card['is_linked']) {
                         $card_classes .= ' focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';

@@ -101,3 +101,10 @@ test('locations grid resolves cards from selected source mode', function () {
     expect(matrix_resolve_locations_grid_cards('locations', [], 'not-an-array'))->toBe([]);
     expect(matrix_locations_grid_cards_from_posts([]))->toBe([]);
 });
+
+test('locations grid card wrapper uses beige surface behind short titles', function () {
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/flexi/locations_grid.php');
+
+    expect($template)->toContain('group flex h-full flex-col overflow-hidden rounded-[8px] bg-[#FBFAF7] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]')
+        ->and($template)->not->toContain('group flex h-full flex-col overflow-hidden rounded-[8px] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]');
+});
