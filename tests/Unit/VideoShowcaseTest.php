@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/video-showcase-functions.php';
 
 test('video showcase slides are normalized for embed and local sources', function () {
@@ -88,6 +89,12 @@ test('video showcase text width full option spans the content area', function ()
     expect(matrix_get_video_showcase_heading_wrap_width_class('feature_single', 'default', 'full'))->toBe('w-full max-w-[1018px]')
         ->and(matrix_get_video_showcase_caption_width_class('feature_slider', 'default', 'full'))->toBe('w-full max-w-[1018px]')
         ->and(matrix_get_video_showcase_heading_wrap_width_class('feature_single', 'default', 'default'))->toBe('max-w-[680px]');
+});
+
+test('video showcase default caption aligns to the content frame', function () {
+    expect(matrix_get_video_showcase_caption_width_class('feature_single', 'default'))->toBe('max-w-[1018px]')
+        ->and(matrix_get_video_showcase_caption_width_class('feature_slider', 'default'))->toBe('max-w-[1018px]')
+        ->and(matrix_get_video_showcase_caption_width_class('compact_slider', 'default'))->toBe('max-w-[780px]');
 });
 
 test('video showcase vertical padding can omit large desktop spacing', function () {
