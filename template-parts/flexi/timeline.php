@@ -266,7 +266,7 @@ $render_timeline_date = static function (array $item, string $classes = '') {
                 <a
                     href="<?php echo esc_url($footer_button_link['url']); ?>"
                     target="<?php echo esc_attr($footer_target); ?>"
-                    class="inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white transition-colors duration-200 hover:bg-[#08284B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                    class="btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white transition-colors duration-200 hover:bg-[#C3DBAE] hover:text-[#1E244B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
                     <?php if ($footer_target === '_blank') { ?>
                         rel="noopener noreferrer"
                     <?php } ?>
