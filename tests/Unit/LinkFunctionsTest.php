@@ -41,3 +41,11 @@ test('matrix_normalize_acf_link forces external acf links to open in a new tab',
         'rel' => 'noopener noreferrer',
     ]);
 });
+
+test('matrix_link_newsletter_subtext_click_here links plain newsletter click here text', function () {
+    expect(function_exists('matrix_link_newsletter_subtext_click_here'))->toBeTrue();
+
+    $html = matrix_link_newsletter_subtext_click_here('<p>For healthcare newsletter click here</p>');
+
+    expect($html)->toContain('<a href="https://www.stpatricks.ie/campaigns/subscribe-to-our-gp-enewsletter/">click here</a>');
+});
