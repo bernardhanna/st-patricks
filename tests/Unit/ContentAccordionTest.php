@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/content-section-functions.php';
 require_once dirname(__DIR__, 2) . '/inc/content-accordion-functions.php';
 
@@ -139,6 +140,17 @@ test('content accordion preserves icon keys for directions rows', function () {
     ]);
 
     expect($result['items'][0]['rows'][0]['icon_key'])->toBe('car');
+});
+
+test('content accordion directions fallback icons use centered car and bus artwork', function () {
+    $car_icon = matrix_get_content_accordion_icon_svg('car');
+    $bus_icon = matrix_get_content_accordion_icon_svg('bus');
+
+    expect($car_icon)->toContain('cx="7.5" cy="16.5"')
+        ->and($car_icon)->toContain('cx="16.5" cy="16.5"')
+        ->and($bus_icon)->toContain('x="7" y="5.5" width="10" height="11"')
+        ->and($bus_icon)->toContain('cx="8.5" cy="17.5"')
+        ->and($bus_icon)->toContain('cx="15.5" cy="17.5"');
 });
 
 test('content accordion falls back to the first item when none are flagged open', function () {
