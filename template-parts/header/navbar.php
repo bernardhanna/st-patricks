@@ -452,7 +452,7 @@ document.addEventListener('alpine:init', () => {
       <a
         href="<?php echo esc_url($help_btn['url']); ?>"
         target="<?php echo esc_attr($help_btn['target'] ?: '_self'); ?>"
-        class="hidden btn gap-2 items-center px-3 h-9 bg-[#024B79] text-white whitespace-nowrap rounded-md transition-colors shrink-0 lg:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden btn gap-2 items-center px-3 h-9 bg-secondary text-secondary-darker whitespace-nowrap rounded-md transition-colors shrink-0 lg:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
         aria-label="<?php echo esc_attr($help_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">
