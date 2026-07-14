@@ -15,17 +15,24 @@ test('what we offer layout style falls back to image_feature', function () {
 test('what we offer accent color uses explicit value first', function () {
     expect(function_exists('matrix_get_what_we_offer_accent_color'))->toBeTrue();
 
-    $row = ['accent_color' => '#B4A8CE'];
+    $row = ['accent_color' => '#123456'];
 
-    expect(matrix_get_what_we_offer_accent_color($row, 0))->toBe('#B4A8CE');
+    expect(matrix_get_what_we_offer_accent_color($row, 0))->toBe('#123456');
+});
+
+test('what we offer accent color normalizes previous pastel values to brand secondary colors', function () {
+    expect(matrix_get_what_we_offer_accent_color(['accent_color' => '#6FC9C0'], 0))->toBe('#68CECA')
+        ->and(matrix_get_what_we_offer_accent_color(['accent_color' => '#C3DBAE'], 1))->toBe('#A3C415')
+        ->and(matrix_get_what_we_offer_accent_color(['accent_color' => '#B4A8CE'], 2))->toBe('#750D68')
+        ->and(matrix_get_what_we_offer_accent_color(['accent_color' => '#E4B8D6'], 3))->toBe('#E13288');
 });
 
 test('what we offer accent color rotates through fallback palette', function () {
-    expect(matrix_get_what_we_offer_accent_color([], 0))->toBe('#6FC9C0')
-        ->and(matrix_get_what_we_offer_accent_color([], 1))->toBe('#C3DBAE')
-        ->and(matrix_get_what_we_offer_accent_color([], 2))->toBe('#B4A8CE')
-        ->and(matrix_get_what_we_offer_accent_color([], 3))->toBe('#E4B8D6')
-        ->and(matrix_get_what_we_offer_accent_color([], 4))->toBe('#6FC9C0');
+    expect(matrix_get_what_we_offer_accent_color([], 0))->toBe('#68CECA')
+        ->and(matrix_get_what_we_offer_accent_color([], 1))->toBe('#A3C415')
+        ->and(matrix_get_what_we_offer_accent_color([], 2))->toBe('#750D68')
+        ->and(matrix_get_what_we_offer_accent_color([], 3))->toBe('#E13288')
+        ->and(matrix_get_what_we_offer_accent_color([], 4))->toBe('#68CECA');
 });
 
 test('what we offer intro two column icons use the existing left svg pair', function () {
@@ -41,8 +48,8 @@ test('what we offer intro two column icons use the existing left svg pair', func
 test('what we offer intro two column icon svg returns markup for default and hover states', function () {
     expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_svg'))->toBeTrue();
 
-    $default = matrix_get_what_we_offer_intro_two_column_icon_svg('default', '#6FC9C0');
-    $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover', '#6FC9C0');
+    $default = matrix_get_what_we_offer_intro_two_column_icon_svg('default', '#68CECA');
+    $hover = matrix_get_what_we_offer_intro_two_column_icon_svg('hover', '#68CECA');
 
     expect($default)->toContain('<svg')
         ->and($default)->toContain('viewBox="0 0 32 32"')
@@ -56,10 +63,14 @@ test('what we offer intro two column icon svg returns markup for default and hov
 test('what we offer intro two column icon background maps accent to brand secondary color', function () {
     expect(function_exists('matrix_get_what_we_offer_intro_two_column_icon_background'))->toBeTrue();
 
-    expect(matrix_get_what_we_offer_intro_two_column_icon_background('#6FC9C0'))->toBe('#6FC9C0')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#C3DBAE')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#B4A8CE')
-        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#E4B8D6');
+    expect(matrix_get_what_we_offer_intro_two_column_icon_background('#68CECA'))->toBe('#68CECA')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#A3C415'))->toBe('#A3C415')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#750D68'))->toBe('#750D68')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E13288'))->toBe('#E13288')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#6FC9C0'))->toBe('#68CECA')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#C3DBAE'))->toBe('#A3C415')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#B4A8CE'))->toBe('#750D68')
+        ->and(matrix_get_what_we_offer_intro_two_column_icon_background('#E4B8D6'))->toBe('#E13288');
 });
 
 test('what we offer vertical padding supports standard and bottom only modes', function () {
