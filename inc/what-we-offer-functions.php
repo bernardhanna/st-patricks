@@ -16,14 +16,14 @@ function matrix_get_what_we_offer_accent_color($service_row, $index = 0)
     $accent_color = is_array($service_row) ? trim((string) ($service_row['accent_color'] ?? '')) : '';
 
     if ($accent_color !== '') {
-        return matrix_get_what_we_offer_brand_secondary_color($accent_color);
+        return $accent_color;
     }
 
     $palette = [
-        '#68CECA',
-        '#A3C415',
-        '#750D68',
-        '#E13288',
+        '#6FC9C0',
+        '#C3DBAE',
+        '#B4A8CE',
+        '#E4B8D6',
     ];
 
     return $palette[max(0, (int) $index) % count($palette)];
@@ -32,29 +32,22 @@ function matrix_get_what_we_offer_accent_color($service_row, $index = 0)
 /**
  * Brand secondary icon-rail backgrounds for intro_two_column (Figma node 966:5970).
  */
-function matrix_get_what_we_offer_brand_secondary_color(string $accent_color): string
+function matrix_get_what_we_offer_intro_two_column_icon_background(string $accent_color): string
 {
     $normalized_accent = strtoupper(ltrim(trim($accent_color), '#'));
 
     $secondary_colors = [
-        '68CECA' => '#68CECA',
-        '6FC9C0' => '#68CECA',
-        'A3C415' => '#A3C415',
-        'C3DBAE' => '#A3C415',
-        '750D68' => '#750D68',
-        'B4A8CE' => '#750D68',
-        'E13288' => '#E13288',
-        'E4B8D6' => '#E13288',
+        '6FC9C0' => '#6FC9C0',
+        'C3DBAE' => '#C3DBAE',
+        'B4A8CE' => '#B4A8CE',
+        'E4B8D6' => '#E4B8D6',
     ];
 
-    return $secondary_colors[$normalized_accent] ?? $accent_color;
-}
+    if (isset($secondary_colors[$normalized_accent])) {
+        return $secondary_colors[$normalized_accent];
+    }
 
-function matrix_get_what_we_offer_intro_two_column_icon_background(string $accent_color): string
-{
-    $brand_secondary_color = matrix_get_what_we_offer_brand_secondary_color($accent_color);
-
-    return $brand_secondary_color !== '' ? $brand_secondary_color : '#68CECA';
+    return $accent_color !== '' ? $accent_color : '#CEF2EE';
 }
 
 function matrix_get_what_we_offer_intro_two_column_icon_urls($base_url = '')
@@ -67,7 +60,7 @@ function matrix_get_what_we_offer_intro_two_column_icon_urls($base_url = '')
     ];
 }
 
-function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', $accent_color = '#68CECA')
+function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', $accent_color = '#6FC9C0')
 {
     $theme_dir = function_exists('get_template_directory')
         ? get_template_directory()
@@ -98,7 +91,7 @@ function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', 
  */
 function matrix_render_what_we_offer_service_rail(array $service): void
 {
-    $accent_color = (string) ($service['accent_color'] ?? '#68CECA');
+    $accent_color = (string) ($service['accent_color'] ?? '#6FC9C0');
     $icon_background = (string) ($service['icon_background'] ?? matrix_get_what_we_offer_intro_two_column_icon_background($accent_color));
     $safe_background = function_exists('esc_attr')
         ? esc_attr($icon_background)
