@@ -25,6 +25,18 @@ $bg_left_op = ($bg_left_op === '' || $bg_left_op === null) ? 0.03 : (float) $bg_
 // Content
 $heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, and Expert advice from SPMHS';
 $subtext = get_field('newsletter_subtext', 'option'); // WYSIWYG
+$healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
+
+if (! empty($subtext) && stripos((string) $subtext, '<a') === false) {
+  $subtext = preg_replace_callback(
+    '/\bclick here\b/i',
+    function ($matches) use ($healthcare_newsletter_url) {
+      return '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#7ED0E0] hover:underline">' . esc_html($matches[0]) . '</a>';
+    },
+    (string) $subtext,
+    1
+  );
+}
 
 // Form
 $action      = trim((string) get_field('newsletter_action', 'option')); // if empty → Brevo AJAX
