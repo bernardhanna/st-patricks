@@ -22,7 +22,7 @@ get_header();
                     <?php } ?>
 
                     <?php if (trim(get_the_content()) !== '') { ?>
-                        <div class="relative min-w-0 w-full wp_editor">
+                        <div class="min-w-0 w-full wp_editor">
                             <article class="<?php echo esc_attr(matrix_get_editor_body_content_class_names()); ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                                 <?php the_content(); ?>
                             </article>
