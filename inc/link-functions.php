@@ -94,6 +94,7 @@ if (! function_exists('matrix_iframe_title_for_src')) {
             'youtube' => 'YouTube video',
             'youtu.be' => 'YouTube video',
             'vimeo' => 'Vimeo video',
+            'issuu' => 'Issuu publication',
             'facebook' => 'Facebook post',
             'instagram' => 'Instagram post',
             'twitter' => 'X (Twitter) post',
@@ -120,6 +121,269 @@ if (! function_exists('matrix_iframe_title_for_src')) {
         $host = preg_replace('/^www\./', '', $host);
 
         return 'Embedded content from ' . $host;
+    }
+}
+
+if (! function_exists('matrix_allowed_embed_iframe_hosts')) {
+    /**
+     * Hosts allowed for client/content embeds (iframe src).
+     *
+     * @return list<string>
+     */
+    function matrix_allowed_embed_iframe_hosts(): array
+    {
+        return [
+            'www.youtube.com',
+            'youtube.com',
+            'www.youtube-nocookie.com',
+            'youtube-nocookie.com',
+            'player.vimeo.com',
+            'vimeo.com',
+            'e.issuu.com',
+            'issuu.com',
+            'www.issuu.com',
+            'www.google.com',
+            'maps.google.com',
+            'www.facebook.com',
+            'facebook.com',
+            'www.instagram.com',
+            'instagram.com',
+            'open.spotify.com',
+            'w.soundcloud.com',
+            'player.podbean.com',
+            'www.buzzsprout.com',
+        ];
+    }
+}
+
+if (! function_exists('matrix_is_allowed_embed_iframe_src')) {
+    function matrix_is_allowed_embed_iframe_src(string $src): bool
+    {
+        $src = trim($src);
+
+        if ($src === '' || ! preg_match('#^https?://#i', $src)) {
+            return false;
+        }
+
+        $host = strtolower((string) parse_url($src, PHP_URL_HOST));
+        $host = preg_replace('/^www\./', '', $host) ?: $host;
+
+        foreach (matrix_allowed_embed_iframe_hosts() as $allowed) {
+            $allowed = strtolower(preg_replace('/^www\./', '', $allowed) ?: $allowed);
+
+            if ($host === $allowed || str_ends_with($host, '.' . $allowed)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (! function_exists('matrix_kses_allowed_html_with_embeds')) {
+    /**
+     * Post HTML allowlist plus iframe embeds from trusted hosts.
+     *
+     * @return array<string, array<string, bool|array>>
+     */
+    function matrix_kses_allowed_html_with_embeds(): array
+    {
+        $allowed = function_exists('wp_kses_allowed_html')
+            ? wp_kses_allowed_html('post')
+            : [];
+
+        if (! is_array($allowed)) {
+            $allowed = [];
+        }
+
+        $allowed['iframe'] = [
+            'src' => true,
+            'width' => true,
+            'height' => true,
+            'frameborder' => true,
+            'allowfullscreen' => true,
+            'allow' => true,
+            'sandbox' => true,
+            'style' => true,
+            'title' => true,
+            'loading' => true,
+            'referrerpolicy' => true,
+            'name' => true,
+            'id' => true,
+            'class' => true,
+            'scrolling' => true,
+        ];
+
+        return $allowed;
+    }
+}
+
+if (! function_exists('matrix_kses_post_with_embeds')) {
+    /**
+     * Like wp_kses_post, but keeps trusted iframe embeds (YouTube, Issuu, etc.).
+     */
+    function matrix_kses_post_with_embeds(string $html): string
+    {
+        if ($html === '') {
+            return '';
+        }
+
+        if (! function_exists('wp_kses')) {
+            return $html;
+        }
+
+        $cleaned = wp_kses($html, matrix_kses_allowed_html_with_embeds());
+
+        // Drop iframes whose src is not on the allowlist.
+        if (! str_contains($cleaned, '<iframe')) {
+            return $cleaned;
+        }
+
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $loaded = $dom->loadHTML(
+            '<?xml encoding="utf-8" ?><div id="matrix-kses-root">' . $cleaned . '</div>',
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR
+        );
+        libxml_clear_errors();
+
+        if (! $loaded) {
+            return $cleaned;
+        }
+
+        $wrapper = $dom->getElementById('matrix-kses-root');
+
+        if (! $wrapper instanceof DOMElement) {
+            return $cleaned;
+        }
+
+        foreach (iterator_to_array($dom->getElementsByTagName('iframe')) as $iframe) {
+            if (! $iframe instanceof DOMElement) {
+                continue;
+            }
+
+            $src = trim($iframe->getAttribute('src'));
+
+            if (! matrix_is_allowed_embed_iframe_src($src)) {
+                $iframe->parentNode?->removeChild($iframe);
+            }
+        }
+
+        $out = '';
+
+        foreach ($wrapper->childNodes as $child) {
+            $out .= $dom->saveHTML($child);
+        }
+
+        return $out;
+    }
+}
+
+if (! function_exists('matrix_normalize_absolute_embeds_in_html')) {
+    /**
+     * Wrap absolute-positioned iframes (e.g. Issuu) so they cannot cover sibling content.
+     */
+    function matrix_normalize_absolute_embeds_in_html(string $html): string
+    {
+        if ($html === '' || ! str_contains($html, '<iframe')) {
+            return $html;
+        }
+
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $loaded = $dom->loadHTML(
+            '<?xml encoding="utf-8" ?><div id="matrix-embed-root">' . $html . '</div>',
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR
+        );
+        libxml_clear_errors();
+
+        if (! $loaded) {
+            return $html;
+        }
+
+        $wrapper = $dom->getElementById('matrix-embed-root');
+
+        if (! $wrapper instanceof DOMElement) {
+            return $html;
+        }
+
+        $changed = false;
+
+        foreach (iterator_to_array($dom->getElementsByTagName('iframe')) as $iframe) {
+            if (! $iframe instanceof DOMElement || ! $iframe->parentNode) {
+                continue;
+            }
+
+            $parent = $iframe->parentNode;
+
+            if ($parent instanceof DOMElement
+                && $parent->hasAttribute('class')
+                && str_contains($parent->getAttribute('class'), 'matrix-embed')
+            ) {
+                continue;
+            }
+
+            $style = strtolower($iframe->getAttribute('style'));
+            $is_absolute = str_contains($style, 'position:absolute') || str_contains($style, 'position: absolute');
+            $src = trim($iframe->getAttribute('src'));
+            $is_issuu = str_contains(strtolower($src), 'issuu.com');
+
+            if (! $is_absolute && ! $is_issuu) {
+                // Standard sized embeds (YouTube etc.): ensure they stay within the column.
+                $class = trim($iframe->getAttribute('class'));
+
+                if (! str_contains($class, 'matrix-embed__frame')) {
+                    $iframe->setAttribute('class', trim($class . ' matrix-embed__frame'));
+                    $changed = true;
+                }
+
+                continue;
+            }
+
+            $container = $dom->createElement('div');
+            $container->setAttribute(
+                'class',
+                $is_issuu ? 'matrix-embed matrix-embed--issuu' : 'matrix-embed matrix-embed--absolute'
+            );
+
+            // Prefer wrapping the iframe in place; if it's alone in a <p>, replace the <p>.
+            if ($parent instanceof DOMElement
+                && strtolower($parent->tagName) === 'p'
+                && $parent->childNodes->length === 1
+                && $parent->parentNode
+            ) {
+                $parent->parentNode->insertBefore($container, $parent);
+                $container->appendChild($iframe);
+                $parent->parentNode->removeChild($parent);
+            } else {
+                $parent->insertBefore($container, $iframe);
+                $container->appendChild($iframe);
+            }
+
+            $iframe->setAttribute(
+                'style',
+                'position:absolute;border:none;width:100%;height:100%;left:0;right:0;top:0;bottom:0;'
+            );
+            $class = trim($iframe->getAttribute('class'));
+
+            if (! str_contains($class, 'matrix-embed__frame')) {
+                $iframe->setAttribute('class', trim($class . ' matrix-embed__frame'));
+            }
+
+            $changed = true;
+        }
+
+        if (! $changed) {
+            return $html;
+        }
+
+        $out = '';
+
+        foreach ($wrapper->childNodes as $child) {
+            $out .= $dom->saveHTML($child);
+        }
+
+        return $out;
     }
 }
 
@@ -283,7 +547,11 @@ if (! function_exists('matrix_kses_rich_text')) {
             return '';
         }
 
-        return matrix_process_external_links_in_html(wp_kses_post($html));
+        $cleaned = function_exists('matrix_kses_post_with_embeds')
+            ? matrix_kses_post_with_embeds($html)
+            : wp_kses_post($html);
+
+        return matrix_process_external_links_in_html($cleaned);
     }
 }
 
@@ -293,6 +561,8 @@ if (! function_exists('matrix_filter_external_links_in_content')) {
         if ($content === '' || is_admin()) {
             return $content;
         }
+
+        $content = matrix_normalize_absolute_embeds_in_html($content);
 
         return matrix_process_external_links_in_html($content);
     }

@@ -947,6 +947,57 @@ body {
   @apply mb-6 max-w-full h-auto;
 }
 
+/* Third-party embeds (YouTube, Issuu, etc.) */
+.is-not-woo .wp_editor .matrix-embed,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed,
+.editor-body-content .matrix-embed,
+.blog-single-content .matrix-embed {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.is-not-woo .wp_editor .matrix-embed--issuu,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed--issuu,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed--issuu,
+.editor-body-content .matrix-embed--issuu,
+.blog-single-content .matrix-embed--issuu,
+.is-not-woo .wp_editor .matrix-embed--absolute,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed--absolute,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed--absolute,
+.editor-body-content .matrix-embed--absolute,
+.blog-single-content .matrix-embed--absolute {
+  /* Issuu-style absolute iframes need an intrinsic box; 16:10 keeps publications readable. */
+  padding-top: max(62.5%, 360px);
+  height: 0;
+}
+
+.is-not-woo .wp_editor iframe.matrix-embed__frame,
+.is-not-woo .wp_editor.editor-body-content iframe.matrix-embed__frame,
+.is-not-woo .wp_editor.blog-single-content iframe.matrix-embed__frame,
+.editor-body-content iframe.matrix-embed__frame,
+.blog-single-content iframe.matrix-embed__frame,
+.is-not-woo .wp_editor .matrix-embed iframe,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed iframe,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed iframe,
+.editor-body-content .matrix-embed iframe,
+.blog-single-content .matrix-embed iframe {
+  max-width: 100%;
+}
+
+.is-not-woo .wp_editor iframe:not(.matrix-embed__frame),
+.is-not-woo .wp_editor.editor-body-content iframe:not(.matrix-embed__frame),
+.is-not-woo .wp_editor.blog-single-content iframe:not(.matrix-embed__frame),
+.editor-body-content iframe:not(.matrix-embed__frame),
+.blog-single-content iframe:not(.matrix-embed__frame) {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 .alignleft,
 img.alignleft {
   @apply inline float-left mr-6;

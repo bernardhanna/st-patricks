@@ -2203,10 +2203,6 @@ input:where([type='file']):focus {
 .w-full {
   width: 100%;
 }
-.w-max {
-  width: -moz-max-content;
-  width: max-content;
-}
 .w-px {
   width: 1px;
 }
@@ -2233,9 +2229,6 @@ input:where([type='file']):focus {
 }
 .min-w-\[720px\] {
   min-width: 720px;
-}
-.min-w-full {
-  min-width: 100%;
 }
 .max-w-2xl {
   max-width: 42rem;
@@ -2347,9 +2340,6 @@ input:where([type='file']):focus {
 }
 .max-w-\[800px\] {
   max-width: 800px;
-}
-.max-w-\[880px\] {
-  max-width: 880px;
 }
 .max-w-\[calc\(100vw-2rem\)\] {
   max-width: calc(100vw - 2rem);
@@ -2771,6 +2761,9 @@ input:where([type='file']):focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.whitespace-normal {
+  white-space: normal;
 }
 .whitespace-nowrap {
   white-space: nowrap;
@@ -8613,6 +8606,10 @@ input:where([type='file']):focus {
   --tw-text-opacity: 1;
   color: rgb(2 75 121 / var(--tw-text-opacity, 1));
 }
+.text-red-50 {
+  --tw-text-opacity: 1;
+  color: rgb(254 242 242 / var(--tw-text-opacity, 1));
+}
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
@@ -8938,6 +8935,10 @@ input:where([type='file']):focus {
   --tw-bg-opacity: 1;
   background-color: rgb(102 196 216 / var(--tw-bg-opacity, 1));
 }
+.hover\:bg-\[\#C3DBAE\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(195 219 174 / var(--tw-bg-opacity, 1));
+}
 .hover\:bg-\[\#F1F8F9\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(241 248 249 / var(--tw-bg-opacity, 1));
@@ -9001,6 +9002,10 @@ input:where([type='file']):focus {
   --tw-text-opacity: 1;
   color: rgb(8 40 75 / var(--tw-text-opacity, 1));
 }
+.hover\:text-\[\#1E244B\]:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 36 75 / var(--tw-text-opacity, 1));
+}
 .hover\:text-hover:hover {
   --tw-text-opacity: 1;
   color: rgb(4 18 39 / var(--tw-text-opacity, 1));
@@ -9016,6 +9021,10 @@ input:where([type='file']):focus {
 .hover\:text-secondary:hover {
   --tw-text-opacity: 1;
   color: rgb(195 219 174 / var(--tw-text-opacity, 1));
+}
+.hover\:text-secondary-darker:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 36 75 / var(--tw-text-opacity, 1));
 }
 .hover\:text-slate-950:hover {
   --tw-text-opacity: 1;
@@ -9250,9 +9259,6 @@ input:where([type='file']):focus {
 }
 .focus-visible\:ring-offset-\[\#08284B\]:focus-visible {
   --tw-ring-offset-color: #08284B;
-}
-.active\:cursor-grabbing:active {
-  cursor: grabbing;
 }
 .active\:border-\[\#7ED0E0\]:active {
   --tw-border-opacity: 1;
@@ -27627,8 +27633,22 @@ input:where([type='file']):focus {
     width: auto;
   }
 
+  .lg\:w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+
+  .lg\:w-max {
+    width: -moz-max-content;
+    width: max-content;
+  }
+
   .lg\:min-w-\[180px\] {
     min-width: 180px;
+  }
+
+  .lg\:min-w-full {
+    min-width: 100%;
   }
 
   .lg\:max-w-\[295px\] {
@@ -27682,6 +27702,10 @@ input:where([type='file']):focus {
   .lg\:-translate-y-1\/2 {
     --tw-translate-y: -50%;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .lg\:cursor-grab {
+    cursor: grab;
   }
 
   .lg\:grid-cols-1 {
@@ -27770,6 +27794,10 @@ input:where([type='file']):focus {
 
   .lg\:gap-2\.5 {
     gap: 0.625rem;
+  }
+
+  .lg\:gap-3 {
+    gap: 0.75rem;
   }
 
   .lg\:gap-4 {
@@ -32337,6 +32365,10 @@ input:where([type='file']):focus {
   .lg\:focus\:bg-\[\#001F33\]:focus {
     --tw-bg-opacity: 1;
     background-color: rgb(0 31 51 / var(--tw-bg-opacity, 1));
+  }
+
+  .lg\:active\:cursor-grabbing:active {
+    cursor: grabbing;
   }
 
   .lg\:active\:bg-black:active {
@@ -45368,8 +45400,14 @@ input:where([type='file']):focus {
 .\[\&_strong\]\:font-semibold strong {
   font-weight: 600;
 }
+.\[\&_svg\]\:h-6 svg {
+  height: 1.5rem;
+}
 .\[\&_svg\]\:h-full svg {
   height: 100%;
+}
+.\[\&_svg\]\:w-6 svg {
+  width: 1.5rem;
 }
 .\[\&_svg\]\:w-full svg {
   width: 100%;
@@ -46501,6 +46539,61 @@ body {
 .blog-single-content img {
   margin-bottom: 1.5rem;
   height: auto;
+  max-width: 100%;
+}
+
+/* Third-party embeds (YouTube, Issuu, etc.) */
+.is-not-woo .wp_editor .matrix-embed,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed,
+.editor-body-content .matrix-embed,
+.blog-single-content .matrix-embed {
+  position: relative;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+.is-not-woo .wp_editor .matrix-embed--issuu,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed--issuu,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed--issuu,
+.editor-body-content .matrix-embed--issuu,
+.blog-single-content .matrix-embed--issuu,
+.is-not-woo .wp_editor .matrix-embed--absolute,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed--absolute,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed--absolute,
+.editor-body-content .matrix-embed--absolute,
+.blog-single-content .matrix-embed--absolute {
+  height: 0px;
+  padding-top: max(62.5%, 360px);
+
+ /* Issuu-style absolute iframes need an intrinsic box; 16:10 keeps publications readable. */
+}
+.is-not-woo .wp_editor iframe.matrix-embed__frame,
+.is-not-woo .wp_editor.editor-body-content iframe.matrix-embed__frame,
+.is-not-woo .wp_editor.blog-single-content iframe.matrix-embed__frame,
+.editor-body-content iframe.matrix-embed__frame,
+.blog-single-content iframe.matrix-embed__frame,
+.is-not-woo .wp_editor .matrix-embed iframe,
+.is-not-woo .wp_editor.editor-body-content .matrix-embed iframe,
+.is-not-woo .wp_editor.blog-single-content .matrix-embed iframe,
+.editor-body-content .matrix-embed iframe,
+.blog-single-content .matrix-embed iframe {
+  max-width: 100%;
+}
+.is-not-woo .wp_editor iframe:not(.matrix-embed__frame),
+.is-not-woo .wp_editor.editor-body-content iframe:not(.matrix-embed__frame),
+.is-not-woo .wp_editor.blog-single-content iframe:not(.matrix-embed__frame),
+.editor-body-content iframe:not(.matrix-embed__frame),
+.blog-single-content iframe:not(.matrix-embed__frame) {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
   max-width: 100%;
 }
 .alignleft,

@@ -837,6 +837,24 @@ if (! function_exists('matrix_migrate_dom_text')) {
     }
 }
 
+if (! function_exists('matrix_migrate_html_chunk_has_content')) {
+    /**
+     * Whether a migrated HTML chunk should be kept (text and/or embeds).
+     */
+    function matrix_migrate_html_chunk_has_content(string $html): bool
+    {
+        if (trim($html) === '') {
+            return false;
+        }
+
+        if (trim(strip_tags($html)) !== '') {
+            return true;
+        }
+
+        return (bool) preg_match('/<(iframe|embed|object|video|audio)\b/i', $html);
+    }
+}
+
 if (! function_exists('matrix_migrate_extract_parsed_page')) {
     /**
      * @return array<string, mixed>|null
@@ -903,7 +921,9 @@ if (! function_exists('matrix_migrate_extract_parsed_page')) {
                     if ($rte instanceof DOMNode) {
                         $chunk = matrix_migrate_rewrite_html_urls(matrix_migrate_dom_inner_html($rte));
 
-                        if (trim(strip_tags($chunk)) !== '') {
+                        // Keep iframe/embed-only sections (e.g. YouTube) — strip_tags alone
+                        // treats them as empty and would drop the whole chunk.
+                        if (matrix_migrate_html_chunk_has_content($chunk)) {
                             $body_parts[] = $chunk;
                         }
                     }
@@ -942,6 +962,10 @@ if (! function_exists('matrix_migrate_extract_parsed_page')) {
 
         if ($body_html === '') {
             return null;
+        }
+
+        if (function_exists('matrix_normalize_absolute_embeds_in_html')) {
+            $body_html = matrix_normalize_absolute_embeds_in_html($body_html);
         }
 
         return [
