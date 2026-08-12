@@ -165,7 +165,7 @@ function matrix_resolve_content_button_variant($value, $default = 'filled')
     return $default === 'outline' ? 'outline' : 'filled';
 }
 
-function matrix_normalize_content_link($link)
+function matrix_normalize_content_link($link, $fallback_title = '')
 {
     if (! is_array($link)) {
         return null;
@@ -173,9 +173,18 @@ function matrix_normalize_content_link($link)
 
     $title = trim((string) ($link['title'] ?? ''));
     $url = trim((string) ($link['url'] ?? ''));
+    $fallback_title = trim((string) $fallback_title);
 
-    if ($title === '' || $url === '') {
+    if ($title === '' && $fallback_title !== '') {
+        $title = $fallback_title;
+    }
+
+    if ($url === '') {
         return null;
+    }
+
+    if ($title === '') {
+        $title = 'Open link';
     }
 
     return [

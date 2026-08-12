@@ -185,7 +185,8 @@ test('directions page accordion layout stacks icon above text on mobile', functi
 
     expect($config['row_classes'])->toContain('flex-col')
         ->and($config['row_classes'])->toContain('lg:flex-row')
-        ->and($config['icon_image_classes'])->toContain('h-12 w-12')
+        ->and($config['icon_tile_classes'])->toContain('h-12 w-12')
+        ->and($config['icon_image_classes'])->toContain('h-6 w-6')
         ->and($config['content_classes'])->toContain('[&_p]:text-[16px]');
 });
 

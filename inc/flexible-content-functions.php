@@ -18,6 +18,14 @@ function load_flexible_content_templates($post_id = null)
 
   if ($post_id && have_rows('flexible_content_blocks', $post_id)) {
     while (have_rows('flexible_content_blocks', $post_id)) : the_row();
+      // Honour “Disable this block” from the content-gathering form (0-based index).
+      if (
+        function_exists('matrix_export_is_block_disabled')
+        && matrix_export_is_block_disabled((int) $post_id, 'flexible_content_blocks', (int) get_row_index() - 1)
+      ) {
+        continue;
+      }
+
       $layout = get_row_layout();
       $template_path = get_template_directory() . '/template-parts/flexi/' . $layout . '.php';
 

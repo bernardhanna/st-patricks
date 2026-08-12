@@ -2,13 +2,13 @@
 
 $section_id = 'testimonials-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading_tag = (string) get_sub_field('heading_tag');
-$heading_text = (string) get_sub_field('heading_text');
+$heading_text = trim(wp_strip_all_tags((string) get_sub_field('heading_text')));
 $layout_style = (string) get_sub_field('layout_style');
 $source_mode = (string) get_sub_field('source_mode');
 $manual_items_raw = get_sub_field('manual_items');
 $selected_testimonials = get_sub_field('selected_testimonials');
 $footer_action_mode = (string) get_sub_field('footer_action_mode');
-$load_more_button_text = (string) get_sub_field('load_more_button_text');
+$load_more_button_text = trim(wp_strip_all_tags((string) get_sub_field('load_more_button_text')));
 $footer_button_link = get_sub_field('footer_button_link');
 $background_image = get_sub_field('background_image');
 $background_color = (string) get_sub_field('background_color');

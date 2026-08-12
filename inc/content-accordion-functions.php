@@ -51,8 +51,8 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
             'panel_body_classes' => 'px-6 pb-3 lg:px-8 lg:pb-6',
             'rows_wrapper_classes' => 'flex flex-col lg:pr-8',
             'row_classes' => 'flex flex-col items-start gap-3 border-t border-[#F1F8F9] py-3 lg:flex-row lg:items-center lg:gap-6 lg:py-4',
-            'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[4px] p-3 lg:h-12 lg:w-12',
-            'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
+            'icon_tile_classes' => 'flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px]',
+            'icon_image_classes' => 'h-6 w-6 object-contain [&_svg]:h-6 [&_svg]:w-6',
             'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold',
         ];
     }
@@ -137,7 +137,7 @@ function matrix_normalize_policies_accordion_row($row)
 
             $title = trim(strip_tags((string) ($document['title'] ?? '')));
             $link = function_exists('matrix_normalize_content_link')
-                ? matrix_normalize_content_link($document['document_link'] ?? null)
+                ? matrix_normalize_content_link($document['document_link'] ?? null, $title !== '' ? $title : 'PDF opens in a new tab')
                 : null;
 
             if ($title === '' || $link === null) {
@@ -162,7 +162,7 @@ function matrix_normalize_policies_accordion_row($row)
 
             $title = trim(strip_tags((string) ($card['title'] ?? '')));
             $link = function_exists('matrix_normalize_content_link')
-                ? matrix_normalize_content_link($card['button_link'] ?? null)
+                ? matrix_normalize_content_link($card['button_link'] ?? null, $title)
                 : null;
 
             if ($title === '' || $link === null) {
@@ -187,7 +187,7 @@ function matrix_normalize_policies_accordion_row($row)
 
             $title = trim(strip_tags((string) ($external_link['title'] ?? '')));
             $link = function_exists('matrix_normalize_content_link')
-                ? matrix_normalize_content_link($external_link['link'] ?? null)
+                ? matrix_normalize_content_link($external_link['link'] ?? null, $title)
                 : null;
 
             if ($title === '' || $link === null) {
