@@ -1121,6 +1121,8 @@ if (! function_exists('matrix_migrate_legacy_path_redirect_map')) {
             'eating-disorders' => '/mental-health/eating-disorders/',
             'personality-disorders' => '/mental-health/personality-disorders/',
             'schizophrenia-psychosis' => '/mental-health/schizophrenia-psychosis/',
+            'schizophrenia' => '/mental-health/schizophrenia/',
+            'psychosis' => '/mental-health/schizophrenia-psychosis/',
             'addiction-dual-diagnosis' => '/mental-health/addiction-dual-diagnosis/',
             'addiction-and-dual-diagnosis' => '/mental-health/addiction-dual-diagnosis/',
             'young-adults' => '/mental-health/young-adults/',

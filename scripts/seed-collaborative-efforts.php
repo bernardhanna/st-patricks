@@ -46,7 +46,8 @@ if (! function_exists('matrix_seed_accordion_item')) {
 $home = home_url('/');
 $advocacy_url = get_permalink(271) ?: home_url('/about-us/advocacy/');
 $about_url = home_url('/about-us/');
-$wmhn_url = get_permalink(get_page_by_path('women-s-mental-health-network')) ?: home_url('/women-s-mental-health-network/');
+$wmhn_url = get_permalink(get_page_by_path('about-us/advocacy/women-s-mental-health-network'))
+    ?: (get_permalink(get_page_by_path('women-s-mental-health-network')) ?: home_url('/about-us/advocacy/women-s-mental-health-network/'));
 $youth_advocacy_url = home_url('/youth-advocacy-service/');
 $women_blog_url = home_url('/media-centre/blogs-articles/');
 $first_fortnight_news = home_url('/media-centre/news/2020/december/firstfortnightfestival2021/');
@@ -166,7 +167,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'useful_links',
         'heading_tag' => 'h2',
-        'heading' => 'In this section',
+        'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => $advocacy_links,
         'background_color' => '#F1F8F9',

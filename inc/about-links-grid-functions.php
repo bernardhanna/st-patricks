@@ -65,17 +65,13 @@ function matrix_get_about_links_grid_card_partial(string $layout_style = 'image_
 function matrix_get_about_links_grid_grid_class_names(string $layout_style, string $columns): string
 {
     $column_classes = [
-        '2' => 'lg:grid-cols-2',
+        '2' => 'sm:grid-cols-2 lg:grid-cols-2',
         '3' => 'lg:grid-cols-3',
         '4' => 'lg:grid-cols-4',
     ];
     $grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
 
-    if ($layout_style === 'flush_image') {
-        return 'grid grid-cols-1 gap-4 ' . $grid_columns . ' lg:gap-x-8 lg:gap-y-4';
-    }
-
-    return 'grid grid-cols-1 gap-4 ' . $grid_columns . ' lg:gap-x-8 lg:gap-y-4';
+    return 'grid w-full grid-cols-1 gap-4 ' . $grid_columns . ' lg:gap-x-8 lg:gap-y-4';
 }
 
 /**

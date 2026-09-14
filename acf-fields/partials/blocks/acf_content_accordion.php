@@ -19,6 +19,19 @@ $content_accordion
             'default_value' => 'default',
             'ui' => 1,
         ])
+        ->addText('heading', [
+            'label' => 'Title',
+            'instructions' => 'Optional. Shown above the accordion items, for example “FAQs”. Leave blank to hide.',
+        ])
+        ->addSelect('heading_tag', [
+            'label' => 'Title Tag',
+            'choices' => [
+                'h2' => 'H2',
+                'h3' => 'H3',
+                'h4' => 'H4',
+            ],
+            'default_value' => 'h2',
+        ])
         ->addRepeater('items', [
             'label' => 'Accordion Items',
             'button_label' => 'Add Item',
@@ -184,6 +197,7 @@ $content_accordion
                 'default' => 'Top & bottom',
                 'bottom_only' => 'Bottom only (no top padding)',
                 'small_top_large_bottom' => 'Small top / large bottom (2rem top, 100px bottom)',
+                'top_50_bottom_100' => '50px top / 100px bottom',
             ],
             'default_value' => 'default',
             'ui' => 1,

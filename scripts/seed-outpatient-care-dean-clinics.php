@@ -352,6 +352,23 @@ foreach ($rows as &$row) {
 }
 unset($row);
 
+    // Ensure the FAQ intro + FAQ accordion sit at the bottom (matches the Drive structure).
+    $faq_rows = [];
+    $non_faq_rows = [];
+    foreach ($rows as $row) {
+        $layout = (string) ($row['acf_fc_layout'] ?? '');
+        $is_faq_intro = $layout === 'content' && (($row['heading'] ?? '') === 'Frequently Asked Questions');
+        $is_faq_accordion = $layout === 'content_accordion';
+
+        if ($is_faq_intro || $is_faq_accordion) {
+            $faq_rows[] = $row;
+            continue;
+        }
+
+        $non_faq_rows[] = $row;
+    }
+    $rows = array_merge($non_faq_rows, $faq_rows);
+
 update_field('hero_content_blocks', [], $post_id);
 update_field('flexible_content_blocks', $rows, $post_id);
 update_post_meta($post_id, '_matrix_seed_key', 'outpatient-care-dean-clinics-content');

@@ -189,7 +189,7 @@ $open_item_background_style = matrix_get_faq_background_style($open_item_backgro
                                 class="px-6 pb-4"
                             >
                                 <div
-                                    class="wp_editor border-t border-[rgba(30,36,75,0.12)] pt-4 text-[15px] font-medium leading-[28px] [&_a]:underline [&_p:last-child]:mb-0 [&_strong]:font-semibold lg:text-[16px]"
+                                    class="wp_editor border-t border-[rgba(30,36,75,0.12)] pt-4 font-primary text-[15px] font-medium leading-[28px] [&_a]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_strong]:font-semibold [&_em]:italic lg:text-[16px]"
                                     style="color: <?php echo esc_attr($answer_color); ?>;"
                                 >
                                     <?php echo matrix_kses_rich_text($faq_item['answer']); ?>

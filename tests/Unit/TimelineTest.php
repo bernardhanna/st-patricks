@@ -54,9 +54,25 @@ test('timeline drops empty items and normalizes footer cta', function () {
     expect(matrix_normalize_timeline_items([
         [
             'item_heading' => '   ',
-            'item_text' => 'ignored',
+            'item_text' => '',
+            'event_date_label' => '',
         ],
     ]))->toBe([]);
+
+    expect(matrix_normalize_timeline_items([
+        [
+            'item_heading' => '',
+            'item_text' => '<p>Body without card heading</p>',
+            'event_date_label' => '1745',
+        ],
+    ]))->toHaveCount(1)
+        ->and(matrix_normalize_timeline_items([
+            [
+                'item_heading' => '',
+                'item_text' => '<p>Body without card heading</p>',
+                'event_date_label' => '1745',
+            ],
+        ])[0]['display_date'])->toBe('1745');
 
     expect(matrix_normalize_timeline_link([
         'title' => ' Our Present and Future ',

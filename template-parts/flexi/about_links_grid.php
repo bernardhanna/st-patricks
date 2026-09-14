@@ -95,16 +95,6 @@ if (have_rows('padding_settings')) {
                 <?php foreach ($links as $item) :
                     $icon = $item['icon'] ?? null;
                     $image_url = trim((string) ($item['image_url'] ?? ''));
-                    // Content form may store an attachment ID in this URL field — resolve it.
-                    if ($image_url !== '' && ctype_digit($image_url)) {
-                        $resolved = wp_get_attachment_image_url((int) $image_url, 'large');
-                        if (!$resolved) {
-                            $resolved = wp_get_attachment_url((int) $image_url);
-                        }
-                        if (is_string($resolved) && $resolved !== '') {
-                            $image_url = $resolved;
-                        }
-                    }
                     $title = trim((string) ($item['title'] ?? ''));
                     $description = trim((string) ($item['description'] ?? ''));
                     $link = $item['link'] ?? null;

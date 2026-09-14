@@ -11,10 +11,7 @@ $layout_style = matrix_resolve_content_layout_style(
     (bool) get_sub_field('reverse_layout')
 );
 $accent_position = matrix_resolve_content_accent_position(get_sub_field('accent_position'));
-$column_layout = matrix_resolve_content_column_layout(get_sub_field('column_layout'));
 $image_height_mode = matrix_resolve_content_image_height_mode(get_sub_field('image_height_mode'));
-$text_width_mode = matrix_resolve_content_text_width_mode(get_sub_field('text_width'));
-$text_max_width_classes = matrix_get_content_text_max_width_class_names($text_width_mode);
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
@@ -44,6 +41,10 @@ $has_intro = matrix_content_has_visible_rich_text($intro_text);
 $has_content = matrix_content_has_visible_rich_text($content);
 $has_image = (bool) $image;
 $has_actions = (bool) ($primary_button || $document_link || $secondary_button);
+
+$column_layout = matrix_resolve_content_effective_column_layout(get_sub_field('column_layout'), $has_image);
+$text_width_mode = matrix_resolve_content_effective_text_width_mode(get_sub_field('text_width'), $has_image);
+$text_max_width_classes = matrix_get_content_text_max_width_class_names($text_width_mode);
 
 if (! $show_heading && ! $has_intro && ! $has_content && ! $has_image && ! $has_actions) {
     return;

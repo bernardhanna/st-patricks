@@ -147,6 +147,24 @@ function matrix_resolve_content_text_width_mode($value)
     return 'constrained';
 }
 
+function matrix_resolve_content_effective_column_layout($column_layout, bool $has_image): string
+{
+    if (! $has_image) {
+        return 'one_column';
+    }
+
+    return matrix_resolve_content_column_layout($column_layout);
+}
+
+function matrix_resolve_content_effective_text_width_mode($text_width, bool $has_image): string
+{
+    if (! $has_image) {
+        return 'full';
+    }
+
+    return matrix_resolve_content_text_width_mode($text_width);
+}
+
 function matrix_get_content_text_max_width_class_names($text_width_mode)
 {
     return matrix_resolve_content_text_width_mode($text_width_mode) === 'full'
@@ -165,7 +183,7 @@ function matrix_resolve_content_button_variant($value, $default = 'filled')
     return $default === 'outline' ? 'outline' : 'filled';
 }
 
-function matrix_normalize_content_link($link, $fallback_title = '')
+function matrix_normalize_content_link($link)
 {
     if (! is_array($link)) {
         return null;
@@ -173,18 +191,9 @@ function matrix_normalize_content_link($link, $fallback_title = '')
 
     $title = trim((string) ($link['title'] ?? ''));
     $url = trim((string) ($link['url'] ?? ''));
-    $fallback_title = trim((string) $fallback_title);
 
-    if ($title === '' && $fallback_title !== '') {
-        $title = $fallback_title;
-    }
-
-    if ($url === '') {
+    if ($title === '' || $url === '') {
         return null;
-    }
-
-    if ($title === '') {
-        $title = 'Open link';
     }
 
     return [
@@ -238,6 +247,7 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
 
     $classes = array_filter([
         'wp_editor',
+        'editor-body-content',
         is_string($text_max_width_classes) && $text_max_width_classes !== '' ? $text_max_width_classes : null,
         'font-primary',
         'text-[16px]',

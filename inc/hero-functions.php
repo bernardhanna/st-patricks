@@ -234,7 +234,7 @@ function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max
     return matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names();
   }
 
-  return 'flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-center';
+  return 'flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-stretch';
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($text_max_width = 'default')
@@ -243,7 +243,7 @@ function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($
     return 'relative order-2 mt-8 h-[240px] w-full overflow-hidden lg:mt-10 lg:h-[320px]';
   }
 
-  return 'relative order-1 h-[240px] w-full overflow-hidden lg:order-2 lg:h-[320px] lg:border-l-2';
+  return 'relative order-1 h-[280px] w-full min-h-[280px] overflow-hidden lg:order-2 lg:h-full lg:min-h-[320px] lg:self-stretch lg:border-l-2';
 }
 
 function matrix_resolve_hero_with_breadcrumbs_text_max_width($value)
@@ -276,18 +276,24 @@ function matrix_get_hero_with_breadcrumbs_heading_max_width_class(
 
 function matrix_get_hero_with_breadcrumbs_container_class_names()
 {
-  return 'mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0';
+  return 'mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0 lg:min-h-[320px]';
+}
+
+function matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names()
+{
+  return 'flex w-full flex-col justify-center px-5 py-12 lg:min-h-[320px] lg:px-[70px] lg:py-[100px]';
 }
 
 function matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names()
 {
-  return implode(' ', [
+    return implode(' ', [
     'w-full',
     'max-w-[1018px]',
     'px-4',
     'max-xl:mx-auto',
     'lg:px-0',
     'py-12',
+    'lg:min-h-[320px]',
     'lg:py-[100px]',
   ]);
 }
@@ -383,7 +389,7 @@ function matrix_get_hero_with_breadcrumbs_image_split_column_class_names($text_m
     return 'order-1 flex w-full flex-col gap-5 px-4 lg:gap-6 lg:px-0';
   }
 
-  return 'order-2 flex w-full flex-col gap-5 px-4 py-4 lg:order-1 lg:gap-6 lg:pr-8 lg:py-0';
+  return 'order-2 flex w-full flex-col justify-center gap-5 px-4 py-8 lg:order-1 lg:gap-6 lg:pr-8 lg:py-10';
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_gradient_layout($text_max_width = 'default')

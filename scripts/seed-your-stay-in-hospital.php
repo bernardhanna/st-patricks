@@ -177,7 +177,7 @@ if (! function_exists('matrix_seed_build_your_stay_in_hospital_rows')) {
             ? matrix_get_search_results_useful_links_defaults()
             : ['links' => []];
 
-        return matrix_apply_service_users_visitors_flexi_layout([
+        $flexi_rows = [
             [
                 'acf_fc_layout' => 'hero_with_breadcrumbs',
                 'layout_style' => 'image_split',
@@ -238,23 +238,41 @@ if (! function_exists('matrix_seed_build_your_stay_in_hospital_rows')) {
                     matrix_seed_accordion_item('Lorem ipsum dolor sit amet consectetur.', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'),
                 ],
             ],
-            [
-                'acf_fc_layout' => 'video_showcase',
-                'heading' => 'Title, slider',
-                'intro' => $video_intro,
-                'slides' => $video_slides,
-                'section_background' => 'linear-gradient(-80.44deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
-            ],
-            [
-                'acf_fc_layout' => 'useful_links',
-                'heading' => 'Useful links (all placeholder/suggestions)',
-                'variant' => 'search',
-                'background_color' => '#E9E2F7',
-                'heading_color' => '#1E244B',
-                'link_color' => '#1E244B',
-                'links' => $useful_links_defaults['links'] ?? [],
-            ],
-        ]);
+        ];
+
+        // Adult stay pages need one extra FAQs accordion section.
+        if ($is_adult) {
+            $flexi_rows[] = [
+                'acf_fc_layout' => 'content_accordion',
+                'section_background' => '#FBFAF7',
+                'panel_background' => '#FFFFFF',
+                'open_panel_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
+                'items' => [
+                    matrix_seed_accordion_item('Additional FAQ 1', '<p></p>'),
+                    matrix_seed_accordion_item('Additional FAQ 2', '<p></p>'),
+                ],
+            ];
+        }
+
+        $flexi_rows[] = [
+            'acf_fc_layout' => 'video_showcase',
+            'heading' => 'Title, slider',
+            'intro' => $video_intro,
+            'slides' => $video_slides,
+            'section_background' => 'linear-gradient(-80.44deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
+        ];
+
+        $flexi_rows[] = [
+            'acf_fc_layout' => 'useful_links',
+            'heading' => 'Useful links (all placeholder/suggestions)',
+            'variant' => 'search',
+            'background_color' => '#E9E2F7',
+            'heading_color' => '#1E244B',
+            'link_color' => '#1E244B',
+            'links' => $useful_links_defaults['links'] ?? [],
+        ];
+
+        return matrix_apply_service_users_visitors_flexi_layout($flexi_rows);
     }
 }
 

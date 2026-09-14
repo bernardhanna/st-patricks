@@ -16,6 +16,7 @@ if (! function_exists('matrix_get_mental_health_condition_paths')) {
             'mental-health/eating-disorders',
             'mental-health/personality-disorders',
             'mental-health/schizophrenia-psychosis',
+            'mental-health/schizophrenia',
             'mental-health/young-adults',
             'mental-health/older-adults',
         ];

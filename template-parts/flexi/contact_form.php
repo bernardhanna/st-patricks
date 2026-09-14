@@ -1,17 +1,35 @@
 <?php
 
 $section_id = 'contact-form-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
-$checkboxes = matrix_get_contact_form_your_portal_checkboxes();
+$form_style = matrix_resolve_contact_form_style(get_sub_field('form_style'));
+$checkboxes = $form_style === 'mailing_list'
+    ? matrix_get_contact_form_mailing_list_checkboxes()
+    : matrix_get_contact_form_your_portal_checkboxes();
 
 if (have_rows('consent_items')) {
     $index = 0;
     while (have_rows('consent_items')) {
         the_row();
         $title = trim((string) get_sub_field('title'));
-        if ($title !== '' && isset($checkboxes[$index])) {
+        if ($title === '') {
+            $index++;
+            continue;
+        }
+
+        $description = trim((string) get_sub_field('description'));
+        $required = (bool) get_sub_field('required');
+
+        if (isset($checkboxes[$index])) {
             $checkboxes[$index]['title'] = $title;
-            $checkboxes[$index]['description'] = trim((string) get_sub_field('description'));
-            $checkboxes[$index]['required'] = (bool) get_sub_field('required');
+            $checkboxes[$index]['description'] = $description;
+            $checkboxes[$index]['required'] = $required;
+        } else {
+            $checkboxes[] = [
+                'name' => 'consent_custom_' . $index,
+                'required' => $required,
+                'title' => $title,
+                'description' => $description,
+            ];
         }
         $index++;
     }
@@ -20,7 +38,11 @@ if (have_rows('consent_items')) {
 $form = matrix_prepare_contact_form([
     'section_id' => $section_id,
     'data_block' => str_replace('_', '-', get_row_layout()) . '-' . get_row_index(),
-    'form_style' => get_sub_field('form_style'),
+    'form_style' => $form_style,
+    'heading' => get_sub_field('heading'),
+    'heading_tag' => get_sub_field('heading_tag'),
+    'intro' => get_sub_field('intro'),
+    'background_type' => get_sub_field('background_type'),
     'background_color' => get_sub_field('background_color'),
     'submit_label' => get_sub_field('submit_label'),
     'success_message' => get_sub_field('success_message'),
@@ -33,14 +55,22 @@ $form = matrix_prepare_contact_form([
     'date_of_birth_show_info' => get_sub_field('date_of_birth_show_info'),
     'privacy_policy_link' => get_sub_field('privacy_policy_link'),
     'privacy_policy_label' => get_sub_field('privacy_policy_label'),
+    'show_role_field' => get_sub_field('show_role_field'),
+    'enable_brevo' => get_sub_field('enable_brevo'),
+    'brevo_list_id' => get_sub_field('brevo_list_id'),
     'checkboxes' => $checkboxes,
+    'vertical_padding' => get_sub_field('vertical_padding'),
 ]);
 
-if ($form['form_style'] !== 'your_portal') {
+if (! in_array($form['form_style'], ['your_portal', 'mailing_list'], true)) {
     return;
 }
 
+$is_portal = $form['form_style'] === 'your_portal';
+$show_heading = $form['heading'] !== '';
+$show_intro = trim(wp_strip_all_tags($form['intro'])) !== '';
 $dob_help_id = $form['form_id'] . '-dob-help';
+$heading_id = $form['section_id'] . '-heading';
 ?>
 
 <section
@@ -48,8 +78,33 @@ $dob_help_id = $form['form_id'] . '-dob-help';
     data-matrix-block="<?php echo esc_attr($form['data_block']); ?>"
     class="flex overflow-hidden relative w-full"
     style="background-color: <?php echo esc_attr($form['background_color']); ?>;"
+    <?php if ($show_heading) { ?>
+        aria-labelledby="<?php echo esc_attr($heading_id); ?>"
+    <?php } ?>
 >
     <div class="<?php echo esc_attr($form['wrapper_classes']); ?>">
+        <div class="<?php echo esc_attr($form['fields_wrapper_classes']); ?>">
+        <?php if ($show_heading || $show_intro) { ?>
+            <div class="mb-8 flex w-full flex-col gap-6">
+                <?php if ($show_heading) { ?>
+                    <header class="flex w-full flex-col gap-8">
+                        <<?php echo esc_attr($form['heading_tag']); ?>
+                            id="<?php echo esc_attr($heading_id); ?>"
+                            class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] text-[#1E244B]"
+                        >
+                            <?php echo esc_html($form['heading']); ?>
+                        </<?php echo esc_attr($form['heading_tag']); ?>>
+                        <div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+                    </header>
+                <?php } ?>
+                <?php if ($show_intro) { ?>
+                    <div class="<?php echo esc_attr(function_exists('matrix_get_content_rich_text_wrapper_class_names') ? matrix_get_content_rich_text_wrapper_class_names('medium') : 'wp_editor font-primary text-[16px] font-medium leading-[28px] text-[#08284B]'); ?>">
+                        <?php echo function_exists('matrix_kses_rich_text') ? matrix_kses_rich_text($form['intro']) : wp_kses_post($form['intro']); ?>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
         <form
             id="<?php echo esc_attr($form['form_id']); ?>"
             class="<?php echo esc_attr(matrix_get_contact_form_form_class_names()); ?>"
@@ -74,6 +129,13 @@ $dob_help_id = $form['form_id'] . '-dob-help';
             <?php if ($form['bcc_email'] !== '') { ?>
                 <input type="hidden" name="_cfg_bcc" value="<?php echo esc_attr($form['bcc_email']); ?>" />
             <?php } ?>
+            <?php
+            $brevo_list_id = (int) ($form['brevo_list_id'] ?? 0);
+            if (! empty($form['enable_brevo']) && $brevo_list_id > 0 && function_exists('matrix_brevo_list_signature')) {
+                ?>
+                <input type="hidden" name="_cfg_brevo_list_id" value="<?php echo esc_attr((string) $brevo_list_id); ?>" />
+                <input type="hidden" name="_cfg_brevo_sig" value="<?php echo esc_attr(matrix_brevo_list_signature($brevo_list_id)); ?>" />
+            <?php } ?>
 
             <div class="portal-contact-form__field">
                 <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-first-name">
@@ -85,7 +147,7 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                     id="<?php echo esc_attr($form['form_id']); ?>-first-name"
                     name="first_name"
                     autocomplete="given-name"
-                    placeholder="Joe"
+                    placeholder="Your first name"
                     required
                 />
             </div>
@@ -100,11 +162,12 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                     id="<?php echo esc_attr($form['form_id']); ?>-last-name"
                     name="last_name"
                     autocomplete="family-name"
-                    placeholder="Bloggs"
+                    placeholder="Your last name"
                     required
                 />
             </div>
 
+            <?php if ($is_portal) { ?>
             <div class="<?php echo esc_attr(matrix_get_contact_form_row_class_names()); ?>">
                 <div class="portal-contact-form__field portal-contact-form__field--half portal-contact-form__field--dob">
                     <div class="portal-contact-form__label-row">
@@ -181,6 +244,7 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                     </div>
                 </div>
             </div>
+            <?php } ?>
 
             <div class="portal-contact-form__field">
                 <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-email">
@@ -192,11 +256,38 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                     id="<?php echo esc_attr($form['form_id']); ?>-email"
                     name="email"
                     autocomplete="email"
-                    placeholder="Example@mail.com"
+                    placeholder="Your email"
                     required
                 />
             </div>
 
+            <?php if (! empty($form['show_role_field'])) { ?>
+                <fieldset class="portal-contact-form__field">
+                    <legend class="portal-contact-form__label">
+                        <?php echo esc_html($form['role_label']); ?><span class="portal-contact-form__required" aria-hidden="true">*</span>
+                    </legend>
+                    <div class="portal-contact-form__radio-group flex-col items-start" role="radiogroup">
+                        <?php foreach ($form['role_options'] as $option) { ?>
+                            <?php
+                            $option_id = $form['form_id'] . '-role-' . sanitize_title((string) $option);
+                            ?>
+                            <label class="portal-contact-form__radio-option" for="<?php echo esc_attr($option_id); ?>">
+                                <input
+                                    class="portal-contact-form__radio"
+                                    type="radio"
+                                    id="<?php echo esc_attr($option_id); ?>"
+                                    name="role"
+                                    value="<?php echo esc_attr((string) $option); ?>"
+                                    required
+                                />
+                                <span><?php echo esc_html((string) $option); ?></span>
+                            </label>
+                        <?php } ?>
+                    </div>
+                </fieldset>
+            <?php } ?>
+
+            <?php if ($is_portal) { ?>
             <div class="portal-contact-form__field">
                 <label class="portal-contact-form__label" for="<?php echo esc_attr($form['form_id']); ?>-phone">
                     Phone number (optional)
@@ -227,6 +318,7 @@ $dob_help_id = $form['form_id'] . '-dob-help';
                     />
                 </div>
             </div>
+            <?php } ?>
 
             <?php foreach ($form['checkboxes'] as $checkbox) { ?>
                 <?php
@@ -283,5 +375,6 @@ $dob_help_id = $form['form_id'] . '-dob-help';
 
             <div class="cf-turnstile" data-size="invisible" aria-hidden="true"></div>
         </form>
+        </div>
     </div>
 </section>

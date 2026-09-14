@@ -185,9 +185,17 @@ test('directions page accordion layout stacks icon above text on mobile', functi
 
     expect($config['row_classes'])->toContain('flex-col')
         ->and($config['row_classes'])->toContain('lg:flex-row')
-        ->and($config['icon_tile_classes'])->toContain('h-12 w-12')
-        ->and($config['icon_image_classes'])->toContain('h-6 w-6')
+        ->and($config['icon_image_classes'])->toContain('h-12 w-12')
         ->and($config['content_classes'])->toContain('[&_p]:text-[16px]');
+});
+
+test('content accordion rich text styles lists like content sections', function () {
+    $config = matrix_get_content_accordion_layout_config('default');
+
+    expect($config['content_classes'])->toContain('[&_ul]:list-disc')
+        ->and($config['content_classes'])->toContain('[&_ul]:pl-6')
+        ->and($config['content_classes'])->toContain('[&_ol]:list-decimal')
+        ->and($config['content_classes'])->toContain('[&_li]:mb-2');
 });
 
 test('content accordion vertical padding supports default and bottom-only spacing', function () {
@@ -200,5 +208,18 @@ test('content accordion vertical padding supports default and bottom-only spacin
         ->toBe('pt-0 pb-12 xl:pt-0 xl:pb-[100px]')
         ->and(matrix_resolve_content_accordion_vertical_padding('small_top_large_bottom'))->toBe('small_top_large_bottom')
         ->and(matrix_get_content_accordion_vertical_padding_classes('small_top_large_bottom', 'default'))
-        ->toBe('pt-8 pb-[100px]');
+        ->toBe('pt-8 pb-[100px]')
+        ->and(matrix_resolve_content_accordion_vertical_padding('top_50_bottom_100'))->toBe('top_50_bottom_100')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('top_50_bottom_100', 'default'))
+        ->toBe('pt-[50px] pb-[100px]');
+});
+
+test('content accordion can show an optional section title', function () {
+    expect(matrix_resolve_content_accordion_heading(null))->toBe('')
+        ->and(matrix_resolve_content_accordion_heading(' FAQs '))->toBe('FAQs')
+        ->and(matrix_resolve_content_accordion_heading_tag(''))->toBe('h2')
+        ->and(matrix_resolve_content_accordion_heading_tag('h3'))->toBe('h3')
+        ->and(matrix_resolve_content_accordion_heading_tag('div'))->toBe('h2')
+        ->and(matrix_get_content_accordion_heading_class_names())->toContain('text-[24px]')
+        ->and(matrix_get_content_accordion_heading_class_names())->toContain('lg:text-[30px]');
 });

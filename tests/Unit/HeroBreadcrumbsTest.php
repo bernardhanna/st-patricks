@@ -84,6 +84,7 @@ test('breadcrumbs only view model hides hero body content', function () {
 test('register intro hero helpers expose figma spacing and typography', function () {
     expect(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names())->toContain('max-w-[1018px]')
         ->and(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names())->toContain('px-4')
+        ->and(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names())->toContain('lg:min-h-[320px]')
         ->and(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names())->toContain('lg:py-[100px]')
         ->and(matrix_get_hero_with_breadcrumbs_register_intro_layout_class_names())->toContain('gap-8')
         ->and(matrix_get_hero_with_breadcrumbs_register_intro_layout_class_names())->toContain('lg:gap-16')
@@ -97,6 +98,12 @@ test('register intro hero helpers expose figma spacing and typography', function
         ->and(matrix_get_hero_with_breadcrumbs_register_intro_button_class_names())->toContain('bg-[#024B79]')
         ->and(matrix_resolve_hero_register_intro_show_button_icon(null))->toBeTrue()
         ->and(matrix_resolve_hero_register_intro_show_button_icon(0))->toBeFalse();
+});
+
+test('subpage hero layouts enforce a 320px desktop min height', function () {
+    expect(matrix_get_hero_with_breadcrumbs_container_class_names())->toContain('lg:min-h-[320px]')
+        ->and(matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names())->toContain('lg:min-h-[320px]')
+        ->and(matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names())->toContain('justify-center');
 });
 
 test('register intro view model exposes optional primary button icon flag', function () {
@@ -121,7 +128,9 @@ test('hero external link icon helper returns accessible svg markup', function ()
 });
 
 test('hero with breadcrumbs container uses 1160px content width', function () {
-    expect(matrix_get_hero_with_breadcrumbs_container_class_names())->toBe('mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0');
+    expect(matrix_get_hero_with_breadcrumbs_container_class_names())->toBe(
+        'mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0 lg:min-h-[320px]'
+    );
 });
 
 test('hero image split layout helpers add spacing before embedded and primary buttons', function () {
@@ -131,7 +140,13 @@ test('hero image split layout helpers add spacing before embedded and primary bu
         ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('bg-[#024B79]')
         ->and(matrix_get_hero_with_breadcrumbs_primary_button_class_names())->toContain('text-white')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names())->toContain('lg:grid-cols-[minmax(0,1fr)_581px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names())->toContain('lg:min-h-[320px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names())->toContain('lg:items-stretch')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('order-1')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('lg:min-h-[320px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('lg:self-stretch')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names())->toContain('h-[280px]')
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_column_class_names())->toContain('lg:py-10')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names())->toContain('text-[28px]');
 });
 

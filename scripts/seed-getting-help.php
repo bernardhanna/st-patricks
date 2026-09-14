@@ -93,7 +93,7 @@ if (! function_exists('matrix_seed_getting_help_useful_links_row')) {
         return [
             'acf_fc_layout' => 'useful_links',
             'heading_tag' => 'h2',
-            'heading' => 'In this section',
+            'heading' => 'Useful Links',
             'variant' => 'flexi',
             'links' => matrix_seed_getting_help_section_links($base_url),
             'background_color' => '#F1F8F9',

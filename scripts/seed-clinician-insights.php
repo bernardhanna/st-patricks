@@ -119,7 +119,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'useful_links',
         'heading_tag' => matrix_page_seed_heading(2),
-        'heading' => 'In this section',
+        'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => [
             ['link' => ['title' => 'Mental health education for GPs', 'url' => $gp_cpd_url, 'target' => '']],

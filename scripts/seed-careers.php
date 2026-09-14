@@ -126,6 +126,7 @@ if (! function_exists('matrix_seed_accordion_item')) {
             'starts_open' => $starts_open ? 1 : 0,
             'content_rows' => [
                 [
+                    'row_type' => 'text',
                     'icon_key' => '',
                     'icon' => '',
                     'content' => $content,
@@ -373,6 +374,7 @@ $why_work_intro = '<p><strong>Here at St Patrick\'s Mental Health Services (SPMH
 $why_work_body = '<p>Our staff work across a wide variety of roles, both clinical and non-clinical.</p><p>If you are interested in working in an exciting, forward-looking environment and being at the forefront of mental healthcare, we would love to hear from you. See our latest vacancies below or <a href="mailto:hr@stpatricks.ie">email your CV to hr@stpatricks.ie</a>.</p>';
 $staff_offer_intro = '<p><strong>Our staff make everything we do possible.</strong></p>';
 $staff_offer_body = '<p>Our mission is to make a positive difference in the care of people experiencing mental health difficulties. We are looking for dedicated and motivated people who share our vision and can help us to achieve this goal.</p><p>We are committed to building and growing an innovative workplace where all staff are empowered and encouraged to reach their full potential. We are an equal opportunities employer.</p>';
+$faq_lorem = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
 $faq_intro = '<p>Find answers to common questions about working with us, applying for roles, and arranging placements or work experience.</p>';
 $faq_apply_body = '<p>If you would like to work with us, you can see our latest vacancies on this page. If a role or area you are interested in is not currently advertised, you can email your cover letter and CV to our Human Resources (HR) Department at <a href="mailto:hr@stpatricks.ie">hr@stpatricks.ie</a>.</p><p>Please get in touch with the HR Department if you have any questions or need any help with your application: email hr@stpatricks.ie or <a href="tel:012493435">call 01 249 3435</a>. We cannot accept paper applications; all applications must be made online.</p>';
 $faq_placement_body = '<p>Honorary and elective placements are usually arranged by people seeking this work experience directly with the department concerned. The documentation needed to confirm the placement is provided by Human Resources. If you would like to apply for a placement, please <a href="mailto:hr@stpatricks.ie">email your request to hr@stpatricks.ie</a>, from where it will be forwarded on to the relevant department.</p><p>Please note that these placements do not establish a relationship of employment between the person and SPMHS. We cannot offer standard employment benefits, including remuneration, to honorary or elective contracts.</p><p>We also welcome volunteers in a number of areas of our organisation. If you are interested in a volunteer role, please email hr@stpatricks.ie.</p>';
@@ -564,6 +566,14 @@ $flexi_rows = [
             matrix_seed_accordion_item(
                 'How can I arrange a work placement or work experience?',
                 $faq_placement_body
+            ),
+            matrix_seed_accordion_item(
+                'Additional FAQ 1',
+                $faq_lorem
+            ),
+            matrix_seed_accordion_item(
+                'Additional FAQ 2',
+                $faq_lorem
             ),
         ],
         'padding_settings' => [

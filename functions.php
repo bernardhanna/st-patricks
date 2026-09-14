@@ -252,6 +252,7 @@ function template_part_blog()
 }
 
 //TEMPLATE FORMS
+require_once get_template_directory() . '/inc/forms/brevo-functions.php';
 require get_template_directory() . '/inc/forms/class-theme-forms.php';
 new Theme_Forms();
 

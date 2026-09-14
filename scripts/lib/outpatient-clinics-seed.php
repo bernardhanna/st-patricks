@@ -74,7 +74,7 @@ if (! function_exists('matrix_seed_outpatient_useful_links_block')) {
         return [
             'acf_fc_layout' => 'useful_links',
             'heading_tag' => matrix_page_seed_heading(2),
-            'heading' => 'In this section',
+            'heading' => 'Useful Links',
             'variant' => 'flexi',
             'links' => matrix_seed_outpatient_section_links(),
             'background_color' => '#F1F8F9',
@@ -114,7 +114,7 @@ if (! function_exists('matrix_seed_outpatient_content_block')) {
             'content' => $content,
             'column_layout' => 'one_column',
             'background_type' => $background,
-            'text_width' => 'constrained',
+            'text_width' => 'full',
         ];
     }
 }

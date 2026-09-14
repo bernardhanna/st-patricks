@@ -60,7 +60,7 @@ function matrix_normalize_timeline_items($rows)
             $row['event_date_label'] ?? ''
         );
 
-        if ($item_heading === '') {
+        if ($item_heading === '' && $item_text === '' && $display_date === '') {
             continue;
         }
 

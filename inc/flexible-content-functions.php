@@ -17,12 +17,15 @@ function load_flexible_content_templates($post_id = null)
   error_log("Loading Flexible Content for Post ID: " . $post_id);
 
   if ($post_id && have_rows('flexible_content_blocks', $post_id)) {
+    $row_index = 0;
+    $flex_field = class_exists('Matrix_Export') ? Matrix_Export::FLEX_FIELD : 'flexible_content_blocks';
     while (have_rows('flexible_content_blocks', $post_id)) : the_row();
-      // Honour “Disable this block” from the content-gathering form (0-based index).
+      // Honour content-gathering "Disable this block" until Publish removes the row.
       if (
         function_exists('matrix_export_is_block_disabled')
-        && matrix_export_is_block_disabled((int) $post_id, 'flexible_content_blocks', (int) get_row_index() - 1)
+        && matrix_export_is_block_disabled((int) $post_id, $flex_field, $row_index)
       ) {
+        $row_index++;
         continue;
       }
 
@@ -34,6 +37,7 @@ function load_flexible_content_templates($post_id = null)
       } else {
         error_log("Missing flexible content template file: {$layout}.php");
       }
+      $row_index++;
     endwhile;
   } else {
     error_log("No ACF Flexible Content Blocks found for Post ID: " . $post_id);

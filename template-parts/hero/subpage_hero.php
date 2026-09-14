@@ -38,7 +38,7 @@ if ($logo_id) {
       />
     <?php endif; ?>
 
-    <div class="relative flex flex-col justify-center items-start w-full min-h-[520px] max-w-[1139px] max-md:max-w-full px-0 lg:px-5  xxl:px-0">
+    <div class="relative flex flex-col justify-center items-start w-full min-h-[320px] lg:min-h-[320px] max-w-[1139px] max-md:max-w-full px-0 lg:px-5  xxl:px-0">
       <div class="relative flex flex-col justify-center px-14 py-8 mb-0 max-w-full bg-white mix-blend-normal opacity-90 backdrop-blur-[104px] rounded-tl-[20px] rounded-tr-[4px] rounded-br-[20px] rounded-bl-[4px] w-fit lg:w-[770px] max-md:px-5 max-md:mb-2.5">
         <div class="max-md:max-w-full">
 

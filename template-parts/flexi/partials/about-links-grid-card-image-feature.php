@@ -41,7 +41,7 @@ if ($description === '' && ! $allow_title_wrap) {
 }
 ?>
 
-<article class="h-full">
+<article class="h-full min-w-0 w-full">
     <<?php echo $card_tag; ?>
         <?php echo $card_attrs; ?>
         class="group flex h-full flex-col rounded-lg p-6 shadow-[0_1px_1px_rgba(0,0,0,0.05)] transition-[filter] duration-200 hover:brightness-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]<?php echo $has_link ? '' : ' pointer-events-none'; ?>"

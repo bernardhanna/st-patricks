@@ -52,6 +52,10 @@ $section_background_style = matrix_get_video_showcase_section_background_style(
 $show_intro = is_string($intro) && trim(strip_tags($intro)) !== '';
 $show_header = $show_heading || $show_intro;
 $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($layout_style, $video_surface_size, $text_max_width);
+$initial_caption = is_string($initial_slide['caption'] ?? null)
+    ? trim(strip_tags((string) $initial_slide['caption']))
+    : '';
+$show_slide_meta = $initial_caption !== '' || ! empty($initial_slide['cta_link']);
 ?>
 
 <section
@@ -74,7 +78,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
                 <?php } ?>
 
                 <?php if ($show_intro) { ?>
-                    <div class="wp_editor <?php echo $show_heading ? 'mt-6' : ''; ?> [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]">
+                    <div class="wp_editor <?php echo $show_heading ? 'mt-6' : ''; ?> [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_a]:font-medium [&_a]:text-[#024B79] [&_a]:underline hover:[&_a]:no-underline">
                         <?php echo matrix_kses_rich_text($intro); ?>
                     </div>
                 <?php } ?>
@@ -128,6 +132,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
                 </button>
             </div>
 
+            <?php if ($show_slide_meta) { ?>
             <div class="mt-5 w-full <?php echo esc_attr($caption_width_class); ?>">
                 <div
                     class="<?php echo esc_attr(trim('wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[#08284B] ' . ($layout_style === 'compact_slider' ? '[&_p]:text-[16px] [&_p]:leading-[26px]' : '[&_p]:text-[18px] [&_p]:leading-[28px]'))); ?>"
@@ -147,6 +152,7 @@ $heading_wrap_width_class = matrix_get_video_showcase_heading_wrap_width_class($
                     </a>
                 </div>
             </div>
+            <?php } ?>
 
             <?php if ($show_slider_controls) { ?>
                 <div class="flex gap-6 items-center mt-8">
