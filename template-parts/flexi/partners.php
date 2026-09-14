@@ -7,11 +7,10 @@ $section_id       = 'partners-' . ( function_exists('wp_generate_uuid4') ? wp_ge
 
 $heading_tag      = get_sub_field('heading_tag') ?: 'h2';
 $heading_text     = get_sub_field('heading_text') ?: '';
+$heading_color    = get_sub_field('heading_color') ?: '#1e293b';
 $partners         = get_sub_field('partners');
 $background_color = get_sub_field('background_color') ?: '#FFFFFF';
 $show_card_style  = (bool) get_sub_field('show_card_style');
-
-
 
 // Build heading tag safely
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
@@ -24,14 +23,16 @@ $card_base = $show_card_style
     ? 'flex items-center justify-center p-4 bg-white border border-neutral-200 rounded-lg shadow-sm'
     : 'flex items-center justify-center bg-transparent';
 
-// Logo container classes
-$logo_container = 'h-10 flex items-center justify-center';
+// Match the previous academic logo strip: fixed height, auto width,
+// object-contain, no overflow clipping.
+$logo_img_class = 'block h-12 w-auto max-w-[14rem] object-contain';
+$logo_link_class = 'inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-highlight-primary';
 
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
-         class="flex overflow-hidden relative"
+         class="flex relative"
          style="background-color: <?php echo esc_attr($background_color); ?>;">
     <div class="flex flex-col items-center mx-auto w-full max-w-container_md p py-12 mob:py-[6rem] max-lg:px-5">
 
@@ -41,7 +42,8 @@ $logo_container = 'h-10 flex items-center justify-center';
             <div class="w-full lg:max-w-[295px]">
                 <?php if (!empty($heading_text)) : ?>
                     <<?php echo tag_escape($heading_tag); ?>
-                        class="text-[18px] mob:text-xl font-medium tracking-normal leading-7 text-left text-red-50">
+                        class="text-[18px] mob:text-xl font-medium tracking-normal leading-7 text-left"
+                        style="color: <?php echo esc_attr($heading_color); ?>;">
                         <?php echo esc_html($heading_text); ?>
                     </<?php echo tag_escape($heading_tag); ?>>
                 <?php endif; ?>
@@ -52,7 +54,7 @@ $logo_container = 'h-10 flex items-center justify-center';
                 <?php if (!empty($partners) && is_array($partners)) : ?>
 
                     <!-- Desktop / tablet layout (≥ sm) -->
-                    <div class="hidden flex-wrap gap-4 justify-center items-center sm:flex md:gap-6 lg:justify-end lg:gap-8">
+                    <div class="hidden flex-nowrap gap-6 justify-center items-center sm:flex md:gap-8 lg:justify-end lg:gap-10">
                         <?php foreach ($partners as $row) :
                             $logo = $row['logo'] ?? null;
                             if (!$logo || empty($logo['url'])) {
@@ -67,24 +69,21 @@ $logo_container = 'h-10 flex items-center justify-center';
                             $has_link   = is_array($link) && !empty($link['url']);
                             ?>
                             <div class="<?php echo esc_attr($card_base); ?>">
-                                <div class="<?php echo esc_attr($logo_container); ?>">
-                                    <?php if ($has_link) : ?>
-                                        <a href="<?php echo esc_url($link['url']); ?>"
-                                           target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                           class="btn focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-highlight-primary"
-                                           aria-label="<?php echo esc_attr($logo_title); ?>">
-                                            <img src="<?php echo esc_url($logo_url); ?>"
-                                                 alt="<?php echo esc_attr($logo_alt); ?>"
-                                                 title="<?php echo esc_attr($logo_title); ?>"
-                                                 class="object-contain w-auto h-full" />
-                                        </a>
-                                    <?php else : ?>
+                                <?php if ($has_link) : ?>
+                                    <a href="<?php echo esc_url($link['url']); ?>"
+                                       target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
+                                       rel="<?php echo ($link['target'] ?? '') === '_blank' ? 'noopener noreferrer' : ''; ?>"
+                                       class="<?php echo esc_attr($logo_link_class); ?>"
+                                       aria-label="<?php echo esc_attr($logo_title); ?>">
                                         <img src="<?php echo esc_url($logo_url); ?>"
                                              alt="<?php echo esc_attr($logo_alt); ?>"
-                                             title="<?php echo esc_attr($logo_title); ?>"
-                                             class="object-contain w-auto h-full" />
-                                    <?php endif; ?>
-                                </div>
+                                             class="<?php echo esc_attr($logo_img_class); ?>" />
+                                    </a>
+                                <?php else : ?>
+                                    <img src="<?php echo esc_url($logo_url); ?>"
+                                         alt="<?php echo esc_attr($logo_alt); ?>"
+                                         class="<?php echo esc_attr($logo_img_class); ?>" />
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -106,30 +105,26 @@ $logo_container = 'h-10 flex items-center justify-center';
                                 $has_link   = is_array($link) && !empty($link['url']);
                                 ?>
                                 <div class="px-2">
-                                    <div class="<?php echo esc_attr($card_base); ?>">
-                                        <div class="<?php echo esc_attr($logo_container); ?>">
-                                            <?php if ($has_link) : ?>
-                                                <a href="<?php echo esc_url($link['url']); ?>"
-                                                   target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                                   class="btn focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-highlight-primary"
-                                                   aria-label="<?php echo esc_attr($logo_title); ?>">
-                                                    <img src="<?php echo esc_url($logo_url); ?>"
-                                                         alt="<?php echo esc_attr($logo_alt); ?>"
-                                                         title="<?php echo esc_attr($logo_title); ?>"
-                                                         class="object-contain w-auto h-full" />
-                                                </a>
-                                            <?php else : ?>
+                                    <div class="<?php echo esc_attr($card_base); ?> min-h-12">
+                                        <?php if ($has_link) : ?>
+                                            <a href="<?php echo esc_url($link['url']); ?>"
+                                               target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
+                                               rel="<?php echo ($link['target'] ?? '') === '_blank' ? 'noopener noreferrer' : ''; ?>"
+                                               class="<?php echo esc_attr($logo_link_class); ?>"
+                                               aria-label="<?php echo esc_attr($logo_title); ?>">
                                                 <img src="<?php echo esc_url($logo_url); ?>"
                                                      alt="<?php echo esc_attr($logo_alt); ?>"
-                                                     title="<?php echo esc_attr($logo_title); ?>"
-                                                     class="object-contain w-auto h-full" />
-                                            <?php endif; ?>
-                                        </div>
+                                                     class="<?php echo esc_attr($logo_img_class); ?>" />
+                                            </a>
+                                        <?php else : ?>
+                                            <img src="<?php echo esc_url($logo_url); ?>"
+                                                 alt="<?php echo esc_attr($logo_alt); ?>"
+                                                 class="<?php echo esc_attr($logo_img_class); ?>" />
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        <!-- No arrows, no indicators: swipe / drag only -->
                     </div>
 
                 <?php endif; ?>

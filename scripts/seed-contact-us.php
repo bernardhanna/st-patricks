@@ -213,7 +213,7 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
     ],
     [
         'acf_fc_layout' => 'locations_map',
-        'heading' => 'Find us',
+        'heading' => 'Directions and locations',
         'heading_tag' => matrix_page_seed_heading(2),
         'intro_text' => '<p>Use the map below to find our campuses and clinics across Ireland. Select a location to view contact details and opening hours.</p>',
         'source_mode' => 'all',

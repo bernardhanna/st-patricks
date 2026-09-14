@@ -35,9 +35,17 @@ function matrix_get_key_contact_info_wrapper_class_names()
     ]);
 }
 
-function matrix_get_key_contact_info_grid_class_names()
+function matrix_get_key_contact_info_grid_class_names(int $column_count = 3)
 {
-    return 'grid w-full grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-4';
+    $column_count = min(3, max(1, $column_count));
+
+    $column_classes = [
+        1 => 'lg:grid-cols-1',
+        2 => 'sm:grid-cols-2 lg:grid-cols-2',
+        3 => 'lg:grid-cols-3',
+    ];
+
+    return 'grid w-full grid-cols-1 gap-4 ' . $column_classes[$column_count] . ' lg:gap-x-8 lg:gap-y-4';
 }
 
 function matrix_get_key_contact_info_column_class_names()

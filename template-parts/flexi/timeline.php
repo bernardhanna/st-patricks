@@ -1,6 +1,6 @@
 <?php
 
-$section_id = 'timeline-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
+$section_id = str_replace('_', '-', (string) get_row_layout()) . '-' . (int) get_row_index();
 $heading = trim((string) get_sub_field('heading'));
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro = get_sub_field('intro');
@@ -88,9 +88,11 @@ $render_timeline_card = static function (array $item, bool $include_mobile_date 
             </div>
         <?php } ?>
 
-        <<?php echo esc_attr($item_heading_tag); ?> class="font-primary text-[1.5rem] font-semibold leading-[1.75rem] tracking-[-0.009rem] text-[#1E244B] lg:text-[24px] lg:leading-[32px] lg:tracking-[-0.144px]">
-            <?php echo esc_html($item['item_heading']); ?>
-        </<?php echo esc_attr($item_heading_tag); ?>>
+        <?php if ($item['item_heading'] !== '') { ?>
+            <<?php echo esc_attr($item_heading_tag); ?> class="font-primary text-[1.5rem] font-semibold leading-[1.75rem] tracking-[-0.009rem] text-[#1E244B] lg:text-[24px] lg:leading-[32px] lg:tracking-[-0.144px]">
+                <?php echo esc_html($item['item_heading']); ?>
+            </<?php echo esc_attr($item_heading_tag); ?>>
+        <?php } ?>
 
         <?php if (trim(strip_tags($item['item_text'])) !== '') { ?>
             <div class="wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[1rem] [&_p]:font-medium [&_p]:leading-[1.75rem] [&_p]:text-[#08284B]">

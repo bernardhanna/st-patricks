@@ -1,9 +1,14 @@
 <?php
 
 /**
- * Seed Our History (page 272) to match Figma frame 3279:19822.
+ * Seed or patch Our History (page 272).
+ *
+ * Default (safe): patch existing content only — add the "Our present and future"
+ * block after the timeline and fix placeholder demo video URLs. Does not replace
+ * hero, timeline, or other blocks Orlaith may already have edited.
  *
  * Run: wp eval-file wp-content/themes/matrix-starter/scripts/seed-our-history.php
+ * Full reseed (destructive — overwrites all flexi blocks): pass --force
  */
 
 $post_id = (int) (get_page_by_path('about-us/our-history')?->ID ?? 0);
@@ -114,6 +119,123 @@ if (! function_exists('matrix_seed_build_image_field')) {
     }
 }
 
+if (! function_exists('matrix_seed_our_history_present_future_block')) {
+    /**
+     * @return array<string, mixed>
+     */
+    function matrix_seed_our_history_present_future_block(array $section_padding = []): array
+    {
+        unset($section_padding);
+
+        require_once __DIR__ . '/lib/our-history-present-future-block.php';
+
+        return matrix_our_history_present_future_block();
+    }
+}
+
+if (! function_exists('matrix_seed_our_history_has_present_future_block')) {
+    function matrix_seed_our_history_has_present_future_block(array $rows): bool
+    {
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            if (($row['acf_fc_layout'] ?? '') === 'content' && ($row['heading'] ?? '') === 'Our present and future') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (! function_exists('matrix_seed_our_history_fix_placeholder_videos')) {
+    /**
+     * Replace Figma/demo placeholder embeds with the real SPMHS history video.
+     *
+     * @param array<int, array<string, mixed>> $rows
+     * @return array{0: array<int, array<string, mixed>>, 1: int}
+     */
+    function matrix_seed_our_history_fix_placeholder_videos(array $rows): array
+    {
+        $spmh_video_url = 'https://youtu.be/mN0Qyhix71E?si=VX8jbB9ttqNmoXqZ';
+        $placeholder_video_url = 'https://www.youtube.com/watch?v=ysz5S6PUM-U';
+        $fixed = 0;
+
+        foreach ($rows as $index => $row) {
+            if (! is_array($row) || ($row['acf_fc_layout'] ?? '') !== 'video_showcase') {
+                continue;
+            }
+
+            $slides = is_array($row['slides'] ?? null) ? $row['slides'] : [];
+
+            foreach ($slides as $slide_index => $slide) {
+                if (! is_array($slide)) {
+                    continue;
+                }
+
+                $embed = trim((string) ($slide['video_embed_url'] ?? ''));
+
+                if ($embed === '' || $embed === $placeholder_video_url) {
+                    $slides[$slide_index]['video_source_type'] = 'embed_url';
+                    $slides[$slide_index]['video_embed_url'] = $spmh_video_url;
+                    $fixed++;
+                }
+            }
+
+            $rows[$index]['slides'] = $slides;
+        }
+
+        return [$rows, $fixed];
+    }
+}
+
+if (! function_exists('matrix_seed_patch_our_history_page')) {
+    /**
+     * Non-destructive update: append the present/future block and fix demo video URLs.
+     *
+     * @return array{added_present_future: bool, videos_fixed: int, block_count: int}
+     */
+    function matrix_seed_patch_our_history_page(int $post_id, array $section_padding): array
+    {
+        $rows = get_field('flexible_content_blocks', $post_id);
+
+        if (! is_array($rows) || $rows === []) {
+            return [
+                'added_present_future' => false,
+                'videos_fixed' => 0,
+                'block_count' => 0,
+            ];
+        }
+
+        $added_present_future = false;
+        $synced_present_future = false;
+
+        require_once __DIR__ . '/lib/our-history-present-future-block.php';
+        $present_future = matrix_our_history_ensure_present_future_block($post_id);
+        $added_present_future = $present_future['added'];
+        $synced_present_future = $present_future['synced'];
+        $rows = get_field('flexible_content_blocks', $post_id);
+
+        if (! is_array($rows)) {
+            $rows = [];
+        }
+
+        [$rows, $videos_fixed] = matrix_seed_our_history_fix_placeholder_videos($rows);
+        update_field('flexible_content_blocks', $rows, $post_id);
+
+        return [
+            'added_present_future' => $added_present_future,
+            'synced_present_future' => $synced_present_future,
+            'videos_fixed' => $videos_fixed,
+            'block_count' => count($rows),
+        ];
+    }
+}
+
+$force_reseed = in_array('--force', array_map('strval', $GLOBALS['argv'] ?? []), true);
+
 $home = home_url('/');
 $about_us_url = home_url('/about-us/');
 $present_future_url = home_url('/about-us/our-present-and-future/');
@@ -167,14 +289,14 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => 'Video Title St. Patrick\'s Mental Health Services 1746-2016',
+        'heading' => "St Patrick's Mental Health Services 1746–2016",
         'intro' => '',
         'layout_style' => 'feature_single',
         'slides' => [
             [
                 'poster_image' => matrix_seed_build_image_field($video_poster_id, 'St Patrick\'s Mental Health Services 1746-2016'),
                 'video_source_type' => 'embed_url',
-                'video_embed_url' => 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+                'video_embed_url' => 'https://www.youtube.com/watch?v=mN0Qyhix71E',
                 'caption' => '',
                 'cta_link' => '',
             ],
@@ -247,7 +369,33 @@ $flexi_rows = [
         'timeline_accent_color' => '#6FC9C0',
         'padding_settings' => $section_padding,
     ],
+    matrix_seed_our_history_present_future_block($section_padding),
 ];
+
+if (! $force_reseed) {
+    $patch = matrix_seed_patch_our_history_page($post_id, $section_padding);
+
+    if ($patch['block_count'] === 0) {
+        if (class_exists('WP_CLI')) {
+            WP_CLI::warning('Our History has no flexi blocks yet; re-run with --force to seed from Figma defaults.');
+        }
+
+        exit(0);
+    }
+
+    if (class_exists('WP_CLI')) {
+        WP_CLI::success(sprintf(
+            'Patched Our History page (%d): %d blocks, present/future block %s%s, %d placeholder video(s) corrected.',
+            $post_id,
+            $patch['block_count'],
+            $patch['added_present_future'] ? 'added' : ($patch['synced_present_future'] ?? false ? 'normalised' : 'already present'),
+            ! empty($patch['synced_present_future']) && ! $patch['added_present_future'] ? '' : '',
+            $patch['videos_fixed']
+        ));
+    }
+
+    exit(0);
+}
 
 update_field('hero_content_blocks', [], $post_id);
 update_field('flexible_content_blocks', $flexi_rows, $post_id);
@@ -258,7 +406,7 @@ $saved_count = is_array($saved_rows) ? count($saved_rows) : 0;
 if (class_exists('WP_CLI')) {
     if ($saved_count === count($flexi_rows)) {
         WP_CLI::success(sprintf(
-            'Seeded Our History page (%d) with %d flexi blocks.',
+            'Force-seeded Our History page (%d) with %d flexi blocks.',
             $post_id,
             $saved_count
         ));

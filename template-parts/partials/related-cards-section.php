@@ -24,7 +24,9 @@ if (! in_array($heading_tag, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], true)) {
     $heading_tag = 'h2';
 }
 
-$grid_columns = $columns === '2' ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
+$grid_columns = function_exists('matrix_get_related_cards_grid_class_names')
+    ? matrix_get_related_cards_grid_class_names($columns)
+    : 'grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-4';
 
 if ($wrapper_classes === '') {
     $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 py-12 lg:gap-8 lg:py-[100px] xl:px-0';
@@ -57,7 +59,7 @@ if ($wrapper_classes === '') {
             <?php } ?>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 <?php echo esc_attr($grid_columns); ?> lg:gap-x-8 lg:gap-y-4">
+        <div class="<?php echo esc_attr($grid_columns); ?>">
             <?php foreach ($cards as $card) { ?>
                 <?php
                 $title = (string) ($card['title'] ?? '');
@@ -74,7 +76,7 @@ if ($wrapper_classes === '') {
                     ? matrix_normalize_asset_url((string) $link['url'])
                     : (string) $link['url'];
                 ?>
-                <article class="h-full overflow-hidden rounded-lg bg-white shadow-[0_1px_1px_rgba(0,0,0,0.05)]">
+                <article class="h-full min-w-0 w-full overflow-hidden rounded-lg bg-white shadow-[0_1px_1px_rgba(0,0,0,0.05)]">
                     <a
                         href="<?php echo esc_url($link_url); ?>"
                         target="<?php echo esc_attr($link_target); ?>"

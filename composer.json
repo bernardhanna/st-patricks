@@ -30,7 +30,8 @@
     }
   },
   "scripts": {
-    "test:php": "vendor/bin/pest"
+    "test:php": "vendor/bin/pest",
+    "test:builder": "bash ../../plugins/matrix-content-gathering/scripts/run-flexible-builder-tests.sh"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

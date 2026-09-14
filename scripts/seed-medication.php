@@ -458,7 +458,7 @@ $flexi_rows = matrix_page_seed_strip_padding_from_rows([
     [
         'acf_fc_layout' => 'useful_links',
         'heading_tag' => matrix_page_seed_heading(2),
-        'heading' => 'In this section',
+        'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => [
             ['link' => ['title' => 'Medication', 'url' => home_url('/service-users-and-visitors/medication/'), 'target' => '']],

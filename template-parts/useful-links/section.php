@@ -33,8 +33,8 @@ if ($wrapper_classes === '') {
 }
 
 $link_classes = $variant === 'search'
-    ? 'group inline-flex min-h-[32px] items-center text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors hover:text-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
-    : 'group inline-flex items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] transition-colors hover:text-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
+    ? 'group inline-flex min-h-[32px] items-center text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
+    : 'group inline-flex w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
 
 $grid_classes = $variant === 'search'
     ? 'mt-8 grid grid-cols-1 gap-y-4 lg:mt-8 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-4'
@@ -65,16 +65,16 @@ $grid_classes = $variant === 'search'
                     href="<?php echo esc_url($link['url']); ?>"
                     target="<?php echo esc_attr($link['target']); ?>"
                     class="<?php echo esc_attr($link_classes); ?>"
-                    style="color: <?php echo esc_attr($link_color); ?>;"
+                    style="color: <?php echo esc_attr($link_color); ?>"
                     <?php if ($link['target'] === '_blank') { ?>
                         rel="noopener noreferrer"
                     <?php } ?>
                 >
-                    <span><?php echo esc_html($link['title']); ?></span>
+                    <span class="transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
                     <?php if ($variant === 'search') { ?>
-                        <span class="ml-1" aria-hidden="true">&rarr;</span>
+                        <span class="ml-1 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">&rarr;</span>
                     <?php } else { ?>
-                        <span class="shrink-0" aria-hidden="true">
+                        <span class="shrink-0 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                 <path d="M6 3L12 9L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>

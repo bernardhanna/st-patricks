@@ -89,7 +89,7 @@ extract($hero, EXTR_SKIP);
                 </div>
             </div>
         <?php } elseif ($layout_style === 'title_accent') { ?>
-            <div class="w-full px-5 lg:px-[70px]">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names()); ?>">
                 <div class="flex flex-col gap-8 max-w-[1018px]">
                     <<?php echo esc_attr($heading_tag); ?>
                         id="<?php echo esc_attr($hero_heading_id); ?>"
@@ -119,7 +119,7 @@ extract($hero, EXTR_SKIP);
                     echo wp_get_attachment_image($hero_image, 'full', false, [
                         'alt' => esc_attr($hero_image_alt),
                         'title' => esc_attr($hero_image_title),
-                        'class' => 'absolute inset-0 h-full w-full object-cover',
+                        'class' => 'absolute inset-0 !h-full !w-full object-cover object-center',
                         'loading' => 'eager',
                     ]);
                     ?>

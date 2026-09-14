@@ -51,6 +51,16 @@ $padding_classes = function_exists('matrix_get_content_accordion_vertical_paddin
     ? matrix_get_content_accordion_vertical_padding_classes($vertical_padding, $layout_style)
     : '';
 $wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !== '' ? ' ' . $padding_classes : ''));
+$heading = function_exists('matrix_resolve_content_accordion_heading')
+    ? matrix_resolve_content_accordion_heading(get_sub_field('heading'))
+    : trim((string) get_sub_field('heading'));
+$heading_tag = function_exists('matrix_resolve_content_accordion_heading_tag')
+    ? matrix_resolve_content_accordion_heading_tag(get_sub_field('heading_tag'))
+    : 'h2';
+$heading_id = $section_id . '-heading';
+$heading_classes = function_exists('matrix_get_content_accordion_heading_class_names')
+    ? matrix_get_content_accordion_heading_class_names()
+    : 'font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]';
 ?>
 
 <section
@@ -58,11 +68,25 @@ $wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !=
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="relative flex overflow-hidden"
     style="<?php echo esc_attr($section_background_style); ?>"
+    <?php if ($heading !== '') { ?>
+        aria-labelledby="<?php echo esc_attr($heading_id); ?>"
+    <?php } ?>
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
         class="<?php echo esc_attr($wrapper_classes); ?>"
     >
+        <?php if ($heading !== '') { ?>
+            <header class="mb-4 flex w-full flex-col gap-4 lg:mb-8 lg:gap-8">
+                <<?php echo esc_attr($heading_tag); ?>
+                    id="<?php echo esc_attr($heading_id); ?>"
+                    class="<?php echo esc_attr($heading_classes); ?>"
+                >
+                    <?php echo esc_html($heading); ?>
+                </<?php echo esc_attr($heading_tag); ?>>
+                <div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
+            </header>
+        <?php } ?>
         <?php foreach ($items as $index => $item) { ?>
             <?php
             $button_id = $section_id . '-button-' . $index;

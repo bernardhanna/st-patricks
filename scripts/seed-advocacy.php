@@ -157,7 +157,7 @@ if (! function_exists('matrix_seed_advocacy_useful_links_block')) {
         return matrix_page_seed_strip_padding([
             'acf_fc_layout' => 'useful_links',
             'heading_tag' => 'h2',
-            'heading' => 'In this section',
+            'heading' => 'Useful Links',
             'variant' => 'flexi',
             'links' => matrix_seed_advocacy_section_links(),
             'background_color' => '#F1F8F9',
@@ -176,7 +176,7 @@ if (! function_exists('matrix_seed_advocacy_services_useful_links_block')) {
         return matrix_page_seed_strip_padding([
             'acf_fc_layout' => 'useful_links',
             'heading_tag' => 'h2',
-            'heading' => 'In this section',
+            'heading' => 'Useful Links',
             'variant' => 'flexi',
             'links' => matrix_seed_advocacy_services_section_links(),
             'background_color' => '#F1F8F9',

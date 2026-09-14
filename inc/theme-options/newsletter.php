@@ -123,7 +123,7 @@ $newsletter
   ->addAccordion('newsletter_brevo_acc', ['label' => 'Brevo (AJAX)'])
     ->addText('brevo_api_key', [
       'label'         => 'Brevo API Key',
-      'instructions'  => 'You may also define MATRIX_BREVO_KEY in wp-config.php.',
+      'instructions'  => 'Prefer define(\'MATRIX_BREVO_KEY\', \'...\'); in wp-config.php. This field is a local fallback only.',
     ])
     ->addText('brevo_list_ids', [
       'label'         => 'Default Brevo List IDs (comma-separated)',

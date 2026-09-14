@@ -40,7 +40,7 @@ $open_panel_background_style = matrix_get_key_contact_info_background_style($ope
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
         class="<?php echo esc_attr(matrix_get_key_contact_info_wrapper_class_names()); ?>"
     >
-        <div class="<?php echo esc_attr(matrix_get_key_contact_info_grid_class_names()); ?>">
+        <div class="<?php echo esc_attr(matrix_get_key_contact_info_grid_class_names(count($columns))); ?>">
             <?php foreach ($columns as $column_index => $column) { ?>
                 <div class="<?php echo esc_attr(matrix_get_key_contact_info_column_class_names()); ?>">
                     <?php foreach ($column['items'] as $item_index => $item) { ?>

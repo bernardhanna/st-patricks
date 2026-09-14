@@ -94,8 +94,14 @@ $condition_cards = [
         'tone' => 'bg2',
     ],
     [
-        'title' => 'Schizophrenia & Psychosis',
+        'title' => 'Psychosis',
         'slug' => 'schizophrenia-psychosis',
+        'image' => '/media/3292/still-just-me-psychosis-featured-image.jpg',
+        'tone' => 'bg3',
+    ],
+    [
+        'title' => 'Schizophrenia',
+        'slug' => 'schizophrenia',
         'image' => '/media/3292/still-just-me-psychosis-featured-image.jpg',
         'tone' => 'bg3',
     ],
@@ -171,7 +177,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'useful_links',
         'heading_tag' => matrix_page_seed_heading(2),
-        'heading' => 'In this section',
+        'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => $inner_nav_links,
         'background_color' => '#F1F8F9',

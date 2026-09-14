@@ -114,6 +114,8 @@ test('key contact info layout helpers expose figma spacing and typography classe
     expect(matrix_get_key_contact_info_wrapper_class_names())->toContain('max-w-[1018px]')
         ->and(matrix_get_key_contact_info_wrapper_class_names())->toContain('lg:pt-16')
         ->and(matrix_get_key_contact_info_grid_class_names())->toContain('lg:grid-cols-3')
+        ->and(matrix_get_key_contact_info_grid_class_names(2))->toContain('lg:grid-cols-2')
+        ->and(matrix_get_key_contact_info_grid_class_names(2))->not->toContain('lg:grid-cols-3')
         ->and(matrix_get_key_contact_info_grid_class_names())->toContain('lg:gap-x-8')
         ->and(matrix_get_key_contact_info_title_class_names())->toContain('lg:text-[18px]')
         ->and(matrix_get_key_contact_info_item_class_names())->toContain('border-white');

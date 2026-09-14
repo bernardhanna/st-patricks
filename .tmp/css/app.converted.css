@@ -140,7 +140,25 @@ body {
   .is-not-woo .wp_editor.blog-single-content h3,
   .editor-body-content h3,
   .blog-single-content h3 {
-  @apply mb-4 mt-10 text-[24px] font-semibold leading-[28px] tracking-[-0.18px];
+  @apply mb-3 mt-8 text-[20px] font-semibold leading-[28px] tracking-[-0.12px] text-[#08284B] lg:text-[22px] lg:leading-[30px];
+ }
+ .is-not-woo .wp_editor.editor-body-content h3::after,
+  .is-not-woo .wp_editor.blog-single-content h3::after,
+  .editor-body-content h3::after,
+  .blog-single-content h3::after {
+  @apply content-[''] block w-[32px] h-[3px] bg-[#6FC9C0] mt-[10px];
+ }
+ .is-not-woo .wp_editor.editor-body-content p + h3,
+  .is-not-woo .wp_editor.blog-single-content p + h3,
+  .editor-body-content p + h3,
+  .blog-single-content p + h3 {
+  @apply mt-6;
+ }
+ .is-not-woo .wp_editor.editor-body-content h3 + ul,
+  .is-not-woo .wp_editor.blog-single-content h3 + ul,
+  .editor-body-content h3 + ul,
+  .blog-single-content h3 + ul {
+  @apply mt-3;
  }
  .is-not-woo .wp_editor.editor-body-content h4,
   .is-not-woo .wp_editor.blog-single-content h4,

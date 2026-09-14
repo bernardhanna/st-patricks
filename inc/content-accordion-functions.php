@@ -34,7 +34,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
             'rows_wrapper_classes' => 'flex flex-col gap-4 pr-8',
             'row_classes' => '',
             'icon_tile_classes' => '',
-            'content_classes' => 'wp_editor [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B]',
+            'content_classes' => 'wp_editor [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
         ];
     }
 
@@ -53,7 +53,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
             'row_classes' => 'flex flex-col items-start gap-3 border-t border-[#F1F8F9] py-3 lg:flex-row lg:items-center lg:gap-6 lg:py-4',
             'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[4px] p-3 lg:h-12 lg:w-12',
             'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
-            'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold',
+            'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
         ];
     }
 
@@ -71,7 +71,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
         'row_classes' => 'flex flex-col items-start gap-3 lg:flex-row lg:items-start lg:gap-4',
         'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[8px] p-3 lg:h-12 lg:w-12',
         'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
-        'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_a]:underline',
+        'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_a]:underline [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
     ];
 }
 
@@ -302,6 +302,10 @@ function matrix_resolve_content_accordion_vertical_padding($value = '')
         return 'small_top_large_bottom';
     }
 
+    if ($value === 'top_50_bottom_100') {
+        return 'top_50_bottom_100';
+    }
+
     return 'default';
 }
 
@@ -317,5 +321,30 @@ function matrix_get_content_accordion_vertical_padding_classes(string $vertical_
         return 'pt-8 pb-[100px]';
     }
 
+    if ($vertical_padding === 'top_50_bottom_100') {
+        return 'pt-[50px] pb-[100px]';
+    }
+
     return 'py-12 xl:py-[100px]';
+}
+
+function matrix_resolve_content_accordion_heading($value = '')
+{
+    return trim((string) $value);
+}
+
+function matrix_resolve_content_accordion_heading_tag($value = '')
+{
+    $tag = strtolower(trim((string) $value));
+
+    if (in_array($tag, ['h2', 'h3', 'h4'], true)) {
+        return $tag;
+    }
+
+    return 'h2';
+}
+
+function matrix_get_content_accordion_heading_class_names()
+{
+    return 'font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]';
 }

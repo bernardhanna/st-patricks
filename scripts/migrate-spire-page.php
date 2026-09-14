@@ -358,7 +358,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'useful_links',
         'heading_tag' => 'h2',
-        'heading' => 'In this section',
+        'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => [
             ['link' => ['title' => 'Research Repository', 'url' => $spire_url, 'target' => '']],

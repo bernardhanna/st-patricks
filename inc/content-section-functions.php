@@ -147,6 +147,24 @@ function matrix_resolve_content_text_width_mode($value)
     return 'constrained';
 }
 
+function matrix_resolve_content_effective_column_layout($column_layout, bool $has_image): string
+{
+    if (! $has_image) {
+        return 'one_column';
+    }
+
+    return matrix_resolve_content_column_layout($column_layout);
+}
+
+function matrix_resolve_content_effective_text_width_mode($text_width, bool $has_image): string
+{
+    if (! $has_image) {
+        return 'full';
+    }
+
+    return matrix_resolve_content_text_width_mode($text_width);
+}
+
 function matrix_get_content_text_max_width_class_names($text_width_mode)
 {
     return matrix_resolve_content_text_width_mode($text_width_mode) === 'full'
@@ -229,6 +247,7 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
 
     $classes = array_filter([
         'wp_editor',
+        'editor-body-content',
         is_string($text_max_width_classes) && $text_max_width_classes !== '' ? $text_max_width_classes : null,
         'font-primary',
         'text-[16px]',

@@ -60,6 +60,16 @@ test('content text width resolves constrained and full max width classes', funct
         ->and(matrix_get_content_text_max_width_class_names('full'))->toBe('max-w-full');
 });
 
+test('content blocks without images use one column full width layout', function () {
+    expect(matrix_resolve_content_effective_column_layout('two_column', false))->toBe('one_column')
+        ->and(matrix_resolve_content_effective_column_layout('one_column', false))->toBe('one_column')
+        ->and(matrix_resolve_content_effective_column_layout('two_column', true))->toBe('two_column');
+
+    expect(matrix_resolve_content_effective_text_width_mode('constrained', false))->toBe('full')
+        ->and(matrix_resolve_content_effective_text_width_mode('full', false))->toBe('full')
+        ->and(matrix_resolve_content_effective_text_width_mode('constrained', true))->toBe('constrained');
+});
+
 test('editor body content helpers expose scoped rich text classes', function () {
     expect(matrix_get_editor_body_content_class_names())->toBe('editor-body-content blog-single-content wp_editor entry-content')
         ->and(matrix_get_editor_body_content_wrapper_class_names())->toContain('max-w-[1018px]')
@@ -132,6 +142,15 @@ test('content rich text wrapper includes paragraph spacing classes', function ()
         ->toContain('[&_p]:mb-4')
         ->and(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]'))->toContain('[&_p:last-child]:mb-0')
         ->and(matrix_get_content_rich_text_wrapper_class_names('bold', ''))->toContain('font-bold');
+});
+
+test('content rich text wrapper styles nested headings', function () {
+    $classes = matrix_get_content_rich_text_wrapper_class_names('medium', '');
+
+    expect($classes)
+        ->toContain('editor-body-content')
+        ->and($classes)->toContain('wp_editor')
+        ->and($classes)->toContain('[&_ul]:list-disc');
 });
 
 test('policy wysiwyg helper splits intro and h2 sections into formatted blocks', function () {

@@ -283,6 +283,50 @@ if (! function_exists('get_post_type_archive_link')) {
     }
 }
 
+if (! function_exists('absint')) {
+    function absint($maybeint)
+    {
+        return abs((int) $maybeint);
+    }
+}
+
+if (! function_exists('sanitize_text_field')) {
+    function sanitize_text_field($str)
+    {
+        return trim(strip_tags((string) $str));
+    }
+}
+
+if (! function_exists('sanitize_email')) {
+    function sanitize_email($email)
+    {
+        $email = filter_var((string) $email, FILTER_SANITIZE_EMAIL);
+
+        return is_string($email) ? $email : '';
+    }
+}
+
+if (! function_exists('is_email')) {
+    function is_email($email)
+    {
+        return (bool) filter_var((string) $email, FILTER_VALIDATE_EMAIL);
+    }
+}
+
+if (! function_exists('wp_salt')) {
+    function wp_salt($scheme = 'auth')
+    {
+        return __wp_stub_value('wp_salt', 'test-auth-salt', [$scheme]);
+    }
+}
+
+if (! function_exists('wp_json_encode')) {
+    function wp_json_encode($data, $options = 0, $depth = 512)
+    {
+        return json_encode($data, $options, $depth);
+    }
+}
+
 if (! function_exists('get_template_part')) {
     function get_template_part($slug, $name = null, $args = [])
     {

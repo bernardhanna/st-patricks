@@ -208,6 +208,10 @@ class Theme_Forms {
       }
     }
 
+    if (function_exists('matrix_maybe_subscribe_theme_form_to_brevo')) {
+      matrix_maybe_subscribe_theme_form_to_brevo($fields, $_POST);
+    }
+
     // 5) Resolve config
     $form_name       = sanitize_text_field($_POST['_theme_form_name'] ?? '');
     $default_subject = $form_name ? "$form_name – new entry" : 'Website form entry';
@@ -328,10 +332,6 @@ function matrix_subscribe_brevo() {
   $enabled = function_exists('get_field') ? (bool) get_field('newsletter_enabled', 'option') : true;
   if (!$enabled) wp_send_json_error(['message' => 'Newsletter disabled.'], 400);
 
-  $api_key = function_exists('get_field') ? (string) get_field('brevo_api_key', 'option') : '';
-  if (!$api_key && defined('MATRIX_BREVO_KEY')) $api_key = MATRIX_BREVO_KEY;
-  if (!$api_key) wp_send_json_error(['message' => 'Missing Brevo API key.'], 500);
-
   $name_raw = sanitize_text_field($_POST['name'] ?? ($_POST['nn'] ?? ''));
   $email    = sanitize_email($_POST['email'] ?? ($_POST['ne'] ?? ''));
   $consent  = isset($_POST['consent']) ? (bool) $_POST['consent'] : ( isset($_POST['ny']) );
@@ -339,14 +339,27 @@ function matrix_subscribe_brevo() {
   if (!$email || !is_email($email)) wp_send_json_error(['message' => 'Please enter a valid email address.'], 400);
   if (!$consent) wp_send_json_error(['message' => 'Please accept the terms.'], 400);
 
-  $opt_lists   = function_exists('get_field') ? (string) get_field('brevo_list_ids', 'option') : '';
+  $opt_lists = function_exists('get_field') ? (string) get_field('brevo_list_ids', 'option') : '';
+  $allowed_ids = function_exists('matrix_parse_brevo_list_ids')
+    ? matrix_parse_brevo_list_ids($opt_lists)
+    : array_values(array_filter(array_map('absint', preg_split('/[,\s;]+/', (string) $opt_lists))));
+
   $post_list_s = sanitize_text_field($_POST['list_ids'] ?? '');
   $post_list_a = (isset($_POST['list_ids']) && is_array($_POST['list_ids'])) ? array_map('sanitize_text_field', (array) $_POST['list_ids']) : [];
+  $posted_ids = function_exists('matrix_parse_brevo_list_ids')
+    ? matrix_parse_brevo_list_ids(array_merge([$post_list_s], $post_list_a))
+    : array_values(array_unique(array_filter(array_map('absint', array_merge(
+        preg_split('/[,\s;]+/', (string) $post_list_s) ?: [],
+        $post_list_a
+      )))));
 
-  $lists_str       = $post_list_s ?: $opt_lists;
-  $_ids_from_str   = array_filter(array_map('absint', preg_split('/[,\s;]+/', (string) $lists_str)));
-  $_ids_from_array = array_filter(array_map('absint', $post_list_a));
-  $list_ids        = array_values(array_unique(array_filter(array_merge($_ids_from_str, $_ids_from_array), 'intval')));
+  $list_ids = $allowed_ids;
+  if ($posted_ids !== []) {
+    $list_ids = array_values(array_intersect($posted_ids, $allowed_ids));
+    if ($list_ids === []) {
+      $list_ids = $allowed_ids;
+    }
+  }
 
   $first = ''; $last = '';
   if ($name_raw) {
@@ -358,44 +371,23 @@ function matrix_subscribe_brevo() {
   $ip   = $_SERVER['REMOTE_ADDR'] ?? '';
   $when = current_time('mysql');
 
-  $endpoint = 'https://api.brevo.com/v3/contacts';
-  $body = [
-    'email'         => $email,
-    'updateEnabled' => true,
-    'attributes'    => array_filter([
-      'FIRSTNAME' => $first,
-      'LASTNAME'  => $last,
-      'CONSENT'   => 'yes',
-      'CONSENT_IP'=> $ip,
-      'CONSENT_AT'=> $when,
-    ]),
-  ];
-  if (!empty($list_ids)) $body['listIds'] = $list_ids;
-
-  $args = [
-    'headers' => [
-      'accept'       => 'application/json',
-      'content-type' => 'application/json',
-      'api-key'      => $api_key,
-    ],
-    'timeout' => 12,
-    'body'    => wp_json_encode($body),
-    'method'  => 'POST',
-  ];
-
-  $res  = wp_remote_post($endpoint, $args);
-  $code = wp_remote_retrieve_response_code($res);
-  $raw  = wp_remote_retrieve_body($res);
-
-  if (in_array($code, [200, 201, 204], true)) {
-    $msg = function_exists('get_field') ? (string) get_field('brevo_default_confirm_message', 'option') : 'Thanks — you’re subscribed!';
-    wp_send_json_success(['message' => $msg]);
+  if (! function_exists('matrix_add_brevo_contact')) {
+    wp_send_json_error(['message' => 'Missing Brevo API key.'], 500);
   }
 
-  $json     = json_decode($raw, true);
-  $err      = is_array($json) && !empty($json['message']) ? $json['message'] : 'Subscription failed.';
-  $fallback = function_exists('get_field') ? (string) get_field('brevo_error_message', 'option') : 'Sorry, something went wrong. Please try again.';
-  wp_send_json_error(['message' => ($err ?: $fallback)], $code ?: 400);
+  $result = matrix_add_brevo_contact($email, array_filter([
+    'FIRSTNAME' => $first,
+    'LASTNAME'  => $last,
+    'CONSENT'   => 'yes',
+    'CONSENT_IP'=> $ip,
+    'CONSENT_AT'=> $when,
+  ]), $list_ids);
+
+  if (! empty($result['ok'])) {
+    wp_send_json_success(['message' => $result['message'] ?? 'Thanks — you’re subscribed!']);
+  }
+
+  wp_send_json_error(['message' => $result['message'] ?? 'Sorry, something went wrong. Please try again.'], $result['code'] ?? 400);
 }
 
 /* ==== Safe singleton init (avoid duplicate action registration) ==== */

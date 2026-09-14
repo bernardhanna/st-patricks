@@ -106,3 +106,32 @@ if (! function_exists('matrix_normalize_related_cards')) {
         return $normalized;
     }
 }
+
+if (! function_exists('matrix_resolve_related_cards_columns')) {
+    /**
+     * @param mixed $value
+     */
+    function matrix_resolve_related_cards_columns($value = ''): string
+    {
+        $value = trim((string) $value);
+
+        if (preg_match('/^([23])(?:\s*columns?)?$/i', $value, $matches)) {
+            return $matches[1];
+        }
+
+        return $value === '2' ? '2' : '3';
+    }
+}
+
+if (! function_exists('matrix_get_related_cards_grid_class_names')) {
+    function matrix_get_related_cards_grid_class_names($columns = '3'): string
+    {
+        $columns = matrix_resolve_related_cards_columns($columns);
+
+        if ($columns === '2') {
+            return 'grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-4';
+        }
+
+        return 'grid w-full grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-4';
+    }
+}
