@@ -447,12 +447,12 @@ document.addEventListener('alpine:init', () => {
       </div>
     <?php endif; ?>
 
-    <!-- Looking for help -->
+    <!-- Looking for help — default: primary dark blue (Figma); hover: green via .btn:hover -->
     <?php if (!empty($help_btn['url']) && !empty($help_btn['title'])) : ?>
       <a
         href="<?php echo esc_url($help_btn['url']); ?>"
         target="<?php echo esc_attr($help_btn['target'] ?: '_self'); ?>"
-        class="hidden btn gap-2 items-center px-3 h-9 bg-secondary text-secondary-darker whitespace-nowrap rounded-md transition-colors shrink-0 lg:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+        class="hidden btn gap-2 items-center px-3 h-9 bg-[#024B79] text-white whitespace-nowrap rounded-md transition-colors shrink-0 lg:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
         aria-label="<?php echo esc_attr($help_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">

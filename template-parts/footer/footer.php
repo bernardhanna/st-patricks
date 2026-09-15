@@ -50,8 +50,13 @@ $contact_email_link = get_field('contact_email_link', 'option');
 $social_heading = get_field('social_heading', 'option') ?: 'Social media';
 $social_links   = get_field('social_links', 'option');
 
-// Legal / copyright
-$copyright_text        = get_field('copyright_text', 'option') ?: ('St Patrick Hospital © ' . date('Y'));
+// Legal / copyright — year is always current even if options store a fixed year
+$copyright_text = get_field('copyright_text', 'option');
+if (!$copyright_text) {
+    $copyright_text = 'Copyright ' . date('Y') . ' St. Patricks. All rights reserved.';
+} else {
+    $copyright_text = preg_replace('/\b(?:19|20)\d{2}\b/', date('Y'), $copyright_text, 1);
+}
 $legal_links           = get_field('legal_links', 'option');
 $developer_credit      = get_field('developer_credit', 'option') ?: 'Designed & Developed by';
 $developer_credit_link = get_field('developer_credit_link', 'option');

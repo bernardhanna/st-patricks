@@ -31,6 +31,18 @@ test('hero slider mobile navigation spans full width and keeps white arrow butto
         ->and($segment)->not->toContain('group-focus:stroke-white');
 });
 
+test('hero slider desktop text panel stays in-flow and does not offset under the image', function () {
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php');
+
+    expect($template)->toContain('hero-slide-text')
+        ->and($template)->toContain('lg:max-w-[560px]')
+        ->and($template)->toContain('lg:shrink-0')
+        ->and($template)->toContain('hero-slide-image')
+        ->and($template)->not->toContain('lg:left-[5rem]')
+        ->and($template)->toContain('.slick-slide:not(.slick-active)')
+        ->and($template)->toContain('pointer-events: none');
+});
+
 test('story slider mobile navigation spans full width and preserves desktop hover states', function () {
     $segment = matrix_get_template_segment(
         dirname(__DIR__, 2) . '/template-parts/flexi/story_slider.php',

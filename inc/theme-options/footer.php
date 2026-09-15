@@ -145,7 +145,8 @@ $footer
   ->addAccordion('footer_legal_acc', ['label' => 'Legal & Copyright'])
     ->addText('copyright_text', [
       'label' => 'Copyright Text',
-      'default_value' => 'St Patrick Hospital © ' . date('Y'),
+      'instructions' => 'Include a 4-digit year (e.g. 2025). It is replaced with the current year automatically on the front end.',
+      'default_value' => 'Copyright ' . date('Y') . ' St. Patricks. All rights reserved.',
     ])
     ->addRepeater('legal_links', [
       'label'        => 'Legal Links',
