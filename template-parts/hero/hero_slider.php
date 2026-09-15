@@ -93,6 +93,11 @@ $is_slider = count($slides) > 1;
 #<?php echo esc_attr($section_id); ?> .slick-slide {
     display: flex !important;
 }
+
+/* Inactive fade slides still sit in the stacking order; keep them from covering active text. */
+#<?php echo esc_attr($section_id); ?> .slick-slide:not(.slick-active) {
+    pointer-events: none;
+}
 </style>
 
 <section id="<?php echo esc_attr($section_id); ?>"
@@ -134,7 +139,7 @@ $is_slider = count($slides) > 1;
                 <?php } ?>
 
                 <!-- TEXT PANEL (BOTTOM ON MOBILE, LEFT ON DESKTOP) -->
-                <div class="flex flex-col flex-1 order-2 justify-center px-4 pt-6 pb-8 lg:pt-0 lg:pb-0 lg:order-1 lg:max-w-[500px] relative lg:left-[5rem] ">
+                <div class="hero-slide-text relative z-10 flex flex-col flex-1 order-2 justify-center px-4 pt-6 pb-8 lg:order-1 lg:max-w-[560px] lg:shrink-0 lg:px-12 lg:pt-0 lg:pb-0">
 
                     <?php if ($is_slider) { ?>
                         <!-- MOBILE-ONLY CONTROLS: below image, above text -->
@@ -227,16 +232,22 @@ $is_slider = count($slides) > 1;
 
                 <!-- DESKTOP IMAGE (RIGHT, >= lg) + GRADIENT OVERLAY -->
                 <?php if (!empty($sl['desktop_img']['url'])) { ?>
-                    <div class="hidden relative flex-1 order-1 justify-end h-full lg:flex lg:order-2">
+                    <div class="hero-slide-image hidden relative z-0 flex-1 order-1 justify-end h-full overflow-hidden lg:flex lg:order-2">
                         <img src="<?php echo esc_url($sl['desktop_img']['url']); ?>"
                              alt="<?php echo esc_attr($sl['desktop_img']['alt']); ?>"
                              title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
                              class="object-contain h-full max-h-[600px]"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
 
+                        <!-- Left-edge fade into hero background (matches image-split heroes) -->
+                        <div class="absolute inset-0 pointer-events-none"
+                             style="background: linear-gradient(90deg, <?php echo esc_attr($hero_slider_gradient_vars['gradient_solid']); ?> 0%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_soft']); ?> 14.69%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_clear']); ?> 45.97%);"
+                             aria-hidden="true"></div>
+
                         <!-- Right-side gradient fade on wide screens -->
                         <div class="hidden absolute inset-y-0 right-0 w-1/3 pointer-events-none xl:block"
-                             style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);">
+                             style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);"
+                             aria-hidden="true">
                         </div>
                     </div>
                 <?php } ?>
