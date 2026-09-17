@@ -192,7 +192,7 @@ test('directions page accordion layout stacks icon above text on mobile', functi
 test('content accordion rich text styles lists like content sections', function () {
     $config = matrix_get_content_accordion_layout_config('default');
 
-    expect($config['content_classes'])->toContain('[&_ul]:list-disc')
+    expect($config['content_classes'])->toContain('[&_ul]:list-none')
         ->and($config['content_classes'])->toContain('[&_ul]:pl-6')
         ->and($config['content_classes'])->toContain('[&_ol]:list-decimal')
         ->and($config['content_classes'])->toContain('[&_li]:mb-2');

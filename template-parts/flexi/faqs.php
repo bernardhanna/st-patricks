@@ -52,9 +52,13 @@ if ($answer_color === '') {
     $answer_color = '#08284B';
 }
 
-$wrapper_classes = $layout_style === 'page'
-    ? ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']
-    : ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5', 'py-12', 'lg:py-[100px]'];
+$wrapper_classes = function_exists('matrix_get_faq_section_wrapper_classes')
+    ? matrix_get_faq_section_wrapper_classes($layout_style, $show_heading)
+    : (
+        $layout_style === 'page'
+            ? ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']
+            : ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5', 'py-12', 'lg:py-[100px]']
+    );
 
 
 
@@ -189,7 +193,7 @@ $open_item_background_style = matrix_get_faq_background_style($open_item_backgro
                                 class="px-6 pb-4"
                             >
                                 <div
-                                    class="wp_editor border-t border-[rgba(30,36,75,0.12)] pt-4 font-primary text-[15px] font-medium leading-[28px] [&_a]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_strong]:font-semibold [&_em]:italic lg:text-[16px]"
+                                    class="wp_editor border-t border-[rgba(30,36,75,0.12)] pt-4 font-primary text-[15px] font-medium leading-[28px] [&_a]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_strong]:font-semibold [&_em]:italic lg:text-[16px]"
                                     style="color: <?php echo esc_attr($answer_color); ?>;"
                                 >
                                     <?php echo matrix_kses_rich_text($faq_item['answer']); ?>

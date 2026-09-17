@@ -20,7 +20,7 @@ $card_title_color = (string) ($card['card_title_color'] ?? '#1E244B');
 $card_desc_color = (string) ($card['card_desc_color'] ?? '#08284B');
 $allow_title_wrap = ! empty($card['allow_title_wrap']);
 
-$title_classes = 'font-primary text-[18px] font-semibold leading-7 tracking-[-0.12px] text-[#1E244B] transition-colors group-hover:text-[#024B79] lg:text-[20px] lg:leading-8';
+$title_classes = 'min-w-0 break-words font-primary text-[18px] font-semibold leading-7 tracking-[-0.12px] text-[#1E244B] transition-colors group-hover:text-[#024B79] lg:text-[20px] lg:leading-8';
 
 if (! $allow_title_wrap) {
     $title_classes .= ' lg:whitespace-nowrap';

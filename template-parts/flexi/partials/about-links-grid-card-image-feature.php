@@ -34,7 +34,7 @@ $card_attrs = $has_link
     )
     : '';
 
-$title_classes = 'min-w-0 font-primary text-[20px] font-semibold leading-8 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]';
+$title_classes = 'min-w-0 break-words font-primary text-[20px] font-semibold leading-8 tracking-[-0.12px] transition-colors group-hover:text-[#024B79]';
 
 if ($description === '' && ! $allow_title_wrap) {
     $title_classes .= ' lg:whitespace-nowrap';
@@ -94,12 +94,18 @@ if ($description === '' && ! $allow_title_wrap) {
             <?php } ?>
 
             <?php if ($description !== '') { ?>
-                <p
-                    class="font-primary text-base font-medium leading-7"
+                <div
+                    class="font-primary text-base font-medium leading-7 wp_editor [&_p]:mb-0 [&_a]:underline hover:[&_a]:no-underline"
                     style="color: <?php echo esc_attr($card_desc_color); ?>;"
                 >
-                    <?php echo esc_html($description); ?>
-                </p>
+                    <?php
+                    if (function_exists('matrix_kses_rich_text') && $description !== wp_strip_all_tags($description)) {
+                        echo matrix_kses_rich_text($description);
+                    } else {
+                        echo esc_html(wp_strip_all_tags($description));
+                    }
+                    ?>
+                </div>
             <?php } ?>
         </div>
     </<?php echo $card_tag; ?>>

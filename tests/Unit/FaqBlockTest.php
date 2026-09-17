@@ -50,6 +50,22 @@ test('faq layout style resolves page and default variants', function () {
         ->and(matrix_resolve_faq_layout_style('unknown'))->toBe('default');
 });
 
+test('faq section wrapper uses reduced top padding to avoid stacking gaps', function () {
+    $with_heading = matrix_get_faq_section_wrapper_classes('default', true);
+    $without_heading = matrix_get_faq_section_wrapper_classes('default', false);
+    $page_without_heading = matrix_get_faq_section_wrapper_classes('page', false);
+
+    expect($with_heading)->toContain('pt-12')
+        ->and($with_heading)->toContain('lg:pt-12')
+        ->and($with_heading)->toContain('lg:pb-[100px]')
+        ->and($with_heading)->not->toContain('lg:py-[100px]')
+        ->and($without_heading)->toContain('pt-0')
+        ->and($without_heading)->toContain('lg:pt-0')
+        ->and($without_heading)->toContain('lg:pb-[100px]')
+        ->and($page_without_heading)->toContain('xl:pt-0')
+        ->and($page_without_heading)->toContain('xl:pb-[100px]');
+});
+
 test('category faq mode skips empty posts and keeps later valid items closed', function () {
     $items = matrix_resolve_faq_items(
         'category',

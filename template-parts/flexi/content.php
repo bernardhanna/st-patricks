@@ -5,7 +5,7 @@ $heading = trim((string) get_sub_field('heading'));
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro_text = get_sub_field('intro_text');
 $content = get_sub_field('content');
-$image = get_sub_field('image');
+$image = matrix_exclude_page_hero_image(get_sub_field('image'));
 $layout_style = matrix_resolve_content_layout_style(
     get_sub_field('layout_style'),
     (bool) get_sub_field('reverse_layout')
@@ -15,7 +15,7 @@ $image_height_mode = matrix_resolve_content_image_height_mode(get_sub_field('ima
 $background_type = (string) get_sub_field('background_type');
 $background_color = (string) get_sub_field('background_color');
 $background_gradient = (string) get_sub_field('background_gradient');
-$background_image = get_sub_field('background_image');
+$background_image = matrix_exclude_page_hero_image(get_sub_field('background_image'));
 $background_image_overlay_color = (string) get_sub_field('background_image_overlay_color');
 $background_image_overlay_opacity = get_sub_field('background_image_overlay_opacity');
 $color_scheme = matrix_resolve_content_color_scheme(
@@ -114,7 +114,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
     <?php } ?>
 
     <div class="<?php echo esc_attr($wrapper_classes . ($uses_background_image ? ' relative z-[1]' : '')); ?>">
-        <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout)); ?>">
+        <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout, $layout_style)); ?>">
             <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
                 <?php if ($show_heading) { ?>
                     <header class="flex flex-col gap-8 w-full">

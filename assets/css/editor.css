@@ -33,7 +33,7 @@ h6, .entry-content h6 {
 }
 
 .entry-content ul {
-  @apply mb-4 list-disc list-inside;
+  @apply mb-4 list-none pl-6;
 }
 
 .entry-content ol {
@@ -42,6 +42,32 @@ h6, .entry-content h6 {
 
 .entry-content li {
   @apply mb-2 text-base font-normal leading-6 text-gray-800;
+}
+
+.entry-content ul > li {
+  position: relative;
+}
+
+.entry-content ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0.35em;
+  width: 1rem;
+  height: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%3E%3Cpath%20d='M3.5%208.5L6.5%2011.5L12.5%204.5'%20stroke='%236FC9C0'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.entry-content ul.list-plain {
+  @apply pl-0;
+}
+
+.entry-content ul.list-plain > li::before {
+  content: none;
+  display: none;
 }
 
 .entry-content li > ul,

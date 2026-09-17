@@ -15,17 +15,27 @@ test('content layout style resolves image positions and falls back to reverse la
         ->and(matrix_resolve_content_layout_style('', false))->toBe('image_left');
 });
 
-test('content image height mode resolves match text and fixed minimum options', function () {
+test('content image height mode resolves match text, fixed minimum, and contain options', function () {
     expect(matrix_resolve_content_image_height_mode('match_text'))->toBe('match_text')
         ->and(matrix_resolve_content_image_height_mode('fixed_min'))->toBe('fixed_min')
+        ->and(matrix_resolve_content_image_height_mode('contain'))->toBe('contain')
         ->and(matrix_resolve_content_image_height_mode(''))->toBe('match_text');
 
     expect(matrix_get_content_grid_class_names('match_text'))->toContain('lg:items-stretch')
-        ->and(matrix_get_content_grid_class_names('fixed_min'))->not->toContain('lg:items-stretch');
+        ->and(matrix_get_content_grid_class_names('fixed_min'))->not->toContain('lg:items-stretch')
+        ->and(matrix_get_content_grid_class_names('contain', 'two_column', 'image_right'))
+        ->toContain('lg:grid-cols-[minmax(0,1fr)_auto]')
+        ->and(matrix_get_content_grid_class_names('contain', 'two_column', 'image_left'))
+        ->toContain('lg:grid-cols-[auto_minmax(0,1fr)]')
+        ->and(matrix_get_content_grid_class_names('contain'))->not->toContain('lg:items-stretch');
 
     expect(matrix_get_content_image_class_names('fixed_min'))->toContain('lg:min-h-[19.5rem]')
         ->and(matrix_get_content_image_class_names('match_text'))->toContain('lg:h-full')
-        ->and(matrix_get_content_image_class_names('match_text'))->not->toContain('lg:min-h-[19.5rem]');
+        ->and(matrix_get_content_image_class_names('match_text'))->not->toContain('lg:min-h-[19.5rem]')
+        ->and(matrix_get_content_image_class_names('contain'))->toContain('max-w-[202px]')
+        ->and(matrix_get_content_image_class_names('contain'))->toContain('object-contain')
+        ->and(matrix_get_content_image_class_names('contain'))->not->toContain('object-cover')
+        ->and(matrix_get_content_image_figure_class_names('contain'))->toContain('max-w-[202px]');
 });
 
 test('content column layout resolves one and two column grid classes', function () {
@@ -76,12 +86,15 @@ test('editor body content helpers expose scoped rich text classes', function () 
         ->and(matrix_get_editor_body_content_wrapper_class_names())->toContain('lg:py-[100px]');
 });
 
-test('content wrapper padding resolves default and top-only desktop spacing', function () {
+test('content wrapper padding resolves default, top-only, and bottom-only desktop spacing', function () {
     expect(matrix_get_content_wrapper_class_names('default'))->toContain('lg:py-[100px]')
         ->and(matrix_get_content_wrapper_class_names('default'))->not->toContain('lg:pb-0')
         ->and(matrix_get_content_wrapper_class_names('no_bottom'))->toContain('lg:pt-[100px]')
         ->and(matrix_get_content_wrapper_class_names('no_bottom'))->toContain('lg:pb-0')
-        ->and(matrix_get_content_wrapper_class_names('no_bottom'))->not->toContain('lg:py-[100px]');
+        ->and(matrix_get_content_wrapper_class_names('no_bottom'))->not->toContain('lg:py-[100px]')
+        ->and(matrix_get_content_wrapper_class_names('no_top'))->toContain('lg:pt-0')
+        ->and(matrix_get_content_wrapper_class_names('no_top'))->toContain('lg:pb-[100px]')
+        ->and(matrix_resolve_content_vertical_padding('no_top'))->toBe('no_top');
 });
 
 test('flexi section wrapper keeps standard max width and padding', function () {
@@ -131,6 +144,13 @@ test('content color scheme resolves inverse for navy backgrounds', function () {
         ->and($inverse['rich_text'])->toContain('text-white');
 });
 
+test('content rich text visibility treats embed-only markup as visible', function () {
+    expect(matrix_content_has_visible_rich_text('<p>Hello</p>'))->toBeTrue()
+        ->and(matrix_content_has_visible_rich_text('<p>   </p>'))->toBeFalse()
+        ->and(matrix_content_has_visible_rich_text('<p><iframe src="https://www.google.com/maps/embed?pb=x"></iframe></p>'))->toBeTrue()
+        ->and(matrix_content_has_visible_rich_text(''))->toBeFalse();
+});
+
 test('content pdf helpers expose icon and document link classes', function () {
     expect(matrix_get_content_pdf_icon_svg())->toContain('<svg')
         ->and(matrix_get_content_pdf_icon_svg())->toContain('aria-hidden="true"')
@@ -150,7 +170,7 @@ test('content rich text wrapper styles nested headings', function () {
     expect($classes)
         ->toContain('editor-body-content')
         ->and($classes)->toContain('wp_editor')
-        ->and($classes)->toContain('[&_ul]:list-disc');
+        ->and($classes)->toContain('[&_ul]:list-none');
 });
 
 test('policy wysiwyg helper splits intro and h2 sections into formatted blocks', function () {
