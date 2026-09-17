@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Rebuild About Us > Extending/Expanding our services from Drive Library 3.
+ * Rebuild About Us > Our present and future > Extending and enhancing our services
+ * from Drive Library 3 ("Extending/Expanding our services").
  *
  * Source: old/content/.../Extending our services/Extending our services.docx
+ * Canonical path: about-us/our-present-and-future/extending-and-enhancing-our-services
  *
  * wp eval-file wp-content/themes/matrix-starter/scripts/rebuild-extending-our-services-from-drive.php
  */
@@ -14,9 +16,9 @@ if (! defined('ABSPATH')) {
 
 require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
 
-$post_id = (int) (get_page_by_path('about-us/extending-our-services')?->ID ?? 0);
+$post_id = (int) (get_page_by_path('about-us/our-present-and-future/extending-and-enhancing-our-services')?->ID ?? 0);
 if ($post_id === 0) {
-    WP_CLI::error('Could not find about-us/extending-our-services');
+    WP_CLI::error('Could not find about-us/our-present-and-future/extending-and-enhancing-our-services');
 }
 
 $home = untrailingslashit(home_url('/'));
@@ -60,11 +62,12 @@ $enhancing = $p('By enhancing and expanding our services, we can respond to serv
         . $a($urls['dean'], 'outpatient Dean Clinics')
         . ' provide an integrated service where service users can access mental health assessment and treatment for the first time, or as part of their continued care. We will continue to refine and improve our outpatient services by further embedding remote access.');
 
-$hero = matrix_orlaith_hero_row('Expanding our services', $hero_intro, $img_id);
+$page_title = 'Extending and enhancing our services';
+$hero = matrix_orlaith_hero_row($page_title, $hero_intro, $img_id);
 $hero['layout_style'] = $img_id > 0 ? 'image_split' : 'title_accent';
 $hero['text_max_width'] = 'default';
 $hero['heading_max_width'] = 'default';
-$hero['current_crumb_label'] = 'Expanding our services';
+$hero['current_crumb_label'] = $page_title;
 $hero['background_color'] = '#C6ECF4';
 $hero['accent_color'] = '#6FC9C0';
 
@@ -84,12 +87,13 @@ $flexi = [
 
 wp_update_post([
     'ID' => $post_id,
-    'post_title' => 'Expanding our services',
+    'post_title' => $page_title,
+    'post_status' => 'publish',
 ]);
 
 update_field('flexible_content_blocks', $flexi, $post_id);
 
-WP_CLI::success('Rebuilt Extending/Expanding our services ' . $post_id . ' → ' . get_permalink($post_id));
+WP_CLI::success('Rebuilt Extending and enhancing our services ' . $post_id . ' → ' . get_permalink($post_id));
 foreach (get_field('flexible_content_blocks', $post_id) as $i => $row) {
     WP_CLI::log(sprintf('[%d] %s %s', $i, $row['acf_fc_layout'] ?? '', $row['heading'] ?? ''));
 }

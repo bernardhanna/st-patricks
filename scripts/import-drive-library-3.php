@@ -643,7 +643,7 @@ $page_map = [
     ['folder' => '02-Page-content/About Us/Our locations', 'path' => 'about-us/our-locations', 'keep' => true],
     ['folder' => '02-Page-content/About Us/Academic Institute', 'path' => 'academic-institute'],
     ['folder' => '02-Page-content/About Us/Training Centre', 'path' => 'healthcare-professionals/training-centre'],
-    ['folder' => '02-Page-content/About Us/Extending our services', 'path' => 'about-us/extending-our-services'],
+    ['folder' => '02-Page-content/About Us/Extending our services', 'path' => 'about-us/our-present-and-future/extending-and-enhancing-our-services'],
     ['folder' => '02-Page-content/About Us/National centre', 'path' => 'national-centre'],
     ['folder' => '02-Page-content/About Us/New hospital', 'path' => 'new-hospital'],
     ['folder' => '02-Page-content/About Us/Advocacy', 'path' => 'about-us/advocacy'],

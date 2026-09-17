@@ -176,6 +176,7 @@ if (! function_exists('matrix_seed_referrals_cta_rows')) {
                 ],
                 'background_type' => 'color',
                 'background_color' => '#1E244B',
+                'color_scheme' => 'inverse',
             ],
         ];
     }
@@ -477,10 +478,10 @@ $landing_rows = [
             'target' => '',
         ],
         'hero_image' => $hero_image_id,
-        'background_color' => '#1E244B',
+        'background_color' => '#C6ECF4',
         'breadcrumb_background_color' => '#F1F8F9',
-        'heading_color' => '#FFFFFF',
-        'text_color' => '#FFFFFF',
+        'heading_color' => '#08284B',
+        'text_color' => '#08284B',
     ],
     matrix_seed_referrals_useful_links_row($referrals_url),
     [
