@@ -175,12 +175,9 @@ if (! function_exists('matrix_migrate_collect_restyle_image_pool')) {
 
         $pool = array_values(array_unique(array_filter($pool)));
 
-        if ($hero_image_id > 0 && count($pool) > 1) {
+        // Never reuse the page hero elsewhere — leave content image-less if needed.
+        if ($hero_image_id > 0) {
             $pool = array_values(array_filter($pool, static fn (int $id): bool => $id !== $hero_image_id));
-        }
-
-        if ($pool === [] && $hero_image_id > 0) {
-            $pool[] = $hero_image_id;
         }
 
         shuffle($pool);
@@ -649,13 +646,8 @@ if (! function_exists('matrix_migrate_extract_structured_page')) {
                     ];
                 }
 
-                if ($pagination_links !== []) {
-                    $blocks[] = [
-                        'type' => 'pods',
-                        'heading' => 'Continue to',
-                        'items' => $pagination_links,
-                    ];
-                }
+                // Intentionally skip legacy "Continue to" pagination pods —
+                // those sections are no longer used on the restyled site.
             }
         }
 

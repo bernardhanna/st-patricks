@@ -64,6 +64,20 @@ if (! function_exists('esc_html')) {
     }
 }
 
+if (! function_exists('wp_strip_all_tags')) {
+    function wp_strip_all_tags($string, $remove_breaks = false)
+    {
+        $string = preg_replace('@<(script|style)[^>]*?>.*?</\\1>@si', '', (string) $string) ?? (string) $string;
+        $string = strip_tags($string);
+
+        if ($remove_breaks) {
+            $string = preg_replace('/[\\r\\n\\t ]+/', ' ', $string) ?? $string;
+        }
+
+        return trim($string);
+    }
+}
+
 if (! function_exists('esc_attr')) {
     function esc_attr($value)
     {

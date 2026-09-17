@@ -1,6 +1,229 @@
 <?php
 // File: inc/flexible-content-functions.php
 
+if (! function_exists('matrix_normalize_attachment_id')) {
+  /**
+   * @param mixed $value
+   */
+  function matrix_normalize_attachment_id($value): int
+  {
+    if (is_numeric($value)) {
+      return max(0, (int) $value);
+    }
+
+    if (is_array($value)) {
+      return max(0, (int) ($value['ID'] ?? $value['id'] ?? 0));
+    }
+
+    return 0;
+  }
+}
+
+if (! function_exists('matrix_extract_page_hero_image_id_from_rows')) {
+  /**
+   * @param mixed $rows
+   */
+  function matrix_extract_page_hero_image_id_from_rows($rows): int
+  {
+    if (! is_array($rows)) {
+      return 0;
+    }
+
+    foreach ($rows as $row) {
+      if (! is_array($row)) {
+        continue;
+      }
+
+      if (($row['acf_fc_layout'] ?? '') !== 'hero_with_breadcrumbs') {
+        continue;
+      }
+
+      $hero_id = matrix_normalize_attachment_id($row['hero_image'] ?? 0);
+
+      if ($hero_id > 0) {
+        return $hero_id;
+      }
+    }
+
+    return 0;
+  }
+}
+
+if (! function_exists('matrix_get_page_hero_image_id')) {
+  /**
+   * Hero image for the current page's flexi hero block (cached per request).
+   */
+  function matrix_get_page_hero_image_id($post_id = null): int
+  {
+    static $cache = [];
+
+    $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? get_the_ID() : 0));
+
+    if ($post_id < 1) {
+      return 0;
+    }
+
+    if (array_key_exists($post_id, $cache)) {
+      return $cache[$post_id];
+    }
+
+    if (
+      isset($GLOBALS['matrix_page_hero_image_ids'])
+      && is_array($GLOBALS['matrix_page_hero_image_ids'])
+      && array_key_exists($post_id, $GLOBALS['matrix_page_hero_image_ids'])
+    ) {
+      return $cache[$post_id] = (int) $GLOBALS['matrix_page_hero_image_ids'][$post_id];
+    }
+
+    if (! function_exists('get_field')) {
+      return $cache[$post_id] = 0;
+    }
+
+    $rows = get_field('flexible_content_blocks', $post_id);
+
+    return $cache[$post_id] = matrix_extract_page_hero_image_id_from_rows($rows);
+  }
+}
+
+if (! function_exists('matrix_exclude_page_hero_image')) {
+  /**
+   * Clear an image field value when it matches the page hero image.
+   *
+   * @param mixed $image
+   * @return mixed
+   */
+  function matrix_exclude_page_hero_image($image, $post_id = null)
+  {
+    $image_id = matrix_normalize_attachment_id($image);
+
+    if ($image_id < 1) {
+      return $image;
+    }
+
+    $hero_id = matrix_get_page_hero_image_id($post_id);
+
+    if ($hero_id < 1 || $image_id !== $hero_id) {
+      return $image;
+    }
+
+    if (is_array($image)) {
+      return null;
+    }
+
+    if (is_numeric($image)) {
+      return 0;
+    }
+
+    return null;
+  }
+}
+
+if (! function_exists('matrix_exclude_page_hero_from_related_cards')) {
+  /**
+   * @param array<int, array<string, mixed>> $cards
+   * @return array<int, array<string, mixed>>
+   */
+  function matrix_exclude_page_hero_from_related_cards(array $cards, $post_id = null): array
+  {
+    $hero_id = matrix_get_page_hero_image_id($post_id);
+
+    if ($hero_id < 1) {
+      return $cards;
+    }
+
+    foreach ($cards as $index => $card) {
+      if (! is_array($card)) {
+        continue;
+      }
+
+      if ((int) ($card['image_id'] ?? 0) === $hero_id) {
+        $cards[$index]['image_id'] = 0;
+      }
+    }
+
+    return $cards;
+  }
+}
+
+if (! function_exists('matrix_strip_duplicate_hero_images_from_flexi_rows')) {
+  /**
+   * Persistently clear non-hero flexi images that reuse the page hero.
+   *
+   * @param mixed $rows
+   * @return array{rows: array<int, array<string, mixed>>, changed: bool}
+   */
+  function matrix_strip_duplicate_hero_images_from_flexi_rows($rows): array
+  {
+    if (! is_array($rows)) {
+      return ['rows' => [], 'changed' => false];
+    }
+
+    $hero_id = matrix_extract_page_hero_image_id_from_rows($rows);
+    $changed = false;
+
+    if ($hero_id < 1) {
+      return ['rows' => $rows, 'changed' => false];
+    }
+
+    foreach ($rows as $index => $row) {
+      if (! is_array($row)) {
+        continue;
+      }
+
+      $layout = (string) ($row['acf_fc_layout'] ?? '');
+
+      if ($layout === 'hero_with_breadcrumbs') {
+        continue;
+      }
+
+      foreach (['image', 'background_image', 'hero_image'] as $field) {
+        if (! array_key_exists($field, $row)) {
+          continue;
+        }
+
+        if (matrix_normalize_attachment_id($row[$field]) !== $hero_id) {
+          continue;
+        }
+
+        $rows[$index][$field] = is_array($row[$field]) ? null : '';
+        $changed = true;
+      }
+
+      if ($layout === 'related_cards' && ! empty($row['cards']) && is_array($row['cards'])) {
+        foreach ($row['cards'] as $card_index => $card) {
+          if (! is_array($card) || ! array_key_exists('image', $card)) {
+            continue;
+          }
+
+          if (matrix_normalize_attachment_id($card['image']) !== $hero_id) {
+            continue;
+          }
+
+          $rows[$index]['cards'][$card_index]['image'] = is_array($card['image']) ? null : '';
+          $changed = true;
+        }
+      }
+
+      if ($layout === 'story_slider' && ! empty($row['slides']) && is_array($row['slides'])) {
+        foreach ($row['slides'] as $slide_index => $slide) {
+          if (! is_array($slide) || ! array_key_exists('image', $slide)) {
+            continue;
+          }
+
+          if (matrix_normalize_attachment_id($slide['image']) !== $hero_id) {
+            continue;
+          }
+
+          $rows[$index]['slides'][$slide_index]['image'] = is_array($slide['image']) ? null : '';
+          $changed = true;
+        }
+      }
+    }
+
+    return ['rows' => $rows, 'changed' => $changed];
+  }
+}
+
 /**
  * Load Flexible Content Templates
  * 
@@ -13,10 +236,21 @@ function load_flexible_content_templates($post_id = null)
     $post_id = is_home() ? get_option('page_for_posts') : get_the_ID();
   }
 
+  $post_id = (int) $post_id;
+
   // Debugging: Log which page ID is being used
   error_log("Loading Flexible Content for Post ID: " . $post_id);
 
   if ($post_id && have_rows('flexible_content_blocks', $post_id)) {
+    if (! isset($GLOBALS['matrix_page_hero_image_ids']) || ! is_array($GLOBALS['matrix_page_hero_image_ids'])) {
+      $GLOBALS['matrix_page_hero_image_ids'] = [];
+    }
+
+    // Resolve once before the ACF row loop so templates can suppress hero reuse
+    // without calling get_field() mid-loop.
+    $flexi_rows = function_exists('get_field') ? get_field('flexible_content_blocks', $post_id) : null;
+    $GLOBALS['matrix_page_hero_image_ids'][$post_id] = matrix_extract_page_hero_image_id_from_rows($flexi_rows);
+
     $row_index = 0;
     $flex_field = class_exists('Matrix_Export') ? Matrix_Export::FLEX_FIELD : 'flexible_content_blocks';
     while (have_rows('flexible_content_blocks', $post_id)) : the_row();
@@ -96,7 +330,6 @@ function force_hero_as_first_block($value, $post_id, $field)
   }
   return $value;
 }
-add_filter('acf/update_value/name=flexible_content_layout', 'force_hero_as_first_block', 10, 3);
 
 function apply_acf_to_blog_page($query)
 {
@@ -104,4 +337,11 @@ function apply_acf_to_blog_page($query)
     $query->set('page_id', get_option('page_for_posts'));
   }
 }
-add_action('pre_get_posts', 'apply_acf_to_blog_page');
+
+if (function_exists('add_filter')) {
+  add_filter('acf/update_value/name=flexible_content_layout', 'force_hero_as_first_block', 10, 3);
+}
+
+if (function_exists('add_action')) {
+  add_action('pre_get_posts', 'apply_acf_to_blog_page');
+}
