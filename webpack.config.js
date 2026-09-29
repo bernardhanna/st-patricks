@@ -62,7 +62,12 @@ module.exports = {
       },
     },
     hot: false,
-    devMiddleware: { writeToDisk: true },
+    // Never write the webpack-dev-server client into dist/*.js — WP loads those
+    // files on staging/prod. Keep CSS on disk for Local WP; JS stays in memory
+    // and is served by webpack-dev-server while `npm run dev` is running.
+    devMiddleware: {
+      writeToDisk: (filePath) => /\.css$/i.test(filePath),
+    },
     watchFiles: ['assets/**/*.{js,css}'],
     client: {
       overlay: {

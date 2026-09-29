@@ -16,7 +16,7 @@
     "watch:css:app": "nodemon --watch assets/css --ext css --exec \"npm run build:css:app\"",
     "watch:css:editor": "nodemon --watch assets/css/editor.css --exec \"npm run build:css:editor\"",
     "watch:css:woo": "nodemon --watch assets/css/woocommerce.css --exec \"npm run build:css:woo\"",
-    "watch:js": "nodemon --watch assets/js --exec \"webpack --config webpack.config.js\"",
+    "watch:js": "nodemon --watch assets/js --exec \"webpack --mode production --config webpack.config.js\"",
     "dev": "concurrently \"npm run watch:css:app\" \"npm run watch:css:editor\" \"npm run watch:css:woo\" \"webpack serve --config webpack.config.js\"",
     "flexi:install": "bash scripts/flexi-install.sh",
     "test:php": "vendor/bin/pest",
