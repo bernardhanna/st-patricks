@@ -19,8 +19,10 @@ if (! function_exists('matrix_render_nav_mega_menu_trigger_attrs')) {
     {
         $key = matrix_get_nav_mega_menu_key($index);
 
+        // Hover opens for pointer users. Keyboard must press Enter/Space (no focusin open),
+        // otherwise the mega menu sticks open while tabbing the rest of the header.
         printf(
-            'data-nav-mega-trigger="%1$s" @mouseenter="$store.navMega.open(\'%1$s\')" @focusin="$store.navMega.open(\'%1$s\')" @focusout="$store.navMega.scheduleCloseFrom($event, \'%1$s\')"',
+            'data-nav-mega-trigger="%1$s" @mouseenter="$store.navMega.open(\'%1$s\')" @keydown.enter.prevent="$store.navMega.toggle(\'%1$s\')" @keydown.space.prevent="$store.navMega.toggle(\'%1$s\')" @focusout="$store.navMega.closeFromFocusOut($event, \'%1$s\')"',
             esc_attr($key)
         );
     }
@@ -32,8 +34,7 @@ if (! function_exists('matrix_render_nav_mega_menu_shell_attrs')) {
         $key = matrix_get_nav_mega_menu_key($index);
 
         printf(
-            'data-nav-mega-menu x-show="$store.navMega.activeKey === \'%s\'" x-cloak @mouseenter="$store.navMega.open(\'%s\')"',
-            esc_attr($key),
+            'data-nav-mega-menu data-nav-mega-key="%1$s" x-show="$store.navMega.activeKey === \'%1$s\'" x-cloak @mouseenter="$store.navMega.open(\'%1$s\')" @focusin="$store.navMega.cancelClose()" @focusout="$store.navMega.closeFromFocusOut($event, \'%1$s\')"',
             esc_attr($key)
         );
     }
