@@ -305,14 +305,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             class="flex h-full flex-col overflow-hidden rounded-[8px]"
                             style="background-color: <?php echo esc_attr($colors['card_background']); ?>;"
                         >
-                            <a
-                                href="<?php echo esc_url($card_link['url']); ?>"
-                                <?php if ($card_link['target'] === '_blank') { ?>
-                                    target="_blank"
-                                    rel="<?php echo esc_attr($card_link['rel']); ?>"
-                                <?php } ?>
-                                class="block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                            >
+                            <div class="block overflow-hidden">
                                 <?php if ($thumbnail_id > 0) { ?>
                                     <?php
                                     echo wp_get_attachment_image($thumbnail_id, 'large', false, [
@@ -325,7 +318,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                         <?php echo esc_html($title); ?>
                                     </div>
                                 <?php } ?>
-                            </a>
+                            </div>
 
                             <div class="flex flex-col flex-1 p-5 lg:p-6">
                                 <?php if ($primary_category_name !== '') { ?>
@@ -356,6 +349,9 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                         style="color: <?php echo esc_attr($colors['card_title']); ?>;"
                                     >
                                         <?php echo esc_html($title); ?>
+                                        <?php if ($card_link['target'] === '_blank') { ?>
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        <?php } ?>
                                     </a>
                                 </h3>
 

@@ -3,10 +3,12 @@
 @tailwind utilities;
 @tailwind variants;
 html {
- @apply w-full scroll-smooth m-auto;
+ @apply w-full scroll-smooth scroll-pt-[calc(var(--site-header-height,6rem)_+_1rem)] m-auto;
 
  /* max-width: 1920px; */
  @apply font-primary;
+
+ /* Keep focused controls clear of sticky site header (WCAG 2.4.11) */
 }
 html.no-scroll {
  @apply overflow-hidden;
@@ -44,13 +46,15 @@ summary:focus {
  outline: 3px solid #7ED0E0;
 }
 
-/* Dark surfaces (top bar, dark CTAs): white focus ring for contrast */
-.bg-\[\#08284B\] a:focus,
-.bg-\[\#08284B\] button:focus,
-[style*="background-color: #08284B"] a:focus,
-[style*="background-color:#08284B"] a:focus,
-[style*="background-color: #08284B"] button:focus {
- @apply outline-stp-white-solid;
+/* Enlarge common icon-only controls toward 44x44 (WCAG 2.5.5 / 2.5.8) */
+.site-main button.w-8.h-8,
+.site-main a.w-8.h-8,
+footer a.w-8.h-8,
+#site-nav button.w-8.h-8 {
+ @apply min-w-11 min-h-11;
+}
+:focus-visible {
+ @apply focus-visible:scroll-mt-[calc(var(--site-header-height,6rem)_+_1rem)];
 }
 .test-convert {
  @apply text-center rounded-custom-md mt-[16px];

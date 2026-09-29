@@ -41,7 +41,7 @@ $copy_link_id = 'blog-share-copy-' . get_the_ID();
                         <?php if ($is_copy) { ?>
                             <button
                                 type="button"
-                                class="btn inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#C6ECF4] text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                                class="btn inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-[#C6ECF4] text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
                                 data-copy-url="<?php echo esc_attr((string) ($share_link['url'] ?? '')); ?>"
                                 aria-describedby="<?php echo esc_attr($copy_link_id); ?>"
                                 onclick="navigator.clipboard && navigator.clipboard.writeText(this.dataset.copyUrl)"
@@ -56,8 +56,8 @@ $copy_link_id = 'blog-share-copy-' . get_the_ID();
                                 href="<?php echo esc_url((string) ($share_link['url'] ?? '#')); ?>"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="btn inline-flex h-8 w-8 items-center justify-center rounded-full bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                                aria-label="<?php echo esc_attr($label); ?>"
+                                class="btn inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
+                                aria-label="<?php echo esc_attr($label . ' (opens in a new tab)'); ?>"
                             >
                                 <?php if (($share_link['id'] ?? '') === 'facebook') { ?>
                                     <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><path d="M19.723 17L20.1675 14.104H17.389V12.225C17.389 11.433 17.777 10.6605 19.0215 10.6605H20.2845V8.1955C20.2845 8.1955 19.1385 8 18.0425 8C15.7545 8 14.259 9.387 14.259 11.8975V14.1045H11.7155V17H14.259V24H17.389V17L19.723 17Z" fill="#024B79"/></svg>

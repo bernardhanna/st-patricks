@@ -124,6 +124,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                     id="<?php echo esc_attr($section_id); ?>-name"
                     type="text"
                     name="name"
+                    autocomplete="name"
                     placeholder="<?php echo esc_attr($name_ph); ?>"
                     class="flex items-center px-3 py-2 w-full text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent"
                     required
@@ -144,6 +145,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                     id="<?php echo esc_attr($section_id); ?>-email"
                     type="email"
                     name="email"
+                    autocomplete="email"
                     placeholder="<?php echo esc_attr($email_ph); ?>"
                     class="flex flex-1 items-center px-3 py-2 text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent max-sm:w-full"
                     required
@@ -230,6 +232,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               <?php if ($require_tc): ?>
                 <input type="hidden" name="consent" value="" />
               <?php endif; ?>
+              <button type="submit" tabindex="-1"><?php echo esc_html($submit_text); ?></button>
             </form>
           <?php else: ?>
             <!-- Direct POST form (no novalidate so native validation runs) -->
@@ -244,6 +247,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               <?php if ($require_tc): ?>
                 <input type="hidden" name="consent" value="" />
               <?php endif; ?>
+              <button type="submit" tabindex="-1"><?php echo esc_html($submit_text); ?></button>
             </form>
           <?php endif; ?>
         </div>

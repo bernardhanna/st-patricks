@@ -120,17 +120,14 @@ $total_pages = max(1, (int) ($pagination['total'] ?? 1));
                         ?>
                         <article class="<?php echo esc_attr(matrix_get_search_results_card_class_names()); ?>">
                             <?php if ($item_image > 0) { ?>
-                                <a
-                                    href="<?php echo esc_url($item_url); ?>"
-                                    class="<?php echo esc_attr(matrix_get_search_results_card_image_class_names()); ?>"
-                                >
+                                <div class="<?php echo esc_attr(matrix_get_search_results_card_image_class_names()); ?>">
                                     <?php
                                     echo wp_get_attachment_image($item_image, 'medium_large', false, [
                                         'class' => 'h-full w-full object-cover',
                                         'alt' => $item_image_alt,
                                     ]);
                                     ?>
-                                </a>
+                                </div>
                             <?php } ?>
 
                             <div class="flex flex-col flex-1 gap-4 min-w-0">

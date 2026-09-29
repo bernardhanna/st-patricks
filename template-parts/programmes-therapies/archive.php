@@ -209,7 +209,7 @@ $posts_per_page = max(1, (int) ($state['posts_per_page'] ?? 10));
                     <input type="hidden" name="pt_care" x-ref="careInput" :value="care" />
                     <input type="hidden" name="pt_delivery" x-ref="deliveryInput" :value="delivery" />
                     <input type="hidden" name="pt_page" x-ref="pageInput" value="<?php echo esc_attr((string) $current_page); ?>" />
-
+                    <button type="submit" class="sr-only">Apply filters</button>
                     <?php foreach ($type_options as $type_option) { ?>
                         <?php
                         $type_slug = matrix_programmes_therapies_archive_sanitize_slug((string) ($type_option['slug'] ?? ''));

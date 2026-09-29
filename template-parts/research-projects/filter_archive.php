@@ -324,10 +324,7 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                             class="flex h-full flex-col overflow-hidden rounded-[8px]"
                             style="background-color: <?php echo esc_attr($colors['card_background']); ?>;"
                         >
-                            <a
-                                href="<?php echo esc_url($permalink); ?>"
-                                class="block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                            >
+                            <div class="block overflow-hidden">
                                 <?php if ($thumbnail_id > 0) { ?>
                                     <?php
                                     echo wp_get_attachment_image($thumbnail_id, 'large', false, [
@@ -340,7 +337,7 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                                         <?php echo esc_html($title); ?>
                                     </div>
                                 <?php } ?>
-                            </a>
+                            </div>
 
                             <div class="flex flex-col flex-1 p-5 lg:p-6">
                                 <?php if ($primary_category_name !== '') { ?>

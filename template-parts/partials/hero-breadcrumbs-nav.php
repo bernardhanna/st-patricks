@@ -35,7 +35,7 @@ if ($background_color === '') {
                     <a
                         href="<?php echo esc_url($url); ?>"
                         target="<?php echo esc_attr(($breadcrumb_item['target'] ?? '') !== '' ? $breadcrumb_item['target'] : '_self'); ?>"
-                        class="inline-flex w-fit whitespace-nowrap font-primary text-[14px] not-italic font-semibold leading-[20px] text-[#08284B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]"
+                        class="inline-flex w-fit whitespace-nowrap font-primary text-[14px] not-italic font-semibold leading-[20px] text-[#08284B] underline underline-offset-2 transition-colors duration-200 hover:text-[#024B79] hover:no-underline focus-visible:text-[#024B79]"
                         aria-label="<?php echo esc_attr($title); ?>"
                     >
                         <?php echo esc_html($title); ?>

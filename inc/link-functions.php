@@ -492,6 +492,23 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             $rel_parts = array_values(array_unique(array_merge($rel_parts, ['noopener', 'noreferrer'])));
 
             $anchor->setAttribute('rel', implode(' ', $rel_parts));
+
+            // Announce new tab to assistive tech (WCAG 3.2.5 / Silktide new-tab check).
+            $already_announced = (bool) preg_match(
+                '/opens in (a )?new (tab|window)/i',
+                $anchor->textContent . ' ' . $anchor->getAttribute('aria-label')
+            );
+
+            if (! $already_announced) {
+                $existing_label = trim($anchor->getAttribute('aria-label'));
+                if ($existing_label !== '') {
+                    $anchor->setAttribute('aria-label', $existing_label . ' (opens in a new tab)');
+                } else {
+                    $sr = $dom->createElement('span', ' (opens in a new tab)');
+                    $sr->setAttribute('class', 'sr-only');
+                    $anchor->appendChild($sr);
+                }
+            }
         }
 
         // Ensure links have a discernible accessible name (WCAG link-name).

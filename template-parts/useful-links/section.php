@@ -33,8 +33,8 @@ if ($wrapper_classes === '') {
 }
 
 $link_classes = $variant === 'search'
-    ? 'group inline-flex min-h-[32px] items-center text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
-    : 'group inline-flex w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
+    ? 'group inline-flex min-h-11 items-center underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:no-underline focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
+    : 'group inline-flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] underline transition-colors duration-200 hover:!text-[#024B79] hover:no-underline hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
 
 $grid_classes = $variant === 'search'
     ? 'mt-8 grid grid-cols-1 gap-y-4 lg:mt-8 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-4'
@@ -71,6 +71,9 @@ $grid_classes = $variant === 'search'
                     <?php } ?>
                 >
                     <span class="transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
+                    <?php if ($link['target'] === '_blank') { ?>
+                        <span class="sr-only"> (opens in a new tab)</span>
+                    <?php } ?>
                     <?php if ($variant === 'search') { ?>
                         <span class="ml-1 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">&rarr;</span>
                     <?php } else { ?>
