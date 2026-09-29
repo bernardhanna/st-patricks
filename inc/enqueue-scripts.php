@@ -4,9 +4,13 @@
 function matrix_starter_enqueue_scripts()
 {
   $app_css_path = get_template_directory() . '/dist/app.css';
+  $app_js_path  = get_template_directory() . '/dist/app.js';
   $theme_version = file_exists($app_css_path)
     ? (string) filemtime($app_css_path)
     : get_option('theme_css_version', '1.0');
+  $js_version = file_exists($app_js_path)
+    ? (string) filemtime($app_js_path)
+    : '1.0.0';
 
   // Ensure jQuery is present early
   wp_enqueue_script('jquery');
@@ -30,7 +34,7 @@ function matrix_starter_enqueue_scripts()
   $app_css = $is_dev ? '/wp-content/themes/matrix-starter/dist/app.css' : $base . '/dist/app.css';
 
   // Main bundle (footer), depends on jQuery in case you use it inside
-  wp_enqueue_script('matrix-starter', $app_js, ['jquery'], '1.0.0', true);
+  wp_enqueue_script('matrix-starter', $app_js, ['jquery'], $js_version, true);
   wp_enqueue_style('matrix-starter', $app_css, [], $theme_version);
 
   // --- ✅ Alpine.js (CDN) + Intersect plugin ---
