@@ -152,6 +152,7 @@ $blog_filter_archive = [
     ],
 ];
 ?>
+<main id="main-content" class="mt-[0rem] w-full site-main">
 <div class="mt-[0rem] w-full">
     <section
         class="relative flex flex-col overflow-hidden"
@@ -220,3 +221,4 @@ $blog_filter_archive = [
     ]);
     ?>
 </div>
+</main>

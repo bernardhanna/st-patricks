@@ -7,7 +7,8 @@ $button_hover_bg_color = get_field('back_to_top_settings_button_hover_bg_color',
   id="backToTop"
   aria-label="Back to top"
   title="Back to top"
-  class="group flex fixed right-5 bottom-5 invisible justify-center items-center w-14 h-14 rounded-full border-2 opacity-0 transition duration-300 border-primary border-1 focus:outline-none"
+  hidden
+  class="group flex fixed right-5 bottom-5 justify-center items-center w-14 h-14 rounded-full border-2 transition duration-300 border-primary border-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
 >
   <span class="sr-only">Back to top</span>
   <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
@@ -23,15 +24,13 @@ $button_hover_bg_color = get_field('back_to_top_settings_button_hover_bg_color',
     const backToTop = document.getElementById("backToTop");
     if (!backToTop) return;
 
-    window.addEventListener("scroll", function() {
-      if (window.scrollY > 200) {
-        backToTop.classList.remove("opacity-0", "invisible");
-        backToTop.classList.add("opacity-100", "visible");
-      } else {
-        backToTop.classList.remove("opacity-100", "visible");
-        backToTop.classList.add("opacity-0", "invisible");
-      }
-    }, { passive: true });
+    const syncVisibility = function() {
+      const show = window.scrollY > 200;
+      backToTop.hidden = !show;
+    };
+
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    syncVisibility();
 
     backToTop.addEventListener("click", function() {
       window.scrollTo({
