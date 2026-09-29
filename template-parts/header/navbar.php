@@ -66,6 +66,18 @@ document.addEventListener('alpine:init', () => {
       this.activeKey = key;
       requestAnimationFrame(() => this.syncPointer(key));
     },
+    close() {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+      this.activeKey = null;
+    },
+    toggle(key) {
+      if (this.activeKey === key) {
+        this.close();
+        return;
+      }
+      this.open(key);
+    },
     syncPointer(key) {
       const triggerKey = key || this.activeKey;
       if (!triggerKey) return;
@@ -93,12 +105,42 @@ document.addEventListener('alpine:init', () => {
 
       return Boolean(target.closest('#site-nav'));
     },
+    isWithinActiveMega(target, key) {
+      if (!target || typeof target.closest !== 'function' || !key) {
+        return false;
+      }
+
+      const trigger = document.querySelector('[data-nav-mega-trigger="' + key + '"]');
+      if (trigger && (trigger === target || trigger.contains(target))) {
+        return true;
+      }
+
+      const panel = document.querySelector('[data-nav-mega-key="' + key + '"]');
+      if (panel && (panel === target || panel.contains(target))) {
+        return true;
+      }
+
+      return false;
+    },
     scheduleCloseFrom(event, key) {
-      if (this.isWithinNavMegaZone(event?.relatedTarget)) {
+      if (this.isWithinActiveMega(event?.relatedTarget, key)) {
         return;
       }
 
       this.scheduleClose(key);
+    },
+    closeFromFocusOut(event, key) {
+      // Keyboard: close as soon as focus leaves this trigger + its panel.
+      // Do not treat the whole header as "inside" or the menu stays stuck open.
+      if (this.isWithinActiveMega(event?.relatedTarget, key)) {
+        return;
+      }
+
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+      if (this.activeKey === key) {
+        this.activeKey = null;
+      }
     },
     scheduleCloseFromEvent(event) {
       if (this.isWithinNavMegaZone(event?.relatedTarget)) {
@@ -109,6 +151,14 @@ document.addEventListener('alpine:init', () => {
         this.scheduleClose(this.activeKey);
       }
     },
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const store = Alpine.store('navMega');
+    if (store && store.activeKey) {
+      store.close();
+    }
   });
   Alpine.data('navbarSearch', () => ({
     searchOpen: false,
