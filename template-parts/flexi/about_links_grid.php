@@ -42,6 +42,15 @@ $card_partial = function_exists('matrix_get_about_links_grid_card_partial')
         ? 'template-parts/flexi/partials/about-links-grid-card-compact-row'
         : 'template-parts/flexi/partials/about-links-grid-card-image-feature');
 
+$image_url_counts = [];
+foreach ($links as $item) {
+    $image_url = trim((string) ($item['image_url'] ?? ''));
+
+    if ($image_url !== '') {
+        $image_url_counts[$image_url] = ($image_url_counts[$image_url] ?? 0) + 1;
+    }
+}
+
 $padding_classes = [];
 if (have_rows('padding_settings')) {
     while (have_rows('padding_settings')) {
@@ -110,6 +119,10 @@ if (have_rows('padding_settings')) {
 
                     $icon_url = is_array($icon) ? ($icon['url'] ?? '') : '';
                     $icon_alt = is_array($icon) ? ($icon['alt'] ?? ($icon['title'] ?? $title)) : $title;
+
+                    if ($image_url !== '' && ($image_url_counts[$image_url] ?? 0) > 1) {
+                        $image_url = '';
+                    }
 
                     if ($image_url === '' && $icon_url === '' && $title === '' && $description === '' && ! $has_link) {
                         continue;
