@@ -156,7 +156,11 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
 
             <?php if (is_array($footer_button_link) && ! empty($footer_button_link['url'])) { ?>
                 <?php
-                $button_title = (string) ($footer_button_link['title'] ?? 'Learn more');
+                $button_title = matrix_resolve_link_accessible_name(
+                    (string) ($footer_button_link['title'] ?? ''),
+                    (string) ($footer_button_link['url'] ?? ''),
+                    (string) ($heading ?? 'research')
+                );
                 $button_target = (string) ($footer_button_link['target'] ?? '_self');
                 ?>
                 <div class="flex justify-start mt-10 w-full sm:justify-end">
