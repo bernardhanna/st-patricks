@@ -9,7 +9,7 @@ $useful_links = is_array($not_found['useful_links'] ?? null) ? $not_found['usefu
 $section_id = 'not-found-page-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 ?>
 
-<main id="<?php echo esc_attr($section_id); ?>" class="w-full site-main">
+<main id="main-content" class="w-full site-main">
     <section class="bg-white" aria-labelledby="<?php echo esc_attr($section_id); ?>-heading">
         <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-5 py-12 xl:px-0 xl:py-[100px]">
             <?php

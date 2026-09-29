@@ -7,7 +7,7 @@ $default_category = $term instanceof WP_Term ? $term->slug : 'all';
 $term_label = $term instanceof WP_Term ? $term->name : 'Research Projects';
 $archive_url = get_post_type_archive_link('research_projects');
 ?>
-<main class="mt-[0rem] w-full">
+<main id="main-content" class="mt-[0rem] w-full">
     <?php
     get_template_part('template-parts/research-projects/archive', null, [
         'prepare_args' => [

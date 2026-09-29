@@ -4,7 +4,7 @@ get_header();
 
 if (get_post_type() === 'post') {
     ?>
-    <main class="w-full overflow-hidden bg-white">
+    <main id="main-content" class="w-full overflow-hidden bg-white">
         <?php while (have_posts()) { ?>
             <?php the_post(); ?>
 
@@ -51,7 +51,7 @@ if (get_post_type() === 'post') {
 }
 
 ?>
-<main class="overflow-hidden w-full min-h-screen site-main">
+<main id="main-content" class="overflow-hidden w-full min-h-screen site-main">
     <?php get_template_part('template-parts/single/hero'); ?>
 
     <?php

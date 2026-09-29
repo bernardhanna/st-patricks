@@ -9,7 +9,7 @@ $careers_archive = matrix_prepare_careers_archive([
     'base_url' => get_post_type_archive_link('careers'),
 ]);
 ?>
-<main class="mt-[0rem] w-full">
+<main id="main-content" class="mt-[0rem] w-full">
     <?php
     get_template_part('template-parts/careers/archive', null, [
         'careers_archive' => $careers_archive,

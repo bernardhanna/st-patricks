@@ -2,7 +2,7 @@
 
 get_header();
 ?>
-<main class="w-full overflow-hidden bg-white">
+<main id="main-content" class="w-full overflow-hidden bg-white">
     <?php while (have_posts()) { ?>
         <?php the_post(); ?>
 

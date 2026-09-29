@@ -39,15 +39,22 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
           $link = isset($row['link']) ? $row['link'] : null;
           if (!$link || empty($link['url']) || empty($link['title'])) { continue; }
         ?>
+          <?php
+            $link_target = $link['target'] ?: '_self';
+            $opens_new_tab = $link_target === '_blank';
+          ?>
           <a
             href="<?php echo esc_url($link['url']); ?>"
-            class="text-sm font-medium leading-5 text-white transition-opacity cursor-pointer hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white max-md:text-sm"
-            target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-            aria-label="<?php echo esc_attr($link['title']); ?>"
+            class="text-sm font-medium leading-5 text-white transition-opacity cursor-pointer hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-[#08284B] max-md:text-sm"
+            target="<?php echo esc_attr($link_target); ?>"
+            <?php echo $opens_new_tab ? 'rel="noopener noreferrer"' : ''; ?>
           >
-            <div class="text-sm font-medium text-white">
+            <span class="text-sm font-medium text-white">
               <?php echo esc_html($link['title']); ?>
-            </div>
+              <?php if ($opens_new_tab) : ?>
+                <span class="sr-only">(opens in a new tab)</span>
+              <?php endif; ?>
+            </span>
           </a>
         <?php endforeach; ?>
       </nav>
@@ -60,7 +67,7 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
           <div>
          <a
           href="<?php echo esc_url($topbar_phone['url']); ?>"
-          class="text-sm font-medium leading-5 text-white transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white max-sm:text-sm max-md:hidden"
+          class="text-sm font-medium leading-5 text-white transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-[#08284B] max-sm:text-sm max-md:hidden"
           aria-label="Call <?php echo esc_attr($topbar_phone['title']); ?>"
         >
             <svg

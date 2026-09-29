@@ -11,7 +11,7 @@ get_header('shop');
 $shop_title = woocommerce_page_title(false);
 ?>
 
-<main class="flex relative flex-col gap-2.5 items-center px-0 pt-[8rem] lg:pt-[15rem] pb-32 w-full lg:min-h-screen">
+<main id="main-content" class="flex relative flex-col gap-2.5 items-center px-0 pt-[8rem] lg:pt-[15rem] pb-32 w-full lg:min-h-screen">
   <div class="flex relative flex-col gap-16 justify-center items-start w-full mx-auto max-w-[1140px] px-5 max-md:gap-10 max-sm:gap-8">
 
     <!-- Breadcrumb -->

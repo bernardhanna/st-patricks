@@ -17,6 +17,58 @@ body {
   @apply font-primary;
 }
 
+/* Skip link: visually hidden until keyboard focus (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background: #08284B;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #7ED0E0;
+  outline-offset: 2px;
+}
+
+/*
+ * Keyboard focus appearance (WCAG 2.4.11 / 2.4.13).
+ * Prefer :focus (not only :focus-visible) so automated audits and
+ * assistive tech that set focus programmatically still see a ring.
+ */
+a:focus,
+button:focus,
+[role="button"]:focus,
+[role="tab"]:focus,
+[role="menuitem"]:focus,
+input:focus,
+select:focus,
+textarea:focus,
+summary:focus {
+  outline: 3px solid #7ED0E0;
+  outline-offset: 2px;
+}
+
+/* Dark surfaces (top bar, dark CTAs): white focus ring for contrast */
+.bg-\[\#08284B\] a:focus,
+.bg-\[\#08284B\] button:focus,
+[style*="background-color: #08284B"] a:focus,
+[style*="background-color:#08284B"] a:focus,
+[style*="background-color: #08284B"] button:focus {
+  outline-color: #ffffff;
+}
+
 .test-convert {
   margin-top: 16px;
   text-align: center;

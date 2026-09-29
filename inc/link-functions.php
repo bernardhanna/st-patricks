@@ -77,6 +77,30 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_is_meaningful_outbound_url')) {
+    /**
+     * True when a URL is worth rendering as a social/outbound control.
+     * Hides empty, hash-only, and same-site homepage placeholders that create
+     * adjacent duplicate links in accessibility audits.
+     */
+    function matrix_is_meaningful_outbound_url(string $url): bool
+    {
+        $url = trim($url);
+        if ($url === '' || $url === '#' || stripos($url, 'javascript:') === 0) {
+            return false;
+        }
+
+        $normalized = untrailingslashit(strtolower(esc_url_raw($url)));
+        $home = untrailingslashit(strtolower(home_url('/')));
+
+        if ($normalized === '' || $normalized === $home) {
+            return false;
+        }
+
+        return true;
+    }
+}
+
 if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
     function matrix_link_newsletter_subtext_click_here(string $html): string
     {
@@ -87,7 +111,7 @@ if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
         $href = esc_url(home_url('/campaigns/subscribe-to-our-gp-enewsletter/'));
         $linked = preg_replace(
             '/\bclick here\b/i',
-            '<a href="' . $href . '">$0</a>',
+            '<a href="' . $href . '">subscribe to our GP e-newsletter</a>',
             $html,
             1
         );
