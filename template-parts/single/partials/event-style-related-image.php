@@ -9,22 +9,12 @@ if ($card === []) {
 }
 
 $title = (string) ($card['title'] ?? '');
-$href = (string) ($card['thumbnail_href'] ?? $card['permalink'] ?? '#');
-$target = (string) ($card['thumbnail_target'] ?? '_self');
-$rel = (string) ($card['thumbnail_rel'] ?? '');
 $image_id = (int) ($card['image_id'] ?? 0);
 $image_alt = (string) ($card['image_alt'] ?? $title);
 $use_webinar_placeholder = ! empty($card['use_webinar_placeholder']);
 ?>
 
-<a
-    href="<?php echo esc_url($href); ?>"
-    <?php if ($target === '_blank') { ?>
-        target="_blank"
-        rel="<?php echo esc_attr($rel !== '' ? $rel : 'noopener noreferrer'); ?>"
-    <?php } ?>
-    class="block overflow-hidden rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
->
+<div class="block overflow-hidden rounded-[4px]">
     <?php if ($use_webinar_placeholder) { ?>
         <?php
         get_template_part('template-parts/single/partials/webinar-single-placeholder', null, [
@@ -44,4 +34,4 @@ $use_webinar_placeholder = ! empty($card['use_webinar_placeholder']);
             <?php echo esc_html($title); ?>
         </div>
     <?php } ?>
-</a>
+</div>

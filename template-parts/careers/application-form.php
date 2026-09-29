@@ -14,7 +14,7 @@ $render_yes_no = static function (string $name, string $label, array $options, s
     $group_id = $form_id . '-' . $name;
     ?>
     <fieldset class="portal-contact-form__field">
-        <legend class="portal-contact-form__label">
+        <legend id="<?php echo esc_attr($group_id); ?>-legend" class="portal-contact-form__label">
             <?php echo esc_html($label); ?><?php if ($required) { ?><span class="portal-contact-form__required" aria-hidden="true">*</span><?php } ?>
         </legend>
         <div class="portal-contact-form__radio-group" role="radiogroup" aria-labelledby="<?php echo esc_attr($group_id); ?>-legend">

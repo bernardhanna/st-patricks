@@ -9,6 +9,8 @@ html {
   width: 100%;
   margin: auto;
   scroll-behavior: smooth;
+  /* Keep focused controls clear of sticky site header (WCAG 2.4.11) */
+  scroll-padding-top: calc(var(--site-header-height, 6rem) + 1rem);
 }
 
 html.no-scroll { overflow: hidden; }
@@ -60,13 +62,17 @@ summary:focus {
   outline-offset: 2px;
 }
 
-/* Dark surfaces (top bar, dark CTAs): white focus ring for contrast */
-.bg-\[\#08284B\] a:focus,
-.bg-\[\#08284B\] button:focus,
-[style*="background-color: #08284B"] a:focus,
-[style*="background-color:#08284B"] a:focus,
-[style*="background-color: #08284B"] button:focus {
-  outline-color: #ffffff;
+/* Enlarge common icon-only controls toward 44x44 (WCAG 2.5.5 / 2.5.8) */
+.site-main button.w-8.h-8,
+.site-main a.w-8.h-8,
+footer a.w-8.h-8,
+#site-nav button.w-8.h-8 {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
+:focus-visible {
+  scroll-margin-top: calc(var(--site-header-height, 6rem) + 1rem);
 }
 
 .test-convert {

@@ -1933,6 +1933,9 @@ input:where([type='file']):focus {
 .min-h-0 {
   min-height: 0px;
 }
+.min-h-11 {
+  min-height: 2.75rem;
+}
 .min-h-12 {
   min-height: 3rem;
 }
@@ -1965,9 +1968,6 @@ input:where([type='file']):focus {
 }
 .min-h-\[320px\] {
   min-height: 320px;
-}
-.min-h-\[32px\] {
-  min-height: 32px;
 }
 .min-h-\[33px\] {
   min-height: 33px;
@@ -2267,6 +2267,9 @@ input:where([type='file']):focus {
 }
 .min-w-0 {
   min-width: 0px;
+}
+.min-w-11 {
+  min-width: 2.75rem;
 }
 .min-w-60 {
   min-width: 15rem;
@@ -45561,11 +45564,14 @@ input:where([type='file']):focus {
 html {
   margin: auto;
   width: 100%;
+  scroll-padding-top: calc(var(--site-header-height,6rem) + 1rem);
   scroll-behavior: smooth;
 
  /* max-width: 1920px; */
 
  font-family: Inter, system-ui, sans-serif;
+
+ /* Keep focused controls clear of sticky site header (WCAG 2.4.11) */
 }
 html.no-scroll {
   overflow: hidden;
@@ -45625,13 +45631,16 @@ summary:focus {
  outline: 3px solid #7ED0E0;
 }
 
-/* Dark surfaces (top bar, dark CTAs): white focus ring for contrast */
-.bg-\[\#08284B\] a:focus,
-.bg-\[\#08284B\] button:focus,
-[style*="background-color: #08284B"] a:focus,
-[style*="background-color:#08284B"] a:focus,
-[style*="background-color: #08284B"] button:focus {
-  outline-color: rgba(255, 255, 255, 1);
+/* Enlarge common icon-only controls toward 44x44 (WCAG 2.5.5 / 2.5.8) */
+.site-main button.w-8.h-8,
+.site-main a.w-8.h-8,
+footer a.w-8.h-8,
+#site-nav button.w-8.h-8 {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+:focus-visible:focus-visible {
+  scroll-margin-top: calc(var(--site-header-height,6rem) + 1rem);
 }
 .test-convert {
   margin-top: 16px;
@@ -45697,25 +45706,11 @@ summary:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(8 40 75 / var(--tw-bg-opacity, 1));
 }
-.hamburger.is-active .hamburger-inner a:focus,.hamburger.is-active .hamburger-inner button:focus,
-.hamburger.is-active .hamburger-inner a:focus:after,
-.hamburger.is-active .hamburger-inner button:focus:after,
-.hamburger.is-active .hamburger-inner a:focus:before,
-.hamburger.is-active .hamburger-inner button:focus:before {
-  outline-color: rgba(255, 255, 255, 1);
-}
 .hamburger-inner,
 .hamburger-inner:after,
 .hamburger-inner:before {
   --tw-bg-opacity: 1;
   background-color: rgb(8 40 75 / var(--tw-bg-opacity, 1));
-}
-.hamburger-inner a:focus,.hamburger-inner button:focus,
-.hamburger-inner a:focus:after,
-.hamburger-inner button:focus:after,
-.hamburger-inner a:focus:before,
-.hamburger-inner button:focus:before {
-  outline-color: rgba(255, 255, 255, 1);
 }
 .nav_btn {
   display: flex;
@@ -46056,6 +46051,13 @@ summary:focus {
   overflow: hidden;
   border-radius: 0.25rem;
 }
+.site-main button.checkbox-wrapper.h-8,
+.site-main a.checkbox-wrapper.h-8,
+footer a.checkbox-wrapper.h-8,
+#site-nav button.checkbox-wrapper.h-8 {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
 .privacy-text {
   margin-top: auto;
   margin-bottom: auto;
@@ -46392,9 +46394,6 @@ summary:focus {
   --tw-shadow: 0 8px 24px rgba(8,40,75,0.24);
   --tw-shadow-colored: 0 8px 24px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-.portal-contact-form__toast a:focus,.portal-contact-form__toast button:focus {
-  outline-color: rgba(255, 255, 255, 1);
 }
 .portal-contact-form__toast.is-visible {
   display: block;

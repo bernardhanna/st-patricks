@@ -32,17 +32,14 @@ $heading = (string) ($defaults['related_heading'] ?? 'Related Links');
                 ?>
                 <article class="flex flex-col gap-6 rounded-[8px] bg-[#FBFAF7] p-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
                     <?php if ($card['image_id'] > 0) { ?>
-                        <a
-                            href="<?php echo esc_url((string) ($card['thumbnail_href'] ?? $card['permalink'])); ?>"
-                            class="block overflow-hidden rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
-                        >
+                        <div class="block overflow-hidden rounded-[4px]">
                             <?php
                             echo wp_get_attachment_image($card['image_id'], 'medium_large', false, [
                                 'class' => 'h-[186px] w-full object-cover',
                                 'alt' => $card['image_alt'] !== '' ? $card['image_alt'] : $card['title'],
                             ]);
                             ?>
-                        </a>
+                        </div>
                     <?php } ?>
 
                     <div class="flex flex-col gap-4">

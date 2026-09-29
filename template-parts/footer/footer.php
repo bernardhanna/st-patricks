@@ -498,9 +498,12 @@ $mob_icons = [
                                     <span class="self-stretch my-auto text-sky-200" aria-hidden="true">|</span>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] underline underline-offset-2 transition-colors duration-200 hover:text-[#024B79] hover:no-underline focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                                            <?php if (($link['target'] ?: '_self') === '_blank') : ?>
+                                                <span class="sr-only"> (opens in a new tab)</span>
+                                            <?php endif; ?>
                                         </span>
                                     </a>
                                 <?php endforeach; ?>

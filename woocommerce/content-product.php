@@ -65,7 +65,7 @@ $add_to_cart_html = preg_replace(
   1
 );
 ?>
-<article <?php wc_product_class('relative bg-white rounded border-2 border-[#D6DFE4] border-solid', $product); ?> role="article" aria-labelledby="product-'<?php echo esc_attr($product_id); ?>'-title">
+<article <?php wc_product_class('relative bg-white rounded border-2 border-[#D6DFE4] border-solid', $product); ?> role="article" aria-labelledby="product-<?php echo esc_attr($product_id); ?>-title">
   <div class="flex flex-col h-full">
     <!-- Top: Image box (rounded, bordered) with optional voltage badge -->
     <header class="relative overflow-hidden bg-white  h-[200px] w-full max-md:h-[180px]">
@@ -79,7 +79,7 @@ $add_to_cart_html = preg_replace(
         </div>
       <?php endif; ?>
 
-      <a href="<?php echo esc_url($permalink); ?>" class="flex absolute inset-0 justify-center items-center p-3 border-b-2 border-[#D6DFE4] border-solid" aria-label="<?php echo esc_attr($title); ?>">
+      <div class="flex absolute inset-0 justify-center items-center p-3 border-b-2 border-[#D6DFE4] border-solid">
         <?php
         if ($image_html) {
           // Wrap your image in a fixed box to mimic exact placement
@@ -92,7 +92,7 @@ $add_to_cart_html = preg_replace(
           );
         }
         ?>
-      </a>
+      </div>
     </header>
 
     <!-- Middle: Title + (optional) short description -->

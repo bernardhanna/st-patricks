@@ -80,7 +80,7 @@ function matrix_get_key_contact_info_contact_row_class_names()
 
 function matrix_get_key_contact_info_contact_text_class_names()
 {
-    return 'font-primary text-[16px] font-medium leading-[28px] text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+    return 'font-primary text-[16px] font-medium leading-[28px] text-[#08284B] underline transition-colors hover:text-[#024B79] hover:no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 }
 
 function matrix_get_key_contact_info_chevron_svg()

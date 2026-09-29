@@ -61,12 +61,24 @@ $heading = (string) ($defaults['related_heading'] ?? 'Related Links');
                             </span>
                         <?php } ?>
 
+                        <?php
+                        $related_href = (string) ($card['thumbnail_href'] ?? $card['permalink'] ?? '');
+                        $related_target = (string) ($card['thumbnail_target'] ?? '_self');
+                        $related_rel = (string) ($card['thumbnail_rel'] ?? '');
+                        ?>
                         <h3 class="font-primary text-[20px] font-semibold leading-[24px] tracking-[-0.12px] text-[#1E244B]">
                             <a
-                                href="<?php echo esc_url($card['permalink']); ?>"
+                                href="<?php echo esc_url($related_href); ?>"
+                                <?php if ($related_target === '_blank') { ?>
+                                    target="_blank"
+                                    rel="<?php echo esc_attr($related_rel !== '' ? $related_rel : 'noopener noreferrer'); ?>"
+                                <?php } ?>
                                 class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]"
                             >
                                 <?php echo esc_html($card['title']); ?>
+                                <?php if ($related_target === '_blank') { ?>
+                                    <span class="sr-only"> (opens in a new tab)</span>
+                                <?php } ?>
                             </a>
                         </h3>
 

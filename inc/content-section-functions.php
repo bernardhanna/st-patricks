@@ -271,14 +271,14 @@ function matrix_get_content_theme_classes(string $color_scheme = 'default'): arr
         return [
             'heading' => 'text-white',
             'rich_text' => 'text-white [&_p]:text-white [&_li]:text-white [&_span]:text-white [&_strong]:text-white [&_b]:text-white [&_a]:text-white [&_a]:underline hover:[&_a]:no-underline',
-            'document_link' => 'text-white hover:text-white/90 focus-visible:text-white/90',
+            'document_link' => 'text-white underline hover:text-white/90 hover:no-underline focus-visible:text-white/90',
         ];
     }
 
     return [
         'heading' => 'text-[#1E244B]',
         'rich_text' => 'text-[#08284B] [&_a:not(.btn)]:text-[#024B79] [&_a:not(.btn)]:underline hover:[&_a:not(.btn)]:no-underline',
-        'document_link' => 'text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] focus-visible:text-[#024B79]',
+        'document_link' => 'text-[#1E244B] underline transition-colors duration-200 hover:text-[#024B79] hover:no-underline focus-visible:text-[#024B79]',
     ];
 }
 
