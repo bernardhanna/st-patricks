@@ -182,8 +182,10 @@ $mob_icons = [
           $platform = $s['platform'] ?? '';
           $url      = $s['url'] ?? '';
           $target   = $s['target'] ?? '_blank';
-          if (!$url) continue; ?>
-          <a href="<?php echo esc_url($url); ?>" target="<?php echo esc_attr($target); ?>" <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?> class="flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-primary-light hover:bg-opacity-80" aria-label="<?php echo esc_attr(ucfirst($platform)); ?>">
+          if (! matrix_is_meaningful_outbound_url((string) $url)) {
+            continue;
+          } ?>
+          <a href="<?php echo esc_url($url); ?>" target="<?php echo esc_attr($target); ?>" <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?> class="flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-primary-light hover:bg-opacity-80" aria-label="<?php echo esc_attr(ucfirst($platform) . ($target === '_blank' ? ' (opens in a new tab)' : '')); ?>">
             <?php echo $mob_icons[$platform] ?? ''; ?>
           </a>
         <?php endforeach; endif; ?>
@@ -464,11 +466,13 @@ $mob_icons = [
                                         $platform = $s['platform'] ?? '';
                                         $url      = $s['url'] ?? '';
                                         $target   = $s['target'] ?? '_blank';
-                                        if (!$url) continue; ?>
+                                        if (! matrix_is_meaningful_outbound_url((string) $url)) {
+                                            continue;
+                                        } ?>
                                         <a href="<?php echo esc_url($url); ?>"
                                            target="<?php echo esc_attr($target); ?>"
                                            <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?>
-                                           aria-label="<?php echo esc_attr(ucfirst($platform)); ?>"
+                                           aria-label="<?php echo esc_attr(ucfirst($platform) . ($target === '_blank' ? ' (opens in a new tab)' : '')); ?>"
                                            class="flex justify-center items-center w-8 h-8 bg-sky-200 rounded-[32px] btn hover:bg-opacity-80 focus:bg-opacity-80">
                                             <?php echo $icons[$platform] ?? ''; ?>
                                         </a>

@@ -96,6 +96,7 @@ require_once get_template_directory() . '/inc/what-we-offer-functions.php';
 require_once get_template_directory() . '/inc/about-links-grid-functions.php';
 require_once get_template_directory() . '/inc/mega-menu-render.php';
 require_once get_template_directory() . '/inc/flexible-content-functions.php';
+require_once get_template_directory() . '/inc/page-section-taxonomy.php';
 
 // Function to handle Tailwind config updates and trigger rebuilds
 function handle_tailwind_config_update()

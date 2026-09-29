@@ -137,7 +137,7 @@ $team_members = [
     'Tara Deehan, Senior Counselling Psychologist',
 ];
 
-$team_list = '<ul>';
+$team_list = '<ul class="list-plain">';
 foreach ($team_members as $member) {
     $team_list .= '<li>' . esc_html($member) . '</li>';
 }

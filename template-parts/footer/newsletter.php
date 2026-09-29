@@ -27,15 +27,25 @@ $heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, an
 $subtext = get_field('newsletter_subtext', 'option'); // WYSIWYG
 $healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
 
-if (! empty($subtext) && stripos((string) $subtext, '<a') === false) {
-  $subtext = preg_replace_callback(
-    '/\bclick here\b/i',
-    function ($matches) use ($healthcare_newsletter_url) {
-      return '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#7ED0E0] hover:underline">' . esc_html($matches[0]) . '</a>';
-    },
-    (string) $subtext,
-    1
-  );
+if (! empty($subtext)) {
+  $subtext = (string) $subtext;
+
+  // Prefer descriptive link text over "click here" (WCAG 2.4.4).
+  if (stripos($subtext, '<a') !== false) {
+    $subtext = preg_replace(
+      '/(<a\b[^>]*>)\s*click here\s*(<\/a>)/i',
+      '$1subscribe to our GP e-newsletter$2',
+      $subtext,
+      1
+    ) ?? $subtext;
+  } else {
+    $subtext = preg_replace(
+      '/\bclick here\b/i',
+      '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#7ED0E0] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>',
+      $subtext,
+      1
+    ) ?? $subtext;
+  }
 }
 
 // Form

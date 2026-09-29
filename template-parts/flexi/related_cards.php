@@ -16,6 +16,8 @@ get_template_part('template-parts/partials/related-cards-section', null, [
         'background_color' => (string) (get_sub_field('background_color') ?: '#FFFFFF'),
         'columns' => (string) (get_sub_field('columns') ?: '3'),
         'wrapper_classes' => $wrapper_classes,
-        'cards' => matrix_normalize_related_cards(get_sub_field('cards')),
+        'cards' => matrix_exclude_page_hero_from_related_cards(
+            matrix_normalize_related_cards(get_sub_field('cards'))
+        ),
     ],
 ]);

@@ -17,6 +17,58 @@ body {
   @apply font-primary;
 }
 
+/* Skip link: visually hidden until keyboard focus (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  background: #08284B;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #7ED0E0;
+  outline-offset: 2px;
+}
+
+/*
+ * Keyboard focus appearance (WCAG 2.4.11 / 2.4.13).
+ * Prefer :focus (not only :focus-visible) so automated audits and
+ * assistive tech that set focus programmatically still see a ring.
+ */
+a:focus,
+button:focus,
+[role="button"]:focus,
+[role="tab"]:focus,
+[role="menuitem"]:focus,
+input:focus,
+select:focus,
+textarea:focus,
+summary:focus {
+  outline: 3px solid #7ED0E0;
+  outline-offset: 2px;
+}
+
+/* Dark surfaces (top bar, dark CTAs): white focus ring for contrast */
+.bg-\[\#08284B\] a:focus,
+.bg-\[\#08284B\] button:focus,
+[style*="background-color: #08284B"] a:focus,
+[style*="background-color:#08284B"] a:focus,
+[style*="background-color: #08284B"] button:focus {
+  outline-color: #ffffff;
+}
+
 .test-convert {
   margin-top: 16px;
   text-align: center;
@@ -101,7 +153,7 @@ body {
   /* Lists */
 
   .is-not-woo .wp_editor .entry-content ul {
-    @apply mb-4 list-disc list-inside;
+    @apply mb-4 list-none pl-6;
   }
 
   .is-not-woo .wp_editor .entry-content ol {
@@ -231,7 +283,7 @@ body {
 
   .editor-body-content ul,
   .blog-single-content ul {
-    @apply pl-6 mb-8 list-disc;
+    @apply pl-6 mb-8 list-none;
     list-style-position: outside;
   }
 
@@ -465,7 +517,7 @@ body {
 .is-not-woo .wp_editor.entry-content ul,
 .is-not-woo .editor-body-content ul,
 .is-not-woo .blog-single-content ul {
-  @apply pl-6 mb-8 list-disc;
+  @apply pl-6 mb-8 list-none;
   list-style-position: outside;
 }
 
@@ -903,7 +955,52 @@ body {
 }
 
 .careers-job-description ul {
-  @apply mb-4 list-disc pl-6;
+  @apply mb-4 list-none pl-6;
+}
+
+/* Teal tick markers for content unordered lists (leave ol / UI lists alone) */
+.wp_editor ul > li,
+.editor-body-content ul > li,
+.blog-single-content ul > li,
+.careers-job-description ul > li,
+.entry-content ul > li {
+  position: relative;
+}
+
+.wp_editor ul > li::before,
+.editor-body-content ul > li::before,
+.blog-single-content ul > li::before,
+.careers-job-description ul > li::before,
+.entry-content ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0.4em;
+  width: 1rem;
+  height: 1rem;
+  /* Fully percent-encoded so css-to-tailwindcss does not rewrite spaces to underscores */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%3E%3Cpath%20d='M3.5%208.5L6.5%2011.5L12.5%204.5'%20stroke='%236FC9C0'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Name directories / plain lists: no tick markers or marker gutter */
+.wp_editor ul.list-plain,
+.editor-body-content ul.list-plain,
+.blog-single-content ul.list-plain,
+.careers-job-description ul.list-plain,
+.entry-content ul.list-plain {
+  padding-left: 0;
+}
+
+.wp_editor ul.list-plain > li::before,
+.editor-body-content ul.list-plain > li::before,
+.blog-single-content ul.list-plain > li::before,
+.careers-job-description ul.list-plain > li::before,
+.entry-content ul.list-plain > li::before {
+  content: none;
+  display: none;
 }
 
 .careers-job-description p {
@@ -962,6 +1059,24 @@ body {
 .editor-body-content :is(strong, b),
 .blog-single-content :is(strong, b) {
   @apply font-semibold text-[#08284B];
+}
+
+/* Inverse content sections (e.g. navy backgrounds) — beat default editor body colours */
+[data-content-scheme="inverse"] .editor-body-content,
+[data-content-scheme="inverse"] .editor-body-content :is(p, li, span, td, th, strong, b),
+[data-content-scheme="inverse"] .wp_editor.editor-body-content :is(p, li, span, td, th, strong, b) {
+  @apply text-white;
+}
+
+[data-content-scheme="inverse"] .editor-body-content :is(h1, h2, h3, h4, h5, h6),
+[data-content-scheme="inverse"] .wp_editor.editor-body-content :is(h1, h2, h3, h4, h5, h6) {
+  @apply text-white;
+}
+
+[data-content-scheme="inverse"] .editor-body-content a:not(.btn),
+[data-content-scheme="inverse"] .wp_editor.editor-body-content a:not(.btn),
+[data-content-scheme="inverse"] .wp-singular .editor-body-content a:not(.btn) {
+  @apply text-white underline hover:no-underline;
 }
 
 /* Image Styling */

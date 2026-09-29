@@ -39,12 +39,30 @@ if (! function_exists('matrix_is_external_url')) {
     }
 }
 
+if (! function_exists('matrix_is_pdf_url')) {
+    function matrix_is_pdf_url(string $url): bool
+    {
+        $url = trim($url);
+
+        if ($url === '') {
+            return false;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        $candidate = is_string($path) && $path !== '' ? $path : $url;
+        $candidate = explode('?', $candidate, 2)[0];
+        $candidate = explode('#', $candidate, 2)[0];
+
+        return str_ends_with(strtolower($candidate), '.pdf');
+    }
+}
+
 if (! function_exists('matrix_normalize_link_target')) {
     function matrix_normalize_link_target(string $url, string $target = ''): string
     {
         $target = trim($target);
 
-        if ($target === '_blank' || matrix_is_external_url($url)) {
+        if ($target === '_blank' || matrix_is_external_url($url) || matrix_is_pdf_url($url)) {
             return '_blank';
         }
 
@@ -59,6 +77,30 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_is_meaningful_outbound_url')) {
+    /**
+     * True when a URL is worth rendering as a social/outbound control.
+     * Hides empty, hash-only, and same-site homepage placeholders that create
+     * adjacent duplicate links in accessibility audits.
+     */
+    function matrix_is_meaningful_outbound_url(string $url): bool
+    {
+        $url = trim($url);
+        if ($url === '' || $url === '#' || stripos($url, 'javascript:') === 0) {
+            return false;
+        }
+
+        $normalized = untrailingslashit(strtolower(esc_url_raw($url)));
+        $home = untrailingslashit(strtolower(home_url('/')));
+
+        if ($normalized === '' || $normalized === $home) {
+            return false;
+        }
+
+        return true;
+    }
+}
+
 if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
     function matrix_link_newsletter_subtext_click_here(string $html): string
     {
@@ -69,7 +111,7 @@ if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
         $href = esc_url(home_url('/campaigns/subscribe-to-our-gp-enewsletter/'));
         $linked = preg_replace(
             '/\bclick here\b/i',
-            '<a href="' . $href . '">$0</a>',
+            '<a href="' . $href . '">subscribe to our GP e-newsletter</a>',
             $html,
             1
         );
@@ -439,7 +481,7 @@ if (! function_exists('matrix_process_external_links_in_html')) {
 
             $href = trim($anchor->getAttribute('href'));
 
-            if ($href === '' || ! matrix_is_external_url($href)) {
+            if ($href === '' || (! matrix_is_external_url($href) && ! matrix_is_pdf_url($href))) {
                 continue;
             }
 
@@ -611,17 +653,81 @@ if (function_exists('add_filter')) {
 
 if (! function_exists('matrix_get_theme_path_redirect_map')) {
     /**
+     * Theme-level 301 redirects for legacy / deleted paths.
+     *
+     * Base map covers hierarchy moves and legacy slugs. Workbook "Delete"
+     * destinations are merged from old/content/delete-redirect-map.json when present.
+     *
      * @return array<string, string>
      */
     function matrix_get_theme_path_redirect_map(): array
     {
-        return [
+        $map = [
+            // Legacy make-a-referral paths
             'make-a-referral/refer-an-adult-for-inpatient-care' => '/healthcare-professionals/refer-an-adult-for-inpatient-care/',
             'make-a-referral/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent-for-inpatient-care/',
             'make-a-referral/refer-to-the-st-patricks-at-home-service' => '/healthcare-professionals/refer-to-the-st-patricks-at-home-service/',
             'make-a-referral/refer-for-outpatient-care' => '/healthcare-professionals/refer-for-outpatient-care/',
             'make-a-referral/refer-to-a-day-programme' => '/healthcare-professionals/refer-to-a-day-programme/',
+            'make-a-referral' => '/healthcare-professionals/',
+
+            // Day programmes
+            'service-users-and-visitors/attending-our-day-programmes' => '/what-we-offer/day-programmes/',
+            'attending-our-day-programmes' => '/what-we-offer/day-programmes/',
+
+            // Renamed pages
+            'service-users-and-visitors/schizophrenia-and-psychosis' => '/service-users-and-visitors/schizophrenia/',
+
+            // Hierarchy fixes - pages moved to correct parents per Slickplan sitemap
+            'national-centre' => '/about-us/our-present-and-future/national-centre/',
+            'new-hospital' => '/about-us/our-present-and-future/new-hospital/',
+            'advocacy-centre' => '/about-us/our-present-and-future/advocacy-centre/',
+            'academic-institute' => '/about-us/our-present-and-future/academic-institute/',
+            'traning-centre' => '/about-us/our-present-and-future/traning-centre/',
+            'extending-and-enhancing-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',
+            'about-us/extending-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',
+            'extending-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',
+            'about-us/partnering-with-service-users' => '/about-us/our-present-and-future/partnering-with-service-users/',
+            'about-us/psychiatrists' => '/about-us/our-team/psychiatrists/',
+            'about-us/social-workers' => '/about-us/our-team/social-workers/',
+            'about-us/nurses' => '/about-us/our-team/nurses/',
+            'about-us/occupational-therapists' => '/about-us/our-team/occupational-therapists/',
+            'about-us/psychologists' => '/about-us/our-team/psychologists/',
+            'about-us/pharmacists' => '/about-us/our-team/pharmacists/',
+            'careers' => '/about-us/careers/',
+            'careers/attending-an-interview' => '/about-us/careers/attending-an-interview/',
+            'recruitment-and-useful-information' => '/about-us/careers/recruitment-and-useful-information/',
+            'recruitment-and-useful-information/staff-wellbeing' => '/about-us/careers/recruitment-and-useful-information/staff-wellbeing/',
+            'recruitment-and-useful-information/how-to-get-work-experience' => '/about-us/careers/recruitment-and-useful-information/how-to-get-work-experience/',
+            'recruitment-and-useful-information/how-to-apply-for-a-role' => '/about-us/careers/recruitment-and-useful-information/how-to-apply-for-a-role/',
+            'training-centre' => '/healthcare-professionals/training-centre/',
+            'directions-and-parking' => '/service-users-and-visitors/directions-and-parking/',
+            'service-user-it-support' => '/service-users-and-visitors/service-user-it-support/',
+            'about-your-portal' => '/your-portal/about-your-portal/',
+            'register-for-your-portal' => '/your-portal/register-for-your-portal/',
         ];
+
+        $theme_dir = function_exists('get_template_directory')
+            ? get_template_directory()
+            : dirname(__DIR__);
+
+        $delete_map_file = $theme_dir . '/old/content/delete-redirect-map.json';
+
+        if (is_readable($delete_map_file)) {
+            $decoded = json_decode((string) file_get_contents($delete_map_file), true);
+
+            if (is_array($decoded)) {
+                foreach ($decoded as $from => $to) {
+                    if (! is_string($from) || ! is_string($to) || $from === '' || $to === '') {
+                        continue;
+                    }
+
+                    $map[trim($from, '/')] = $to;
+                }
+            }
+        }
+
+        return $map;
     }
 }
 
@@ -654,5 +760,6 @@ if (! function_exists('matrix_maybe_redirect_theme_paths')) {
 }
 
 if (function_exists('add_action')) {
-    add_action('template_redirect', 'matrix_maybe_redirect_theme_paths', 1);
+    // Run before Password Protected (priority -10) so legacy paths redirect even when gated.
+    add_action('template_redirect', 'matrix_maybe_redirect_theme_paths', -20);
 }

@@ -4,8 +4,10 @@ $section_id = 'stories-' . uniqid();
 $heading = get_sub_field('heading');
 $heading_tag = get_sub_field('heading_tag');
 $description = get_sub_field('description');
-$hero_image = get_sub_field('hero_image');
-$hero_image_alt = get_post_meta($hero_image, '_wp_attachment_image_alt', true) ?: 'Stories and support image';
+$hero_image = matrix_exclude_page_hero_image(get_sub_field('hero_image'));
+$hero_image_alt = $hero_image
+    ? (get_post_meta($hero_image, '_wp_attachment_image_alt', true) ?: 'Stories and support image')
+    : 'Stories and support image';
 $button = get_sub_field('button');
 $background_color = get_sub_field('background_color');
 $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';

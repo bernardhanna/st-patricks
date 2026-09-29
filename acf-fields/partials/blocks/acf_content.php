@@ -266,10 +266,11 @@ $content_safeguarding
         ])
         ->addSelect('image_height_mode', [
             'label' => 'Image Height',
-            'instructions' => 'On desktop, match the image height to the text column or use a fixed minimum height.',
+            'instructions' => 'Match text height, use a fixed minimum, or show a small contained image beside the text (max 202px, object-fit contain).',
             'choices' => [
                 'match_text' => 'Match Text Height',
                 'fixed_min' => 'Fixed Minimum Height (19.5rem)',
+                'contain' => 'Contain beside text (202px)',
             ],
             'default_value' => 'match_text',
             'ui' => 1,
@@ -303,10 +304,11 @@ $content_safeguarding
         ])
         ->addSelect('vertical_padding', [
             'label' => 'Vertical Padding',
-            'instructions' => 'Use “Top only” when the next block should sit flush underneath on desktop.',
+            'instructions' => 'Use “Top only” when the next block should sit flush underneath, or “Bottom only” to remove top padding under the previous block.',
             'choices' => [
                 'default' => 'Top & bottom (100px desktop)',
-                'no_bottom' => 'Top only (100px top, no bottom on desktop)',
+                'no_bottom' => 'Top only (no bottom on desktop)',
+                'no_top' => 'Bottom only (no top on desktop)',
             ],
             'default_value' => 'default',
             'ui' => 1,

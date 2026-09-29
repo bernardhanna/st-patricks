@@ -10,7 +10,7 @@ $archive_sections = is_array($sitemap['archive_sections'] ?? null) ? $sitemap['a
 $section_id = 'sitemap-page-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 ?>
 
-<main id="<?php echo esc_attr($section_id); ?>" class="w-full site-main">
+<main id="main-content" class="w-full site-main">
     <?php
     matrix_render_hero_with_breadcrumbs(
         matrix_get_utility_page_hero_config($heading, $intro, [

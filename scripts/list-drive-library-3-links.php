@@ -105,7 +105,7 @@ $pages = [
     ['About Us', 'Our locations', 'about-us/our-locations', '02-Page-content/About Us/Our locations'],
     ['About Us', 'Academic Institute', 'academic-institute', '02-Page-content/About Us/Academic Institute'],
     ['About Us', 'Training Centre', 'healthcare-professionals/training-centre', '02-Page-content/About Us/Training Centre'],
-    ['About Us', 'Extending our services', 'about-us/extending-our-services', '02-Page-content/About Us/Extending our services'],
+    ['About Us', 'Extending our services', 'about-us/our-present-and-future/extending-and-enhancing-our-services', '02-Page-content/About Us/Extending our services'],
     ['About Us', 'National centre', 'national-centre', '02-Page-content/About Us/National centre'],
     ['About Us', 'New hospital', 'new-hospital', '02-Page-content/About Us/New hospital'],
     ['About Us', 'Advocacy', 'about-us/advocacy', '02-Page-content/About Us/Advocacy'],

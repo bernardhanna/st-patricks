@@ -16,7 +16,7 @@ $current_page = max(1, (int) ($pagination['current'] ?? 1));
 $total_pages = max(1, (int) ($pagination['total'] ?? 1));
 ?>
 
-<main class="w-full">
+<main id="main-content" class="w-full">
     <section class="w-full bg-[#F1F8F9]">
         <div class="mx-auto w-full max-w-[1280px]">
             <?php

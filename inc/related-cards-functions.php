@@ -85,10 +85,21 @@ if (! function_exists('matrix_normalize_related_cards')) {
                 continue;
             }
 
-            $image_id = (int) ($card['image'] ?? 0);
+            $image_id = 0;
+            $image = $card['image'] ?? null;
+
+            if (is_numeric($image)) {
+                $image_id = (int) $image;
+            } elseif (is_array($image)) {
+                $image_id = (int) ($image['ID'] ?? $image['id'] ?? 0);
+            }
 
             if ($image_id < 1) {
                 $image_url = trim((string) ($card['image_url'] ?? ''));
+
+                if ($image_url === '' && is_array($image)) {
+                    $image_url = trim((string) ($image['url'] ?? ''));
+                }
 
                 if ($image_url !== '' && function_exists('matrix_migrate_attachment_id_from_url')) {
                     $image_id = matrix_migrate_attachment_id_from_url($image_url);

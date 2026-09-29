@@ -2,7 +2,7 @@
 
 get_header();
 ?>
-<main class="overflow-hidden w-full site-main">
+<main id="main-content" class="overflow-hidden w-full site-main">
     <?php load_hero_templates(); ?>
 
     <?php

@@ -24,7 +24,7 @@ test('newsletter subtext links plain click here to the gp enewsletter signup', f
     ]);
 
     expect($html)->toContain(
-        '<a href="https://example.test/campaigns/subscribe-to-our-gp-enewsletter/" class="text-[#7ED0E0] hover:underline">Click here</a>'
+        '<a href="https://example.test/campaigns/subscribe-to-our-gp-enewsletter/" class="text-[#7ED0E0] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>'
     );
 });
 
@@ -37,6 +37,6 @@ test('newsletter subtext keeps editor managed click here links unchanged', funct
         'require_terms' => false,
     ]);
 
-    expect($html)->toContain('<a href="https://example.test/custom">Click here</a>')
-        ->and($html)->not->toContain('/campaigns/subscribe-to-our-gp-enewsletter/');
+    expect($html)->toContain('<a href="https://example.test/custom">subscribe to our GP e-newsletter</a>')
+        ->and($html)->not->toContain('>Click here</a>');
 });

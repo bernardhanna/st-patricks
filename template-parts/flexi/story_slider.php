@@ -20,7 +20,7 @@ $intro_text    = get_sub_field('intro_text');
 $slides = [];
 if (have_rows('slides')) {
   while (have_rows('slides')) { the_row();
-    $img_id    = get_sub_field('image');
+    $img_id    = matrix_exclude_page_hero_image(get_sub_field('image'));
     $has_video = (bool) get_sub_field('has_video');
     $video_source_type = get_sub_field('video_source_type') ?: 'youtube_vimeo';
     $video_embed_url = get_sub_field('video_embed_url');
@@ -318,7 +318,11 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
       activeCardImg.classList.remove('hidden');
     }
 
-    var hasVideo = slides[idx].has_video && slides[idx].video && slides[idx].video.url;
+    var hasVideo = !!(slides[idx].has_video && (
+      slides[idx].video_url
+      || slides[idx].video_embed_url
+      || (slides[idx].video && slides[idx].video.url)
+    ));
     var videoType = hasVideo ? (slides[idx].video_type || 'external') : 'none';
     var hasInlineVideo = hasVideo && (videoType === 'local' || videoType === 'youtube' || videoType === 'vimeo');
 
@@ -357,12 +361,16 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
   if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(idx - 1); });
   if (nextBtn) nextBtn.addEventListener('click', function(){ goTo(idx + 1); });
   if (playBtn && activeCardImg) {
+    playBtn.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+    });
     playBtn.addEventListener('click', function(e){
       if (suppressPlayClick) {
         e.preventDefault();
         return;
       }
       e.preventDefault();
+      e.stopPropagation();
       var slide = slides[idx];
       if (!slide) return;
 
@@ -399,6 +407,7 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
     var dragThreshold = 48;
 
     stage.addEventListener('pointerdown', function(e) {
+      if (e.target.closest('[data-play-video], [data-active-iframe], [data-active-video], video, iframe')) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       dragging = true;
       dragStartX = e.clientX;
