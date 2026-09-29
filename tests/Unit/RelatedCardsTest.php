@@ -43,8 +43,25 @@ test('related card link helper defaults missing title and normalizes target', fu
     ]);
 
     expect($link)->not->toBeNull()
-        ->and($link['title'])->toBe('Learn more')
+        ->and($link['title'])->toBe('Next')
         ->and($link['target'])->toBe('_blank');
+});
+
+test('related cards replace vague CTA titles with the card heading', function () {
+    $cards = matrix_normalize_related_cards([
+        [
+            'title' => 'Anxiety supports',
+            'description' => 'Overview.',
+            'image' => 1,
+            'link' => [
+                'title' => 'Learn more',
+                'url' => 'https://example.com/anxiety',
+            ],
+        ],
+    ]);
+
+    expect($cards)->toHaveCount(1)
+        ->and($cards[0]['link']['title'])->toBe('Anxiety supports');
 });
 
 test('related cards column resolver accepts ACF labels and values', function () {

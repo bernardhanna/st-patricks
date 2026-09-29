@@ -63,10 +63,17 @@ summary:focus {
 }
 
 /* Enlarge common icon-only controls toward 44x44 (WCAG 2.5.5 / 2.5.8) */
-.site-main button.w-8.h-8,
-.site-main a.w-8.h-8,
+button.w-8.h-8,
+a.w-8.h-8,
+.slider-prev,
+.slider-next,
 footer a.w-8.h-8,
-#site-nav button.w-8.h-8 {
+#site-nav button.w-8.h-8,
+button[aria-label^="Go to slide"],
+button[aria-label="Previous"],
+button[aria-label="Next"],
+button[aria-label="Previous story"],
+button[aria-label="Next story"] {
   min-width: 2.75rem;
   min-height: 2.75rem;
 }

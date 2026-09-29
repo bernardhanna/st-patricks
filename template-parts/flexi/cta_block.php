@@ -16,7 +16,7 @@ $extra_classes = trim((string) get_sub_field('section_classes'));
 
 
 $btn_url    = $button['url'] ?? '#';
-$btn_title  = $button['title'] ?? 'Learn more';
+$btn_title  = matrix_resolve_link_accessible_name($button['title'] ?? '', $btn_url, $title);
 $btn_target = $button['target'] ?? '_self';
 
 // Helpers
