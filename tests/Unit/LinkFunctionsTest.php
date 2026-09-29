@@ -63,7 +63,30 @@ test('matrix_link_newsletter_subtext_click_here links plain newsletter click her
 
     $html = matrix_link_newsletter_subtext_click_here('<p>For healthcare newsletter click here</p>');
 
-    expect($html)->toContain('<a href="https://www.stpatricks.ie/campaigns/subscribe-to-our-gp-enewsletter/">click here</a>');
+    expect($html)->toContain('<a href="https://www.stpatricks.ie/campaigns/subscribe-to-our-gp-enewsletter/">subscribe to our GP e-newsletter</a>');
+});
+
+test('matrix_process_external_links_in_html strips orphan Word comment anchors', function () {
+    $html = '<p>Intro<a href="#_msocom_1"></a> and <a id="_msocom_1" href=""></a>more.</p>';
+    $processed = matrix_process_external_links_in_html($html);
+
+    expect($processed)->not->toContain('#_msocom')
+        ->and($processed)->toContain('Intro')
+        ->and($processed)->toContain('more.');
+});
+
+test('matrix_process_external_links_in_html rewrites vague link text from the URL', function () {
+    $html = '<p>See <a href="https://example.com/locations/st-patricks-university-hospital/">Find out more</a>.</p>';
+    $processed = matrix_process_external_links_in_html($html);
+
+    expect($processed)->toContain('>St Patricks University Hospital<')
+        ->and($processed)->not->toContain('>Find out more<');
+});
+
+test('matrix_resolve_link_accessible_name prefers context over vague titles', function () {
+    expect(matrix_is_vague_link_text('click here'))->toBeTrue()
+        ->and(matrix_resolve_link_accessible_name('Learn more', '/about-us/advocacy/', 'Advocacy'))->toBe('Advocacy')
+        ->and(matrix_link_label_from_url('https://example.com/child-safeguarding-statement'))->toBe('Child Safeguarding Statement');
 });
 
 test('matrix_get_theme_path_redirect_map includes deleted page redirects', function () {

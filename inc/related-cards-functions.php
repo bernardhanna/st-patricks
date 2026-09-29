@@ -30,7 +30,7 @@ if (! function_exists('matrix_normalize_related_card_link')) {
      * @param mixed $link
      * @return array{title: string, url: string, target: string}|null
      */
-    function matrix_normalize_related_card_link($link): ?array
+    function matrix_normalize_related_card_link($link, string $context = ''): ?array
     {
         if (! is_array($link)) {
             return null;
@@ -44,11 +44,11 @@ if (! function_exists('matrix_normalize_related_card_link')) {
 
         $url = matrix_normalize_asset_url($url);
 
-        $title = trim((string) ($link['title'] ?? ''));
-
-        if ($title === '') {
-            $title = __('Learn more', 'matrix-starter');
-        }
+        $title = matrix_resolve_link_accessible_name(
+            trim((string) ($link['title'] ?? '')),
+            $url,
+            $context
+        );
 
         $target = matrix_normalize_link_target($url, (string) ($link['target'] ?? ''));
 
@@ -79,7 +79,7 @@ if (! function_exists('matrix_normalize_related_cards')) {
             }
 
             $title = trim((string) ($card['title'] ?? ''));
-            $link = matrix_normalize_related_card_link($card['link'] ?? null);
+            $link = matrix_normalize_related_card_link($card['link'] ?? null, $title);
 
             if ($title === '' || $link === null) {
                 continue;

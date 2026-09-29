@@ -101,6 +101,109 @@ if (! function_exists('matrix_is_meaningful_outbound_url')) {
     }
 }
 
+if (! function_exists('matrix_is_vague_link_text')) {
+    /**
+     * Link text that fails WCAG 2.4.4 / Silktide "links explain their purpose".
+     */
+    function matrix_is_vague_link_text(string $text): bool
+    {
+        $normalized = strtolower(trim(preg_replace('/\s+/u', ' ', $text) ?? $text));
+
+        return in_array($normalized, [
+            '',
+            'here',
+            'click here',
+            'learn more',
+            'read more',
+            'find out more',
+            'view more',
+            'more',
+            'read',
+            'link',
+        ], true);
+    }
+}
+
+if (! function_exists('matrix_link_label_from_url')) {
+    /**
+     * Build a readable label from a URL path slug (last segment).
+     */
+    function matrix_link_label_from_url(string $url): string
+    {
+        $url = trim($url);
+
+        if ($url === '' || $url === '#' || str_starts_with($url, '#')) {
+            return '';
+        }
+
+        $path = (string) parse_url($url, PHP_URL_PATH);
+        $path = trim($path, '/');
+
+        if ($path === '') {
+            $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+            $host = preg_replace('/^www\./', '', (string) $host) ?: '';
+
+            return $host !== '' ? $host : '';
+        }
+
+        $segments = array_values(array_filter(explode('/', $path), static fn ($s) => $s !== ''));
+        $slug = (string) end($segments);
+        $slug = preg_replace('/\.(html?|php|aspx?)$/i', '', $slug) ?? $slug;
+
+        if ($slug === '' || preg_match('/^\d+$/', $slug)) {
+            return '';
+        }
+
+        $label = str_replace(['-', '_'], ' ', $slug);
+        $label = preg_replace('/\s+/u', ' ', $label) ?? $label;
+
+        return ucwords(strtolower(trim($label)));
+    }
+}
+
+if (! function_exists('matrix_resolve_link_accessible_name')) {
+    /**
+     * Prefer explicit titles; replace vague defaults with context or URL-derived labels.
+     */
+    function matrix_resolve_link_accessible_name(string $title, string $url = '', string $context = ''): string
+    {
+        $title = trim($title);
+        $context = function_exists('wp_strip_all_tags')
+            ? trim(wp_strip_all_tags($context))
+            : trim(strip_tags($context));
+
+        if (! matrix_is_vague_link_text($title)) {
+            return $title;
+        }
+
+        if ($context !== '') {
+            return $context;
+        }
+
+        $from_url = matrix_link_label_from_url($url);
+
+        if ($from_url !== '') {
+            return $from_url;
+        }
+
+        $fallback = function_exists('__') ? __('Learn more', 'matrix-starter') : 'Learn more';
+
+        return $title !== '' ? $title : $fallback;
+    }
+}
+
+if (! function_exists('matrix_is_orphan_word_anchor_href')) {
+    /**
+     * Word/Office leftover fragment anchors that create empty links in audits.
+     */
+    function matrix_is_orphan_word_anchor_href(string $href): bool
+    {
+        $href = trim($href);
+
+        return (bool) preg_match('/^#_(?:msocom|ednref|ftnref|edn|ftn)/i', $href);
+    }
+}
+
 if (! function_exists('matrix_link_newsletter_subtext_click_here')) {
     function matrix_link_newsletter_subtext_click_here(string $html): string
     {
@@ -474,6 +577,28 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             $iframe->setAttribute('title', matrix_iframe_title_for_src(trim($iframe->getAttribute('src'))));
         }
 
+        // Remove Word/Office leftover fragment anchors (empty / comment links).
+        foreach (iterator_to_array($dom->getElementsByTagName('a')) as $anchor) {
+            if (! $anchor instanceof DOMElement || ! $anchor->parentNode) {
+                continue;
+            }
+
+            $href = trim($anchor->getAttribute('href'));
+            $visible = trim(preg_replace('/\s+/u', ' ', $anchor->textContent) ?? '');
+            $is_orphan_href = matrix_is_orphan_word_anchor_href($href)
+                || ($href === '' && $visible === '' && trim($anchor->getAttribute('aria-label')) === '');
+
+            if (! $is_orphan_href) {
+                continue;
+            }
+
+            while ($anchor->firstChild) {
+                $anchor->parentNode->insertBefore($anchor->firstChild, $anchor);
+            }
+
+            $anchor->parentNode->removeChild($anchor);
+        }
+
         foreach ($dom->getElementsByTagName('a') as $anchor) {
             if (! $anchor instanceof DOMElement) {
                 continue;
@@ -508,6 +633,42 @@ if (! function_exists('matrix_process_external_links_in_html')) {
                     $sr->setAttribute('class', 'sr-only');
                     $anchor->appendChild($sr);
                 }
+            }
+        }
+
+        // Replace vague link text with a destination-derived label (WCAG 2.4.4).
+        foreach ($dom->getElementsByTagName('a') as $anchor) {
+            if (! $anchor instanceof DOMElement) {
+                continue;
+            }
+
+            $href = trim($anchor->getAttribute('href'));
+            $aria = trim($anchor->getAttribute('aria-label'));
+            $visible = trim(preg_replace('/\s+/u', ' ', $anchor->textContent) ?? '');
+
+            // Ignore sr-only "opens in a new tab" when judging vagueness.
+            $visible_for_check = trim(preg_replace('/\s*\(opens in (a )?new (tab|window)\)\s*/i', '', $visible) ?? '');
+
+            if ($aria !== '' || ! matrix_is_vague_link_text($visible_for_check)) {
+                continue;
+            }
+
+            $label = matrix_resolve_link_accessible_name($visible_for_check, $href);
+
+            if ($label === '' || strcasecmp($label, $visible_for_check) === 0) {
+                continue;
+            }
+
+            while ($anchor->firstChild) {
+                $anchor->removeChild($anchor->firstChild);
+            }
+
+            $anchor->appendChild($dom->createTextNode($label));
+
+            if (matrix_is_external_url($href) || matrix_is_pdf_url($href)) {
+                $sr = $dom->createElement('span', ' (opens in a new tab)');
+                $sr->setAttribute('class', 'sr-only');
+                $anchor->appendChild($sr);
             }
         }
 
@@ -642,7 +803,7 @@ if (! function_exists('matrix_normalize_acf_link')) {
         $target = matrix_normalize_link_target($url, (string) ($link['target'] ?? ''));
 
         return [
-            'title' => (string) ($link['title'] ?? ''),
+            'title' => matrix_resolve_link_accessible_name((string) ($link['title'] ?? ''), $url),
             'url' => $url,
             'target' => $target,
             'rel' => matrix_external_link_rel($target),

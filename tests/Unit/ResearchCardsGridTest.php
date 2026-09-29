@@ -49,7 +49,19 @@ test('research cards grid link helper falls back to learn more when title is bla
     ]);
 
     expect($link)->not->toBeNull()
-        ->and($link['title'])->toBe('Learn more');
+        ->and($link['title'])->toBe('Research');
+});
+
+test('research cards grid replaces vague CTA titles with the card heading', function () {
+    $cards = matrix_normalize_research_cards_grid_cards([
+        [
+            'title' => 'View Ethics Guidance',
+            'summary' => 'Supporting copy.',
+            'link' => ['url' => 'https://example.com/guidance', 'title' => 'Read more'],
+        ],
+    ]);
+
+    expect($cards[0]['link']['title'])->toBe('View Ethics Guidance');
 });
 
 test('research cards grid resolves manual cards by default', function () {

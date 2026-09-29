@@ -14,19 +14,22 @@ function matrix_get_research_cards_grid_defaults()
     ];
 }
 
-function matrix_normalize_research_cards_grid_link($link)
+function matrix_normalize_research_cards_grid_link($link, string $context = '')
 {
     if (! is_array($link) || empty($link['url'])) {
         return null;
     }
 
-    $title = trim((string) ($link['title'] ?? ''));
-
     $url = (string) $link['url'];
+    $title = matrix_resolve_link_accessible_name(
+        trim((string) ($link['title'] ?? '')),
+        $url,
+        $context
+    );
 
     return [
         'url' => $url,
-        'title' => $title !== '' ? $title : 'Learn more',
+        'title' => $title,
         'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
@@ -224,7 +227,7 @@ function matrix_normalize_research_cards_grid_cards($rows)
             'title' => $title,
             'summary' => trim((string) ($row['summary'] ?? '')),
             'image' => is_array($row['image'] ?? null) ? $row['image'] : null,
-            'link' => matrix_normalize_research_cards_grid_link($row['link'] ?? null),
+            'link' => matrix_normalize_research_cards_grid_link($row['link'] ?? null, $title),
         ];
     }
 

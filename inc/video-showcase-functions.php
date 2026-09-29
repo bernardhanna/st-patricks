@@ -6,12 +6,15 @@ function matrix_normalize_video_showcase_link($link)
         return null;
     }
 
-    $title = trim((string) ($link['title'] ?? ''));
     $url = (string) $link['url'];
+    $title = matrix_resolve_link_accessible_name(
+        trim((string) ($link['title'] ?? '')),
+        $url
+    );
 
     return [
         'url' => $url,
-        'title' => $title !== '' ? $title : 'Learn more',
+        'title' => $title,
         'target' => matrix_normalize_link_target($url, (string) ($link['target'] ?? '')),
     ];
 }
