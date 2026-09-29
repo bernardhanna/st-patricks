@@ -61,14 +61,20 @@ $terms_prefix = get_field('terms_text_prefix', 'option') ?: 'By signing to our n
 $terms_link   = get_field('terms_link', 'option');
 $privacy_link = get_field('privacy_link', 'option');
 
-// Helpers for links
-$terms_href   = !empty($terms_link['url'])   ? esc_url($terms_link['url'])     : '#';
-$terms_title  = !empty($terms_link['title']) ? esc_html($terms_link['title'])  : 'Terms & Conditions';
-$terms_target = !empty($terms_link['target'])? esc_attr($terms_link['target']) : '_self';
+$default_privacy_url = home_url('/cookie-privacy-policy/');
 
-$priv_href    = !empty($privacy_link['url'])   ? esc_url($privacy_link['url'])     : '#';
-$priv_title   = !empty($privacy_link['title']) ? esc_html($privacy_link['title'])  : 'Privacy Policy';
-$priv_target  = !empty($privacy_link['target'])? esc_attr($privacy_link['target']) : '_self';
+// Helpers for links — never leave privacy/terms href as "#" (Silktide broken-link + forms review).
+$terms_href   = ! empty($terms_link['url']) && $terms_link['url'] !== '#'
+    ? esc_url($terms_link['url'])
+    : esc_url($default_privacy_url);
+$terms_title  = ! empty($terms_link['title']) ? esc_html($terms_link['title']) : 'Terms & Conditions';
+$terms_target = ! empty($terms_link['target']) ? esc_attr($terms_link['target']) : '_self';
+
+$priv_href    = ! empty($privacy_link['url']) && $privacy_link['url'] !== '#'
+    ? esc_url($privacy_link['url'])
+    : esc_url($default_privacy_url);
+$priv_title   = ! empty($privacy_link['title']) ? esc_html($privacy_link['title']) : 'Privacy Policy';
+$priv_target  = ! empty($privacy_link['target']) ? esc_attr($privacy_link['target']) : '_self';
 
 // Endpoints / nonce for Brevo AJAX
 $admin_ajax  = esc_url(admin_url('admin-ajax.php'));
