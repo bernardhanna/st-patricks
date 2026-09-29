@@ -117,7 +117,13 @@ function matrix_normalize_content_cta_link($link)
     $title = trim((string) ($link['title'] ?? ''));
     $url = trim((string) ($link['url'] ?? ''));
 
-    if ($title === '' || $url === '') {
+    if ($url === '') {
+        return null;
+    }
+
+    $title = matrix_resolve_link_accessible_name($title, $url);
+
+    if ($title === '') {
         return null;
     }
 

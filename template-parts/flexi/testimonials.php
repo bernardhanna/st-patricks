@@ -335,7 +335,11 @@ $tone_backgrounds = [
                             }
                         </style>
                     <?php } else {
-                        $button_title = (string) ($footer_button_link['title'] ?? 'Learn more');
+                        $button_title = matrix_resolve_link_accessible_name(
+                            (string) ($footer_button_link['title'] ?? ''),
+                            (string) ($footer_button_link['url'] ?? ''),
+                            (string) ($heading ?? 'testimonials')
+                        );
                         $button_target = (string) ($footer_button_link['target'] ?? '_self');
                         ?>
                         <a

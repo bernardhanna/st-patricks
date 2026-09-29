@@ -56,6 +56,38 @@ $initial_caption = is_string($initial_slide['caption'] ?? null)
     ? trim(strip_tags((string) $initial_slide['caption']))
     : '';
 $show_slide_meta = $initial_caption !== '' || ! empty($initial_slide['cta_link']);
+
+$resolve_video_cta_title = static function (array $slide) use ($heading): string {
+    $cta = is_array($slide['cta_link'] ?? null) ? $slide['cta_link'] : [];
+    $title = trim((string) ($cta['title'] ?? ''));
+    $url = trim((string) ($cta['url'] ?? ''));
+    $caption = is_string($slide['caption'] ?? null) ? trim(wp_strip_all_tags((string) $slide['caption'])) : '';
+    $context = $caption !== '' ? $caption : $heading;
+
+    if (function_exists('matrix_resolve_link_accessible_name')) {
+        return matrix_resolve_link_accessible_name($title, $url, $context);
+    }
+
+    return $title !== '' ? $title : ($context !== '' ? $context : 'Watch video');
+};
+
+$slides_have_cta = false;
+
+foreach ($slides as $slide_index => $slide) {
+    if (empty($slide['cta_link']) || ! is_array($slide['cta_link']) || empty($slide['cta_link']['url'])) {
+        $slides[$slide_index]['cta_link'] = null;
+        continue;
+    }
+
+    $slides[$slide_index]['cta_link']['title'] = $resolve_video_cta_title($slide);
+    $slides_have_cta = true;
+}
+
+$initial_slide = $slides[0];
+$initial_cta_title = ! empty($initial_slide['cta_link']['url'])
+    ? (string) ($initial_slide['cta_link']['title'] ?? '')
+    : '';
+$show_slide_meta = $initial_caption !== '' || $slides_have_cta;
 ?>
 
 <section
@@ -141,16 +173,19 @@ $show_slide_meta = $initial_caption !== '' || ! empty($initial_slide['cta_link']
                     <?php echo matrix_kses_rich_text($initial_slide['caption']); ?>
                 </div>
 
-                <div class="mt-5 <?php echo $initial_slide['cta_link'] ? '' : 'hidden'; ?>" data-active-cta-wrap>
+                <?php if ($slides_have_cta) { ?>
+                <div class="mt-5 <?php echo ! empty($initial_slide['cta_link']['url']) ? '' : 'hidden'; ?>" data-active-cta-wrap>
                     <a
                         href="<?php echo esc_url($initial_slide['cta_link']['url'] ?? '#'); ?>"
                         target="<?php echo esc_attr($initial_slide['cta_link']['target'] ?? '_self'); ?>"
                         class="inline-flex min-h-[52px] items-center justify-center border border-[#024B79] px-6 py-4 text-[16px] font-semibold leading-none text-[#024B79] transition-colors hover:bg-[#024B79] hover:text-white focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]"
                         data-active-cta
+                        <?php echo empty($initial_slide['cta_link']['url']) ? 'hidden' : ''; ?>
                     >
-                        <?php echo esc_html($initial_slide['cta_link']['title'] ?? 'Learn more'); ?>
+                        <?php echo esc_html($initial_cta_title); ?>
                     </a>
                 </div>
+                <?php } ?>
             </div>
             <?php } ?>
 
@@ -262,11 +297,15 @@ $show_slide_meta = $initial_caption !== '' || ! empty($initial_slide['cta_link']
     if (ctaWrap && ctaLink) {
       if (slide.cta_link && slide.cta_link.url) {
         ctaWrap.classList.remove('hidden');
+        ctaLink.hidden = false;
         ctaLink.href = slide.cta_link.url;
         ctaLink.target = slide.cta_link.target || '_self';
-        ctaLink.textContent = slide.cta_link.title || 'Learn more';
+        ctaLink.textContent = slide.cta_link.title || '';
       } else {
         ctaWrap.classList.add('hidden');
+        ctaLink.hidden = true;
+        ctaLink.removeAttribute('href');
+        ctaLink.textContent = '';
       }
     }
 

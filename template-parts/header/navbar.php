@@ -9,7 +9,10 @@
 
 $logo_id  = get_theme_mod('custom_logo');
 $logo_url = $logo_id ? wp_get_attachment_image_url($logo_id, 'full') : '';
-$logo_alt = $logo_id ? get_post_meta($logo_id, '_wp_attachment_image_alt', true) : get_bloginfo('name');
+$logo_alt = trim((string) ($logo_id ? get_post_meta($logo_id, '_wp_attachment_image_alt', true) : ''));
+if ($logo_alt === '') {
+  $logo_alt = get_bloginfo('name') ?: "St Patrick's Mental Health Services";
+}
 
 $nav_settings      = get_field('navigation_settings_start', 'option') ?: [];
 $enable_search     = ! empty($nav_settings['enable_search']);
@@ -451,19 +454,17 @@ document.addEventListener('alpine:init', () => {
                 <div x-show="loading" class="px-3 py-2.5 text-sm text-slate-600">Searching...</div>
                 <div x-show="!loading && error" class="px-3 py-2.5 text-sm text-red-600" x-text="error"></div>
                 <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
-                  <template x-for="item in results" :key="item.id + '-' + item.subtype">
-                    <li>
-                      <a
-                        :href="item.url"
-                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
-                      >
-                        <span class="text-sm font-normal text-slate-950" x-text="item.title"></span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </a>
-                    </li>
-                  </template>
+                  <li x-for="item in results" :key="item.id + '-' + item.subtype">
+                    <a
+                      :href="item.url"
+                      class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
+                    >
+                      <span class="text-sm font-normal text-slate-950" x-text="item.title"></span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </li>
                 </ul>
                 <div x-show="!loading && !error && !results.length" class="px-3 py-2.5 text-sm text-slate-600">
                   No results found. Try a different keyword.
@@ -474,21 +475,19 @@ document.addEventListener('alpine:init', () => {
             <template x-if="query.trim().length < 2">
               <nav aria-label="FAQ categories">
                 <ul class="p-0 m-0 list-none">
-                  <template x-for="faq in faqLinks" :key="faq.title">
-                    <li>
-                      <a
-                        :href="faq.url"
-                        :target="faq.target || '_self'"
-                        :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
-                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
-                      >
-                        <span class="text-sm font-normal text-slate-950" x-text="faq.title"></span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </a>
-                    </li>
-                  </template>
+                  <li x-for="faq in faqLinks" :key="faq.title">
+                    <a
+                      :href="faq.url"
+                      :target="faq.target || '_self'"
+                      :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
+                      class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
+                    >
+                      <span class="text-sm font-normal text-slate-950" x-text="faq.title"></span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </li>
                 </ul>
               </nav>
             </template>
@@ -517,7 +516,6 @@ document.addEventListener('alpine:init', () => {
         href="<?php echo esc_url($referral_btn['url']); ?>"
         target="<?php echo esc_attr($referral_btn['target'] ?: '_self'); ?>"
         class="hidden btn items-center px-3 h-9 rounded-md border border-[#024B79] text-[#08284B] whitespace-nowrap transition-colors shrink-0 mob:flex focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-        role="button"
         aria-label="<?php echo esc_attr($referral_btn['title']); ?>"
       >
         <span class="text-sm font-medium leading-6 text-current">

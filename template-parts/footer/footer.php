@@ -14,11 +14,20 @@ $footer_logo = get_field('footer_logo', 'option');
 if (!$footer_logo) {
     $logo_id  = get_theme_mod('custom_logo');
     if ($logo_id) {
+        $footer_alt = trim((string) get_post_meta($logo_id, '_wp_attachment_image_alt', true));
+        if ($footer_alt === '') {
+            $footer_alt = get_bloginfo('name') ?: "St Patrick's Mental Health Services";
+        }
         $footer_logo = [
             'url'   => wp_get_attachment_image_url($logo_id, 'full'),
-            'alt'   => get_post_meta($logo_id, '_wp_attachment_image_alt', true) ?: get_bloginfo('name'),
+            'alt'   => $footer_alt,
             'title' => get_the_title($logo_id) ?: get_bloginfo('name'),
         ];
+    }
+} elseif (is_array($footer_logo)) {
+    $footer_alt = trim((string) ($footer_logo['alt'] ?? ''));
+    if ($footer_alt === '') {
+        $footer_logo['alt'] = get_bloginfo('name') ?: "St Patrick's Mental Health Services";
     }
 }
 
@@ -26,6 +35,11 @@ if (!$footer_logo) {
 $mobile_footer_logo = get_field('mobile_footer_logo', 'option');
 if (!$mobile_footer_logo) {
     $mobile_footer_logo = $footer_logo;
+} elseif (is_array($mobile_footer_logo)) {
+    $mobile_footer_alt = trim((string) ($mobile_footer_logo['alt'] ?? ''));
+    if ($mobile_footer_alt === '') {
+        $mobile_footer_logo['alt'] = trim((string) ($footer_logo['alt'] ?? '')) ?: (get_bloginfo('name') ?: "St Patrick's Mental Health Services");
+    }
 }
 
 // Columns

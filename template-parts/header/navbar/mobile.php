@@ -103,7 +103,10 @@ $faq_links = [
 
 $logo_id = get_theme_mod('custom_logo');
 $logo_url = $logo_id ? wp_get_attachment_image_url($logo_id, 'full') : '';
-$logo_alt = $logo_id ? get_post_meta($logo_id, '_wp_attachment_image_alt', true) : get_bloginfo('name');
+$logo_alt = trim((string) ($logo_id ? get_post_meta($logo_id, '_wp_attachment_image_alt', true) : ''));
+if ($logo_alt === '') {
+    $logo_alt = get_bloginfo('name') ?: "St Patrick's Mental Health Services";
+}
 
 $nav_slide_config = [
     'menu' => $menu_data,
@@ -208,23 +211,25 @@ $nav_slide_config = [
                         x-cloak
                     >
                         <ul class="m-0 list-none p-0" role="list">
-                            <template x-for="faq in faqLinks" :key="faq.title">
-                                <li class="border-b border-[#E2E8F0] last:border-b-0">
-                                    <a
-                                        :href="faq.url"
-                                        :target="faq.target || '_self'"
-                                        :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
-                                        class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
-                                        @click="close()"
-                                        @mousedown.prevent
-                                    >
-                                        <span x-text="faq.title"></span>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
-                                            <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </template>
+                            <li
+                                x-for="faq in faqLinks"
+                                :key="faq.title"
+                                class="border-b border-[#E2E8F0] last:border-b-0"
+                            >
+                                <a
+                                    :href="faq.url"
+                                    :target="faq.target || '_self'"
+                                    :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
+                                    class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
+                                    @click="close()"
+                                    @mousedown.prevent
+                                >
+                                    <span x-text="faq.title"></span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
+                                        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -237,20 +242,22 @@ $nav_slide_config = [
                         <div x-show="loading" class="px-4 py-4 text-sm text-[#64748B]">Searching...</div>
                         <div x-show="!loading && error" class="px-4 py-4 text-sm text-red-600" x-text="error"></div>
                         <ul x-show="!loading && !error && results.length" class="m-0 list-none p-0" role="list">
-                            <template x-for="item in results" :key="item.id + '-' + item.subtype">
-                                <li class="border-b border-[#E2E8F0] last:border-b-0">
-                                    <a
-                                        :href="item.url"
-                                        class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
-                                        @click="close()"
-                                    >
-                                        <span x-text="item.title"></span>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
-                                            <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </template>
+                            <li
+                                x-for="item in results"
+                                :key="item.id + '-' + item.subtype"
+                                class="border-b border-[#E2E8F0] last:border-b-0"
+                            >
+                                <a
+                                    :href="item.url"
+                                    class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
+                                    @click="close()"
+                                >
+                                    <span x-text="item.title"></span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
+                                        <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                            </li>
                         </ul>
                         <div x-show="!loading && !error && !results.length" class="px-4 py-4 text-sm text-[#64748B]">
                             No results found. Try a different keyword.
@@ -284,8 +291,11 @@ $nav_slide_config = [
                         :style="slideStyle(idx)"
                         role="list"
                     >
-                        <template x-for="(item, i) in level" :key="i">
-                            <li class="border-b border-[#E2E8F0] last:border-b-0">
+                        <li
+                            x-for="(item, i) in level"
+                            :key="i"
+                            class="border-b border-[#E2E8F0] last:border-b-0"
+                        >
                                 <template x-if="item.children.length">
                                     <div class="flex items-center justify-between gap-3 px-5 py-4">
                                         <a
@@ -317,8 +327,7 @@ $nav_slide_config = [
                                         <span x-text="item.label"></span>
                                     </a>
                                 </template>
-                            </li>
-                        </template>
+                        </li>
                     </ul>
                 </template>
             </div>

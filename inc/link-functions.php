@@ -643,13 +643,12 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             }
 
             $href = trim($anchor->getAttribute('href'));
-            $aria = trim($anchor->getAttribute('aria-label'));
             $visible = trim(preg_replace('/\s+/u', ' ', $anchor->textContent) ?? '');
 
             // Ignore sr-only "opens in a new tab" when judging vagueness.
             $visible_for_check = trim(preg_replace('/\s*\(opens in (a )?new (tab|window)\)\s*/i', '', $visible) ?? '');
 
-            if ($aria !== '' || ! matrix_is_vague_link_text($visible_for_check)) {
+            if (! matrix_is_vague_link_text($visible_for_check)) {
                 continue;
             }
 

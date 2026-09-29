@@ -6,8 +6,10 @@ $button_hover_bg_color = get_field('back_to_top_settings_button_hover_bg_color',
   type="button"
   id="backToTop"
   aria-label="Back to top"
+  title="Back to top"
   class="group flex fixed right-5 bottom-5 invisible justify-center items-center w-14 h-14 rounded-full border-2 opacity-0 transition duration-300 border-primary border-1 focus:outline-none"
 >
+  <span class="sr-only">Back to top</span>
   <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
     onmouseover="this.querySelector('rect').setAttribute('fill', '<?php echo esc_attr($button_hover_bg_color); ?>');"
     onmouseout="this.querySelector('rect').setAttribute('fill', '<?php echo esc_attr($button_bg_color); ?>');">
