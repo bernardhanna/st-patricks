@@ -210,8 +210,12 @@ function matrix_prepare_contact_form($args = [])
 
     $privacy_url = '';
     $privacy_link = $args['privacy_policy_link'] ?? null;
-    if (is_array($privacy_link) && ! empty($privacy_link['url'])) {
+    if (is_array($privacy_link) && ! empty($privacy_link['url']) && $privacy_link['url'] !== '#') {
         $privacy_url = (string) $privacy_link['url'];
+    }
+
+    if ($privacy_url === '' && function_exists('home_url')) {
+        $privacy_url = home_url('/cookie-privacy-policy/');
     }
 
     $heading_tag = trim((string) ($args['heading_tag'] ?? $defaults['heading_tag']));

@@ -834,7 +834,7 @@ if (! function_exists('matrix_get_theme_path_redirect_map')) {
      * Theme-level 301 redirects for legacy / deleted paths.
      *
      * Base map covers hierarchy moves and legacy slugs. Workbook "Delete"
-     * destinations are merged from old/content/delete-redirect-map.json when present.
+     * destinations are merged from inc/data/path-redirect-map.json when present.
      *
      * @return array<string, string>
      */
@@ -889,20 +889,33 @@ if (! function_exists('matrix_get_theme_path_redirect_map')) {
             ? get_template_directory()
             : dirname(__DIR__);
 
-        $delete_map_file = $theme_dir . '/old/content/delete-redirect-map.json';
+        // Prefer the tracked theme data file so redirects deploy with the theme.
+        // Keep the legacy gitignored path as a local fallback during migration.
+        $candidates = [
+            $theme_dir . '/inc/data/path-redirect-map.json',
+            $theme_dir . '/old/content/delete-redirect-map.json',
+        ];
 
-        if (is_readable($delete_map_file)) {
+        foreach ($candidates as $delete_map_file) {
+            if (! is_readable($delete_map_file)) {
+                continue;
+            }
+
             $decoded = json_decode((string) file_get_contents($delete_map_file), true);
 
-            if (is_array($decoded)) {
-                foreach ($decoded as $from => $to) {
-                    if (! is_string($from) || ! is_string($to) || $from === '' || $to === '') {
-                        continue;
-                    }
-
-                    $map[trim($from, '/')] = $to;
-                }
+            if (! is_array($decoded)) {
+                continue;
             }
+
+            foreach ($decoded as $from => $to) {
+                if (! is_string($from) || ! is_string($to) || $from === '' || $to === '') {
+                    continue;
+                }
+
+                $map[trim($from, '/')] = $to;
+            }
+
+            break;
         }
 
         return $map;
