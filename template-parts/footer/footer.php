@@ -215,6 +215,9 @@ $mob_icons = [
             if (empty($link['url'])) continue; ?>
             <a href="<?php echo esc_url($link['url']); ?>" target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" class="hover:underline">
               <?php echo esc_html($link['title'] ?: $link['url']); ?>
+              <?php if (($link['target'] ?: '_self') === '_blank') : ?>
+                <span class="sr-only"> (opens in a new tab)</span>
+              <?php endif; ?>
             </a>
           <?php endforeach; endif; ?>
         </div>
@@ -223,6 +226,9 @@ $mob_icons = [
           <?php if (!empty($developer_credit_link['url'])): ?>
             <a href="<?php echo esc_url($developer_credit_link['url']); ?>" target="<?php echo esc_attr($developer_credit_link['target'] ?: '_blank'); ?>" rel="noopener noreferrer" class="hover:underline">
               <?php echo esc_html($developer_credit_link['title'] ?: 'Matrix Internet'); ?>
+              <?php if (($developer_credit_link['target'] ?: '_blank') === '_blank') : ?>
+                <span class="sr-only"> (opens in a new tab)</span>
+              <?php endif; ?>
             </a>
           <?php endif; ?>
         </div>
@@ -535,6 +541,9 @@ $mob_icons = [
                                    class="flex gap-2.5 justify-center items-center self-stretch my-auto leading-6 whitespace-nowrap btn w-fit hover:text-hover focus:text-hover">
                                     <span class="self-stretch my-auto text-indigo-950">
                                         <?php echo esc_html($developer_credit_link['title'] ?: 'Matrix Internet'); ?>
+                                        <?php if (($developer_credit_link['target'] ?: '_blank') === '_blank') : ?>
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        <?php endif; ?>
                                     </span>
                                 </a>
                             <?php endif; ?>

@@ -77,6 +77,20 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_new_tab_announcement_html')) {
+    /**
+     * Visible-to-AT note Silktide expects on links that open a new tab.
+     */
+    function matrix_new_tab_announcement_html(string $target = ''): string
+    {
+        if (trim($target) !== '_blank') {
+            return '';
+        }
+
+        return '<span class="sr-only"> (opens in a new tab)</span>';
+    }
+}
+
 if (! function_exists('matrix_is_meaningful_outbound_url')) {
     /**
      * True when a URL is worth rendering as a social/outbound control.

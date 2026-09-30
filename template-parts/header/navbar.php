@@ -482,7 +482,10 @@ document.addEventListener('alpine:init', () => {
                       :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
                       class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
                     >
-                      <span class="text-sm font-normal text-slate-950" x-text="faq.title"></span>
+                      <span class="text-sm font-normal text-slate-950">
+                        <span x-text="faq.title"></span>
+                        <span class="sr-only" x-text="faq.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
+                      </span>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
