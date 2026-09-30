@@ -990,14 +990,16 @@ input:where([type='file']):focus {
 }
 .entry-content a:not(.btn),
   .editor-body-content a:not(.btn),
-  .blog-single-content a:not(.btn) {
+  .blog-single-content a:not(.btn),
+  .wp_editor a:not(.btn) {
   --tw-text-opacity: 1;
   color: rgb(2 75 121 / var(--tw-text-opacity, 1));
   text-decoration-line: underline;
 }
 .entry-content a:not(.btn):hover,
   .editor-body-content a:not(.btn):hover,
-  .blog-single-content a:not(.btn):hover {
+  .blog-single-content a:not(.btn):hover,
+  .wp_editor a:not(.btn):hover {
   text-decoration-line: none;
 }
 /* Blockquote */
@@ -1575,6 +1577,9 @@ input:where([type='file']):focus {
 }
 .mb-1 {
   margin-bottom: 0.25rem;
+}
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 .mb-2 {
   margin-bottom: 0.5rem;
