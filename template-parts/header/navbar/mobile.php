@@ -224,7 +224,10 @@ $nav_slide_config = [
                                     @click="close()"
                                     @mousedown.prevent
                                 >
-                                    <span x-text="faq.title"></span>
+                                    <span>
+                                        <span x-text="faq.title"></span>
+                                        <span class="sr-only" x-text="faq.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
+                                    </span>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">
                                         <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>

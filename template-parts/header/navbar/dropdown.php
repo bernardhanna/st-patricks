@@ -61,6 +61,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                 class="inline-flex justify-center items-center px-6 mt-8 h-11 text-sm font-medium leading-6 text-[#1E244B] bg-[#7ED0E0] rounded-[6px] transition-colors hover:bg-[#66c4d8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] w-fit"
                             >
                                 <?php echo esc_html($dropdown_cta['title']); ?>
+                                <?php echo matrix_new_tab_announcement_html((string) ($dropdown_cta['target'] ?? '_self')); ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -100,6 +101,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                                     @mouseenter="activeTier3Index = null"
                                                 >
                                                     <?php echo esc_html($child->label); ?>
+                                                    <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
                                                 </a>
                                             <?php endif; ?>
                                         </li>
@@ -140,6 +142,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                                         <?php if (!empty($grandchild->target)) : ?>target="<?php echo esc_attr($grandchild->target); ?>"<?php endif; ?>
                                                     >
                                                         <?php echo esc_html($grandchild->label); ?>
+                                                        <?php echo matrix_new_tab_announcement_html((string) ($grandchild->target ?? '')); ?>
                                                     </a>
                                                 </li>
                                             <?php endforeach; ?>

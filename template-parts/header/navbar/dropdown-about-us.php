@@ -95,6 +95,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     @mouseenter="activePanelIndex = -1"
                                 >
                                     <?php echo esc_html($child->label); ?>
+                                    <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
                                 </a>
                             <?php endif; ?>
                         </li>
@@ -148,6 +149,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                             <?php if (! empty($grandchild->target)) : ?>target="<?php echo esc_attr($grandchild->target); ?>"<?php endif; ?>
                                         >
                                             <?php echo esc_html($grandchild->label); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($grandchild->target ?? '')); ?>
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
