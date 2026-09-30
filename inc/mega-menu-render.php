@@ -267,6 +267,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                                 <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
                                             >
                                                 <?php echo esc_html($child->label); ?>
+                                                <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
@@ -283,6 +284,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                                 <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
                                             >
                                                 <?php echo esc_html($child->label); ?>
+                                                <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
@@ -298,6 +300,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                             <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
                                         >
                                             <?php echo esc_html($child->label); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
