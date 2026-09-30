@@ -86,13 +86,15 @@ if (!function_exists('matrix_resolve_link')) {
             $out['url']    = (string) ($raw['url'] ?? '');
             $out['title']  = (string) ($raw['title'] ?? '');
             $out['target'] = (string) ($raw['target'] ?? '_self');
-            return $out;
-        }
-        if (is_string($raw)) {
+        } elseif (is_string($raw)) {
             $out['url']   = $raw;
             $out['title'] = $raw;
-            return $out;
         }
+
+        if ($out['url'] !== '' && function_exists('matrix_normalize_link_target')) {
+            $out['target'] = matrix_normalize_link_target($out['url'], $out['target']);
+        }
+
         return $out;
     }
 }
@@ -144,6 +146,7 @@ $mob_icons = [
                      target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
                      class="text-sm text-dark-bg hover:underline">
                     <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                    <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                   </a>
                 <?php endforeach; ?>
               </nav>
@@ -332,6 +335,7 @@ $mob_icons = [
                                        class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                                         </span>
                                     </a>
                                 <?php endforeach; ?>
@@ -355,6 +359,7 @@ $mob_icons = [
                                        class="inline-flex justify-start items-center gap-2.5 w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                                         </span>
                                     </a>
                                 <?php endforeach; ?>
@@ -378,6 +383,7 @@ $mob_icons = [
                                        class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                                         </span>
                                     </a>
                                 <?php endforeach; ?>
@@ -401,6 +407,7 @@ $mob_icons = [
                                        class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
+                                            <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                                         </span>
                                     </a>
                                 <?php endforeach; ?>
