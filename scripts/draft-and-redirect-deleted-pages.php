@@ -55,7 +55,7 @@ function matrix_delete_path_redirect_overrides(): array
     return [
         // Pages (existing map + extras)
         'advocacy-services' => '/about-us/our-present-and-future/advocacy-centre/',
-        'advocacy-services/youth-advocacy' => '/human-rights-advocacy/',
+        'advocacy-services/youth-advocacy' => '/about-us/advocacy/youth-advocacy/',
         'getting-help/learning-resource-hub/anxiety-information-booklet' => '/service-users-and-visitors/',
         'getting-help/learning-resource-hub/carers-supporters-information-guide' => '/service-users-and-visitors/carers-and-supporters/',
         'getting-help/learning-resource-hub/coming-off-benzodiazepine-or-z-drugs' => '/service-users-and-visitors/',
@@ -97,10 +97,10 @@ function matrix_delete_path_redirect_overrides(): array
         'mental-health' => '/service-users-and-visitors/about-mental-health/',
         'yourmentalhealth' => '/service-users-and-visitors/about-mental-health/',
         'strategy-2018-2022' => '/about-us/',
-        'collaborative-efforts' => '/about-us/',
+        'collaborative-efforts' => '/about-us/advocacy/collaborative-efforts/',
         'flexi' => '/',
         'transformation-of-st-patricks-campus' => '/about-us/our-present-and-future/',
-        'public-education-anti-stigma-campaigns' => '/lifewithoutstigma/',
+        'public-education-anti-stigma-campaigns' => '/about-us/advocacy/public-education-anti-stigma-campaigns/',
         'shareyourexperience' => '/service-users-and-visitors/feedback-and-comments/',
         'service-users-and-visitors/attending-our-day-programmes' => '/what-we-offer/day-programmes/',
 

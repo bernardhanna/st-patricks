@@ -86,10 +86,10 @@ $top_level = [
     ]],
     ['Advocacy', $home . 'about-us/advocacy/', [
         ['Human Rights Advocacy', $home . 'human-rights-advocacy/'],
-        ['Public Education & Anti-Stigma Campaigns', $home . 'public-education-anti-stigma-campaigns/'],
-        ['Collaborative Efforts', $home . 'collaborative-efforts/'],
+        ['Public Education & Anti-Stigma Campaigns', $home . 'about-us/advocacy/public-education-anti-stigma-campaigns/'],
+        ['Collaborative Efforts', $home . 'about-us/advocacy/collaborative-efforts/'],
         ['Advocacy Services', $home . 'advocacy-services/'],
-        ['Youth Advocacy', $home . 'advocacy-services/youth-advocacy/'],
+        ['Youth Advocacy', $home . 'about-us/advocacy/youth-advocacy/'],
     ]],
     ['Support us', $home . 'about-us/support-us/'],
     ['Our Locations', $home . 'about-us/our-locations/'],
