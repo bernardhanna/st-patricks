@@ -17,11 +17,20 @@ $newsletter
     'ui'            => 1,
     'default_value' => 1,
   ])
-  // Mirror field used by matrix_subscribe_brevo() gate:
   ->addTrueFalse('newsletter_enabled', [
-    'label'         => 'Enable Newsletter (AJAX gate for Brevo)',
+    'label'         => 'Enable Newsletter (AJAX subscribe)',
     'ui'            => 1,
     'default_value' => 1,
+  ])
+  ->addSelect('newsletter_provider', [
+    'label'         => 'Newsletter provider',
+    'choices'       => [
+      'mailchimp' => 'Mailchimp',
+      'brevo'     => 'Brevo',
+    ],
+    'default_value' => 'mailchimp',
+    'ui'            => 1,
+    'instructions'  => 'Mailchimp is used for newsletter signups. Brevo remains available for contact forms, or as a fallback here.',
   ])
 
   // Design
@@ -76,7 +85,7 @@ $newsletter
     ->addUrl('newsletter_action', [
       'label'         => 'Form Action URL',
       'default_value' => '',
-      'instructions'  => 'Leave empty to use Brevo AJAX subscribe. Set to external endpoint to POST directly.',
+      'instructions'  => 'Leave empty to use Mailchimp/Brevo AJAX subscribe. Set only if you need a custom POST endpoint.',
     ])
     ->addText('name_label', [
       'label'         => 'Name Label',
@@ -92,7 +101,7 @@ $newsletter
     ])
     ->addText('email_placeholder', [
       'label'         => 'Email Placeholder',
-      'default_value' => 'Joeblogs@mail.com',
+      'default_value' => 'Enter email address',
     ])
     ->addText('submit_text', [
       'label'         => 'Submit Button Text',
@@ -119,15 +128,38 @@ $newsletter
     ])
   ->addAccordion('newsletter_form_acc_end', ['endpoint' => 1])
 
-  // Brevo (AJAX) global config used by matrix_subscribe_brevo()
-  ->addAccordion('newsletter_brevo_acc', ['label' => 'Brevo (AJAX)'])
+  ->addAccordion('newsletter_mailchimp_acc', ['label' => 'Mailchimp'])
+    ->addText('mailchimp_api_key', [
+      'label'         => 'Mailchimp API Key',
+      'instructions'  => 'Prefer define(\'MATRIX_MAILCHIMP_KEY\', \'xxxx-us21\'); in wp-config.php. The suffix after the last hyphen is the datacenter.',
+    ])
+    ->addText('mailchimp_list_id', [
+      'label'         => 'Default Mailchimp audience ID',
+      'instructions'  => 'Used by the site-wide footer form. Page blocks can pick a different audience.',
+    ])
+    ->addTrueFalse('mailchimp_double_opt_in', [
+      'label'         => 'Double opt-in (confirmation email)',
+      'ui'            => 1,
+      'default_value' => 1,
+    ])
+    ->addText('mailchimp_success_message', [
+      'label'         => 'Success Message',
+      'default_value' => 'Thanks — please check your email to confirm your subscription.',
+    ])
+    ->addText('mailchimp_error_message', [
+      'label'         => 'Error Message',
+      'default_value' => 'Sorry, something went wrong. Please try again.',
+    ])
+  ->addAccordion('newsletter_mailchimp_acc_end', ['endpoint' => 1])
+
+  ->addAccordion('newsletter_brevo_acc', ['label' => 'Brevo (contact forms / fallback)'])
     ->addText('brevo_api_key', [
       'label'         => 'Brevo API Key',
-      'instructions'  => 'Prefer define(\'MATRIX_BREVO_KEY\', \'...\'); in wp-config.php. This field is a local fallback only.',
+      'instructions'  => 'Used by contact forms. Prefer define(\'MATRIX_BREVO_KEY\', \'...\'); in wp-config.php.',
     ])
     ->addText('brevo_list_ids', [
       'label'         => 'Default Brevo List IDs (comma-separated)',
-      'instructions'  => 'Can be overridden by form hidden field or page-level config.',
+      'instructions'  => 'Only used if Newsletter provider is set to Brevo.',
     ])
     ->addText('brevo_default_confirm_message', [
       'label'         => 'Default Success Message',

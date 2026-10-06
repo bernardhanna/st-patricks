@@ -16,7 +16,8 @@ if (! defined('ABSPATH')) {
 
 require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
 
-$post_id = (int) (get_page_by_path('about-us/clinical-psychologists')?->ID
+$post_id = (int) (get_page_by_path('about-us/our-team/psychologists')?->ID
+    ?? get_page_by_path('about-us/clinical-psychologists')?->ID
     ?? get_page_by_path('about-us/psychologists')?->ID
     ?? 0);
 

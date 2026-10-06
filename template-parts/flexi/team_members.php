@@ -1,7 +1,9 @@
 <?php
 
-$section_id = 'team-members-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading = trim((string) get_sub_field('heading'));
+$section_id = function_exists('matrix_flexi_heading_section_id')
+    ? matrix_flexi_heading_section_id($heading !== '' ? $heading : 'Our Senior Management Team', 'team-members')
+    : 'team-members-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro = get_sub_field('intro');
 $layout_style = (string) get_sub_field('layout_style');

@@ -3,7 +3,7 @@
 if (! function_exists('matrix_get_nav_mega_menu_shell_classes')) {
     function matrix_get_nav_mega_menu_shell_classes(): string
     {
-        return 'pointer-events-none fixed left-0 top-[var(--site-header-height,120px)] z-[55] flex w-screen flex-col bg-transparent';
+        return 'pointer-events-none fixed left-0 top-[calc(var(--site-header-height,8.5rem)+0.75rem)] z-[75] flex w-screen flex-col bg-transparent';
     }
 }
 

@@ -111,7 +111,7 @@ $footer
     ->addLink('contact_phone_link', [
       'label'         => 'Phone (Link Array)',
       'return_format' => 'array',
-      'default_value' => ['url' => 'tel:+3531012123123', 'title' => '01 012 123 123', 'target' => '_self'],
+      'default_value' => ['url' => 'tel:+35312493200', 'title' => '01 249 3200', 'target' => '_self'],
     ])
     ->addLink('contact_email_link', [
       'label'         => 'Email (Link Array)',

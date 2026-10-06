@@ -7,8 +7,7 @@ $contact_text_class_names = matrix_get_key_contact_info_contact_text_class_names
 $opening_hours = is_array($item['opening_hours'] ?? null) ? $item['opening_hours'] : [];
 $location_url = trim((string) ($item['location_url'] ?? ''));
 
-$has_bullets = ($item['bullet_items'] ?? []) !== [];
-$wrapper_classes = trim($panel_class_names . ($has_bullets ? '' : ' pt-0'));
+$wrapper_classes = $panel_class_names;
 ?>
 
 <div class="<?php echo esc_attr($wrapper_classes); ?>">

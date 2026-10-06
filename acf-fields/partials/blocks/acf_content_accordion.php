@@ -25,6 +25,7 @@ $content_accordion
         ])
         ->addSelect('heading_tag', [
             'label' => 'Title Tag',
+            'instructions' => 'Usually H2 for a top-level section under the page hero. Use H3 only when this accordion is nested under another section heading.',
             'choices' => [
                 'h2' => 'H2',
                 'h3' => 'H3',
@@ -198,6 +199,7 @@ $content_accordion
                 'bottom_only' => 'Bottom only (no top padding)',
                 'small_top_large_bottom' => 'Small top / large bottom (2rem top, 100px bottom)',
                 'top_50_bottom_100' => '50px top / 100px bottom',
+                'compact' => 'Compact (3rem top and bottom)',
             ],
             'default_value' => 'default',
             'ui' => 1,

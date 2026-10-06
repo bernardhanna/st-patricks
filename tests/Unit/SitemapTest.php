@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__DIR__, 2) . '/inc/sitemap-functions.php';
+require_once dirname(__DIR__, 2) . '/inc/link-functions.php';
 
 beforeEach(function () {
     $GLOBALS['matrix_test_sitemap_post_fields'] = [];
@@ -87,4 +88,43 @@ test('sitemap taxonomy children build filtered archive urls', function () {
     expect($children)->not->toBeEmpty();
     expect($children[0]['title'])->toBe('All');
     expect($children[0]['url'])->toBe('http://localhost:10034/news-and-events/');
+});
+
+test('sitemap listable helper skips drafts and redirected paths', function () {
+    $draft = (object) [
+        'ID' => 3077,
+        'post_status' => 'draft',
+        'post_type' => 'page',
+        'post_title' => 'GPs & Referrers',
+    ];
+    $published = (object) [
+        'ID' => 232,
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_title' => 'Healthcare Professionals',
+    ];
+
+    expect(matrix_sitemap_post_is_listable($draft))->toBeFalse();
+    expect(matrix_sitemap_post_is_listable($published))->toBeTrue();
+    expect(matrix_sitemap_path_is_redirected('referrals'))->toBeTrue();
+    expect(matrix_sitemap_path_is_redirected('healthcare-professionals'))->toBeFalse();
+});
+
+test('sitemap hub list no longer includes leftover referral and help shells', function () {
+    $paths = matrix_get_sitemap_hub_page_paths();
+
+    expect($paths)->toContain('healthcare-professionals')
+        ->and($paths)->toContain('service-users-and-visitors')
+        ->and($paths)->not->toContain('referrals')
+        ->and($paths)->not->toContain('make-a-referral')
+        ->and($paths)->not->toContain('getting-help')
+        ->and($paths)->not->toContain('get-involved');
+});
+
+test('inpatient extra children retarget make a referral to the adult inpatient refer page', function () {
+    $extra = matrix_get_sitemap_hub_extra_children();
+
+    expect($extra['inpatient-care'])->toContain('healthcare-professionals/refer-an-adult-for-inpatient-care')
+        ->and($extra['inpatient-care'])->not->toContain('make-a-referral')
+        ->and($extra['service-users-and-visitors'])->toContain('getting-help/concerned-about-yourself-or-someone-you-know');
 });

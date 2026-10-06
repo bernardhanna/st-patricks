@@ -249,7 +249,7 @@ if (! function_exists('matrix_seed_build_programmes_therapies_flexi_rows')) {
                 'acf_fc_layout' => 'programmes_therapies_archive',
                 'heading' => 'Select a programme or therapy',
                 'heading_tag' => 'h2',
-                'posts_per_page' => 10,
+                'posts_per_page' => 6,
                 'empty_state_message' => 'No programmes or therapies matched your filters.',
                 'padding_settings' => $section_padding,
             ],

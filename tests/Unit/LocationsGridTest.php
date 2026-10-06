@@ -108,3 +108,9 @@ test('locations grid card wrapper uses beige surface behind short titles', funct
     expect($template)->toContain('group flex h-full flex-col overflow-hidden rounded-[8px] bg-[#FBFAF7] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]')
         ->and($template)->not->toContain('group flex h-full flex-col overflow-hidden rounded-[8px] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]');
 });
+
+test('locations grid vertical padding can sit flush under the previous section', function () {
+    expect(matrix_get_locations_grid_vertical_padding_classes('default'))->toBe('py-12 lg:py-[100px]')
+        ->and(matrix_get_locations_grid_vertical_padding_classes('no_top'))->toContain('lg:pt-0')
+        ->and(matrix_get_locations_grid_vertical_padding_classes('no_bottom'))->toContain('lg:pb-0');
+});

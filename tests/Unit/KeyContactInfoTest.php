@@ -44,7 +44,7 @@ test('matrix_normalize_key_contact_info_columns adds placeholders for empty pane
     ]);
 
     expect($normalized['columns'][0]['items'][0]['bullet_items'])->toHaveCount(3)
-        ->and($normalized['columns'][0]['items'][0]['phone'])->toBe('01 012 123 123')
+        ->and($normalized['columns'][0]['items'][0]['phone'])->toBe('01 249 3200')
         ->and($normalized['columns'][0]['items'][0]['email'])->toBe('hello@StPatrick.ie');
 });
 
@@ -118,5 +118,8 @@ test('key contact info layout helpers expose figma spacing and typography classe
         ->and(matrix_get_key_contact_info_grid_class_names(2))->not->toContain('lg:grid-cols-3')
         ->and(matrix_get_key_contact_info_grid_class_names())->toContain('lg:gap-x-8')
         ->and(matrix_get_key_contact_info_title_class_names())->toContain('lg:text-[18px]')
-        ->and(matrix_get_key_contact_info_item_class_names())->toContain('border-white');
+        ->and(matrix_get_key_contact_info_item_class_names())->toContain('border-white')
+        ->and(matrix_get_key_contact_info_item_class_names())->toContain('matrix-contact-accordion-card')
+        ->and(matrix_get_key_contact_info_panel_class_names())->toContain('pt-3')
+        ->and(matrix_get_key_contact_info_header_class_names())->not->toContain('focus-visible:ring-2');
 });

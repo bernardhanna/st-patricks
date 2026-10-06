@@ -57,6 +57,7 @@ $careers_links   = get_field('careers_links', 'option');
 
 $contact_heading    = get_field('contact_heading', 'option') ?: 'Contact us';
 $locations_heading  = get_field('locations_heading', 'option') ?: 'Our Locations';
+$locations_map_url  = home_url('/contact-us/');
 $contact_phone_link = get_field('contact_phone_link', 'option');
 $contact_email_link = get_field('contact_email_link', 'option');
 
@@ -108,6 +109,8 @@ $mob_icons = [
     'facebook' => '<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M19.723 16.9995L20.1675 14.104H17.389V12.225C17.389 11.433 17.777 10.6605 19.0215 10.6605H20.2845V8.1955C20.2845 8.1955 19.1385 8 18.0425 8C15.7545 8 14.259 9.387 14.259 11.8975V14.1045H11.7155V17H14.259V24H17.389V17L19.723 16.9995Z" fill="#024B79"/></svg>',
     'tiktok'   => '<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M16.3513 8.01399C17.2238 8.00049 18.0913 8.00849 18.9578 8.00049C19.0103 9.02099 19.3773 10.0605 20.1243 10.782C20.8698 11.5215 21.9243 11.86 22.9503 11.9745V14.659C21.9888 14.6275 21.0228 14.4275 20.1503 14.0135C19.7703 13.8415 19.4163 13.62 19.0698 13.3935C19.0653 15.3415 19.0778 17.287 19.0573 19.227C19.0053 20.159 18.6978 21.0865 18.1558 21.8545C17.2838 23.133 15.7703 23.9665 14.2158 23.9925C13.2623 24.047 12.3098 23.787 11.4973 23.308C10.1508 22.514 9.20327 21.0605 9.06527 19.5005C9.04769 19.1701 9.04502 18.8391 9.05727 18.5085C9.17727 17.24 9.80477 16.0265 10.7788 15.201C11.8828 14.2395 13.4293 13.7815 14.8773 14.0525C14.8908 15.04 14.8513 16.0265 14.8513 17.014C14.1898 16.8 13.4168 16.86 12.8388 17.2615C12.4159 17.5401 12.0964 17.95 11.9293 18.428C11.7913 18.766 11.8308 19.1415 11.8388 19.5005C11.9973 20.5945 13.0493 21.514 14.1723 21.4145C14.9168 21.4065 15.6303 20.9745 16.0183 20.342C16.1438 20.1205 16.2843 19.894 16.2918 19.6335C16.3573 18.441 16.3313 17.2535 16.3393 16.061C16.3448 13.3735 16.3313 10.6935 16.3518 8.01449Z" fill="#024B79"/></svg>',
     'instagram'=> '<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M16 8.00098C13.8255 8.00098 13.5545 8.01148 12.7035 8.04748C11.849 8.08948 11.271 8.22198 10.761 8.41998C10.2273 8.62153 9.74387 8.93702 9.34451 9.34448C8.93642 9.74332 8.62084 10.2269 8.42001 10.761C8.22201 11.271 8.08951 11.849 8.04751 12.7035C8.00901 13.555 8.00101 13.8255 8.00101 16C8.00101 18.1745 8.01151 18.4455 8.04751 19.2965C8.08951 20.1485 8.22201 20.729 8.42001 21.239C8.62156 21.7727 8.93705 22.2561 9.34451 22.6555C9.74335 23.0636 10.2269 23.3791 10.761 23.58C11.271 23.7755 11.8515 23.9105 12.7035 23.9525C13.555 23.991 13.8255 23.999 16 23.999C18.1745 23.999 18.4455 23.9885 19.2965 23.9525C20.1485 23.9105 20.729 23.775 21.239 23.58C21.7728 23.3784 22.2561 23.0629 22.6555 22.6555C23.0649 22.2577 23.3807 21.7738 23.58 21.239C23.7755 20.729 23.9105 20.1485 23.9525 19.2965C23.991 18.445 23.999 18.1745 23.999 16C23.999 13.8255 23.9885 13.5545 23.9525 12.7035C23.9105 11.8515 23.775 11.268 23.58 10.761C23.3785 10.2272 23.063 9.74384 22.6555 9.34448C22.2577 8.93511 21.7739 8.61933 21.239 8.41998C20.729 8.22198 20.1485 8.08948 19.2965 8.04748C18.445 8.00898 18.1745 8.00098 16 8.00098ZM16 9.44098C18.1355 9.44098 18.3905 9.45148 19.2345 9.48748C20.013 9.52398 20.437 9.65398 20.7185 9.76398C21.0664 9.8926 21.3814 10.097 21.6405 10.3625C21.906 10.62 22.1098 10.9344 22.2365 11.282C22.3465 11.5635 22.4765 11.9875 22.513 12.766C22.549 13.61 22.5595 13.8655 22.5595 16.0005C22.5595 18.1355 22.549 18.391 22.51 19.235C22.468 20.0135 22.338 20.4375 22.2285 20.719C22.077 21.0945 21.908 21.357 21.629 21.641C21.3691 21.9049 21.0543 22.1083 20.707 22.237C20.429 22.347 19.999 22.477 19.2175 22.5135C18.369 22.5495 18.119 22.56 15.978 22.56C13.837 22.56 13.5875 22.5495 12.738 22.5105C11.9595 22.4685 11.53 22.3385 11.2485 22.229C10.8685 22.0775 10.608 21.9085 10.329 21.6295C10.0475 21.348 9.86851 21.08 9.73051 20.7075C9.61851 20.4295 9.49051 19.9995 9.44901 19.218C9.42051 18.3795 9.40701 18.1195 9.40701 15.9885C9.40701 13.8585 9.42051 13.598 9.44901 12.749C9.49051 11.9675 9.61851 11.5385 9.73051 11.2595C9.86851 10.879 10.048 10.619 10.329 10.3375C10.6075 10.059 10.8685 9.87898 11.2485 9.73798C11.53 9.62848 11.949 9.49848 12.7305 9.45948C13.579 9.42898 13.829 9.41798 15.967 9.41798L16 9.44098Z" fill="#024B79"/></svg>',
+    'youtube'  => '<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M27.54 10.22a3.2 3.2 0 0 0-2.25-2.26C23.26 7.5 16 7.5 16 7.5s-7.26 0-9.29.46a3.2 3.2 0 0 0-2.25 2.26A24.6 24.6 0 0 0 4 16a24.6 24.6 0 0 0 .46 5.78 3.2 3.2 0 0 0 2.25 2.26C8.74 24.5 16 24.5 16 24.5s7.26 0 9.29-.46a3.2 3.2 0 0 0 2.25-2.26A24.6 24.6 0 0 0 28 16a24.6 24.6 0 0 0-.46-5.78zM13.6 20.1V11.9L20.8 16z" fill="#024B79"/></svg>',
+    'linkedin' => '<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9.43 12.25H6.08V25h3.35V12.25zM7.74 7C6.61 7 5.7 7.92 5.7 9.06c0 1.13.91 2.06 2.04 2.06 1.14 0 2.05-.93 2.05-2.06C9.79 7.92 8.88 7 7.74 7zM25.9 17.9c0-3.82-2.04-5.6-4.76-5.6-2.19 0-3.17 1.21-3.72 2.06V12.25h-3.35c.04.94 0 12.75 0 12.75h3.35v-7.12c0-.38.03-.76.14-1.03.3-.76.99-1.55 2.15-1.55 1.52 0 2.12 1.16 2.12 2.85V25H25.9v-7.1z" fill="#024B79"/></svg>',
 ];
 
 // ====== MOBILE FOOTER (lg and below) ======
@@ -144,7 +147,7 @@ $mob_icons = [
                   if (empty($link['url'])) continue; ?>
                   <a href="<?php echo esc_url($link['url']); ?>"
                      target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                     class="text-sm text-dark-bg hover:underline">
+                     class="text-sm text-dark-bg no-underline hover:underline">
                     <?php echo esc_html($link['title'] ?: $link['url']); ?>
                     <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
                   </a>
@@ -162,7 +165,11 @@ $mob_icons = [
 
     <div class="mb-8">
       <h3 class="mb-2 font-primary text-[18px] not-italic font-semibold leading-[22.75px] tracking-[-0.09px] text-[#1E244B]"><?php echo esc_html($contact_heading); ?></h3>
-      <p class="mb-6 text-sm font-medium text-dark-bg"><?php echo esc_html($locations_heading); ?></p>
+      <p class="mb-6 text-sm font-medium text-dark-bg">
+        <a href="<?php echo esc_url($locations_map_url); ?>" class="text-sm font-medium text-dark-bg no-underline hover:underline">
+          <?php echo esc_html($locations_heading); ?>
+        </a>
+      </p>
 
       <div class="flex flex-col gap-3 mb-3">
         <?php if (!empty($contact_phone_link['url'])): ?>
@@ -172,7 +179,7 @@ $mob_icons = [
             <path d="M14.0498 2C16.0881 2.21477 17.992 3.1188 19.4467 4.56258C20.9014 6.00636 21.8197 7.90341 22.0498 9.94" stroke="#024B79" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M14.0498 6C15.0333 6.19394 15.9358 6.67903 16.6402 7.39231C17.3446 8.10559 17.8183 9.01413 17.9998 10" stroke="#024B79" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <a href="<?php echo esc_url($contact_phone_link['url']); ?>" target="<?php echo esc_attr($contact_phone_link['target'] ?: '_self'); ?>" class="text-sm text-dark-bg hover:underline">
+          <a href="<?php echo esc_url($contact_phone_link['url']); ?>" target="<?php echo esc_attr($contact_phone_link['target'] ?: '_self'); ?>" class="text-sm text-dark-bg no-underline hover:underline">
             <?php echo esc_html($contact_phone_link['title'] ?: $contact_phone_link['url']); ?>
           </a>
         </div>
@@ -184,7 +191,7 @@ $mob_icons = [
             <path d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4Z" stroke="#024B79" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M22 7L13.03 12.7C12.7213 12.8934 12.3643 12.996 12 12.996C11.6357 12.996 11.2787 12.8934 10.97 12.7L2 7" stroke="#024B79" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <a href="<?php echo esc_url($contact_email_link['url']); ?>" target="<?php echo esc_attr($contact_email_link['target'] ?: '_self'); ?>" class="text-sm text-dark-bg hover:underline">
+          <a href="<?php echo esc_url($contact_email_link['url']); ?>" target="<?php echo esc_attr($contact_email_link['target'] ?: '_self'); ?>" class="text-sm text-dark-bg no-underline hover:underline">
             <?php echo esc_html($contact_email_link['title'] ?: $contact_email_link['url']); ?>
           </a>
         </div>
@@ -216,7 +223,7 @@ $mob_icons = [
           <?php if (!empty($legal_links)): foreach ($legal_links as $row):
             $link = matrix_resolve_link($row);
             if (empty($link['url'])) continue; ?>
-            <a href="<?php echo esc_url($link['url']); ?>" target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" class="hover:underline">
+            <a href="<?php echo esc_url($link['url']); ?>" target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" class="no-underline hover:underline">
               <?php echo esc_html($link['title'] ?: $link['url']); ?>
               <?php if (($link['target'] ?: '_self') === '_blank') : ?>
                 <span class="sr-only"> (opens in a new tab)</span>
@@ -227,7 +234,7 @@ $mob_icons = [
         <div class="flex gap-1 items-center text-sm text-dark-bg">
           <span><?php echo esc_html($developer_credit); ?></span>
           <?php if (!empty($developer_credit_link['url'])): ?>
-            <a href="<?php echo esc_url($developer_credit_link['url']); ?>" target="<?php echo esc_attr($developer_credit_link['target'] ?: '_blank'); ?>" rel="noopener noreferrer" class="hover:underline">
+            <a href="<?php echo esc_url($developer_credit_link['url']); ?>" target="<?php echo esc_attr($developer_credit_link['target'] ?: '_blank'); ?>" rel="noopener noreferrer" class="no-underline hover:underline">
               <?php echo esc_html($developer_credit_link['title'] ?: 'Matrix Internet'); ?>
               <?php if (($developer_credit_link['target'] ?: '_blank') === '_blank') : ?>
                 <span class="sr-only"> (opens in a new tab)</span>
@@ -332,7 +339,7 @@ $mob_icons = [
                                     if (empty($link['url'])) continue; ?>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
@@ -356,7 +363,7 @@ $mob_icons = [
                                     if (empty($link['url'])) continue; ?>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
@@ -380,7 +387,7 @@ $mob_icons = [
                                     if (empty($link['url'])) continue; ?>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
@@ -404,7 +411,7 @@ $mob_icons = [
                                     if (empty($link['url'])) continue; ?>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($link['target'] ?: '_self')); ?>
@@ -424,7 +431,10 @@ $mob_icons = [
 
                             <address class="flex flex-col self-start mt-6 text-sm not-italic leading-6">
                                 <h3 class="font-primary text-[14px] not-italic font-medium leading-[24px] text-[#1E244B]">
-                                    <?php echo esc_html($locations_heading); ?>
+                                    <a href="<?php echo esc_url($locations_map_url); ?>"
+                                       class="inline-flex w-fit font-primary text-[14px] not-italic font-medium leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                        <?php echo esc_html($locations_heading); ?>
+                                    </a>
                                 </h3>
 
                                 <?php if (!empty($contact_phone_link['url'])) : ?>
@@ -438,7 +448,7 @@ $mob_icons = [
                                         </div>
                                         <a href="<?php echo esc_url($contact_phone_link['url']); ?>"
                                            target="<?php echo esc_attr($contact_phone_link['target'] ?: '_self'); ?>"
-                                           class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                           class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                             <span class="self-stretch my-auto text-current">
                                                 <?php echo esc_html($contact_phone_link['title'] ?: $contact_phone_link['url']); ?>
                                             </span>
@@ -456,7 +466,7 @@ $mob_icons = [
                                         </div>
                                         <a href="<?php echo esc_url($contact_email_link['url']); ?>"
                                            target="<?php echo esc_attr($contact_email_link['target'] ?: '_self'); ?>"
-                                           class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                           class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                             <span class="self-stretch my-auto text-current">
                                                 <?php echo esc_html($contact_email_link['title'] ?: $contact_email_link['url']); ?>
                                             </span>
@@ -487,6 +497,12 @@ $mob_icons = [
                                             </svg>',
                                         'instagram'=> '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                             <path d="M7.999 0C5.8245 0 5.5535 0.0105 4.7025 0.0465C3.848 0.0885 3.27 0.221 2.76 0.419C2.22625 0.620553 1.74286 0.936045 1.3435 1.3435C0.935418 1.74235 0.619829 2.22589 0.419 2.76C0.221 3.27 0.0885 3.848 0.0465 4.7025C0.008 5.554 0 5.8245 0 7.999C0 10.1735 0.0105 10.4445 0.0465 11.2955C0.0885 12.1475 0.221 12.728 0.419 13.238C0.620553 13.7717 0.936045 14.2551 1.3435 14.6545C1.74235 15.0626 2.22589 15.3782 2.76 15.579C3.27 15.7745 3.8505 15.9095 4.7025 15.9515C5.554 15.99 5.8245 15.998 7.999 15.998C10.1735 15.998 10.4445 15.9875 11.2955 15.9515C12.1475 15.9095 12.728 15.774 13.238 15.579C13.7717 15.3774 14.2551 15.062 14.6545 14.6545C15.0639 14.2567 15.3796 13.7729 15.579 13.238C15.7745 12.728 15.9095 12.1475 15.9515 11.2955C15.99 10.444 15.998 10.1735 15.998 7.999C15.998 5.8245 15.9875 5.5535 15.9515 4.7025C15.9095 3.8505 15.774 3.267 15.579 2.76C15.3774 2.22625 15.062 1.74286 14.6545 1.3435C14.2567 0.934138 13.7729 0.618351 13.238 0.419C12.728 0.221 12.1475 0.0885 11.2955 0.0465C10.444 0.008 10.1735 0 7.999 0ZM7.999 1.44C10.1345 1.44 10.3895 1.4505 11.2335 1.4865C12.012 1.523 12.436 1.653 12.7175 1.763C13.0654 1.89163 13.3804 2.09607 13.6395 2.3615C13.905 2.61907 14.1088 2.93343 14.2355 3.281C14.3455 3.5625 14.4755 3.9865 14.512 4.765C14.548 5.609 14.5585 5.8645 14.5585 7.9995C14.5585 10.1345 14.548 10.39 14.509 11.234C14.467 12.0125 14.337 12.4365 14.2275 12.718C14.076 13.0935 13.907 13.356 13.628 13.64C13.3681 13.9039 13.0533 14.1074 12.706 14.236C12.428 14.346 11.998 14.476 11.2165 14.5125C10.368 14.5485 10.118 14.559 7.977 14.559C5.836 14.559 5.5865 14.5485 4.737 14.5095C3.9585 14.4675 3.529 14.3375 3.2475 14.228C2.8675 14.0765 2.607 13.9075 2.328 13.6285C2.0465 13.347 1.8675 13.079 1.7295 12.7065C1.6175 12.4285 1.4895 11.9985 1.448 11.217C1.4195 10.3785 1.406 10.1185 1.406 7.9875C1.406 5.8575 1.4195 5.597 1.448 4.748C1.4895 3.9665 1.6175 3.5375 1.7295 3.2585C1.8675 2.878 2.047 2.618 2.328 2.3365C2.6065 2.058 2.8675 1.878 3.2475 1.737C3.529 1.6275 3.948 1.4975 4.7295 1.4585C5.578 1.428 5.828 1.417 7.966 1.417L7.999 1.44ZM7.999 3.8935C7.45967 3.8933 6.92559 3.99939 6.42728 4.20569C5.92897 4.41199 5.47619 4.71446 5.09483 5.09583C4.71346 5.47719 4.41099 5.92997 4.20469 6.42828C3.99839 6.92659 3.8923 7.46067 3.8925 8C3.8923 8.53933 3.99839 9.07341 4.20469 9.57172C4.41099 10.07 4.71346 10.5228 5.09483 10.9042C5.47619 11.2855 5.92897 11.588 6.42728 11.7943C6.92559 12.0006 7.45967 12.1067 7.999 12.1065C8.53833 12.1067 9.07241 12.0006 9.57072 11.7943C10.069 11.588 10.5218 11.2855 10.9032 10.9042C11.2845 10.5228 11.587 10.07 11.7933 9.57172C11.9996 9.07341 12.1057 8.53933 12.1055 8C12.1057 7.46067 11.9996 6.92659 11.7933 6.42828C11.587 5.92997 11.2845 5.47719 10.9032 5.09583C10.5218 4.71446 10.069 4.41199 9.57072 4.20569C9.07241 3.99939 8.53833 3.8933 7.999 3.8935ZM7.999 10.6665C6.525 10.6665 5.3325 9.474 5.3325 8C5.3325 6.526 6.525 5.3335 7.999 5.3335C9.473 5.3335 10.6655 6.526 10.6655 8C10.6655 9.474 9.473 10.6665 7.999 10.6665ZM13.231 3.7295C13.2307 3.98433 13.1293 4.22864 12.949 4.40874C12.7687 4.58884 12.5243 4.69 12.2695 4.69C12.1435 4.69 12.0187 4.66518 11.9023 4.61696C11.7859 4.56874 11.6801 4.49807 11.591 4.40897C11.5019 4.31987 11.4313 4.2141 11.383 4.09768C11.3348 3.98127 11.31 3.8565 11.31 3.7305C11.31 3.6045 11.3348 3.47973 11.383 3.36332C11.4313 3.2469 11.5019 3.14113 11.591 3.05203C11.6801 2.96293 11.7859 2.89226 11.9023 2.84404C12.0187 2.79582 12.1435 2.771 12.2695 2.771C12.798 2.771 13.231 3.201 13.231 3.7295Z" fill="#024B79"/>
+                                            </svg>',
+                                        'youtube'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M23.5 6.2a3 3 0 0 0-2.12-2.12C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.38.48A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.12 2.12C4.5 20.4 12 20.4 12 20.4s7.5 0 9.38-.48a3 3 0 0 0 2.12-2.12A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.75 15.57V8.43L15.84 12z" fill="#024B79"/>
+                                            </svg>',
+                                        'linkedin' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="M6.94 8.5H3.75V21h3.19V8.5zM5.34 3C4.05 3 3 4.06 3 5.34c0 1.27 1.05 2.32 2.34 2.32 1.3 0 2.35-1.05 2.35-2.32C7.69 4.06 6.64 3 5.34 3zM21 13.04c0-3.67-1.96-5.38-4.57-5.38-2.1 0-3.04 1.16-3.57 1.98V8.5H9.75c.05.9 0 12.5 0 12.5h3.11v-6.98c0-.37.03-.74.13-1.01.3-.73.97-1.49 2.1-1.49 1.48 0 2.07 1.13 2.07 2.79V21H21v-7.96z" fill="#024B79"/>
                                             </svg>',
                                     ];
                                     foreach ($social_links as $s) :
@@ -525,7 +541,7 @@ $mob_icons = [
                                     <span class="self-stretch my-auto text-sky-200" aria-hidden="true">|</span>
                                     <a href="<?php echo esc_url($link['url']); ?>"
                                        target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
-                                       class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] underline underline-offset-2 transition-colors duration-200 hover:text-[#024B79] hover:no-underline focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
+                                       class="inline-flex justify-start items-center gap-2.5 self-stretch my-auto whitespace-nowrap w-fit font-primary text-[14px] not-italic font-normal leading-[24px] text-[#1E244B] no-underline underline-offset-2 transition-colors duration-200 hover:text-[#024B79] hover:underline hover:underline-offset-2 focus-visible:text-[#024B79] focus-visible:underline focus-visible:underline-offset-2">
                                         <span class="self-stretch my-auto text-current">
                                             <?php echo esc_html($link['title'] ?: $link['url']); ?>
                                             <?php if (($link['target'] ?: '_self') === '_blank') : ?>

@@ -632,6 +632,25 @@ if (! function_exists('matrix_process_external_links_in_html')) {
 
             $anchor->setAttribute('rel', implode(' ', $rel_parts));
 
+            if (matrix_is_pdf_url($href)) {
+                $anchor_classes = trim($anchor->getAttribute('class'));
+                if (! preg_match('/(?:^|\s)is-pdf-link(?:\s|$)/', $anchor_classes)) {
+                    $anchor->setAttribute('class', trim($anchor_classes . ' is-pdf-link'));
+                }
+
+                $list_item = $anchor->parentNode;
+                while ($list_item && ! ($list_item instanceof DOMElement && strtolower($list_item->tagName) === 'li')) {
+                    $list_item = $list_item->parentNode;
+                }
+
+                if ($list_item instanceof DOMElement) {
+                    $li_classes = trim($list_item->getAttribute('class'));
+                    if (! preg_match('/(?:^|\s)has-pdf-link(?:\s|$)/', $li_classes)) {
+                        $list_item->setAttribute('class', trim($li_classes . ' has-pdf-link'));
+                    }
+                }
+            }
+
             // Announce new tab to assistive tech (WCAG 3.2.5 / Silktide new-tab check).
             $already_announced = (bool) preg_match(
                 '/opens in (a )?new (tab|window)/i',
@@ -856,7 +875,9 @@ if (! function_exists('matrix_get_theme_path_redirect_map')) {
         $map = [
             // Legacy make-a-referral paths
             'make-a-referral/refer-an-adult-for-inpatient-care' => '/healthcare-professionals/refer-an-adult-for-inpatient-care/',
-            'make-a-referral/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent-for-inpatient-care/',
+            'make-a-referral/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent/',
+            // Page renamed for go-live (drop inpatient-specific slug)
+            'healthcare-professionals/refer-an-adolescent-for-inpatient-care' => '/healthcare-professionals/refer-an-adolescent/',
             'make-a-referral/refer-to-the-st-patricks-at-home-service' => '/healthcare-professionals/refer-to-the-st-patricks-at-home-service/',
             'make-a-referral/refer-for-outpatient-care' => '/healthcare-professionals/refer-for-outpatient-care/',
             'make-a-referral/refer-to-a-day-programme' => '/healthcare-professionals/refer-to-a-day-programme/',

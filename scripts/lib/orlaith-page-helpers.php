@@ -8,6 +8,34 @@ if (! function_exists('matrix_orlaith_permalink')) {
     function matrix_orlaith_permalink(string $path): string
     {
         $path = trim($path, '/');
+
+        // CPT rewrite prefixes are not WP parent slugs (posts are often parent=0).
+        // Prefer looking up by leaf slug within the matching CPT before falling back
+        // to pages that share the same basename (e.g. schizophrenia page vs MH CPT).
+        $cpt_by_prefix = [
+            'mental-health' => 'mental_health',
+            'care-treatment' => 'care_treatment',
+            'programmes-therapies' => 'programmes_therapies',
+            'get-involved' => 'get_involved',
+            'locations' => 'locations',
+        ];
+        $parts = explode('/', $path);
+        if (count($parts) >= 2) {
+            $prefix = $parts[0];
+            $leaf = (string) end($parts);
+            if (isset($cpt_by_prefix[$prefix]) && $leaf !== '') {
+                $cpt_hits = get_posts([
+                    'name' => $leaf,
+                    'post_type' => $cpt_by_prefix[$prefix],
+                    'post_status' => 'publish',
+                    'posts_per_page' => 1,
+                ]);
+                if ($cpt_hits !== []) {
+                    return (string) get_permalink($cpt_hits[0]);
+                }
+            }
+        }
+
         $page = get_page_by_path($path, OBJECT, [
             'page',
             'post',
@@ -239,6 +267,43 @@ if (! function_exists('matrix_orlaith_useful_links_row')) {
             'link_color' => '#1E244B',
             'links' => $rows,
         ];
+    }
+}
+
+if (! function_exists('matrix_orlaith_newsletter_row')) {
+    /**
+     * @param array<string, mixed> $extra
+     */
+    function matrix_orlaith_newsletter_row(string $heading, string $subtext_html, array $extra = []): array
+    {
+        return array_merge([
+            'acf_fc_layout' => 'newsletter',
+            'heading' => $heading,
+            'subtext' => $subtext_html,
+            'newsletter_list_id' => '',
+        ], $extra);
+    }
+}
+
+if (! function_exists('matrix_orlaith_gp_newsletter_row')) {
+    /**
+     * Healthcare GP e-newsletter flexi (same copy/list as subscribe-to-our-gp-enewsletter).
+     *
+     * @param array<string, mixed> $extra
+     */
+    function matrix_orlaith_gp_newsletter_row(string $subtext_html = '', array $extra = []): array
+    {
+        if ($subtext_html === '') {
+            $subtext_html = '<p>We issue a quarterly digital newsletter especially tailored to GPs, covering mental health news, research findings, service updates and clinical insights. Sign up using the form below.</p>';
+        }
+
+        $list_id = function_exists('matrix_resolve_gp_newsletter_list_id')
+            ? matrix_resolve_gp_newsletter_list_id()
+            : '';
+
+        return matrix_orlaith_newsletter_row('Sign-up to get the GP Newsletter', $subtext_html, array_merge([
+            'newsletter_list_id' => $list_id,
+        ], $extra));
     }
 }
 

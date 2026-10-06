@@ -24,13 +24,19 @@ h6, .entry-content h6 {
   @apply mb-4 font-normal leading-6 text-gray-800;
 }
 .entry-content ul {
-  @apply mb-4 list-disc list-inside;
+  @apply mb-4 list-none pl-6;
 }
 .entry-content ol {
   @apply mb-4 list-decimal list-inside;
 }
 .entry-content li {
   @apply mb-2 text-base font-normal leading-6 text-gray-800;
+}
+.entry-content ul > li {
+  @apply relative before:content-[''] before:absolute before:w-4 before:h-4 before:bg-[url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%3E%3Cpath%20d='M3.5%208.5L6.5%2011.5L12.5%204.5'%20stroke='%236FC9C0'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E")] before:bg-no-repeat before:bg-center before:bg-contain before:-left-6 before:top-[0.35em];
+}
+.entry-content ul.list-plain {
+  @apply pl-0;
 }
 .entry-content li > ul,
 .entry-content li > ol {

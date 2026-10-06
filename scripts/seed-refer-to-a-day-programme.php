@@ -119,10 +119,10 @@ $figma = [
 $video_poster_id = matrix_seed_resolve_image($figma['video'], 'refer-day-programme-video-2888-3767', 'Refer to a day programme video');
 $testimonials_bg_id = matrix_seed_resolve_image($figma['testimonials_bg'], 'refer-day-programme-testimonials-2888-3767', 'Refer to a day programme testimonials background');
 
-$hero_copy = 'What we offer - is a landing page (per sitemap) that links users to add other subpages within this section. Page context goes here. Max 4 lines of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini.';
-$lorem_card = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.';
-$faq_answer = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
-$video_intro = '<p>Videos and images section as requested. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>';
+$hero_copy = 'We run a number of day programmes to support people in their mental health recovery. Use the options below to refer a patient to a programme accepting referrals from GPs and other mental healthcare professionals.';
+$lorem_card = 'Day programme offering specialist mental health support at St Patrick\'s Mental Health Services.';
+$faq_answer = '<p>Please contact our Referral and Assessment Service on 01 249 3635 for guidance on referring to a day programme.</p>';
+$video_intro = '<p>Explore how our day programmes support recovery and how healthcare professionals can make a referral.</p>';
 
 $testimonial_quote = '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 $testimonial_quote_long = '<p>Long testimonials example: Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
@@ -241,39 +241,25 @@ $flexi_rows = [
         'text_color' => '#08284B',
     ],
     [
-        'acf_fc_layout' => 'content',
-        'heading' => 'Make a Referral via Healthlink',
-        'heading_tag' => 'h2',
-        'accent_position' => 'below_heading',
-        'intro_text' => '',
-        'content' => '<p>The fastest and most efficient method is to send referrals via Healthlink or through your practice management system.</p>',
-        'image' => '',
-        'layout_style' => 'image_left',
-        'background_type' => 'color',
-        'background_color' => '#CEF2EE',
-        'primary_button' => [
-            'title' => 'Go to Healthlink',
+        'acf_fc_layout' => 'referral_action_cards',
+        'left_title' => 'Make a Referral via Healthlink',
+        'left_description' => '<p>The fastest and most efficient method is to send referrals via Healthlink or through your practice management system.</p>',
+        'left_button' => [
+            'title' => 'Make a Referral via Healthlink',
             'url' => 'https://www.healthlink.ie/',
             'target' => '_blank',
         ],
-        'padding_settings' => $section_padding,
-    ],
-    [
-        'acf_fc_layout' => 'content',
-        'heading' => 'Download our Adult Referral Form',
-        'heading_tag' => 'h2',
-        'accent_position' => 'below_heading',
-        'intro_text' => '',
-        'content' => '<p>Complete our Adult Referral form and submit via Healthmail - referrals@stpatricks.ie</p>',
-        'image' => '',
-        'layout_style' => 'image_left',
-        'background_type' => 'color',
-        'background_color' => '#E4F4D6',
-        'primary_button' => [
-            'title' => 'Download Adult Referral Form',
-            'url' => '#',
-            'target' => '',
+        'left_action_icon' => 'external',
+        'right_title' => 'Download our Adult Referral Form',
+        'right_description' => '<p>Complete our Adult Referral form and submit via Healthmail – referrals@stpatricks.ie</p>',
+        'right_button' => [
+            'title' => 'Download our Adult Referral Form',
+            'url' => (string) wp_get_attachment_url(3913),
+            'target' => '_blank',
         ],
+        'right_action_icon' => 'download',
+        'left_background_color' => '#CEF2EE',
+        'right_background_color' => '#E4F4D6',
         'padding_settings' => $section_padding,
     ],
     [
@@ -289,7 +275,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => 'Title, slider',
+        'heading' => 'Day programmes',
         'intro' => $video_intro,
         'layout_style' => 'feature_slider',
         'slides' => $video_slides,

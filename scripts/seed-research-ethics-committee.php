@@ -355,11 +355,13 @@ $flexi_rows = [
         'text_width' => 'wide',
         'background_type' => 'color',
         'background_color' => '#FBFAF7',
+        'vertical_padding' => 'no_bottom',
     ],
     [
         'acf_fc_layout' => 'content_accordion',
         'layout_style' => 'default',
         'section_background' => '#FBFAF7',
+        'vertical_padding' => 'compact',
         'panel_background' => 'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)',
         'open_panel_background' => 'linear-gradient(135deg, #F6EDE0 0%, #F5F0E0 48%, #F4F5DE 100%)',
         'items' => [

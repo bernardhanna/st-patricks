@@ -1,11 +1,23 @@
 <?php
 
 $queried_object = get_queried_object();
+$heading_value = trim((string) get_sub_field('heading'));
+if ($heading_value === '') {
+    $heading_value = 'Current Vacancies';
+}
+$permalink_path = $queried_object instanceof WP_Post
+    ? (string) wp_parse_url((string) get_permalink($queried_object), PHP_URL_PATH)
+    : '';
 $is_careers_landing_page = $queried_object instanceof WP_Post
     && $queried_object->post_type === 'page'
-    && $queried_object->post_name === 'careers';
+    && (
+        $queried_object->post_name === 'careers'
+        || preg_match('#/(?:about-us/)?careers/?$#', $permalink_path) === 1
+    );
 $section_id = $is_careers_landing_page
-    ? 'current-vacancies'
+    ? (function_exists('matrix_flexi_heading_section_id')
+        ? matrix_flexi_heading_section_id($heading_value, 'current-vacancies')
+        : 'current-vacancies')
     : 'careers-archive-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';

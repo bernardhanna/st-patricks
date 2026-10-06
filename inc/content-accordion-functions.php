@@ -53,7 +53,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
             'row_classes' => 'flex flex-col items-start gap-3 border-t border-[#F1F8F9] py-3 lg:flex-row lg:items-center lg:gap-6 lg:py-4',
             'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[4px] p-3 lg:h-12 lg:w-12',
             'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
-            'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a]:text-[#024B79] [&_a]:underline [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
+            'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_a:not(.btn)]:text-[#024B79] [&_a:not(.btn)]:underline [&_a.btn]:no-underline [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
         ];
     }
 
@@ -71,7 +71,7 @@ function matrix_get_content_accordion_layout_config(string $layout_style)
         'row_classes' => 'flex flex-col items-start gap-3 lg:flex-row lg:items-start lg:gap-4',
         'icon_tile_classes' => 'flex shrink-0 items-center justify-center rounded-[8px] p-3 lg:h-12 lg:w-12',
         'icon_image_classes' => 'h-12 w-12 object-contain lg:h-6 lg:w-6',
-        'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_a]:underline [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
+        'content_classes' => 'wp_editor w-full min-w-0 lg:flex-1 [&_p:last-child]:mb-0 [&_p]:mb-4 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_strong]:font-bold [&_a:not(.btn)]:underline [&_a.btn]:no-underline [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2',
     ];
 }
 
@@ -306,6 +306,10 @@ function matrix_resolve_content_accordion_vertical_padding($value = '')
         return 'top_50_bottom_100';
     }
 
+    if ($value === 'compact') {
+        return 'compact';
+    }
+
     return 'default';
 }
 
@@ -323,6 +327,10 @@ function matrix_get_content_accordion_vertical_padding_classes(string $vertical_
 
     if ($vertical_padding === 'top_50_bottom_100') {
         return 'pt-[50px] pb-[100px]';
+    }
+
+    if ($vertical_padding === 'compact') {
+        return 'py-12';
     }
 
     return 'py-12 xl:py-[100px]';

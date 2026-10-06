@@ -100,7 +100,7 @@ if (! function_exists('matrix_seed_resolve_image')) {
 
 if (! function_exists('matrix_seed_build_landing_cards')) {
     /**
-     * @param  array<int, array{title: string, url: string, figma: string, key: string}>  $items
+     * @param  array<int, array{title: string, url: string, figma: string, key: string, target?: string}>  $items
      * @return array<int, array<string, mixed>>
      */
     function matrix_seed_build_landing_cards(array $items, string $key_prefix): array
@@ -121,7 +121,7 @@ if (! function_exists('matrix_seed_build_landing_cards')) {
                 'link' => [
                     'title' => $item['title'],
                     'url' => $item['url'],
-                    'target' => '',
+                    'target' => (string) ($item['target'] ?? ''),
                 ],
             ];
         }
@@ -172,7 +172,8 @@ $your_account_cards = matrix_seed_build_landing_cards([
     ],
     [
         'title' => 'Make a Payment',
-        'url' => $section_base . 'make-a-payment-external-link-to-stripe/',
+        'url' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00',
+        'target' => '_blank',
         'figma' => $figma['card_02'],
         'key' => 'account',
     ],
@@ -312,13 +313,13 @@ $flexi_rows = [
     ],
     array_merge($grid_defaults, [
         'acf_fc_layout' => 'research_cards_grid',
-        'heading' => 'Section title placeholder/Your account',
+        'heading' => 'Your account',
         'cards' => $your_account_cards,
         'background_color' => '#FFFFFF',
     ]),
     array_merge($grid_defaults, [
         'acf_fc_layout' => 'research_cards_grid',
-        'heading' => '(Placeholder) Your Stay',
+        'heading' => 'Your stay',
         'cards' => $your_stay_cards,
         'background_color' => '#FBFAF7',
     ]),

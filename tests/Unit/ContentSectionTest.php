@@ -97,6 +97,11 @@ test('content wrapper padding resolves default, top-only, and bottom-only deskto
         ->and(matrix_resolve_content_vertical_padding('no_top'))->toBe('no_top');
 });
 
+test('flexi heading section ids slug the heading and fall back when empty', function () {
+    expect(matrix_flexi_heading_section_id('Role of the REC'))->toBe('role-of-the-rec')
+        ->and(matrix_flexi_heading_section_id(''))->toStartWith('section-');
+});
+
 test('flexi section wrapper keeps standard max width and padding', function () {
     expect(matrix_get_flexi_section_wrapper_class_names())->toContain('max-w-[1018px]')
         ->and(matrix_get_flexi_section_wrapper_class_names())->toContain('py-12')

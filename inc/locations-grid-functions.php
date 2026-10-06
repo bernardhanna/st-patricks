@@ -1,5 +1,20 @@
 <?php
 
+function matrix_get_locations_grid_vertical_padding_classes($vertical_padding = 'default'): string
+{
+    $vertical_padding = trim((string) $vertical_padding);
+
+    if ($vertical_padding === 'no_bottom') {
+        return 'py-12 lg:pt-[100px] lg:pb-0';
+    }
+
+    if ($vertical_padding === 'no_top') {
+        return 'pt-0 pb-12 lg:pt-0 lg:pb-[100px]';
+    }
+
+    return 'py-12 lg:py-[100px]';
+}
+
 function matrix_normalize_locations_grid_cards($rows)
 {
     if (! is_array($rows)) {

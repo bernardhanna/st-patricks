@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/orlaith-page-helpers.php';
+require_once __DIR__ . '/orlaith-psychosis-layout.php';
 
 function matrix_orlaith_rebuild_suan_layout(int $post_id): void
 {
@@ -712,42 +713,14 @@ function matrix_orlaith_rebuild_schizophrenia_layout(int $post_id): void
 
 function matrix_orlaith_rebuild_psychosis_rename_cleanup(int $post_id): void
 {
-    if ($post_id <= 0 || ! function_exists('update_field')) {
+    if ($post_id <= 0) {
         return;
     }
 
-    $rows = get_field('flexible_content_blocks', $post_id);
-    if (! is_array($rows) || $rows === []) {
-        return;
+    if (function_exists('matrix_orlaith_rebuild_psychosis_layout')) {
+        matrix_orlaith_rebuild_psychosis_layout($post_id);
     }
 
-    $useful = null;
-    $out = [];
-    foreach ($rows as $row) {
-        $layout = (string) ($row['acf_fc_layout'] ?? '');
-        $heading = (string) ($row['heading'] ?? '');
-        if ($layout === 'useful_links') {
-            $row['heading'] = 'Useful links';
-            $useful = $row;
-            continue;
-        }
-        if ($layout === 'related_cards' && str_contains(strtolower($heading), 'continue')) {
-            continue;
-        }
-        if ($layout === 'content' && str_contains(strtolower($heading), 'treatments are available for schizophrenia')) {
-            $row['heading'] = 'What treatments are available for psychosis?';
-        }
-        if ($layout === 'content' && (int) ($row['image'] ?? 0) === 764 && ! str_contains(strtolower($heading), 'about psychosis')) {
-            $row['image'] = '';
-            $row['column_layout'] = 'one_column';
-        }
-        $out[] = $row;
-    }
-    if (is_array($useful)) {
-        $out[] = $useful;
-    }
-
-    update_field('flexible_content_blocks', $out, $post_id);
     wp_update_post([
         'ID' => $post_id,
         'post_title' => 'Psychosis',

@@ -17,6 +17,7 @@ if (! defined('ABSPATH')) {
 }
 
 require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
+require_once get_template_directory() . '/scripts/lib/training-centre-seed.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -508,75 +509,14 @@ if ($poster <= 0) {
     $poster = $training_hero;
 }
 
-$training_intro = $p('St Patrick’s Mental Health Services (SPMHS) offers a wide range of mental health education supports for GPs and healthcare professionals.')
-    . $p('We have developed a range of resources to help GPs in their practice with patients who present with mental health difficulties.')
-    . $p('If you have any questions about mental health information supports or continuous professional development (CPD) opportunities for GPs, please email '
-        . $a('mailto:communications@stpatricks.ie', 'communications@stpatricks.ie', '')
-        . '.');
-
-$webinars = $p('Each year, we host a GP Webinar Series. These webinars are presented by clinicians from across our services, who, in each webinar, focus on a mental health topic relevant to GP practice. Each webinar also includes a question and answer session with the presenting clinicians.')
-    . $p('The webinars are recognised for Accredited CE (CE) by the Irish College of General Practitioners (ICGP), with available points confirmed ahead of each webinar. Please note that Accredited CE is only available to those who attend the live webinar.')
-    . $p('Registration for the webinars is free.')
-    . $p('Check our '
-        . $a($urls['webinars'], 'events calendar', '')
-        . ' to see and register for upcoming GP Webinars.');
-
-$films = $p('We also host a range of on-demand mental health information films for GPs.')
-    . $p('These films cover a wide range of mental health topics relevant to the GP surgery, including:')
-    . $ul([
-        'recognising and assessing different mental health difficulties',
-        'supporting people living with mental health difficulties',
-        'exploring different types of therapy, medication management and treatment approaches.',
-    ])
-    . $p('Visit our YouTube channel '
-        . $a($urls['youtube'], 'here')
-        . ' to get the full playlist, or find out more about and watch the films '
-        . $a($urls['webinars'], 'here', '')
-        . '.');
-
-$insights = $p('Clinical staff from across our mental health services regularly contribute to our specialist blogs and articles for GPs and healthcare professionals. These articles cover diverse mental health topics to support patients presenting with mental health difficulties. '
-        . $a($urls['clinician_insights'], 'Read our clinician insights here', '')
-        . '.');
-
-$newsletter_intro = $p('We issue a quarterly digital newsletter especially tailored to GPs, covering mental health news, research findings, service updates and clinical insights. Sign up using the form below.');
-
-$training_rows = [
-    matrix_orlaith_hero_row('Training Centre', $training_intro, $training_hero),
-    matrix_orlaith_content_row('GP Webinar Series', $webinars, 'white', 0, 'image_left', [
-        'primary_button' => matrix_orlaith_button('Upcoming webinars and events', $urls['webinars']),
-        'primary_button_variant' => 'filled',
-    ]),
-    matrix_orlaith_content_row('Mental health films for GPs', $films, 'cream', 0, 'image_left', [
-        'primary_button' => matrix_orlaith_button('SPMHS on YouTube', $urls['youtube'], '_blank'),
-        'primary_button_variant' => 'filled',
-    ]),
-    matrix_orlaith_content_row('Clinician insights', $insights, 'white', 0, 'image_left', [
-        'primary_button' => matrix_orlaith_button('Read clinician insights', $urls['clinician_insights']),
-        'primary_button_variant' => 'filled',
-    ]),
-    matrix_orlaith_video_row(
-        'Research and training',
-        $p('Watch how our Academic Institute and Training Centre support staff and organisations working in mental health.'),
-        [[
-            'url' => 'https://www.youtube.com/watch?v=AjJQxOrmv1o',
-            'caption' => 'Learn more about our Academic Institute and our commitment to supporting staff and organisations working in mental health through our new training centre.',
-            'poster' => $poster,
-        ]]
-    ),
-    matrix_orlaith_contact_form_row('GP newsletter', $newsletter_intro, [
-        'form_name' => 'GP newsletter signup',
-        'email_subject' => 'GP newsletter – new signup',
-        'recipient_email' => 'communications@stpatricks.ie',
-        'success_message' => 'Thanks! You are signed up for the GP newsletter.',
-        'submit_label' => 'Sign up',
-        'background_type' => 'cream',
-        'privacy_policy_link' => [
-            'title' => 'Privacy Notice',
-            'url' => $urls['privacy'],
-            'target' => '_blank',
-        ],
-    ]),
-];
+$training_rows = matrix_training_centre_flexi_rows([
+    'hero_image' => $training_hero,
+    'poster' => $poster,
+    'webinars_url' => $urls['webinars'],
+    'youtube_url' => $urls['youtube'],
+    'clinician_insights_url' => $urls['clinician_insights'],
+    'privacy_url' => $urls['privacy'],
+]);
 
 wp_update_post([
     'ID' => $training_id,

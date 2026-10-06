@@ -50,7 +50,7 @@ $url_map = [
     'news and events' => $home . 'news-and-events/',
     'news & events' => $home . 'news-and-events/',
     'blog' => $home . 'news-and-events/',
-    'make a payment' => $home . 'service-users-and-visitors/make-a-payment-external-link-to-stripe/',
+    'make a payment' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00',
     'your portal (login)' => $home . 'your-portal/',
     'contact us' => $home . 'contact-us/',
 
@@ -62,7 +62,9 @@ $url_map = [
 
     // Footer — Quick links
     'your portal' => $home . 'your-portal/',
+    'healthcare faqs' => $home . 'healthcare-professionals/frequently-asked-questions/',
     'faqs (healthcare)' => $home . 'healthcare-professionals/frequently-asked-questions/',
+    'service users faqs' => $home . 'service-users-and-visitors/frequently-asked-questions-faqs/',
     'faqs (service users)' => $home . 'service-users-and-visitors/frequently-asked-questions-faqs/',
     'directions & parking' => $home . 'directions-and-parking/',
 
@@ -94,7 +96,25 @@ $nav_button_map = [
 $topbar_links = get_field('topbar_links', 'option');
 
 if (is_array($topbar_links)) {
-    update_field('topbar_links', matrix_seed_patch_link_repeaters($topbar_links, $url_map), 'option');
+    $topbar_links = matrix_seed_patch_link_repeaters($topbar_links, $url_map);
+
+    foreach ($topbar_links as $index => $row) {
+        if (! is_array($row['link'] ?? null)) {
+            continue;
+        }
+
+        $title_key = strtolower(trim((string) ($row['link']['title'] ?? '')));
+
+        if ($title_key === 'your portal (login)') {
+            $topbar_links[$index]['link']['title'] = 'Your Portal';
+        }
+
+        if ($title_key === 'make a payment') {
+            $topbar_links[$index]['link']['target'] = '_blank';
+        }
+    }
+
+    update_field('topbar_links', $topbar_links, 'option');
 }
 
 // --- Footer columns ---

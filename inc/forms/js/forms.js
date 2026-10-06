@@ -299,7 +299,7 @@
     });
   });
 
-  // === NEWSLETTER (Brevo) ===
+  // === NEWSLETTER (Mailchimp / Brevo AJAX) ===
   if (!window._brevoInitDone) {
     window._brevoInitDone = true;
 

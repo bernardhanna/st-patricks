@@ -32,6 +32,48 @@ function matrix_is_event_post($post_id = null)
     return has_category($slug, $post_id);
 }
 
+/**
+ * Whether a post should render like a flexi page (skip blog article chrome).
+ *
+ * Used for campaign/landing posts that carry a page-style hero_with_breadcrumbs
+ * (or other page hero) as their first flexible content block.
+ */
+function matrix_post_has_page_style_flexi($post_id = null): bool
+{
+    $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? get_the_ID() : 0));
+
+    if ($post_id < 1 && function_exists('get_queried_object_id')) {
+        $post_id = (int) get_queried_object_id();
+    }
+
+    if ($post_id < 1) {
+        return false;
+    }
+
+    $page_heroes = [
+        'hero_with_breadcrumbs',
+        'hero',
+        'hero_banner',
+    ];
+
+    // Read layout names from post meta. Do not call get_field() on the flexi
+    // field here: it leaves ACF's loop pointer mid-field before have_rows().
+    $layouts = function_exists('get_post_meta')
+        ? get_post_meta($post_id, 'flexible_content_blocks', true)
+        : null;
+
+    if (! is_array($layouts) || $layouts === []) {
+        return false;
+    }
+
+    $first = $layouts[0];
+    $layout = is_array($first)
+        ? (string) ($first['acf_fc_layout'] ?? '')
+        : (string) $first;
+
+    return in_array($layout, $page_heroes, true);
+}
+
 function matrix_get_event_post_fields($post_id = null)
 {
     $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? get_the_ID() : 0));
@@ -156,18 +198,26 @@ function matrix_format_blog_post_date($post_id = null)
     return get_the_date(matrix_get_post_date_display_format(), $post_id);
 }
 
-function matrix_get_blog_post_intro($post_id = null)
+function matrix_get_clean_post_excerpt($post_id = null, $word_count = 40)
 {
     $post_id = $post_id ?: get_the_ID();
-    $excerpt = trim((string) get_the_excerpt($post_id));
+    $word_count = max(1, (int) $word_count);
+    $stored = trim(wp_strip_all_tags((string) get_post_field('post_excerpt', $post_id)));
 
-    if ($excerpt !== '') {
-        return $excerpt;
+    if ($stored !== '') {
+        return $stored;
     }
 
     $content = (string) get_post_field('post_content', $post_id);
 
-    return wp_trim_words(wp_strip_all_tags($content), 40, '...');
+    return wp_trim_words(wp_strip_all_tags($content), $word_count, '...');
+}
+
+function matrix_get_blog_post_intro($post_id = null)
+{
+    $post_id = $post_id ?: get_the_ID();
+
+    return matrix_get_clean_post_excerpt($post_id, 40);
 }
 
 function matrix_get_blog_post_author_name($post_id = null)

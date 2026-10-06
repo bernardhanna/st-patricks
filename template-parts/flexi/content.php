@@ -1,7 +1,9 @@
 <?php
 
-$section_id = 'content-section-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading = trim((string) get_sub_field('heading'));
+$section_id = function_exists('matrix_flexi_heading_section_id')
+    ? matrix_flexi_heading_section_id($heading, 'content-section')
+    : 'content-section-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading_tag = (string) get_sub_field('heading_tag');
 $intro_text = get_sub_field('intro_text');
 $content = get_sub_field('content');

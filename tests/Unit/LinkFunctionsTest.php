@@ -40,7 +40,16 @@ test('matrix_process_external_links_in_html opens internal pdf links in a new ta
     $processed = matrix_process_external_links_in_html($html);
 
     expect($processed)->toContain('target="_blank"')
-        ->and($processed)->toContain('rel="noopener noreferrer"');
+        ->and($processed)->toContain('rel="noopener noreferrer"')
+        ->and($processed)->toContain('is-pdf-link');
+});
+
+test('matrix_process_external_links_in_html marks pdf list items for the pdf icon', function () {
+    $html = '<ul><li><a href="https://www.stpatricks.ie/media/4215/css-overarching.pdf">Child Safeguarding Statement</a></li></ul>';
+    $processed = matrix_process_external_links_in_html($html);
+
+    expect($processed)->toContain('has-pdf-link')
+        ->and($processed)->toContain('is-pdf-link');
 });
 
 test('matrix_normalize_acf_link forces external acf links to open in a new tab', function () {
@@ -102,6 +111,12 @@ test('matrix_get_theme_path_redirect_map includes deleted page redirects', funct
         ->and($map['get-involved'])->toBe('/about-us/support-us/')
         ->and($map)->toHaveKey('mental-health')
         ->and($map['mental-health'])->toBe('/service-users-and-visitors/about-mental-health/')
+        ->and($map)->toHaveKey('anxiety')
+        ->and($map['anxiety'])->toBe('/mental-health/anxiety/')
+        ->and($map)->toHaveKey('addiction-dual-diagnosis')
+        ->and($map['addiction-dual-diagnosis'])->toBe('/mental-health/addiction-dual-diagnosis/')
+        ->and($map)->toHaveKey('schizophrenia')
+        ->and($map['schizophrenia'])->toBe('/mental-health/schizophrenia/')
         ->and($map)->toHaveKey('inpatient-hospital-care')
         ->and($map['inpatient-hospital-care'])->toBe('/inpatient-care/')
         ->and($map)->toHaveKey('outpatient-clinics/about-the-dean-clinics')

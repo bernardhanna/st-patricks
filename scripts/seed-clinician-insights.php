@@ -106,8 +106,8 @@ $flexi_rows = [
         'heading' => 'Clinician insights',
         'content' => '<p>' . esc_html($hero_intro) . '</p>',
         'primary_button' => [
-            'title' => 'Mental health education for GPs',
-            'url' => $gp_cpd_url,
+            'title' => 'Training Centre',
+            'url' => $training_url,
             'target' => '',
         ],
         'hero_image' => (int) matrix_migrate_attachment_id_for_source_path('/media/1539/gp-portal.jpeg'),
@@ -122,10 +122,9 @@ $flexi_rows = [
         'heading' => 'Useful Links',
         'variant' => 'flexi',
         'links' => [
-            ['link' => ['title' => 'Mental health education for GPs', 'url' => $gp_cpd_url, 'target' => '']],
-            ['link' => ['title' => 'Webinars and events', 'url' => $webinars_url, 'target' => '']],
             ['link' => ['title' => 'Training Centre', 'url' => $training_url, 'target' => '']],
-            ['link' => ['title' => 'Frequently Asked Questions', 'url' => $faqs_url, 'target' => '']],
+            ['link' => ['title' => 'Webinars and events', 'url' => $webinars_url, 'target' => '']],
+            ['link' => ['title' => 'Healthcare professional FAQs', 'url' => $faqs_url, 'target' => '']],
         ],
         'background_color' => '#F1F8F9',
     ],
@@ -172,17 +171,18 @@ $flexi_rows = [
     ],
     matrix_seed_hp_faqs_section_row('Clinical information and professional development', $clinical_term_id),
     [
-        'acf_fc_layout' => 'content_cta',
+        'acf_fc_layout' => 'useful_links',
         'heading_tag' => matrix_page_seed_heading(2),
         'heading' => 'Need more information?',
-        'body' => '<p>For queries about referrals, services, or clinical information, visit our Frequently Asked Questions page or contact our Referral and Assessment Service on <strong>01 249 3635</strong>.</p>',
-        'button_link' => [
-            'title' => 'See healthcare professional FAQs',
-            'url' => $faqs_url,
-            'target' => '',
+        'variant' => 'flexi',
+        'links' => [
+            ['link' => ['title' => 'Healthcare professional FAQs', 'url' => $faqs_url, 'target' => '']],
+            ['link' => ['title' => 'Training Centre', 'url' => $training_url, 'target' => '']],
+            ['link' => ['title' => 'Webinars and events', 'url' => $webinars_url, 'target' => '']],
         ],
-        'background_type' => 'color',
-        'background_color' => '#CEF2EE',
+        'background_color' => '#E9E2F7',
+        'heading_color' => '#1E244B',
+        'link_color' => '#1E244B',
     ],
 ];
 

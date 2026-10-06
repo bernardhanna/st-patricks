@@ -1,6 +1,5 @@
 <?php
 
-$section_id = 'content-accordion-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $layout_style = function_exists('matrix_resolve_content_accordion_layout_style')
     ? matrix_resolve_content_accordion_layout_style(get_sub_field('layout_style'))
     : 'default';
@@ -54,6 +53,9 @@ $wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !=
 $heading = function_exists('matrix_resolve_content_accordion_heading')
     ? matrix_resolve_content_accordion_heading(get_sub_field('heading'))
     : trim((string) get_sub_field('heading'));
+$section_id = function_exists('matrix_flexi_heading_section_id')
+    ? matrix_flexi_heading_section_id($heading, 'content-accordion')
+    : 'content-accordion-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 $heading_tag = function_exists('matrix_resolve_content_accordion_heading_tag')
     ? matrix_resolve_content_accordion_heading_tag(get_sub_field('heading_tag'))
     : 'h2';
@@ -74,6 +76,7 @@ $heading_classes = function_exists('matrix_get_content_accordion_heading_class_n
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
+        x-init="(() => { const hash = (window.location.hash || '').replace('#', ''); if (!hash) { return; } const match = $el.querySelector('[data-accordion-slug=\'' + hash + '\']'); if (match && match.dataset.accordionIndex) { activeIndex = parseInt(match.dataset.accordionIndex, 10); } })()"
         class="<?php echo esc_attr($wrapper_classes); ?>"
     >
         <?php if ($heading !== '') { ?>
@@ -91,8 +94,14 @@ $heading_classes = function_exists('matrix_get_content_accordion_heading_class_n
             <?php
             $button_id = $section_id . '-button-' . $index;
             $panel_id = $section_id . '-panel-' . $index;
+            $item_slug = function_exists('matrix_flexi_heading_section_id')
+                ? matrix_flexi_heading_section_id((string) ($item['title'] ?? ''), 'accordion-item')
+                : 'accordion-item-' . $index;
             ?>
             <div
+                id="<?php echo esc_attr($item_slug); ?>"
+                data-accordion-slug="<?php echo esc_attr($item_slug); ?>"
+                data-accordion-index="<?php echo esc_attr((string) $index); ?>"
                 class="<?php echo esc_attr($layout_config['item_classes']); ?>"
                 :style="activeIndex === <?php echo esc_attr((string) $index); ?> ? '<?php echo esc_js($open_panel_background_style); ?>' : '<?php echo esc_js($panel_background_style); ?>'"
             >

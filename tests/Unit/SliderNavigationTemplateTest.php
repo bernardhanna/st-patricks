@@ -43,6 +43,21 @@ test('hero slider desktop text panel stays in-flow and does not offset under the
         ->and($template)->toContain('pointer-events: none');
 });
 
+test('hero slider desktop first indicator uses the same active colour as news and events', function () {
+    $path = dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php';
+    $template = file_get_contents($path);
+    $segment = matrix_get_template_segment(
+        $path,
+        '<!-- Dots (desktop) -->',
+        '<!-- Desktop Next -->'
+    );
+
+    expect($segment)->toContain('#0f172a')
+        ->and($segment)->toContain('#7ED0E0')
+        ->and($segment)->not->toContain('#80CCD9')
+        ->and($template)->toContain('setActiveDots(0)');
+});
+
 test('story slider mobile navigation spans full width and preserves desktop hover states', function () {
     $segment = matrix_get_template_segment(
         dirname(__DIR__, 2) . '/template-parts/flexi/story_slider.php',

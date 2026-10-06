@@ -128,6 +128,18 @@ test('contact form background can be white cream or custom', function () {
         ->and($legacy_white['background_color'])->toBe('#FFFFFF');
 });
 
+test('contact form field placeholders cover text email date and phone inputs', function () {
+    $placeholders = matrix_get_contact_form_field_placeholders();
+
+    expect($placeholders['first_name'])->toBe('Enter your first name')
+        ->and($placeholders['last_name'])->toBe('Enter your last name')
+        ->and($placeholders['date_of_birth'])->toBe('DD/MM/YYYY')
+        ->and($placeholders['eircode'])->toBe('Enter your Eircode')
+        ->and($placeholders['email'])->toBe('Enter email address')
+        ->and($placeholders['phone_number'])->toBe('Enter phone number')
+        ->and($placeholders['phone_country_code'])->toBe('Select country code');
+});
+
 test('contact form can enable a signed brevo list without turning it on by default', function () {
     expect(matrix_resolve_contact_form_enable_brevo(null))->toBeFalse()
         ->and(matrix_resolve_contact_form_enable_brevo('0'))->toBeFalse()

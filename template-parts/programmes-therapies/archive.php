@@ -36,7 +36,7 @@ $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
 $form_id = 'programmes-therapies-archive-' . (function_exists('wp_rand') ? wp_rand(1000, 999999) : mt_rand(1000, 999999));
 $ajax_url = function_exists('admin_url') ? admin_url('admin-ajax.php') : '';
-$posts_per_page = max(1, (int) ($state['posts_per_page'] ?? 10));
+$posts_per_page = max(1, (int) ($state['posts_per_page'] ?? 6));
 ?>
 
 <section

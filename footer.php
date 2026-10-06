@@ -1,4 +1,8 @@
-<?php get_template_part('template-parts/footer/newsletter'); ?>
+<?php
+if (! function_exists('matrix_page_has_newsletter_block') || ! matrix_page_has_newsletter_block()) {
+    get_template_part('template-parts/footer/newsletter');
+}
+?>
 <footer class="overflow-hidden w-full">
     <?php get_template_part('template-parts/footer/footer'); ?>
 

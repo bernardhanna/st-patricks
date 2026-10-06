@@ -19,6 +19,43 @@ if (! function_exists('matrix_normalize_attachment_id')) {
   }
 }
 
+if (! function_exists('matrix_extract_page_hero_image_id_from_post_meta')) {
+  /**
+   * Read the hero image from post meta without calling get_field().
+   * get_field() on the flexi field before have_rows() desyncs ACF row data.
+   */
+  function matrix_extract_page_hero_image_id_from_post_meta($post_id): int
+  {
+    $post_id = (int) $post_id;
+
+    if ($post_id < 1 || ! function_exists('get_post_meta')) {
+      return 0;
+    }
+
+    $layouts = get_post_meta($post_id, 'flexible_content_blocks', true);
+
+    if (! is_array($layouts)) {
+      return 0;
+    }
+
+    foreach ($layouts as $index => $layout) {
+      if ($layout !== 'hero_with_breadcrumbs') {
+        continue;
+      }
+
+      $hero_id = matrix_normalize_attachment_id(
+        get_post_meta($post_id, 'flexible_content_blocks_' . (int) $index . '_hero_image', true)
+      );
+
+      if ($hero_id > 0) {
+        return $hero_id;
+      }
+    }
+
+    return 0;
+  }
+}
+
 if (! function_exists('matrix_extract_page_hero_image_id_from_rows')) {
   /**
    * @param mixed $rows
@@ -75,13 +112,7 @@ if (! function_exists('matrix_get_page_hero_image_id')) {
       return $cache[$post_id] = (int) $GLOBALS['matrix_page_hero_image_ids'][$post_id];
     }
 
-    if (! function_exists('get_field')) {
-      return $cache[$post_id] = 0;
-    }
-
-    $rows = get_field('flexible_content_blocks', $post_id);
-
-    return $cache[$post_id] = matrix_extract_page_hero_image_id_from_rows($rows);
+    return $cache[$post_id] = matrix_extract_page_hero_image_id_from_post_meta($post_id);
   }
 }
 
@@ -246,10 +277,10 @@ function load_flexible_content_templates($post_id = null)
       $GLOBALS['matrix_page_hero_image_ids'] = [];
     }
 
-    // Resolve once before the ACF row loop so templates can suppress hero reuse
-    // without calling get_field() mid-loop.
-    $flexi_rows = function_exists('get_field') ? get_field('flexible_content_blocks', $post_id) : null;
-    $GLOBALS['matrix_page_hero_image_ids'][$post_id] = matrix_extract_page_hero_image_id_from_rows($flexi_rows);
+    // Resolve the hero image from post meta. Do not call get_field() on the
+    // flexi field here: it leaves ACF's loop pointer mid-field and duplicates
+    // later rows (seen as "Our vision and mission" rendering twice).
+    $GLOBALS['matrix_page_hero_image_ids'][$post_id] = matrix_extract_page_hero_image_id_from_post_meta($post_id);
 
     $row_index = 0;
     $flex_field = class_exists('Matrix_Export') ? Matrix_Export::FLEX_FIELD : 'flexible_content_blocks';

@@ -1,5 +1,26 @@
 <?php
 
+function matrix_flexi_heading_section_id(string $heading, string $fallback_prefix = 'section'): string
+{
+    $heading = trim($heading);
+    $slug = '';
+
+    if ($heading !== '') {
+        $slug = function_exists('sanitize_title')
+            ? (string) sanitize_title($heading)
+            : strtolower(trim((string) preg_replace('/[^a-z0-9]+/i', '-', $heading)));
+        $slug = trim($slug, '-');
+    }
+
+    if ($slug !== '') {
+        return $slug;
+    }
+
+    $unique = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid();
+
+    return $fallback_prefix . '-' . $unique;
+}
+
 function matrix_resolve_content_layout_style($layout_style, $reverse_layout = false)
 {
     $layout_style = is_string($layout_style) ? trim($layout_style) : '';

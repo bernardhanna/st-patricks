@@ -7,9 +7,9 @@ $portal_cta = $args['portal_cta'] ?? null;
 
 <div class="relative z-[1] flex w-[232px] shrink-0 flex-col gap-12">
     <div>
-        <h2 class="font-primary text-[30px] font-semibold leading-9 tracking-[-0.225px] text-[#1E244B]">
+        <p class="font-primary text-[30px] font-semibold leading-9 tracking-[-0.225px] text-[#1E244B]">
             <?php echo esc_html($title); ?>
-        </h2>
+        </p>
         <?php matrix_render_nav_mega_menu_heading_underline(); ?>
     </div>
 
