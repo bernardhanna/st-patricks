@@ -27,6 +27,14 @@ $fields
     ],
     'layout'       => 'vertical',
   ])
+  ->addTrueFalse('enable_matrix_buggie', [
+    'label'         => 'Matrix Buggie',
+    'instructions'  => 'Load the Matrix Buggie tracker on the front end (async). Turn off to stop loading the script.',
+    'ui'            => 1,
+    'ui_on_text'    => 'Enabled',
+    'ui_off_text'   => 'Disabled',
+    'default_value' => 1,
+  ])
   ->addAccordion('scripts_settings_end')->endpoint();
 
 return $fields;

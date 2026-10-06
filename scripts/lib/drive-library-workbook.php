@@ -15,6 +15,14 @@ if (! defined('MATRIX_WORKBOOK_CONTENT_ON_DRIVE_META_KEY')) {
     define('MATRIX_WORKBOOK_CONTENT_ON_DRIVE_META_KEY', 'matrix_content_on_drive');
 }
 
+if (! defined('MATRIX_WORKBOOK_ADDED_FROM_DRIVE_META_KEY')) {
+    define('MATRIX_WORKBOOK_ADDED_FROM_DRIVE_META_KEY', 'matrix_added_from_drive');
+}
+
+if (! defined('MATRIX_WORKBOOK_ADDED_FROM_FORM_META_KEY')) {
+    define('MATRIX_WORKBOOK_ADDED_FROM_FORM_META_KEY', 'matrix_added_from_form');
+}
+
 if (! function_exists('matrix_workbook_drive_folder_ids_path')) {
     function matrix_workbook_drive_folder_ids_path(): string
     {
@@ -340,15 +348,52 @@ if (! function_exists('matrix_workbook_content_on_drive_label')) {
     }
 }
 
-if (! function_exists('matrix_workbook_apply_yes_no_controls')) {
+if (! function_exists('matrix_workbook_added_from_drive_options')) {
     /**
-     * Attach a Yes/No dropdown (and light colouring) to a column.
+     * @return array<int, string>
+     */
+    function matrix_workbook_added_from_drive_options(): array
+    {
+        return ['Done'];
+    }
+}
+
+if (! function_exists('matrix_workbook_added_from_drive_label')) {
+    /**
+     * Done / blank. Prefers explicit meta; otherwise Done when Drive import meta exists.
+     */
+    function matrix_workbook_added_from_drive_label(int $post_id): string
+    {
+        $stored = strtolower(trim((string) get_post_meta($post_id, MATRIX_WORKBOOK_ADDED_FROM_DRIVE_META_KEY, true)));
+
+        if (in_array($stored, ['done', 'yes', 'y'], true)) {
+            return 'Done';
+        }
+
+        if (get_post_meta($post_id, '_matrix_drive3_import', true) !== '') {
+            return 'Done';
+        }
+
+        return '';
+    }
+}
+
+if (! function_exists('matrix_workbook_apply_list_controls')) {
+    /**
+     * Attach a dropdown + green “Done/Yes” colouring to a column.
      *
      * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+     * @param array<int, string> $options
      */
-    function matrix_workbook_apply_yes_no_controls($sheet, int $last_row, string $column): void
-    {
-        if ($last_row < 2) {
+    function matrix_workbook_apply_list_controls(
+        $sheet,
+        int $last_row,
+        string $column,
+        array $options,
+        string $prompt_title,
+        string $prompt
+    ): void {
+        if ($last_row < 2 || $options === []) {
             return;
         }
 
@@ -356,40 +401,41 @@ if (! function_exists('matrix_workbook_apply_yes_no_controls')) {
             return;
         }
 
-        $options = matrix_workbook_content_on_drive_options();
         $validation = $sheet->getCell($column . '2')->getDataValidation();
         $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
         $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP);
         $validation->setAllowBlank(true);
         $validation->setShowDropDown(true);
         $validation->setShowInputMessage(true);
-        $validation->setPromptTitle('Content on Drive');
-        $validation->setPrompt('Yes = content came from Google Drive. No = used the form / other.');
+        $validation->setPromptTitle($prompt_title);
+        $validation->setPrompt($prompt);
         $validation->setShowErrorMessage(true);
         $validation->setFormula1('"' . implode(',', $options) . '"');
         $validation->setSqref($column . '2:' . $column . $last_row);
 
         $conditionals = [];
 
-        $yes = new \PhpOffice\PhpSpreadsheet\Style\Conditional();
-        $yes->setConditionType(\PhpOffice\PhpSpreadsheet\Style\Conditional::CONDITION_CELLIS);
-        $yes->setOperatorType(\PhpOffice\PhpSpreadsheet\Style\Conditional::OPERATOR_EQUAL);
-        $yes->addCondition('"Yes"');
-        $yes->getStyle()->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $yes->getStyle()->getFill()->getStartColor()->setRGB('D4EDDA');
-        $yes->getStyle()->getFont()->getColor()->setRGB('155724');
-        $yes->getStyle()->getFont()->setBold(true);
-        $conditionals[] = $yes;
+        foreach ($options as $option) {
+            $rule = new \PhpOffice\PhpSpreadsheet\Style\Conditional();
+            $rule->setConditionType(\PhpOffice\PhpSpreadsheet\Style\Conditional::CONDITION_CELLIS);
+            $rule->setOperatorType(\PhpOffice\PhpSpreadsheet\Style\Conditional::OPERATOR_EQUAL);
+            $rule->addCondition('"' . $option . '"');
+            $rule->getStyle()->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
 
-        $no = new \PhpOffice\PhpSpreadsheet\Style\Conditional();
-        $no->setConditionType(\PhpOffice\PhpSpreadsheet\Style\Conditional::CONDITION_CELLIS);
-        $no->setOperatorType(\PhpOffice\PhpSpreadsheet\Style\Conditional::OPERATOR_EQUAL);
-        $no->addCondition('"No"');
-        $no->getStyle()->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $no->getStyle()->getFill()->getStartColor()->setRGB('F8D7DA');
-        $no->getStyle()->getFont()->getColor()->setRGB('721C24');
-        $no->getStyle()->getFont()->setBold(true);
-        $conditionals[] = $no;
+            if (in_array($option, ['Done', 'Yes'], true)) {
+                $rule->getStyle()->getFill()->getStartColor()->setRGB('D4EDDA');
+                $rule->getStyle()->getFont()->getColor()->setRGB('155724');
+            } elseif ($option === 'No') {
+                $rule->getStyle()->getFill()->getStartColor()->setRGB('F8D7DA');
+                $rule->getStyle()->getFont()->getColor()->setRGB('721C24');
+            } else {
+                $rule->getStyle()->getFill()->getStartColor()->setRGB('FFF3CD');
+                $rule->getStyle()->getFont()->getColor()->setRGB('856404');
+            }
+
+            $rule->getStyle()->getFont()->setBold(true);
+            $conditionals[] = $rule;
+        }
 
         $range = $column . '2:' . $column . $last_row;
         $sheet->getStyle($range)->setConditionalStyles($conditionals);
@@ -398,5 +444,79 @@ if (! function_exists('matrix_workbook_apply_yes_no_controls')) {
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
             ],
         ]);
+    }
+}
+
+if (! function_exists('matrix_workbook_added_from_form_options')) {
+    /**
+     * @return array<int, string>
+     */
+    function matrix_workbook_added_from_form_options(): array
+    {
+        return ['Yes'];
+    }
+}
+
+if (! function_exists('matrix_workbook_added_from_form_label')) {
+    function matrix_workbook_added_from_form_label(int $post_id): string
+    {
+        $stored = strtolower(trim((string) get_post_meta($post_id, MATRIX_WORKBOOK_ADDED_FROM_FORM_META_KEY, true)));
+
+        return in_array($stored, ['yes', 'y', 'done'], true) ? 'Yes' : '';
+    }
+}
+
+if (! function_exists('matrix_workbook_apply_added_from_form_controls')) {
+    /**
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+     */
+    function matrix_workbook_apply_added_from_form_controls($sheet, int $last_row, string $column): void
+    {
+        matrix_workbook_apply_list_controls(
+            $sheet,
+            $last_row,
+            $column,
+            matrix_workbook_added_from_form_options(),
+            'Added from form',
+            'Yes = content was added/edited via the content form (not Drive).'
+        );
+    }
+}
+
+if (! function_exists('matrix_workbook_apply_yes_no_controls')) {
+    /**
+     * Attach a Yes/No dropdown (and light colouring) to a column.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+     */
+    function matrix_workbook_apply_yes_no_controls($sheet, int $last_row, string $column): void
+    {
+        matrix_workbook_apply_list_controls(
+            $sheet,
+            $last_row,
+            $column,
+            matrix_workbook_content_on_drive_options(),
+            'Content on Drive',
+            'Yes = Drive has source copy for this page. No = no Drive copy expected.'
+        );
+    }
+}
+
+if (! function_exists('matrix_workbook_apply_added_from_drive_controls')) {
+    /**
+     * Attach a Done dropdown to the Added from drive column.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet
+     */
+    function matrix_workbook_apply_added_from_drive_controls($sheet, int $last_row, string $column): void
+    {
+        matrix_workbook_apply_list_controls(
+            $sheet,
+            $last_row,
+            $column,
+            matrix_workbook_added_from_drive_options(),
+            'Added from drive',
+            'Done = Drive copy is already on the website. Leave blank if not yet added.'
+        );
     }
 }

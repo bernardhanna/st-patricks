@@ -145,6 +145,15 @@ if ($hero_image_id <= 0) {
     $hero_image_id = (int) matrix_migrate_attachment_id_for_source_path('/media/3121/get-involved-banner.png');
 }
 
+$hero_image_alt = 'St Patrick’s Mental Health Services buildings, clinic, and online support.';
+if ($hero_image_id > 0 && trim((string) get_post_meta($hero_image_id, '_wp_attachment_image_alt', true)) === '') {
+    update_post_meta($hero_image_id, '_wp_attachment_image_alt', $hero_image_alt);
+}
+
+if ($hero_image_id <= 0 && class_exists('WP_CLI')) {
+    WP_CLI::warning('Service Users FAQ seed could not resolve hero_image from mental-health-services.png or get-involved-banner.png.');
+}
+
 $parent_term_id = matrix_seed_su_faq_ensure_term('service-users-and-visitors', 'Service Users and Visitors');
 $referrals_term_id = matrix_seed_su_faq_ensure_term('service-users-referrals', 'Questions about referrals', $parent_term_id);
 $treatments_term_id = matrix_seed_su_faq_ensure_term('service-users-treatments', 'Questions about treatments and services', $parent_term_id);

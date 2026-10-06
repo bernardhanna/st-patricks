@@ -11,6 +11,22 @@ test('attachment id normalizer accepts scalars and ACF arrays', function () {
         ->and(matrix_normalize_attachment_id([]))->toBe(0);
 });
 
+test('page hero image is extracted from post meta without get_field', function () {
+    __wp_stub('get_post_meta', function ($post_id, $key, $single) {
+        if ($key === 'flexible_content_blocks') {
+            return ['content', 'hero_with_breadcrumbs', 'content'];
+        }
+
+        if ($key === 'flexible_content_blocks_1_hero_image') {
+            return 1960;
+        }
+
+        return '';
+    });
+
+    expect(matrix_extract_page_hero_image_id_from_post_meta(216))->toBe(1960);
+});
+
 test('page hero image is extracted from the hero_with_breadcrumbs row', function () {
     $rows = [
         [

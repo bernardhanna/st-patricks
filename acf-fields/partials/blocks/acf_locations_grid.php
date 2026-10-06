@@ -87,6 +87,17 @@ $locations_grid
             'label' => 'Footer Button Link',
             'instructions' => 'Optional section CTA shown below the grid.',
             'return_format' => 'array',
+        ])
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Bottom only” to sit flush under the previous section.',
+            'choices' => [
+                'default' => 'Top & bottom (100px desktop)',
+                'no_bottom' => 'Top only (no bottom on desktop)',
+                'no_top' => 'Bottom only (no top on desktop)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
         ]);
 
 return $locations_grid;

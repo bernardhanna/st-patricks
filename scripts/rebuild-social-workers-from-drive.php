@@ -20,7 +20,9 @@ require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
-$post_id = (int) (get_page_by_path('about-us/social-workers')?->ID ?? 0);
+$post_id = (int) (get_page_by_path('about-us/our-team/social-workers')?->ID
+    ?? get_page_by_path('about-us/social-workers')?->ID
+    ?? 0);
 if ($post_id === 0) {
     WP_CLI::error('Could not find about-us/social-workers');
 }

@@ -62,7 +62,9 @@ $url_map = [
 
     // Footer — Quick links
     'your portal' => $home . 'your-portal/',
+    'healthcare faqs' => $home . 'healthcare-professionals/frequently-asked-questions/',
     'faqs (healthcare)' => $home . 'healthcare-professionals/frequently-asked-questions/',
+    'service users faqs' => $home . 'service-users-and-visitors/frequently-asked-questions-faqs/',
     'faqs (service users)' => $home . 'service-users-and-visitors/frequently-asked-questions-faqs/',
     'directions & parking' => $home . 'directions-and-parking/',
 
@@ -94,7 +96,21 @@ $nav_button_map = [
 $topbar_links = get_field('topbar_links', 'option');
 
 if (is_array($topbar_links)) {
-    update_field('topbar_links', matrix_seed_patch_link_repeaters($topbar_links, $url_map), 'option');
+    $topbar_links = matrix_seed_patch_link_repeaters($topbar_links, $url_map);
+
+    foreach ($topbar_links as $index => $row) {
+        if (! is_array($row['link'] ?? null)) {
+            continue;
+        }
+
+        $title_key = strtolower(trim((string) ($row['link']['title'] ?? '')));
+
+        if ($title_key === 'your portal (login)') {
+            $topbar_links[$index]['link']['title'] = 'Your Portal';
+        }
+    }
+
+    update_field('topbar_links', $topbar_links, 'option');
 }
 
 // --- Footer columns ---

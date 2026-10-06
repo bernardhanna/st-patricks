@@ -172,9 +172,9 @@ document.addEventListener('alpine:init', () => {
     abortController: null,
     searchTimeout: null,
     faqLinks: [
-      { title: "Healthcare FAQ's", url: '<?php echo esc_url( home_url( '/healthcare-professionals/frequently-asked-questions/' ) ); ?>' },
+      { title: 'Healthcare FAQs', url: '<?php echo esc_url( home_url( '/healthcare-professionals/frequently-asked-questions/' ) ); ?>' },
       { title: 'Our locations and parking', url: '<?php echo esc_url( home_url( '/about-us/our-locations/' ) ); ?>' },
-      { title: "Service user FAQ's", url: '<?php echo esc_url( home_url( '/service-users-and-visitors/frequently-asked-questions-faqs/' ) ); ?>' },
+      { title: 'Service Users FAQs', url: '<?php echo esc_url( home_url( '/service-users-and-visitors/frequently-asked-questions-faqs/' ) ); ?>' },
       { title: 'Make a payment', url: 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00', target: '_blank' },
     ],
 
@@ -285,7 +285,7 @@ document.addEventListener('alpine:init', () => {
   @mouseenter="$store.navMega.cancelClose()"
 >
   <!-- Logo -->
-  <div class="flex relative z-[70] items-center">
+  <div class="flex relative z-10 items-center">
     <a href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?> - Go to homepage">
       <?php if ($logo_url) : ?>
         <img
@@ -363,7 +363,7 @@ document.addEventListener('alpine:init', () => {
     </div>
 
     <div
-      class="pointer-events-none fixed top-[var(--site-header-height,120px)] z-[56] hidden xl:block"
+      class="pointer-events-none fixed top-[calc(var(--site-header-height,8.5rem)+0.75rem)] z-[76] hidden xl:block"
       x-show="$store.navMega.activeKey"
       x-cloak
       :style="'left:' + $store.navMega.pointerLeft + 'px;'"
@@ -454,17 +454,19 @@ document.addEventListener('alpine:init', () => {
                 <div x-show="loading" class="px-3 py-2.5 text-sm text-slate-600">Searching...</div>
                 <div x-show="!loading && error" class="px-3 py-2.5 text-sm text-red-600" x-text="error"></div>
                 <ul x-show="!loading && !error && results.length" class="p-0 m-0 list-none">
-                  <li x-for="item in results" :key="item.id + '-' + item.subtype">
-                    <a
-                      :href="item.url"
-                      class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
-                    >
-                      <span class="text-sm font-normal text-slate-950" x-text="item.title"></span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                  </li>
+                  <template x-for="item in results" :key="item.id + '-' + item.subtype">
+                    <li>
+                      <a
+                        :href="item.url"
+                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
+                      >
+                        <span class="text-sm font-normal text-slate-950" x-text="item.title"></span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </li>
+                  </template>
                 </ul>
                 <div x-show="!loading && !error && !results.length" class="px-3 py-2.5 text-sm text-slate-600">
                   No results found. Try a different keyword.
@@ -475,22 +477,24 @@ document.addEventListener('alpine:init', () => {
             <template x-if="query.trim().length < 2">
               <nav aria-label="FAQ categories">
                 <ul class="p-0 m-0 list-none">
-                  <li x-for="faq in faqLinks" :key="faq.title">
-                    <a
-                      :href="faq.url"
-                      :target="faq.target || '_self'"
-                      :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
-                      class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
-                    >
-                      <span class="text-sm font-normal text-slate-950">
-                        <span x-text="faq.title"></span>
-                        <span class="sr-only" x-text="faq.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
-                      </span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                  </li>
+                  <template x-for="faq in faqLinks" :key="faq.title">
+                    <li>
+                      <a
+                        :href="faq.url"
+                        :target="faq.target || '_self'"
+                        :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
+                        class="flex justify-between items-center px-3 py-2.5 w-full no-underline transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none"
+                      >
+                        <span class="text-sm font-normal text-slate-950">
+                          <span x-text="faq.title"></span>
+                          <span class="sr-only" x-text="faq.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
+                        </span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M9 6L15 12L9 18" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </a>
+                    </li>
+                  </template>
                 </ul>
               </nav>
             </template>

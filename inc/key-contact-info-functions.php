@@ -55,12 +55,12 @@ function matrix_get_key_contact_info_column_class_names()
 
 function matrix_get_key_contact_info_item_class_names()
 {
-    return 'overflow-hidden rounded-[4px] border border-white';
+    return 'matrix-contact-accordion-card relative overflow-hidden rounded-[4px] border border-white';
 }
 
 function matrix_get_key_contact_info_header_class_names()
 {
-    return 'flex min-h-[58px] w-full items-center justify-between gap-4 px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]';
+    return 'flex min-h-[58px] w-full items-center justify-between gap-4 px-6 py-4 text-left focus:outline-none focus-visible:outline-none';
 }
 
 function matrix_get_key_contact_info_title_class_names()
@@ -70,7 +70,7 @@ function matrix_get_key_contact_info_title_class_names()
 
 function matrix_get_key_contact_info_panel_class_names()
 {
-    return 'px-6 pb-4';
+    return 'px-6 pb-4 pt-3';
 }
 
 function matrix_get_key_contact_info_contact_row_class_names()
@@ -132,7 +132,7 @@ function matrix_apply_key_contact_info_item_placeholders(array $item)
             'Referrals and admissions',
             'Out-of-hours support',
         ],
-        'phone' => '01 012 123 123',
+        'phone' => '01 249 3200',
         'email' => 'hello@StPatrick.ie',
     ]);
 }

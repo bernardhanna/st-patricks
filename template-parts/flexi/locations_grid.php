@@ -23,6 +23,9 @@ if ($cards === []) {
     return;
 }
 
+$vertical_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
+    ? matrix_get_locations_grid_vertical_padding_classes(get_sub_field('vertical_padding'))
+    : 'py-12 lg:py-[100px]';
 $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
 
 ?>
@@ -32,7 +35,7 @@ $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative bg-white"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', array_unique($wrapper_classes))); ?>">
+    <div class="<?php echo esc_attr($vertical_padding . ' ' . implode(' ', array_unique($wrapper_classes))); ?>">
         <div class="w-full">
             <<?php echo esc_attr($heading_tag); ?>
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"

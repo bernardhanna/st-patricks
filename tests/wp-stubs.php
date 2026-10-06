@@ -276,6 +276,13 @@ if (! function_exists('get_option')) {
     }
 }
 
+if (! function_exists('get_post_meta')) {
+    function get_post_meta($post_id, $key = '', $single = false)
+    {
+        return __wp_stub_value('get_post_meta', $single ? '' : [], [$post_id, $key, $single]);
+    }
+}
+
 if (! function_exists('get_post_field')) {
     function get_post_field($field, $post_id = null, $context = 'display')
     {

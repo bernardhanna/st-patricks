@@ -216,7 +216,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
             <?php for ($dot = 0; $dot < $total_slides; $dot++): ?>
               <button
                 type="button"
-                class="w-3 h-3 rounded-full transition-colors duration-200 cursor-pointer"
+                class="w-2.5 h-2.5 min-h-[10px] min-w-[10px] rounded-full transition-colors duration-200 cursor-pointer"
                 data-slide="<?php echo esc_attr($dot); ?>"
                 role="tab"
                 aria-label="Go to slide <?php echo esc_attr($dot + 1); ?>"
@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cards.forEach(function(_, idx){
         var b = document.createElement('button');
         b.type = 'button';
-        b.className = 'w-3 h-3 rounded-full transition-colors duration-200';
+        b.className = 'w-2.5 h-2.5 min-h-[10px] min-w-[10px] rounded-full transition-colors duration-200';
         b.setAttribute('aria-label', 'Go to card ' + (idx + 1));
         b.dataset.index = idx;
         dotsWrap.appendChild(b);

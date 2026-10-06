@@ -71,6 +71,7 @@ $show_heading = $form['heading'] !== '';
 $show_intro = trim(wp_strip_all_tags($form['intro'])) !== '';
 $dob_help_id = $form['form_id'] . '-dob-help';
 $heading_id = $form['section_id'] . '-heading';
+$placeholders = matrix_get_contact_form_field_placeholders();
 ?>
 
 <section
@@ -147,7 +148,7 @@ $heading_id = $form['section_id'] . '-heading';
                     id="<?php echo esc_attr($form['form_id']); ?>-first-name"
                     name="first_name"
                     autocomplete="given-name"
-                    placeholder="Your first name"
+                    placeholder="<?php echo esc_attr($placeholders['first_name']); ?>"
                     required
                 />
             </div>
@@ -162,7 +163,7 @@ $heading_id = $form['section_id'] . '-heading';
                     id="<?php echo esc_attr($form['form_id']); ?>-last-name"
                     name="last_name"
                     autocomplete="family-name"
-                    placeholder="Your last name"
+                    placeholder="<?php echo esc_attr($placeholders['last_name']); ?>"
                     required
                 />
             </div>
@@ -210,7 +211,7 @@ $heading_id = $form['section_id'] . '-heading';
                             name="date_of_birth"
                             inputmode="numeric"
                             autocomplete="bday"
-                            placeholder="DD/MM/YYYY"
+                            placeholder="<?php echo esc_attr($placeholders['date_of_birth']); ?>"
                             pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}"
                             required
                             data-portal-dob-display
@@ -239,6 +240,7 @@ $heading_id = $form['section_id'] . '-heading';
                             id="<?php echo esc_attr($form['form_id']); ?>-eircode"
                             name="eircode"
                             autocomplete="postal-code"
+                            placeholder="<?php echo esc_attr($placeholders['eircode']); ?>"
                             required
                         />
                     </div>
@@ -256,7 +258,7 @@ $heading_id = $form['section_id'] . '-heading';
                     id="<?php echo esc_attr($form['form_id']); ?>-email"
                     name="email"
                     autocomplete="email"
-                    placeholder="Your email"
+                    placeholder="<?php echo esc_attr($placeholders['email']); ?>"
                     required
                 />
             </div>
@@ -301,6 +303,9 @@ $heading_id = $form['section_id'] . '-heading';
                             name="phone_country_code"
                             aria-label="Country code"
                         >
+                            <option value="" disabled>
+                                <?php echo esc_html($placeholders['phone_country_code']); ?>
+                            </option>
                             <?php foreach ($form['phone_country_options'] as $code => $label) { ?>
                                 <option value="<?php echo esc_attr($code); ?>" <?php selected($code, '+353'); ?>>
                                     <?php echo esc_html($code); ?>
@@ -315,6 +320,7 @@ $heading_id = $form['section_id'] . '-heading';
                         name="phone_number"
                         autocomplete="tel-national"
                         inputmode="tel"
+                        placeholder="<?php echo esc_attr($placeholders['phone_number']); ?>"
                     />
                 </div>
             </div>

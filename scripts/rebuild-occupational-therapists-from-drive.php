@@ -16,7 +16,9 @@ if (! defined('ABSPATH')) {
 
 require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
 
-$post_id = (int) (get_page_by_path('about-us/occupational-therapists')?->ID ?? 0);
+$post_id = (int) (get_page_by_path('about-us/our-team/occupational-therapists')?->ID
+    ?? get_page_by_path('about-us/occupational-therapists')?->ID
+    ?? 0);
 if ($post_id === 0) {
     WP_CLI::error('Could not find about-us/occupational-therapists');
 }

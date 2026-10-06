@@ -2,7 +2,10 @@
 
 get_header();
 
-if (get_post_type() === 'post') {
+$is_classic_blog_post = get_post_type() === 'post'
+    && (! function_exists('matrix_post_has_page_style_flexi') || ! matrix_post_has_page_style_flexi());
+
+if ($is_classic_blog_post) {
     ?>
     <main id="main-content" class="w-full overflow-hidden bg-white">
         <?php while (have_posts()) { ?>
@@ -52,7 +55,11 @@ if (get_post_type() === 'post') {
 
 ?>
 <main id="main-content" class="overflow-hidden w-full min-h-screen site-main">
-    <?php get_template_part('template-parts/single/hero'); ?>
+    <?php
+    if (get_post_type() !== 'post') {
+        get_template_part('template-parts/single/hero');
+    }
+    ?>
 
     <?php
     if (function_exists('load_hero_templates')) {

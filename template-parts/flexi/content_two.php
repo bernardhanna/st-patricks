@@ -24,7 +24,7 @@ $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
 >
-    <div class="flex flex-col items-center pt-24 pb-24 mx-auto w-full max-w-container max-lg:px-5 max-sm:pt-16 max-sm:pb-16">
+    <div class="flex flex-col items-center pt-24 pb-12 mx-auto w-full max-w-container max-lg:px-5 max-sm:pt-16 max-sm:pb-16">
         <div class="flex flex-col gap-14 items-start max-w-full w-[1018px] max-md:px-5 max-md:py-0 max-md:w-[90%] max-sm:px-4 max-sm:py-0 max-sm:w-[95%]">
 
             <!-- Header Section -->

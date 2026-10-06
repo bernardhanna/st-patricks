@@ -167,6 +167,38 @@ function matrix_get_signed_brevo_list_id_from_request($request = null)
 }
 
 /**
+ * @param array<string, mixed>|null $request
+ * @return list<int>
+ */
+function matrix_resolve_subscribe_brevo_list_ids($request = null)
+{
+    $request = is_array($request) ? $request : $_POST;
+
+    $signed = matrix_get_signed_brevo_list_id_from_request($request);
+    if ($signed > 0) {
+        return [$signed];
+    }
+
+    $opt_lists = function_exists('get_field') ? (string) get_field('brevo_list_ids', 'option') : '';
+    $allowed_ids = matrix_parse_brevo_list_ids($opt_lists);
+
+    $post_list_s = sanitize_text_field((string) ($request['list_ids'] ?? ''));
+    $post_list_a = [];
+    if (isset($request['list_ids']) && is_array($request['list_ids'])) {
+        $post_list_a = array_map('sanitize_text_field', $request['list_ids']);
+    }
+
+    $posted_ids = matrix_parse_brevo_list_ids(array_merge([$post_list_s], $post_list_a));
+    if ($posted_ids === []) {
+        return $allowed_ids;
+    }
+
+    $intersect = array_values(array_intersect($posted_ids, $allowed_ids));
+
+    return $intersect !== [] ? $intersect : $allowed_ids;
+}
+
+/**
  * @param array<string, string> $attributes
  * @param list<int> $list_ids
  * @return array{ok: bool, code: int, message: string}

@@ -96,6 +96,7 @@ require_once get_template_directory() . '/inc/what-we-offer-functions.php';
 require_once get_template_directory() . '/inc/about-links-grid-functions.php';
 require_once get_template_directory() . '/inc/mega-menu-render.php';
 require_once get_template_directory() . '/inc/flexible-content-functions.php';
+require_once get_template_directory() . '/inc/newsletter-functions.php';
 require_once get_template_directory() . '/inc/page-section-taxonomy.php';
 
 // Function to handle Tailwind config updates and trigger rebuilds
@@ -254,6 +255,7 @@ function template_part_blog()
 
 //TEMPLATE FORMS
 require_once get_template_directory() . '/inc/forms/brevo-functions.php';
+require_once get_template_directory() . '/inc/forms/mailchimp-functions.php';
 require get_template_directory() . '/inc/forms/class-theme-forms.php';
 new Theme_Forms();
 

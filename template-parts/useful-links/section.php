@@ -34,7 +34,7 @@ if ($wrapper_classes === '') {
 
 $link_classes = $variant === 'search'
     ? 'group inline-flex min-h-11 items-center underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:no-underline focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
-    : 'group inline-flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] underline transition-colors duration-200 hover:!text-[#024B79] hover:no-underline hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
+    : 'group inline-flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
 
 $grid_classes = $variant === 'search'
     ? 'mt-8 grid grid-cols-1 gap-y-4 lg:mt-8 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-4'
@@ -76,6 +76,10 @@ $grid_classes = $variant === 'search'
                     <?php } ?>
                     <?php if ($variant === 'search') { ?>
                         <span class="ml-1 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">&rarr;</span>
+                    <?php } elseif (function_exists('matrix_is_pdf_url') && matrix_is_pdf_url((string) $link['url'])) { ?>
+                        <span class="shrink-0" aria-hidden="true">
+                            <?php echo function_exists('matrix_get_content_pdf_icon_svg') ? matrix_get_content_pdf_icon_svg() : ''; ?>
+                        </span>
                     <?php } else { ?>
                         <span class="shrink-0 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">

@@ -27,6 +27,12 @@ require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $dry_run = in_array('dry-run', array_map('strval', $GLOBALS['argv'] ?? []), true);
 $library = get_template_directory() . '/old/content/SPMHS-Content-Gathering-Library 3';
+if (! is_dir($library)) {
+    $library4 = get_template_directory() . '/old/content/SPMHS-Content-Gathering-Library 4';
+    if (is_dir($library4)) {
+        $library = $library4;
+    }
+}
 
 $log = static function (string $message): void {
     if (class_exists('WP_CLI')) {
@@ -39,7 +45,7 @@ $warn = static function (string $message): void {
     }
 };
 
-if (! is_dir($library)) {
+if (! is_dir($library) && ! (defined('MATRIX_DRIVE3_NO_RUN') && MATRIX_DRIVE3_NO_RUN)) {
     if (class_exists('WP_CLI')) {
         WP_CLI::error('Missing library folder: ' . $library);
     }
@@ -284,6 +290,7 @@ if (! function_exists('matrix_drive3_apply_page')) {
                         'about_links_grid',
                         'programmes_therapies_archive',
                         'multidisciplinary_team_grid',
+                        'research_cards_grid',
                         'stories',
                         'contact_form',
                     ], true)) {

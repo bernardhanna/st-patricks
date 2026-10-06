@@ -242,6 +242,43 @@ if (! function_exists('matrix_orlaith_useful_links_row')) {
     }
 }
 
+if (! function_exists('matrix_orlaith_newsletter_row')) {
+    /**
+     * @param array<string, mixed> $extra
+     */
+    function matrix_orlaith_newsletter_row(string $heading, string $subtext_html, array $extra = []): array
+    {
+        return array_merge([
+            'acf_fc_layout' => 'newsletter',
+            'heading' => $heading,
+            'subtext' => $subtext_html,
+            'newsletter_list_id' => '',
+        ], $extra);
+    }
+}
+
+if (! function_exists('matrix_orlaith_gp_newsletter_row')) {
+    /**
+     * Healthcare GP e-newsletter flexi (same copy/list as subscribe-to-our-gp-enewsletter).
+     *
+     * @param array<string, mixed> $extra
+     */
+    function matrix_orlaith_gp_newsletter_row(string $subtext_html = '', array $extra = []): array
+    {
+        if ($subtext_html === '') {
+            $subtext_html = '<p>We issue a quarterly digital newsletter especially tailored to GPs, covering mental health news, research findings, service updates and clinical insights. Sign up using the form below.</p>';
+        }
+
+        $list_id = function_exists('matrix_resolve_gp_newsletter_list_id')
+            ? matrix_resolve_gp_newsletter_list_id()
+            : '';
+
+        return matrix_orlaith_newsletter_row('Sign-up to get the GP Newsletter', $subtext_html, array_merge([
+            'newsletter_list_id' => $list_id,
+        ], $extra));
+    }
+}
+
 if (! function_exists('matrix_orlaith_contact_form_row')) {
     /**
      * @param array<string, mixed> $extra

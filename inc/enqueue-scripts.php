@@ -1,6 +1,24 @@
 <?php
 // File: inc/enqueue-scripts.php
 
+if (! function_exists('matrix_buggie_script_url')) {
+  function matrix_buggie_script_url(): string
+  {
+    return 'https://buggie.matrixinternet.ie/w/pk_ypg2qtwlgavacomieccztune.js';
+  }
+}
+
+if (! function_exists('matrix_is_buggie_enabled')) {
+  function matrix_is_buggie_enabled(): bool
+  {
+    if (! function_exists('get_field')) {
+      return false;
+    }
+
+    return (bool) get_field('enable_matrix_buggie', 'option');
+  }
+}
+
 function matrix_starter_enqueue_scripts()
 {
   $app_css_path = get_template_directory() . '/dist/app.css';
@@ -194,6 +212,16 @@ function matrix_starter_enqueue_scripts()
     }
   }
 
+  if (matrix_is_buggie_enabled()) {
+    wp_enqueue_script(
+      'matrix-buggie',
+      matrix_buggie_script_url(),
+      [],
+      null,
+      true
+    );
+  }
+
   // Woo fragments
   if (class_exists('WooCommerce')) {
     wp_enqueue_script('wc-cart-fragments');
@@ -201,12 +229,18 @@ function matrix_starter_enqueue_scripts()
 
   // Defer only non-critical scripts. Never defer jQuery or Alpine.
   add_filter('script_loader_tag', function ($tag, $handle) {
+    if ($handle === 'matrix-buggie' && strpos($tag, ' src=') !== false) {
+      $tag = str_replace([' defer', ' async'], '', $tag);
+      return str_replace(' src', ' async src', $tag);
+    }
+
     $no_defer = [
       'jquery','jquery-core','jquery-migrate',
       'matrix-starter','theme-forms',
       'wc-cart-fragments','woocommerce',
       'recaptcha',
       'alpine-intersect','alpine', // ✅ keep Alpine immediate
+      'matrix-buggie',
     ];
     if (in_array($handle, $no_defer, true)) return $tag;
     if (strpos($tag, ' src=') !== false) {

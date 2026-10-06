@@ -8,7 +8,7 @@
  * - A Pages sheet for published pages that sit outside a section (homepage first)
  * - One sheet per remaining published post type
  * - Columns: Title, Local URL, Staging URL, Local Form Link, Staging Form Link,
- *   Drive folder, Content on Drive, Status, Status set by, Notes
+ *   Content on Drive, Added from drive, Added from form, Status, Status set by, Notes
  *
  * Client editing forms render every page in a token into one HTML document, so each
  * sheet is split into chunks of MATRIX_WORKBOOK_FORM_CHUNK_SIZE posts with one token each.
@@ -462,18 +462,20 @@ $headers = [
     'Staging URL',
     'Local Form Link',
     'Staging Form Link',
-    'Drive folder',
     'Content on Drive',
+    'Added from drive',
+    'Added from form',
     'Status',
     'Status set by',
     'Notes',
 ];
-$last_col = 'J';
-$drive_col = 'F';
-$on_drive_col = 'G';
-$status_col = 'H';
-$set_by_col = 'I';
-$link_columns = ['B', 'C', 'D', 'E', 'F'];
+$last_col = 'K';
+$on_drive_col = 'F';
+$added_drive_col = 'G';
+$added_form_col = 'H';
+$status_col = 'I';
+$set_by_col = 'J';
+$link_columns = ['B', 'C', 'D', 'E'];
 
 $build_row = static function (WP_Post $post) use (
     $sitemap_rank_for,
@@ -497,7 +499,6 @@ $build_row = static function (WP_Post $post) use (
     }
 
     $form_url = $form_url_by_post[$post_id] ?? '';
-    $drive = matrix_workbook_drive_folder_for_post($post);
 
     return [
         $title,
@@ -505,8 +506,9 @@ $build_row = static function (WP_Post $post) use (
         matrix_workbook_to_staging_url($local_url, $local_home),
         $form_url,
         matrix_workbook_to_staging_url($form_url, $local_home),
-        $drive['url'],
         matrix_workbook_content_on_drive_label($post_id),
+        matrix_workbook_added_from_drive_label($post_id),
+        matrix_workbook_added_from_form_label($post_id),
         matrix_workbook_status_label_from_meta($post_id),
         matrix_workbook_status_set_by($post_id),
         implode('. ', $notes),
@@ -556,8 +558,9 @@ foreach ($sheets as $sheet) {
     $worksheet->getColumnDimension('C')->setWidth(52);
     $worksheet->getColumnDimension('D')->setWidth(58);
     $worksheet->getColumnDimension('E')->setWidth(58);
-    $worksheet->getColumnDimension($drive_col)->setWidth(52);
     $worksheet->getColumnDimension($on_drive_col)->setWidth(18);
+    $worksheet->getColumnDimension($added_drive_col)->setWidth(18);
+    $worksheet->getColumnDimension($added_form_col)->setWidth(18);
     $worksheet->getColumnDimension($status_col)->setWidth(18);
     $worksheet->getColumnDimension($set_by_col)->setWidth(30);
     $worksheet->getColumnDimension($last_col)->setWidth(34);
@@ -567,6 +570,8 @@ foreach ($sheets as $sheet) {
     }
 
     matrix_workbook_apply_yes_no_controls($worksheet, $last_row, $on_drive_col);
+    matrix_workbook_apply_added_from_drive_controls($worksheet, $last_row, $added_drive_col);
+    matrix_workbook_apply_added_from_form_controls($worksheet, $last_row, $added_form_col);
     matrix_workbook_apply_status_controls($worksheet, $last_row, $status_col);
 
     $sheet_counts[$title] = count($rows);
@@ -602,9 +607,17 @@ foreach ($legend as $label => $meaning) {
 
 $summary_rows[] = [];
 $summary_rows[] = ['Content on Drive', 'Meaning'];
-$summary_rows[] = ['Yes', 'Content was supplied / edited via Google Drive'];
-$summary_rows[] = ['No', 'Content was supplied via the form (or elsewhere)'];
+$summary_rows[] = ['Yes', 'Drive has source copy for this page (folder Y / link)'];
+$summary_rows[] = ['No', 'No Drive copy expected for this page'];
 $summary_rows[] = ['(blank)', 'Not marked yet — use the Yes/No dropdown'];
+$summary_rows[] = [];
+$summary_rows[] = ['Added from drive', 'Meaning'];
+$summary_rows[] = ['Done', 'Drive copy is already on the website — do not re-import'];
+$summary_rows[] = ['(blank)', 'Not yet added from Drive (or needs a check)'];
+$summary_rows[] = [];
+$summary_rows[] = ['Added from form', 'Meaning'];
+$summary_rows[] = ['Yes', 'Content was added/edited via the content form'];
+$summary_rows[] = ['(blank)', 'Not marked as form-edited'];
 $summary_rows[] = [];
 $summary_rows[] = ['Drive library', matrix_workbook_drive_folder_ids()['root_url']];
 $summary_rows[] = [];
@@ -672,16 +685,15 @@ $instructions->fromArray([
     ['8. Staging form links only resolve after the database is search-replaced onto staging, because the form tokens live in the database.'],
     ['9. Form links open the content editing form directly on that row\'s page. Editing requires a logged-in Administrator or Site Editor.'],
     ['10. Large sheets are split across several forms (see the Form table on Summary) so no single form has to render too many pages.'],
-    ['11. Drive folder opens the matching Google Drive folder for that page (when we have a mapped source). Blank means no Drive folder is linked yet.'],
-    ['12. Content on Drive is a Yes/No toggle: Yes = content came from Google Drive; No = used the editing form / elsewhere. Pre-filled Yes when a Drive import was recorded.'],
-    ['13. Status mirrors the Content status column in wp-admin (Pages and Posts lists): To do, In progress, Done, or Delete.'],
-    ['14. Status set by shows who marked a row Done. The plugin only records an author for Done, so other statuses are blank.'],
-    ['15. Re-running the export regenerates the file and mints fresh form tokens, so work in a copy once you start marking Content on Drive / Status rows.'],
+    ['11. Content on Drive = Yes/No: does Drive have source copy for this page?'],
+    ['12. Added from drive = Done when that Drive copy is already on the website. Leave blank until added. Do not re-import Done rows if copy already matches.'],
+    ['13. Added from form = Yes when content was added/edited via the content form (not Drive).'],
+    ['14. Status mirrors the Content status column in wp-admin (Pages and Posts lists): To do, In progress, Done, or Delete.'],
+    ['15. Status set by shows who marked a row Done. The plugin only records an author for Done, so other statuses are blank.'],
+    ['16. Re-running the export regenerates the file and mints fresh form tokens, so work in a copy once you start marking Drive / Status columns.'],
     [''],
     ['Regenerate command:'],
     ['wp eval-file wp-content/themes/matrix-starter/scripts/export-sitemap-content-workbook.php'],
-    ['Refresh Drive folder links (optional):'],
-    ['php wp-content/themes/matrix-starter/scripts/crawl-drive-library-folder-ids.php'],
 ], null, 'A1');
 $instructions->getStyle('A1')->getFont()->setBold(true)->setSize(14);
 $instructions->getColumnDimension('A')->setWidth(120);

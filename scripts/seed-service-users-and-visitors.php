@@ -312,13 +312,13 @@ $flexi_rows = [
     ],
     array_merge($grid_defaults, [
         'acf_fc_layout' => 'research_cards_grid',
-        'heading' => 'Section title placeholder/Your account',
+        'heading' => 'Your account',
         'cards' => $your_account_cards,
         'background_color' => '#FFFFFF',
     ]),
     array_merge($grid_defaults, [
         'acf_fc_layout' => 'research_cards_grid',
-        'heading' => '(Placeholder) Your Stay',
+        'heading' => 'Your stay',
         'cards' => $your_stay_cards,
         'background_color' => '#FBFAF7',
     ]),

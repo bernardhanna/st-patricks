@@ -351,3 +351,16 @@ function matrix_get_contact_form_action_url()
 {
     return function_exists('admin_url') ? admin_url('admin-post.php') : '/wp-admin/admin-post.php';
 }
+
+function matrix_get_contact_form_field_placeholders()
+{
+    return [
+        'first_name' => 'Enter your first name',
+        'last_name' => 'Enter your last name',
+        'date_of_birth' => 'DD/MM/YYYY',
+        'eircode' => 'Enter your Eircode',
+        'email' => 'Enter email address',
+        'phone_number' => 'Enter phone number',
+        'phone_country_code' => 'Select country code',
+    ];
+}

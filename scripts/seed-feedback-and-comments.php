@@ -46,6 +46,16 @@ $clinical_governance_phone = '01 249 3200';
 
 $hero_intro = 'Here, you can find information on how to provide feedback, including making a complaint, to St Patrick\'s Mental Health Services (SPMHS).';
 
+$hero_image_id = (int) matrix_migrate_attachment_id_for_source_path('/media/1724/st-patricks-mental-health-multidisciplinary-team.jpg');
+$hero_image_alt = 'People in conversation while a staff member listens and takes notes.';
+if ($hero_image_id > 0 && trim((string) get_post_meta($hero_image_id, '_wp_attachment_image_alt', true)) === '') {
+    update_post_meta($hero_image_id, '_wp_attachment_image_alt', $hero_image_alt);
+}
+
+if ($hero_image_id <= 0 && class_exists('WP_CLI')) {
+    WP_CLI::warning('Feedback seed could not resolve hero_image from st-patricks-mental-health-multidisciplinary-team.jpg.');
+}
+
 $welcome_body = '<p>At SPMHS, we welcome feedback on all aspects of our services.</p>'
     . '<p>We recognise the importance of receiving continuous <a href="' . esc_url($participation_url) . '">feedback from our service users</a> and everyone involved in our services and activities. We are also committed to the <a href="' . esc_url($child_protection_url) . '" target="_blank" rel="noopener noreferrer">protection of children and vulnerable adults</a>.</p>'
     . '<p>Feedback enables us to continue to deliver a high quality service and to place the welfare and needs of service users at the forefront of all our activities.</p>'
@@ -95,7 +105,7 @@ $flexi_rows = [
         'heading' => 'Feedback and comments',
         'content' => '<p>' . esc_html($hero_intro) . '</p>',
         'primary_button' => '',
-        'hero_image' => '',
+        'hero_image' => $hero_image_id,
         'background_color' => '#C6ECF4',
         'breadcrumb_background_color' => '#F1F8F9',
         'heading_color' => '#08284B',

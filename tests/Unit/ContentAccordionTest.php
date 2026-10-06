@@ -195,7 +195,9 @@ test('content accordion rich text styles lists like content sections', function 
     expect($config['content_classes'])->toContain('[&_ul]:list-none')
         ->and($config['content_classes'])->toContain('[&_ul]:pl-6')
         ->and($config['content_classes'])->toContain('[&_ol]:list-decimal')
-        ->and($config['content_classes'])->toContain('[&_li]:mb-2');
+        ->and($config['content_classes'])->toContain('[&_li]:mb-2')
+        ->and($config['content_classes'])->toContain('[&_a:not(.btn)]:underline')
+        ->and($config['content_classes'])->toContain('[&_a.btn]:no-underline');
 });
 
 test('content accordion vertical padding supports default and bottom-only spacing', function () {
@@ -211,7 +213,10 @@ test('content accordion vertical padding supports default and bottom-only spacin
         ->toBe('pt-8 pb-[100px]')
         ->and(matrix_resolve_content_accordion_vertical_padding('top_50_bottom_100'))->toBe('top_50_bottom_100')
         ->and(matrix_get_content_accordion_vertical_padding_classes('top_50_bottom_100', 'default'))
-        ->toBe('pt-[50px] pb-[100px]');
+        ->toBe('pt-[50px] pb-[100px]')
+        ->and(matrix_resolve_content_accordion_vertical_padding('compact'))->toBe('compact')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('compact', 'default'))
+        ->toBe('py-12');
 });
 
 test('content accordion can show an optional section title', function () {

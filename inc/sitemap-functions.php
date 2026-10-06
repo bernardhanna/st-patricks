@@ -41,14 +41,8 @@ function matrix_get_sitemap_hub_page_paths()
         'inpatient-care',
         'programmes-therapies',
         'healthcare-professionals',
-        'referrals',
-        'make-a-referral',
         'service-users-and-visitors',
-        'getting-help',
-        'get-involved',
         'news-and-events',
-        'careers',
-        'recruitment-and-useful-information',
         'contact-us',
         'your-portal',
     ]);
@@ -69,20 +63,21 @@ function matrix_get_sitemap_hub_extra_children()
     return apply_filters('matrix_sitemap_hub_extra_children', [
         'inpatient-care' => [
             'service-users-and-visitors/your-stay-in-hospital-as-an-adult',
-            'make-a-referral',
+            'healthcare-professionals/refer-an-adult-for-inpatient-care',
         ],
         'your-portal' => [
-            'about-your-portal',
-            'register-for-your-portal',
-            'service-user-it-support',
+            'your-portal/about-your-portal',
+            'your-portal/register-for-your-portal',
+            'service-users-and-visitors/service-user-it-support',
         ],
         'contact-us' => [
-            'directions-and-parking',
+            'service-users-and-visitors/directions-and-parking',
         ],
         'service-users-and-visitors' => [
-            'directions-and-parking',
-            'about-your-portal',
-            'service-user-it-support',
+            'service-users-and-visitors/directions-and-parking',
+            'your-portal/about-your-portal',
+            'service-users-and-visitors/service-user-it-support',
+            'getting-help/concerned-about-yourself-or-someone-you-know',
         ],
     ]);
 }
@@ -118,7 +113,6 @@ function matrix_get_sitemap_hub_cpt_archives()
      */
     return apply_filters('matrix_sitemap_hub_cpt_archives', [
         'programmes-therapies' => 'programmes_therapies',
-        'referrals' => 'referrals',
     ]);
 }
 
@@ -190,6 +184,73 @@ function matrix_get_sitemap_excluded_page_ids()
 }
 
 /**
+ * Request path for a post, used to skip destinations that already 301 away.
+ *
+ * @param WP_Post|object $post
+ */
+function matrix_get_sitemap_post_request_path($post)
+{
+    if (! is_object($post)) {
+        return '';
+    }
+
+    $post_type = (string) ($post->post_type ?? 'page');
+
+    if ($post_type === 'page' && function_exists('get_page_uri')) {
+        return trim((string) get_page_uri($post), '/');
+    }
+
+    if (! function_exists('get_permalink')) {
+        return '';
+    }
+
+    return trim((string) parse_url((string) get_permalink($post), PHP_URL_PATH), '/');
+}
+
+/**
+ * Whether a local path is a theme-level redirect source.
+ *
+ * @param string $path
+ */
+function matrix_sitemap_path_is_redirected($path)
+{
+    $path = trim((string) $path, '/');
+
+    if ($path === '' || ! function_exists('matrix_get_theme_path_redirect_map')) {
+        return false;
+    }
+
+    $map = matrix_get_theme_path_redirect_map();
+
+    return is_array($map) && isset($map[$path]);
+}
+
+/**
+ * Whether a post should appear in the HTML sitemap.
+ *
+ * @param WP_Post|object|null $post
+ * @param array<int, true>    $exclude_lookup
+ */
+function matrix_sitemap_post_is_listable($post, array $exclude_lookup = [])
+{
+    if (! is_object($post) || ! isset($post->ID)) {
+        return false;
+    }
+
+    $status = (string) ($post->post_status ?? '');
+
+    if ($status !== '' && $status !== 'publish') {
+        return false;
+    }
+
+    if (isset($exclude_lookup[(int) $post->ID])) {
+        return false;
+    }
+
+    return ! matrix_sitemap_path_is_redirected(matrix_get_sitemap_post_request_path($post));
+}
+
+/**
  * Build the hierarchical page tree from a list of page objects.
  *
  * @param array<int, WP_Post|object> $pages
@@ -225,7 +286,7 @@ function matrix_build_sitemap_child_node_from_page_path($path, array $exclude_lo
 {
     $page = get_page_by_path($path);
 
-    if (! $page instanceof WP_Post || isset($exclude_lookup[(int) $page->ID])) {
+    if (! $page instanceof WP_Post || ! matrix_sitemap_post_is_listable($page, $exclude_lookup)) {
         return null;
     }
 
@@ -263,7 +324,7 @@ function matrix_build_sitemap_child_node_from_cpt_post(array $source, array $exc
 
     $post = $posts[0];
 
-    if (isset($exclude_lookup[(int) $post->ID])) {
+    if (! matrix_sitemap_post_is_listable($post, $exclude_lookup)) {
         return null;
     }
 
@@ -298,7 +359,7 @@ function matrix_build_sitemap_cpt_archive_children($post_type, array $exclude_lo
     $children = [];
 
     foreach (is_array($posts) ? $posts : [] as $post) {
-        if (! $post instanceof WP_Post || isset($exclude_lookup[(int) $post->ID])) {
+        if (! $post instanceof WP_Post || ! matrix_sitemap_post_is_listable($post, $exclude_lookup)) {
             continue;
         }
 
@@ -328,7 +389,7 @@ function matrix_build_sitemap_taxonomy_children($base_url, array $config)
 
     $terms = get_terms([
         'taxonomy' => $taxonomy,
-        'hide_empty' => false,
+        'hide_empty' => true,
     ]);
 
     if (is_wp_error($terms) || ! is_array($terms)) {
@@ -346,6 +407,10 @@ function matrix_build_sitemap_taxonomy_children($base_url, array $config)
 
     foreach ($terms as $term) {
         if (! $term instanceof WP_Term) {
+            continue;
+        }
+
+        if ((string) $term->slug === 'uncategorized') {
             continue;
         }
 
@@ -398,7 +463,7 @@ function matrix_build_sitemap_shallow_page_node($page, array $exclude_lookup)
     ]);
 
     foreach (is_array($child_pages) ? $child_pages : [] as $child) {
-        if (! $child instanceof WP_Post || isset($exclude_lookup[(int) $child->ID])) {
+        if (! $child instanceof WP_Post || ! matrix_sitemap_post_is_listable($child, $exclude_lookup)) {
             continue;
         }
 
@@ -470,7 +535,7 @@ function matrix_build_sitemap_section_for_path($path, array $exclude_lookup, $in
 {
     $page = get_page_by_path($path);
 
-    if (! $page instanceof WP_Post || isset($exclude_lookup[(int) $page->ID])) {
+    if (! $page instanceof WP_Post || ! matrix_sitemap_post_is_listable($page, $exclude_lookup)) {
         return null;
     }
 

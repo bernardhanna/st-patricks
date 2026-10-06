@@ -40,7 +40,16 @@ test('matrix_process_external_links_in_html opens internal pdf links in a new ta
     $processed = matrix_process_external_links_in_html($html);
 
     expect($processed)->toContain('target="_blank"')
-        ->and($processed)->toContain('rel="noopener noreferrer"');
+        ->and($processed)->toContain('rel="noopener noreferrer"')
+        ->and($processed)->toContain('is-pdf-link');
+});
+
+test('matrix_process_external_links_in_html marks pdf list items for the pdf icon', function () {
+    $html = '<ul><li><a href="https://www.stpatricks.ie/media/4215/css-overarching.pdf">Child Safeguarding Statement</a></li></ul>';
+    $processed = matrix_process_external_links_in_html($html);
+
+    expect($processed)->toContain('has-pdf-link')
+        ->and($processed)->toContain('is-pdf-link');
 });
 
 test('matrix_normalize_acf_link forces external acf links to open in a new tab', function () {

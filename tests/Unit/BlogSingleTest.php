@@ -35,6 +35,11 @@ test('blog single resolves author name with fallback', function () {
     expect($defaults['author_fallback'])->toBe('St Patrick Hospital Team');
 });
 
+test('page-style flexi helper exists for campaign posts', function () {
+    expect(function_exists('matrix_post_has_page_style_flexi'))->toBeTrue()
+        ->and(matrix_post_has_page_style_flexi(0))->toBeFalse();
+});
+
 test('blog single maps related post cards', function () {
     expect(function_exists('matrix_map_blog_related_post_card'))->toBeTrue();
 });

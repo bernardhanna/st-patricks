@@ -39,6 +39,24 @@ test('brevo list signatures reject unsigned or swapped ids', function () {
         ]))->toBe(0);
 });
 
+test('subscribe list ids prefer a signed newsletter list over allowed defaults', function () {
+    $signature = matrix_brevo_list_signature(42);
+
+    __wp_stub('get_field', fn ($field, $post_id = false) => $field === 'brevo_list_ids' ? '12,18' : null);
+
+    expect(matrix_resolve_subscribe_brevo_list_ids([
+        'list_ids' => '18',
+        '_cfg_brevo_list_id' => '42',
+        '_cfg_brevo_sig' => $signature,
+    ]))->toBe([42])
+        ->and(matrix_resolve_subscribe_brevo_list_ids([
+            'list_ids' => '99',
+        ]))->toBe([12, 18])
+        ->and(matrix_resolve_subscribe_brevo_list_ids([
+            'list_ids' => '18',
+        ]))->toBe([18]);
+});
+
 test('theme form brevo consent requires a mailing list or newsletter tick', function () {
     expect(matrix_theme_form_has_brevo_consent([
         'email' => 'a@example.com',

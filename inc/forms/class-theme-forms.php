@@ -339,28 +339,6 @@ function matrix_subscribe_brevo() {
   if (!$email || !is_email($email)) wp_send_json_error(['message' => 'Please enter a valid email address.'], 400);
   if (!$consent) wp_send_json_error(['message' => 'Please accept the terms.'], 400);
 
-  $opt_lists = function_exists('get_field') ? (string) get_field('brevo_list_ids', 'option') : '';
-  $allowed_ids = function_exists('matrix_parse_brevo_list_ids')
-    ? matrix_parse_brevo_list_ids($opt_lists)
-    : array_values(array_filter(array_map('absint', preg_split('/[,\s;]+/', (string) $opt_lists))));
-
-  $post_list_s = sanitize_text_field($_POST['list_ids'] ?? '');
-  $post_list_a = (isset($_POST['list_ids']) && is_array($_POST['list_ids'])) ? array_map('sanitize_text_field', (array) $_POST['list_ids']) : [];
-  $posted_ids = function_exists('matrix_parse_brevo_list_ids')
-    ? matrix_parse_brevo_list_ids(array_merge([$post_list_s], $post_list_a))
-    : array_values(array_unique(array_filter(array_map('absint', array_merge(
-        preg_split('/[,\s;]+/', (string) $post_list_s) ?: [],
-        $post_list_a
-      )))));
-
-  $list_ids = $allowed_ids;
-  if ($posted_ids !== []) {
-    $list_ids = array_values(array_intersect($posted_ids, $allowed_ids));
-    if ($list_ids === []) {
-      $list_ids = $allowed_ids;
-    }
-  }
-
   $first = ''; $last = '';
   if ($name_raw) {
     $parts = preg_split('/\s+/', trim($name_raw));
@@ -370,18 +348,39 @@ function matrix_subscribe_brevo() {
 
   $ip   = $_SERVER['REMOTE_ADDR'] ?? '';
   $when = current_time('mysql');
+  $provider = function_exists('matrix_get_newsletter_provider')
+    ? matrix_get_newsletter_provider()
+    : 'mailchimp';
 
-  if (! function_exists('matrix_add_brevo_contact')) {
-    wp_send_json_error(['message' => 'Missing Brevo API key.'], 500);
+  if ($provider === 'mailchimp') {
+    if (! function_exists('matrix_add_mailchimp_subscriber')) {
+      wp_send_json_error(['message' => 'Missing Mailchimp API key.'], 500);
+    }
+
+    $list_id = function_exists('matrix_resolve_subscribe_mailchimp_list_id')
+      ? matrix_resolve_subscribe_mailchimp_list_id($_POST)
+      : '';
+    $result = matrix_add_mailchimp_subscriber($email, array_filter([
+      'FNAME' => $first,
+      'LNAME' => $last,
+    ]), $list_id);
+  } else {
+    $list_ids = function_exists('matrix_resolve_subscribe_brevo_list_ids')
+      ? matrix_resolve_subscribe_brevo_list_ids($_POST)
+      : [];
+
+    if (! function_exists('matrix_add_brevo_contact')) {
+      wp_send_json_error(['message' => 'Missing Brevo API key.'], 500);
+    }
+
+    $result = matrix_add_brevo_contact($email, array_filter([
+      'FIRSTNAME' => $first,
+      'LASTNAME'  => $last,
+      'CONSENT'   => 'yes',
+      'CONSENT_IP'=> $ip,
+      'CONSENT_AT'=> $when,
+    ]), $list_ids);
   }
-
-  $result = matrix_add_brevo_contact($email, array_filter([
-    'FIRSTNAME' => $first,
-    'LASTNAME'  => $last,
-    'CONSENT'   => 'yes',
-    'CONSENT_IP'=> $ip,
-    'CONSENT_AT'=> $when,
-  ]), $list_ids);
 
   if (! empty($result['ok'])) {
     wp_send_json_success(['message' => $result['message'] ?? 'Thanks — you’re subscribed!']);

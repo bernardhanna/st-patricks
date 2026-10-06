@@ -198,6 +198,7 @@ $content_accordion
                 'bottom_only' => 'Bottom only (no top padding)',
                 'small_top_large_bottom' => 'Small top / large bottom (2rem top, 100px bottom)',
                 'top_50_bottom_100' => '50px top / 100px bottom',
+                'compact' => 'Compact (3rem top and bottom)',
             ],
             'default_value' => 'default',
             'ui' => 1,

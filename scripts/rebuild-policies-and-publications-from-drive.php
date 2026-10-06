@@ -123,11 +123,10 @@ $policies_accordion = [
         . '.'),
 ];
 
-$strategy_intro = $p('The Future in Mind is our organisational strategy for 2023 to 2027. It stays true to our founding principles, while committing us to developing new services and promoting mental health awareness. The strategy was developed in consultation with service users, staff, our Board of Governors and other key stakeholders. '
-    . $a($urls['strategy'], 'See more on our strategy here')
-    . '.');
-
 $reports_accordion = [
+    'Our strategy' => $p('The Future in Mind is our organisational strategy for 2023 to 2027. It stays true to our founding principles, while committing us to developing new services and promoting mental health awareness. The strategy was developed in consultation with service users, staff, our Board of Governors and other key stakeholders. '
+        . $a($urls['strategy'], 'See more on our strategy here')
+        . '.'),
     'Annual Reports' => $p('Our Annual Reports reflect on our yearly activity and show that we continue to occupy a distinctive and essential role within Ireland’s mental healthcare landscape. You can find our most recent Annual Reports below. If you would like a copy of an Annual Report for an earlier year, please email '
             . $a('mailto:communications@stpatricks.ie', 'communications@stpatricks.ie')
             . '.')
@@ -186,8 +185,7 @@ $reports_accordion = [
 $flexi = [
     matrix_orlaith_hero_row('Policies and publications', $hero_intro, $img_id),
     matrix_orlaith_accordion_row($policies_accordion, 'default', 'Our policies and charters'),
-    matrix_orlaith_content_row('Strategies and reports', $strategy_intro, 'cream'),
-    matrix_orlaith_accordion_row($reports_accordion),
+    matrix_orlaith_accordion_row($reports_accordion, 'default', 'Strategies and reports'),
     matrix_orlaith_useful_links_row([
         'About us' => 'about-us',
         'Our team' => 'about-us/our-team',

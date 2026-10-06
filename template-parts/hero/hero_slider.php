@@ -279,7 +279,7 @@ $is_slider = count($slides) > 1;
                         <?php
                         for ($d = 0; $d < count($slides); $d++) {
                             $is_active = $d === 0;
-                            $dot_color = $is_active ? '#80CCD9' : '#7ED0E0';
+                            $dot_color = $is_active ? '#0f172a' : '#7ED0E0';
                             ?>
                             <button
                                 class="w-3 h-3 rounded-full transition-colors slider-dot"
@@ -342,6 +342,19 @@ $is_slider = count($slides) > 1;
 
         var dots = document.querySelectorAll('#' + id + ' .slider-dot');
 
+        function setActiveDots(index) {
+            dots.forEach(function(d) {
+                var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
+                var active = dotIndex === index;
+                d.style.backgroundColor = active ? '#0f172a' : '#7ED0E0';
+                if (active) {
+                    d.setAttribute('aria-current', 'true');
+                } else {
+                    d.removeAttribute('aria-current');
+                }
+            });
+        }
+
         dots.forEach(function(dot) {
             dot.addEventListener('click', function() {
                 var target = parseInt(dot.getAttribute('data-slide') || '0', 10) || 0;
@@ -349,17 +362,10 @@ $is_slider = count($slides) > 1;
             });
         });
 
+        setActiveDots(0);
+
         $(container).on('beforeChange', function(e, slick, cur, next) {
-            dots.forEach(function(d) {
-                var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
-                if (dotIndex === next) {
-                    d.style.backgroundColor = '#0f172a';
-                    d.setAttribute('aria-current', 'true');
-                } else {
-                    d.style.backgroundColor = '#7ED0E0';
-                    d.removeAttribute('aria-current');
-                }
-            });
+            setActiveDots(next);
         });
 
         var prevBtns = document.querySelectorAll('#' + id + ' .slider-prev');

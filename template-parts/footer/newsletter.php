@@ -1,6 +1,8 @@
 <?php
-// Enable?
-if (! get_field('newsletter_enable', 'option')) {
+$newsletter_args = is_array($args ?? null) ? $args : [];
+$force = ! empty($newsletter_args['force']);
+
+if (! $force && ! get_field('newsletter_enable', 'option')) {
   return;
 }
 
@@ -24,10 +26,37 @@ $bg_left_op = ($bg_left_op === '' || $bg_left_op === null) ? 0.03 : (float) $bg_
 
 // Content
 $heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, and Expert advice from SPMHS';
+if (array_key_exists('heading', $newsletter_args) && trim((string) $newsletter_args['heading']) !== '') {
+  $heading = trim((string) $newsletter_args['heading']);
+}
+
 $subtext = get_field('newsletter_subtext', 'option'); // WYSIWYG
+if (array_key_exists('subtext', $newsletter_args)) {
+  $subtext = $newsletter_args['subtext'];
+}
+
+$link_healthcare_signup = array_key_exists('link_healthcare_signup', $newsletter_args)
+  ? (bool) $newsletter_args['link_healthcare_signup']
+  : true;
+
+$provider = function_exists('matrix_get_newsletter_provider')
+  ? matrix_get_newsletter_provider()
+  : 'mailchimp';
+$list_id = function_exists('matrix_sanitize_newsletter_list_id')
+  ? matrix_sanitize_newsletter_list_id($newsletter_args['list_id'] ?? '')
+  : trim((string) ($newsletter_args['list_id'] ?? ''));
+if ($list_id === '' && $provider === 'mailchimp' && function_exists('get_field')) {
+  $list_id = function_exists('matrix_sanitize_newsletter_list_id')
+    ? matrix_sanitize_newsletter_list_id(get_field('mailchimp_list_id', 'option'))
+    : trim((string) get_field('mailchimp_list_id', 'option'));
+}
+$heading_tag = strtolower((string) ($newsletter_args['heading_tag'] ?? 'h1'));
+if (! in_array($heading_tag, ['h1', 'h2', 'h3'], true)) {
+  $heading_tag = 'h1';
+}
 $healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
 
-if (! empty($subtext)) {
+if ($link_healthcare_signup && ! empty($subtext)) {
   $subtext = (string) $subtext;
 
   // Prefer descriptive link text over "click here" (WCAG 2.4.4).
@@ -41,7 +70,7 @@ if (! empty($subtext)) {
   } else {
     $subtext = preg_replace(
       '/\bclick here\b/i',
-      '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#7ED0E0] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>',
+      '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#C6ECF4] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>',
       $subtext,
       1
     ) ?? $subtext;
@@ -49,11 +78,13 @@ if (! empty($subtext)) {
 }
 
 // Form
-$action      = trim((string) get_field('newsletter_action', 'option')); // if empty → Brevo AJAX
+$action      = trim((string) get_field('newsletter_action', 'option')); // if empty → AJAX subscribe
 $name_label  = get_field('name_label', 'option') ?: 'Full name';
 $name_ph     = get_field('name_placeholder', 'option') ?: 'Enter your full name';
 $email_label = get_field('email_label', 'option') ?: 'Email';
-$email_ph    = get_field('email_placeholder', 'option') ?: 'Joeblogs@mail.com';
+$email_ph    = function_exists('matrix_get_newsletter_email_placeholder')
+    ? matrix_get_newsletter_email_placeholder()
+    : 'Enter email address';
 $submit_text = get_field('submit_text', 'option') ?: 'Subscribe';
 $require_tc  = (bool) get_field('require_terms', 'option');
 
@@ -101,9 +132,9 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
           <div class="flex flex-col gap-6 items-start w-full">
             <div class="flex flex-col gap-6 justify-center items-center w-full md:gap-8">
               <!-- Title -->
-              <h1 class="text-white text-center font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-[-0.576px]">
+              <<?php echo $heading_tag; ?> class="text-white text-center font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-[-0.576px]">
                 <?php echo esc_html($heading); ?>
-              </h1>
+              </<?php echo $heading_tag; ?>>
 
               <!-- Decorative Line -->
               <div class="w-10 h-1" style="background-color: <?php echo esc_attr($accent_line_color); ?>;"></div>
@@ -111,8 +142,14 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Subtitle -->
             <?php if (!empty($subtext)): ?>
-              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor [&_a]:text-[#C6ECF4] [&_a:hover]:underline">
-                <?php echo matrix_kses_rich_text(matrix_link_newsletter_subtext_click_here($subtext)); ?>
+              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor [&_a]:!text-[#C6ECF4] [&_a]:no-underline [&_a:hover]:underline">
+                <?php
+                  $subtext_html = (string) $subtext;
+                  if ($link_healthcare_signup && function_exists('matrix_link_newsletter_subtext_click_here')) {
+                    $subtext_html = matrix_link_newsletter_subtext_click_here($subtext_html);
+                  }
+                  echo matrix_kses_rich_text($subtext_html);
+                ?>
               </div>
             <?php endif; ?>
           </div>
@@ -203,9 +240,9 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                   />
                   <label for="<?php echo esc_attr($section_id); ?>-terms" class="flex-1 text-xs font-medium leading-4 text-white cursor-pointer">
                     <?php echo esc_html($terms_prefix); ?>
-                    <a href="<?php echo $terms_href; ?>" class="text-spmhs-blue-light hover:underline" target="<?php echo $terms_target; ?>"><?php echo $terms_title; ?></a>
+                    <a href="<?php echo $terms_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] hover:underline" target="<?php echo $terms_target; ?>"><?php echo $terms_title; ?></a>
                     &
-                    <a href="<?php echo $priv_href; ?>" class="text-spmhs-blue-light hover:underline" target="<?php echo $priv_target; ?>"><?php echo $priv_title; ?></a>.
+                    <a href="<?php echo $priv_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] hover:underline" target="<?php echo $priv_target; ?>"><?php echo $priv_title; ?></a>.
                   </label>
                 </div>
               </div>
@@ -227,12 +264,22 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               novalidate
             >
               <input type="hidden" name="nonce" value="<?php echo esc_attr($nonce_brevo); ?>" />
-              <?php
+              <?php if ($list_id !== '' && function_exists('matrix_newsletter_list_signature')) : ?>
+                <input type="hidden" name="_cfg_newsletter_list_id" value="<?php echo esc_attr($list_id); ?>" />
+                <input type="hidden" name="_cfg_newsletter_sig" value="<?php echo esc_attr(matrix_newsletter_list_signature($list_id, $provider)); ?>" />
+                <?php if ($provider === 'brevo' && function_exists('matrix_brevo_list_signature')) : ?>
+                  <input type="hidden" name="list_ids" value="<?php echo esc_attr($list_id); ?>" />
+                  <input type="hidden" name="_cfg_brevo_list_id" value="<?php echo esc_attr($list_id); ?>" />
+                  <input type="hidden" name="_cfg_brevo_sig" value="<?php echo esc_attr(matrix_brevo_list_signature($list_id)); ?>" />
+                <?php endif; ?>
+              <?php elseif ($provider === 'brevo') :
                 $default_lists = (string) get_field('brevo_list_ids', 'option');
                 if ($default_lists !== ''):
               ?>
                 <input type="hidden" name="list_ids" value="<?php echo esc_attr($default_lists); ?>" />
-              <?php endif; ?>
+              <?php
+                endif;
+              endif; ?>
               <input type="hidden" name="name" value="" />
               <input type="hidden" name="email" value="" />
               <?php if ($require_tc): ?>
