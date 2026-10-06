@@ -31,10 +31,10 @@ $p = static function (string $html): string {
 
 $urls = [
     'human_rights' => $home . '/human-rights-advocacy/',
-    'public_education' => $home . '/public-education-anti-stigma-campaigns/',
-    'collaborative' => $home . '/collaborative-efforts/',
+    'public_education' => $home . '/about-us/advocacy/public-education-anti-stigma-campaigns/',
+    'collaborative' => $home . '/about-us/advocacy/collaborative-efforts/',
     'advocacy_services' => $home . '/advocacy-services/',
-    'youth_advocacy' => $home . '/advocacy-services/youth-advocacy/',
+    'youth_advocacy' => $home . '/about-us/advocacy/youth-advocacy/',
     'service_user' => $home . '/service-users-and-visitors/service-user-participation/',
     'partnering' => $home . '/about-us/partnering-with-service-users/',
     'womens_network' => $home . '/about-us/advocacy/women-s-mental-health-network/',
