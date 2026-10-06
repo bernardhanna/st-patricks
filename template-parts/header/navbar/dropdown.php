@@ -48,9 +48,9 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                 <div class="flex min-h-[420px]">
                     <div class="flex flex-col justify-between px-8 py-10 w-[260px] border-r border-slate-200 bg-slate-100">
                         <div>
-                            <h2 class="text-[40px] font-semibold leading-[44px] tracking-[-0.6px] text-[#1E244B]">
+                            <p class="text-[40px] font-semibold leading-[44px] tracking-[-0.6px] text-[#1E244B]">
                                 <?php echo esc_html($item->label); ?>
-                            </h2>
+                            </p>
                             <div class="mt-8 w-10 h-1 bg-[#FF9E66]" aria-hidden="true"></div>
                         </div>
 
@@ -124,7 +124,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                         class="px-8 py-10"
                                         aria-label="<?php echo esc_attr($child->label); ?> submenu"
                                     >
-                                        <h3 class="pb-6 text-[20px] font-semibold leading-[28px] tracking-[-0.1px] text-[#1E244B]">
+                                        <p class="pb-6 text-[20px] font-semibold leading-[28px] tracking-[-0.1px] text-[#1E244B]">
                                             <a
                                                 href="<?php echo esc_url($child->url); ?>"
                                                 class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
@@ -132,7 +132,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                             >
                                                 <?php echo esc_html($child->label); ?>
                                             </a>
-                                        </h3>
+                                        </p>
                                         <ul class="space-y-3" role="list">
                                             <?php foreach ($child_children_tier3 as $grandchild) : ?>
                                                 <li>

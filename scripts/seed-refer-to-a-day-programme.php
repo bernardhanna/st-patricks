@@ -119,10 +119,10 @@ $figma = [
 $video_poster_id = matrix_seed_resolve_image($figma['video'], 'refer-day-programme-video-2888-3767', 'Refer to a day programme video');
 $testimonials_bg_id = matrix_seed_resolve_image($figma['testimonials_bg'], 'refer-day-programme-testimonials-2888-3767', 'Refer to a day programme testimonials background');
 
-$hero_copy = 'What we offer - is a landing page (per sitemap) that links users to add other subpages within this section. Page context goes here. Max 4 lines of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini.';
-$lorem_card = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliqua. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.';
-$faq_answer = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>';
-$video_intro = '<p>Videos and images section as requested. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>';
+$hero_copy = 'We run a number of day programmes to support people in their mental health recovery. Use the options below to refer a patient to a programme accepting referrals from GPs and other mental healthcare professionals.';
+$lorem_card = 'Day programme offering specialist mental health support at St Patrick\'s Mental Health Services.';
+$faq_answer = '<p>Please contact our Referral and Assessment Service on 01 249 3635 for guidance on referring to a day programme.</p>';
+$video_intro = '<p>Explore how our day programmes support recovery and how healthcare professionals can make a referral.</p>';
 
 $testimonial_quote = '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 $testimonial_quote_long = '<p>Long testimonials example: Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
@@ -275,7 +275,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => 'Title, slider',
+        'heading' => 'Day programmes',
         'intro' => $video_intro,
         'layout_style' => 'feature_slider',
         'slides' => $video_slides,

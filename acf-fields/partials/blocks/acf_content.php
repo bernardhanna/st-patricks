@@ -18,7 +18,7 @@ $content_safeguarding
         ])
         ->addSelect('heading_tag', [
             'label' => 'Heading Tag',
-            'instructions' => 'Select the appropriate HTML heading tag for SEO and accessibility.',
+            'instructions' => 'Use H1 only for the page hero. Top-level flexi sections should be H2 (siblings under the hero). Use H3+ only for nested headings inside this section’s content — do not step H2→H3→H4 across successive sections.',
             'choices' => [
                 'h1' => 'H1',
                 'h2' => 'H2',

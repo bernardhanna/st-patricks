@@ -129,7 +129,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0 rotate-90 text-[#001F33]">
                                     <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <h3 class="font-primary text-[20px] font-semibold leading-7 tracking-[-0.1px] text-[#1E244B]">
+                                <p class="font-primary text-[20px] font-semibold leading-7 tracking-[-0.1px] text-[#1E244B]">
                                     <a
                                         href="<?php echo esc_url($child->url); ?>"
                                         class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
@@ -137,7 +137,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     >
                                         <?php echo esc_html($child->label); ?>
                                     </a>
-                                </h3>
+                                </p>
                             </div>
 
                             <ul class="flex flex-col gap-4" role="list">

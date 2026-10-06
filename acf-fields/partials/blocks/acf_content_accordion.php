@@ -25,6 +25,7 @@ $content_accordion
         ])
         ->addSelect('heading_tag', [
             'label' => 'Title Tag',
+            'instructions' => 'Usually H2 for a top-level section under the page hero. Use H3 only when this accordion is nested under another section heading.',
             'choices' => [
                 'h2' => 'H2',
                 'h3' => 'H3',

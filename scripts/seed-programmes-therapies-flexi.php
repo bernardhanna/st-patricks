@@ -83,7 +83,7 @@ $rows[] = [
     'acf_fc_layout' => 'programmes_therapies_archive',
     'heading' => 'Select a programme or therapy',
     'heading_tag' => 'h2',
-    'posts_per_page' => 10,
+    'posts_per_page' => 6,
     'empty_state_message' => 'No programmes or therapies matched your filters.',
 ];
 

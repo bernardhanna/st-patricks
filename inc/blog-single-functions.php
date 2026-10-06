@@ -198,18 +198,26 @@ function matrix_format_blog_post_date($post_id = null)
     return get_the_date(matrix_get_post_date_display_format(), $post_id);
 }
 
-function matrix_get_blog_post_intro($post_id = null)
+function matrix_get_clean_post_excerpt($post_id = null, $word_count = 40)
 {
     $post_id = $post_id ?: get_the_ID();
-    $excerpt = trim((string) get_the_excerpt($post_id));
+    $word_count = max(1, (int) $word_count);
+    $stored = trim(wp_strip_all_tags((string) get_post_field('post_excerpt', $post_id)));
 
-    if ($excerpt !== '') {
-        return $excerpt;
+    if ($stored !== '') {
+        return $stored;
     }
 
     $content = (string) get_post_field('post_content', $post_id);
 
-    return wp_trim_words(wp_strip_all_tags($content), 40, '...');
+    return wp_trim_words(wp_strip_all_tags($content), $word_count, '...');
+}
+
+function matrix_get_blog_post_intro($post_id = null)
+{
+    $post_id = $post_id ?: get_the_ID();
+
+    return matrix_get_clean_post_excerpt($post_id, 40);
 }
 
 function matrix_get_blog_post_author_name($post_id = null)

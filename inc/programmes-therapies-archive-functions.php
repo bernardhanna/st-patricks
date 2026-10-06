@@ -48,7 +48,7 @@ function matrix_get_programmes_therapies_archive_defaults()
         'delivery_hybrid_label' => 'Hybrid',
         'delivery_online_label' => 'Online',
         'delivery_in_person_label' => 'In person',
-        'posts_per_page' => 10,
+        'posts_per_page' => 6,
         'empty_state_message' => 'No programmes or therapies matched your filters.',
     ];
 }
@@ -97,7 +97,7 @@ function matrix_resolve_programmes_therapies_archive_base_url($preferred_base_ur
     return function_exists('home_url') ? home_url('/programmes-therapies/') : '/programmes-therapies/';
 }
 
-function matrix_resolve_programmes_therapies_archive_state($request, $allowed_type_slugs = [], $allowed_care_slugs = [], $allowed_delivery_slugs = [], $posts_per_page = 10)
+function matrix_resolve_programmes_therapies_archive_state($request, $allowed_type_slugs = [], $allowed_care_slugs = [], $allowed_delivery_slugs = [], $posts_per_page = 6)
 {
     $allowed_type_slugs = array_values(array_filter(array_map('matrix_programmes_therapies_archive_sanitize_slug', (array) $allowed_type_slugs)));
     $allowed_care_slugs = array_values(array_filter(array_map('matrix_programmes_therapies_archive_sanitize_slug', (array) $allowed_care_slugs)));
@@ -110,7 +110,7 @@ function matrix_resolve_programmes_therapies_archive_state($request, $allowed_ty
     $posts_per_page = (int) $posts_per_page;
 
     if ($posts_per_page < 1) {
-        $posts_per_page = 10;
+        $posts_per_page = 6;
     }
 
     if ($paged < 1) {
@@ -151,7 +151,7 @@ function matrix_build_programmes_therapies_archive_query_args($state, $type_slug
         'post_status' => 'publish',
         'orderby' => 'title',
         'order' => 'ASC',
-        'posts_per_page' => (int) ($state['posts_per_page'] ?? 10),
+        'posts_per_page' => (int) ($state['posts_per_page'] ?? 6),
         'paged' => max(1, (int) ($state['paged'] ?? 1)),
     ];
 
@@ -280,10 +280,10 @@ function matrix_prepare_programmes_therapies_archive($args = [])
 {
     $defaults = matrix_get_programmes_therapies_archive_defaults();
     $request_state = is_array($args['request_state'] ?? null) ? $args['request_state'] : [];
-    $posts_per_page = (int) ($args['posts_per_page'] ?? ($defaults['posts_per_page'] ?? 10));
+    $posts_per_page = (int) ($args['posts_per_page'] ?? ($defaults['posts_per_page'] ?? 6));
 
     if ($posts_per_page < 1) {
-        $posts_per_page = (int) ($defaults['posts_per_page'] ?? 10);
+        $posts_per_page = (int) ($defaults['posts_per_page'] ?? 6);
     }
 
     if (empty($request_state['pt_page']) && function_exists('get_query_var')) {
@@ -495,7 +495,7 @@ function matrix_register_programmes_therapies_archive_rest_route()
             ],
             'posts_per_page' => [
                 'type' => 'integer',
-                'default' => 10,
+                'default' => 6,
                 'minimum' => 1,
             ],
             'base_url' => [

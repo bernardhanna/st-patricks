@@ -286,11 +286,9 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         $categories = get_the_category($post_id);
                         $primary_category = ($categories && $categories[0] instanceof WP_Term) ? $categories[0] : null;
                         $primary_category_name = $primary_category ? $primary_category->name : '';
-                        $excerpt = trim((string) get_the_excerpt($post_id));
-
-                        if ($excerpt === '') {
-                            $excerpt = wp_trim_words(wp_strip_all_tags((string) get_post_field('post_content', $post_id)), 24, '...');
-                        }
+                        $excerpt = function_exists('matrix_get_clean_post_excerpt')
+                            ? matrix_get_clean_post_excerpt($post_id, 24)
+                            : wp_trim_words(wp_strip_all_tags((string) get_post_field('post_content', $post_id)), 24, '...');
 
                         $thumbnail_alt = '';
                         if ($thumbnail_id > 0) {

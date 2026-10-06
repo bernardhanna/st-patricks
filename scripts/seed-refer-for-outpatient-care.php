@@ -145,8 +145,8 @@ $location_image_ids = [
     matrix_seed_resolve_image($figma['location_4'], 'refer-outpatient-location-dean-2888-3951', 'Dean Clinic'),
 ];
 
-$hero_copy = 'What we offer - is a landing page (per sitemap) that links users to add other subpages within this section. Page context goes here. Max 4 lines of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini.';
-$video_intro = '<p>Videos and images section as requested. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>';
+$hero_copy = 'Refer adults to outpatient assessment and treatment through our Dean Clinics. Referrals can be made electronically via Healthlink or your practice management system, or by submitting our referral form by Healthmail.';
+$video_intro = '<p>Find out more about outpatient mental healthcare through our Dean Clinics and how referrals are managed.</p>';
 $testimonial_quote = '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 $testimonial_quote_long = '<p>Long testimonials example: Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 
@@ -301,7 +301,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => 'Title, slider',
+        'heading' => 'Outpatient care',
         'intro' => $video_intro,
         'layout_style' => 'feature_slider',
         'slides' => $video_slides,

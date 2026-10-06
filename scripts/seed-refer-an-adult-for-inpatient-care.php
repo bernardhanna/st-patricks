@@ -145,8 +145,8 @@ $location_image_ids = [
     matrix_seed_resolve_image($figma['location_4'], 'refer-adult-inpatient-location-dean-2888-5019', 'Dean Clinic'),
 ];
 
-$hero_copy = 'What we offer - is a landing page (per sitemap) that links users to add other subpages within this section. Page context goes here. Max 4 lines of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini.';
-$video_intro = '<p>Videos and images section as requested. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>';
+$hero_copy = 'St Patrick\'s Mental Health Services provides specialist inpatient mental healthcare for adults. Use the options below to refer a patient via Healthlink or by completing our adult referral form.';
+$video_intro = '<p>Learn more about adult inpatient care at St Patrick\'s Mental Health Services, including what to expect for referrers and service users.</p>';
 $testimonial_quote = '<p>Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 $testimonial_quote_long = '<p>Long testimonials example: Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments. Through our Advocacy Committee, we respond to all relevant calls for submissions by the Dáil, Seanad and Government departments.</p>';
 
@@ -326,7 +326,7 @@ $flexi_rows = [
     [
         'acf_fc_layout' => 'video_showcase',
         'heading_tag' => 'h2',
-        'heading' => 'Title, slider',
+        'heading' => 'Our inpatient services',
         'intro' => $video_intro,
         'layout_style' => 'feature_slider',
         'slides' => $video_slides,

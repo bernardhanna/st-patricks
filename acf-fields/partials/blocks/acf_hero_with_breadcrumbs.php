@@ -91,6 +91,7 @@ $hero_with_breadcrumbs
         ])
         ->addSelect('heading_tag', [
             'label' => 'Heading Tag',
+            'instructions' => 'Page hero should almost always be H1. Other flexi sections on the page should then use H2.',
             'choices' => [
                 'h1' => 'H1',
                 'h2' => 'H2',

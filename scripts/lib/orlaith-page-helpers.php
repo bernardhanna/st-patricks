@@ -8,6 +8,34 @@ if (! function_exists('matrix_orlaith_permalink')) {
     function matrix_orlaith_permalink(string $path): string
     {
         $path = trim($path, '/');
+
+        // CPT rewrite prefixes are not WP parent slugs (posts are often parent=0).
+        // Prefer looking up by leaf slug within the matching CPT before falling back
+        // to pages that share the same basename (e.g. schizophrenia page vs MH CPT).
+        $cpt_by_prefix = [
+            'mental-health' => 'mental_health',
+            'care-treatment' => 'care_treatment',
+            'programmes-therapies' => 'programmes_therapies',
+            'get-involved' => 'get_involved',
+            'locations' => 'locations',
+        ];
+        $parts = explode('/', $path);
+        if (count($parts) >= 2) {
+            $prefix = $parts[0];
+            $leaf = (string) end($parts);
+            if (isset($cpt_by_prefix[$prefix]) && $leaf !== '') {
+                $cpt_hits = get_posts([
+                    'name' => $leaf,
+                    'post_type' => $cpt_by_prefix[$prefix],
+                    'post_status' => 'publish',
+                    'posts_per_page' => 1,
+                ]);
+                if ($cpt_hits !== []) {
+                    return (string) get_permalink($cpt_hits[0]);
+                }
+            }
+        }
+
         $page = get_page_by_path($path, OBJECT, [
             'page',
             'post',

@@ -33,7 +33,7 @@ if ($wrapper_classes === '') {
 }
 
 $link_classes = $variant === 'search'
-    ? 'group inline-flex min-h-11 items-center underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:no-underline focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
+    ? 'group inline-flex min-h-11 items-center no-underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:underline hover:underline-offset-2 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
     : 'group inline-flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
 
 $grid_classes = $variant === 'search'

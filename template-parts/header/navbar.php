@@ -410,7 +410,7 @@ document.addEventListener('alpine:init', () => {
           role="search"
           aria-labelledby="navbar-search-title"
         >
-          <h2 id="navbar-search-title" class="sr-only">Search and FAQ</h2>
+          <span id="navbar-search-title" class="sr-only">Search and FAQ</span>
 
           <form role="search" class="flex gap-2 items-center px-3 py-2.5" @submit.prevent="submitSearch()">
             <label for="navbar-search-input" class="sr-only">Search by keyword, symptom, or page</label>

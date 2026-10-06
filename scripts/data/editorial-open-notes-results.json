@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-10-06T15:17:01+00:00",
+  "results": {
+    "NEWS-079": {
+      "status": "Done",
+      "evidence": "Migrated Ukrainian PDFs on post 2380 into media library (FileBird folder 5). stats={\"total_pdf_links\":27,\"migrated\":5,\"reused\":9,\"already_local\":13,\"failed\":0,\"verified_200\":27,\"verified_fail\":0} replacements=14 remaining_media=0 failures=none"
+    },
+    "NEWS-109": {
+      "status": "Done",
+      "evidence": "Updated excerpt to remove coronavirus outbreak framing. Old: \"Our Advocacy Manager looks at how we can keep a routine during the coronavirus outbreak while finding meaning in how we spend our time.\" New: \"Our Advocacy Manager explores how keeping a routine and finding meaningful activity can support mental health in daily life.\""
+    },
+    "NEWS-017": {
+      "status": "Done",
+      "evidence": "Restored full title from article lead (was truncated with ellipsis even on legacy site crawl): \"SPMHS launches Rainbow Badge campaign to support LGBTQ+ people\""
+    },
+    "PAGE-098": {
+      "status": "Done",
+      "evidence": "Removed 2 blank video slides from video_showcase. Slug refer-an-adolescent-for-inpatient-care → refer-an-adolescent (permalink http://localhost:10034/healthcare-professionals/refer-an-adolescent/). Display title already \"Refer an adolescent\". Slider H2 formatting left as theme limitation."
+    },
+    "PAGE-115": {
+      "status": "Done",
+      "evidence": "Reordered flexible blocks on page 266 so content_accordion dropdowns sit ahead of Homecare videos (reordered=yes). Layout sequence sample: content_accordion → content_accordion → video_showcase → content_accordion"
+    },
+    "NEWS-015": {
+      "status": "Done",
+      "evidence": "Sideloaded Annual/Outcomes report PDFs from production /media/ and linked them on post 2991: [{\"id\":4448,\"url\":\"http:\\/\\/localhost:10034\\/wp-content\\/uploads\\/2026\\/10\\/spmhs-annual-report-2024-final.pdf\",\"title\":\"SPMHS Annual Report 2024\"},{\"id\":903,\"url\":\"http:\\/\\/localhost:10034\\/wp-content\\/uploads\\/2026\\/06\\/spmhs-outcomes-report-2024-summary.pdf\",\"title\":\"SPMHS Outcomes Report 2024 Summary\"},{\"id\":901,\"url\":\"http:\\/\\/localhost:10034\\/wp-content\\/uploads\\/2026\\/06\\/2024-outcomes-report.pdf\",\"title\":\"2024 Outcomes Report\"}]"
+    },
+    "PAGE-142": {
+      "status": "Open",
+      "evidence": "Still blocked: Accessibility page (ID 230) has no statement copy. Matrix to supply accessibility standards/limitations text — cannot invent."
+    },
+    "NEWS-003": {
+      "status": "Needs review",
+      "evidence": "Replaced broken stpatricks.ie /media/4233 link with local migrated attachment #1276 (the-swift-cft-e-scale.pdf, 437KB, HTTP 200). Production URL now 404. July-amended file not found in Downloads/Drive/library — confirm with client whether #1276 is the July amendment."
+    },
+    "NEWS-124": {
+      "status": "Needs review",
+      "evidence": "Still on client editorial hold (import script NEWS-124). Published as \"Maternal mental health matters\" (ID 1168) — no client-updated copy available to apply; leaving for client review."
+    },
+    "NEWS-113": {
+      "status": "Needs review",
+      "evidence": "Still missing locally. No post matches exploring-the-experience-of-and-treatment-of-self-harm. Nursing H1 rename completed on NEWS-122 (ID 1169). Likely deleted/merged — confirm with client whether to restore or mark N/A."
+    }
+  },
+  "ukr_stats": {
+    "total_pdf_links": 27,
+    "migrated": 5,
+    "reused": 9,
+    "already_local": 13,
+    "failed": 0,
+    "verified_200": 27,
+    "verified_fail": 0
+  },
+  "remaining_media": [],
+  "failures": []
+}

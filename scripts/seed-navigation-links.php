@@ -50,7 +50,7 @@ $url_map = [
     'news and events' => $home . 'news-and-events/',
     'news & events' => $home . 'news-and-events/',
     'blog' => $home . 'news-and-events/',
-    'make a payment' => $home . 'service-users-and-visitors/make-a-payment-external-link-to-stripe/',
+    'make a payment' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00',
     'your portal (login)' => $home . 'your-portal/',
     'contact us' => $home . 'contact-us/',
 
@@ -107,6 +107,10 @@ if (is_array($topbar_links)) {
 
         if ($title_key === 'your portal (login)') {
             $topbar_links[$index]['link']['title'] = 'Your Portal';
+        }
+
+        if ($title_key === 'make a payment') {
+            $topbar_links[$index]['link']['target'] = '_blank';
         }
     }
 

@@ -24,6 +24,10 @@ require_once get_template_directory() . '/scripts/lib/orlaith-drive-links.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-depression-layout.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-anxiety-layout.php';
+require_once get_template_directory() . '/scripts/lib/orlaith-addiction-layout.php';
+require_once get_template_directory() . '/scripts/lib/orlaith-eating-disorders-layout.php';
+require_once get_template_directory() . '/scripts/lib/orlaith-bipolar-layout.php';
+require_once get_template_directory() . '/scripts/lib/orlaith-psychosis-layout.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-carers-layout.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-suas-layout.php';
 require_once get_template_directory() . '/scripts/lib/orlaith-rebuild-august-pages.php';
@@ -580,6 +584,27 @@ $anxiety_id = (int) (get_posts([
     'posts_per_page' => 1,
     'fields' => 'ids',
 ])[0] ?? 0);
+$addiction_id = (int) (get_posts([
+    'post_type' => 'mental_health',
+    'name' => 'addiction-dual-diagnosis',
+    'post_status' => 'any',
+    'posts_per_page' => 1,
+    'fields' => 'ids',
+])[0] ?? 0);
+$eating_disorders_id = (int) (get_posts([
+    'post_type' => 'mental_health',
+    'name' => 'eating-disorders',
+    'post_status' => 'any',
+    'posts_per_page' => 1,
+    'fields' => 'ids',
+])[0] ?? 0);
+$bipolar_id = (int) (get_posts([
+    'post_type' => 'mental_health',
+    'name' => 'bipolar-disorder',
+    'post_status' => 'any',
+    'posts_per_page' => 1,
+    'fields' => 'ids',
+])[0] ?? 0);
 $psychosis_id = (int) (get_posts([
     'post_type' => 'mental_health',
     'name' => 'schizophrenia-psychosis',
@@ -833,6 +858,60 @@ if (! $dry_run && $anxiety_id > 0) {
         'post_type' => 'mental_health',
     ];
     WP_CLI::log('Updated Anxiety ' . $anxiety_id);
+}
+
+if (! $dry_run && $addiction_id > 0) {
+    matrix_orlaith_rebuild_addiction_layout($addiction_id);
+    if (class_exists('Matrix_Flexible_Pages')) {
+        Matrix_Flexible_Pages::set_flexible_page($addiction_id, false);
+    }
+    $created['PAGE-ADDICTION'] = [
+        'id' => $addiction_id,
+        'title' => 'Addiction & dual diagnosis',
+        'section' => 'Service Users',
+        'mode' => 'Fixed',
+        'action' => 'Migrate',
+        'note' => 'Signs of addiction are accordions. Dual diagnosis heading sits above mood disorders. Useful resources uses the cream background. Related and Continue to cards removed.',
+        'existing' => true,
+        'post_type' => 'mental_health',
+    ];
+    WP_CLI::log('Updated Addiction & dual diagnosis ' . $addiction_id);
+}
+
+if (! $dry_run && $eating_disorders_id > 0) {
+    matrix_orlaith_rebuild_eating_disorders_layout($eating_disorders_id);
+    if (class_exists('Matrix_Flexible_Pages')) {
+        Matrix_Flexible_Pages::set_flexible_page($eating_disorders_id, false);
+    }
+    $created['PAGE-EATING-DISORDERS'] = [
+        'id' => $eating_disorders_id,
+        'title' => 'Eating disorders',
+        'section' => 'Service Users',
+        'mode' => 'Fixed',
+        'action' => 'Migrate',
+        'note' => 'Types and causes headings sit on accordion groups. Useful resources uses the cream background. Causes sit below resources. Related and Continue to cards removed.',
+        'existing' => true,
+        'post_type' => 'mental_health',
+    ];
+    WP_CLI::log('Updated Eating disorders ' . $eating_disorders_id);
+}
+
+if (! $dry_run && $bipolar_id > 0) {
+    matrix_orlaith_rebuild_bipolar_layout($bipolar_id);
+    if (class_exists('Matrix_Flexible_Pages')) {
+        Matrix_Flexible_Pages::set_flexible_page($bipolar_id, false);
+    }
+    $created['PAGE-BIPOLAR'] = [
+        'id' => $bipolar_id,
+        'title' => 'Bipolar disorder',
+        'section' => 'Service Users',
+        'mode' => 'Fixed',
+        'action' => 'Migrate',
+        'note' => 'Signs heading sits on the symptoms accordion. Useful resources uses the cream background. Related and Continue to cards removed.',
+        'existing' => true,
+        'post_type' => 'mental_health',
+    ];
+    WP_CLI::log('Updated Bipolar disorder ' . $bipolar_id);
 }
 
 $schizophrenia_id = 0;
