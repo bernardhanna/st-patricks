@@ -84,6 +84,16 @@ function matrix_starter_enqueue_scripts()
     filemtime(get_template_directory() . '/inc/forms/js/forms.js'),
     true
   );
+  wp_localize_script('theme-forms', 'matrixBrevo', [
+    'nonce' => wp_create_nonce('matrix_brevo_subscribe'),
+    'ajaxurl' => admin_url('admin-ajax.php'),
+  ]);
+  wp_add_inline_script(
+    'theme-forms',
+    'window.matrixBrevoNonce = (window.matrixBrevo && window.matrixBrevo.nonce) ? window.matrixBrevo.nonce : (window.matrixBrevoNonce || "");'
+      . ' if (window.matrixBrevo && window.matrixBrevo.ajaxurl) { window.ajaxurl = window.matrixBrevo.ajaxurl; }',
+    'before'
+  );
 
   if (function_exists('get_field')) {
     $captcha_provider = (string) (get_field('captcha_provider', 'option') ?: 'none');
