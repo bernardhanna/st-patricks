@@ -181,6 +181,15 @@ function matrix_add_mailchimp_subscriber($email, array $merge_fields = [], $list
         rawurlencode($hash)
     );
 
+    // Some SPMHS audiences (e.g. GP's newsletter) require LNAME; single-word
+    // "Full name" entries would otherwise fail with a 400 from Mailchimp.
+    if (! isset($merge_fields['FNAME']) || trim((string) $merge_fields['FNAME']) === '') {
+        $merge_fields['FNAME'] = 'Subscriber';
+    }
+    if (! isset($merge_fields['LNAME']) || trim((string) $merge_fields['LNAME']) === '') {
+        $merge_fields['LNAME'] = '-';
+    }
+
     $body = [
         'email_address' => $email,
         'status_if_new' => $status,

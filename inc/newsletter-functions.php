@@ -162,7 +162,15 @@ if (! function_exists('matrix_resolve_gp_newsletter_list_id')) {
             $audiences = matrix_get_mailchimp_audiences();
         }
 
-        return matrix_find_newsletter_list_id_by_name(is_array($audiences) ? $audiences : [], 'GP');
+        $audiences = is_array($audiences) ? $audiences : [];
+
+        // Prefer the live GP newsletter over "GP - email only".
+        $exact = matrix_find_newsletter_list_id_by_name($audiences, "GP's newsletter");
+        if ($exact !== '') {
+            return $exact;
+        }
+
+        return matrix_find_newsletter_list_id_by_name($audiences, 'GP');
     }
 }
 
