@@ -1138,9 +1138,9 @@ if (! function_exists('matrix_migrate_legacy_path_redirect_map')) {
             'gps-professionals/involuntary-admissions' => '/referrals/involuntary-admissions/',
             'getting-help/insurance-information' => '/getting-help/insurance-information/',
             'getting-help/faqs' => '/getting-help/faqs/',
-            'advocacy/public-education-anti-stigma-campaigns/youth-advocacy-service' => '/about-us/advocacy/youth-advocacy/',
+            'advocacy/public-education-anti-stigma-campaigns/youth-advocacy-service' => '/about-us/advocacy/',
             'advocacy/public-education-anti-stigma-campaigns/walk-in-my-shoes' => 'https://www.walkinmyshoes.ie/',
-            'advocacy/advocacy-services/youth-advocacy' => '/about-us/advocacy/youth-advocacy/',
+            'advocacy/advocacy-services/youth-advocacy' => '/about-us/advocacy/',
             'advocacy/service-user-participation' => '/service-user-participation/',
             'get-involved' => '/get-involved/',
             'get-involved/peer-support' => '/get-involved/peer-support/',
@@ -1317,6 +1317,14 @@ if (! function_exists('matrix_migrate_resolve_migrated_url')) {
         foreach (matrix_migrate_legacy_path_redirect_map() as $old_path => $destination) {
             if ($path === $old_path) {
                 return str_starts_with($destination, 'http') ? $destination : (string) home_url($destination);
+            }
+        }
+
+        if (function_exists('matrix_get_theme_path_redirect_map')) {
+            foreach (matrix_get_theme_path_redirect_map() as $old_path => $destination) {
+                if ($path === trim($old_path, '/')) {
+                    return str_starts_with($destination, 'http') ? $destination : (string) home_url($destination);
+                }
             }
         }
 

@@ -73,9 +73,9 @@ $footer
   ->addAccordion('footer_col_about_acc_end', ['endpoint' => 1])
 
   ->addAccordion('footer_col_quick_acc', ['label' => 'Quick Links'])
-    ->addText('quick_links_heading', ['label' => 'Heading', 'default_value' => 'Quick Links'])
+    ->addText('quick_links_heading', ['label' => 'Heading', 'default_value' => 'Quick links'])
     ->addRepeater('quick_links', [
-      'label'        => 'Quick Links',
+      'label'        => 'Quick links',
       'button_label' => 'Add Link',
       'layout'       => 'table',
     ])
@@ -115,8 +115,8 @@ $footer
     ])
     ->addLink('contact_email_link', [
       'label'         => 'Email (Link Array)',
+      'instructions'  => 'Leave empty to hide email in the footer contact section.',
       'return_format' => 'array',
-      'default_value' => ['url' => 'mailto:hello@StPatrick.ie', 'title' => 'hello@StPatrick.ie', 'target' => '_self'],
     ])
   ->addAccordion('footer_col_contact_acc_end', ['endpoint' => 1])
 

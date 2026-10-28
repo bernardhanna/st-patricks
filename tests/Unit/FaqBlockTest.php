@@ -22,7 +22,7 @@ test('selected faq mode maps post-like items into question and answer rows', fun
         ->and($items[0]['answer'])->toBe('<p>You can make a referral by contacting our service directly.</p>');
 });
 
-test('all faq mode falls back to the first item being open when none are flagged', function () {
+test('all faq mode leaves every item closed when none are flagged', function () {
     $items = matrix_resolve_faq_items(
         'all',
         [],
@@ -40,7 +40,7 @@ test('all faq mode falls back to the first item being open when none are flagged
     );
 
     expect($items)->toHaveCount(2)
-        ->and($items[0]['starts_open'])->toBeTrue()
+        ->and($items[0]['starts_open'])->toBeFalse()
         ->and($items[1]['starts_open'])->toBeFalse();
 });
 
@@ -85,5 +85,5 @@ test('category faq mode skips empty posts and keeps later valid items closed', f
 
     expect($items)->toHaveCount(1)
         ->and($items[0]['question'])->toBe('Can family attend appointments?')
-        ->and($items[0]['starts_open'])->toBeTrue();
+        ->and($items[0]['starts_open'])->toBeFalse();
 });

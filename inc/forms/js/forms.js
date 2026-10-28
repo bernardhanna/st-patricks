@@ -311,7 +311,13 @@
 
           const fd = new FormData(form);
           fd.set('action', 'matrix_subscribe_brevo');
-          fd.set('nonce', window.matrixBrevoNonce || '');
+          // Prefer localized nonce; otherwise keep the form's hidden nonce
+          // (do not overwrite with '' — that causes "Bad nonce.").
+          const formNonce = (form.querySelector('input[name="nonce"]') || {}).value || '';
+          const nonce = window.matrixBrevoNonce || formNonce;
+          if (nonce) {
+            fd.set('nonce', nonce);
+          }
 
           // Abort previous if any
           if (form._brevoController) { try { form._brevoController.abort(); } catch (e) { } }

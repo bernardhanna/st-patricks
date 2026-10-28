@@ -262,6 +262,13 @@ if (! function_exists('get_page_by_path')) {
     }
 }
 
+if (! function_exists('get_post')) {
+    function get_post($post = null, $output = OBJECT, $filter = 'raw')
+    {
+        return __wp_stub_value('get_post', null, [$post, $output, $filter]);
+    }
+}
+
 if (! function_exists('get_post_type_object')) {
     function get_post_type_object($post_type)
     {

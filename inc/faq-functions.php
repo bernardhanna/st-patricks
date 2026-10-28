@@ -37,20 +37,12 @@ function matrix_resolve_faq_items($source_mode, $selected_posts = [], $category_
 
     $resolved_items = [];
 
-    foreach (array_values($source_items) as $index => $post) {
-        $item = matrix_map_faq_post_to_item($post, $index === 0);
+    foreach (array_values($source_items) as $post) {
+        $item = matrix_map_faq_post_to_item($post, false);
 
         if (is_array($item)) {
-            if ($resolved_items !== []) {
-                $item['starts_open'] = false;
-            }
-
             $resolved_items[] = $item;
         }
-    }
-
-    if ($resolved_items !== []) {
-        $resolved_items[0]['starts_open'] = true;
     }
 
     return $resolved_items;

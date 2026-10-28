@@ -162,17 +162,19 @@ $show_slide_meta = $initial_caption !== '' || $slides_have_cta;
                         </svg>
                     </span>
                 </button>
-            </div>
 
-            <?php if ($show_slide_meta) { ?>
-            <div class="mt-5 w-full <?php echo esc_attr($caption_width_class); ?>">
+                <?php if ($initial_caption !== '') { ?>
                 <div
-                    class="<?php echo esc_attr(trim('wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[#08284B] ' . ($layout_style === 'compact_slider' ? '[&_p]:text-[16px] [&_p]:leading-[26px]' : '[&_p]:text-[18px] [&_p]:leading-[28px]'))); ?>"
+                    class="pointer-events-none absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-[#001F33]/90 to-transparent px-5 pb-16 pt-5 wp_editor [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[18px] [&_p]:leading-[28px] [&_p]:text-white"
                     data-active-caption
                 >
                     <?php echo matrix_kses_rich_text($initial_slide['caption']); ?>
                 </div>
+                <?php } ?>
+            </div>
 
+            <?php if ($show_slide_meta && $slides_have_cta) { ?>
+            <div class="mt-5 w-full <?php echo esc_attr($caption_width_class); ?>">
                 <?php if ($slides_have_cta) { ?>
                 <div class="mt-5 <?php echo ! empty($initial_slide['cta_link']['url']) ? '' : 'hidden'; ?>" data-active-cta-wrap>
                     <a

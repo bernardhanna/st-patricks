@@ -100,12 +100,6 @@ $body = $p('A consultant psychiatrist is a medical doctor, or physician, who spe
 
 $mdt_cards = [
     [
-        'title' => 'Psychiatrists',
-        'description' => $p('Our medical team of consultant psychiatrists and registrars provides tailored care and treatment to people experiencing a wide range of mental health difficulties.'),
-        'link' => matrix_orlaith_button('Psychiatrists', $home . '/about-us/psychiatrists/'),
-        'card_tone' => 'teal',
-    ],
-    [
         'title' => 'Psychologists',
         'description' => $p('Our Psychology Department is made up of a team of clinical and counselling psychologists who provide a range of treatment to adolescents, adults, and older adults.'),
         'link' => matrix_orlaith_button('Psychologists', $urls['psychologists']),

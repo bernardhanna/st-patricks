@@ -341,4 +341,23 @@ if (is_array($apply)) {
     $save($apply_id, $apply, 'How to apply headings');
 }
 
+// --- About Us landing: hero heading casing + footer contact email removed ---
+$about_us_page = get_page_by_path('about-us');
+if ($about_us_page instanceof WP_Post) {
+    $about_us_id = (int) $about_us_page->ID;
+    wp_update_post([
+        'ID' => $about_us_id,
+        'post_title' => 'About us',
+    ]);
+    $about_rows = get_field('flexible_content_blocks', $about_us_id);
+    if (is_array($about_rows) && isset($about_rows[0]) && is_array($about_rows[0])) {
+        $about_rows[0]['heading'] = 'About us';
+        $about_rows[0]['current_crumb_label'] = 'About us';
+        $save($about_us_id, $about_rows, 'About us landing hero heading');
+    }
+}
+
+update_field('contact_email_link', ['url' => '', 'title' => '', 'target' => '_self'], 'option');
+WP_CLI::success('Footer contact email cleared.');
+
 WP_CLI::success('About Us snag content updates complete.');

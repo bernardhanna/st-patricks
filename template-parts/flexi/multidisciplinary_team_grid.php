@@ -7,6 +7,31 @@ $intro = get_sub_field('intro');
 $background_color = (string) get_sub_field('background_color');
 $cards = matrix_normalize_multidisciplinary_team_cards(get_sub_field('cards'));
 
+// Drop cards that only link back to the page the visitor is already on.
+// Legacy URLs (e.g. /about-us/psychiatrists/) redirect to the live team page,
+// so rendering them here would hand the visitor a link to the current page.
+$current_path = (function_exists('is_singular') && is_singular())
+    ? trim((string) wp_parse_url((string) get_permalink(), PHP_URL_PATH), '/')
+    : '';
+
+if ($current_path !== '') {
+    $path_redirect_map = function_exists('matrix_get_theme_path_redirect_map') ? matrix_get_theme_path_redirect_map() : [];
+
+    $cards = array_values(array_filter($cards, static function ($card) use ($current_path, $path_redirect_map) {
+        if (empty($card['is_linked']) || empty($card['link']['url'])) {
+            return true;
+        }
+
+        $card_path = trim((string) wp_parse_url((string) $card['link']['url'], PHP_URL_PATH), '/');
+
+        if (isset($path_redirect_map[$card_path])) {
+            $card_path = trim((string) wp_parse_url((string) home_url($path_redirect_map[$card_path]), PHP_URL_PATH), '/');
+        }
+
+        return $card_path === '' || $card_path !== $current_path;
+    }));
+}
+
 if ($heading === '') {
     $heading = 'Our multidisciplinary team';
 }
@@ -27,6 +52,10 @@ if ($cards === []) {
 }
 
 $tone_backgrounds = matrix_get_multidisciplinary_team_grid_tone_backgrounds();
+
+if (matrix_is_willow_grove_branded_page()) {
+    $tone_backgrounds['lavender'] = matrix_get_brand_lavender_color();
+}
 ?>
 
 <section

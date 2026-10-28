@@ -15,7 +15,7 @@ $navigationFields
     ->addLink('looking_help_button', [
       'label'         => '“Looking for help?” Button',
       'return_format' => 'array',
-      'instructions'  => 'Shown on ≥ sm screens.',
+      'instructions'  => 'Shown on 60 sm screens.',
       'default_value' => [
         'url'    => '/help',
         'title'  => 'Looking for help?',

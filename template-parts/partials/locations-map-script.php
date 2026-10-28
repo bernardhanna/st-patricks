@@ -115,6 +115,16 @@ $matrix_locations_map_script_printed = true;
     };
   }
 
+  function getPanelScrollbarMetrics(panel, track) {
+    const maxScroll = panel.scrollHeight - panel.clientHeight;
+    const trackHeight = track.clientHeight;
+    const ratio = panel.clientHeight / panel.scrollHeight;
+    const thumbHeight = Math.max(112, trackHeight * ratio);
+    const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+
+    return { maxScroll, thumbHeight, maxThumbTop };
+  }
+
   function updatePanelScrollbar(panel) {
     const section = panel.closest(".locations-map-section");
     if (!section) return;
@@ -124,20 +134,81 @@ $matrix_locations_map_script_printed = true;
     const thumb = section.querySelector(".locations-map-panel__scrollbar-thumb");
     if (!trackWrap || !track || !thumb) return;
 
-    const maxScroll = panel.scrollHeight - panel.clientHeight;
+    const { maxScroll, thumbHeight, maxThumbTop } = getPanelScrollbarMetrics(panel, track);
     if (maxScroll <= 0) {
       trackWrap.style.display = "none";
       return;
     }
 
     trackWrap.style.display = "";
-    const trackHeight = track.clientHeight;
-    const ratio = panel.clientHeight / panel.scrollHeight;
-    const thumbHeight = Math.max(112, trackHeight * ratio);
-    const maxThumbTop = trackHeight - thumbHeight;
-    const thumbTop = (panel.scrollTop / maxScroll) * maxThumbTop;
+    const thumbTop = maxThumbTop > 0 ? (panel.scrollTop / maxScroll) * maxThumbTop : 0;
     thumb.style.height = thumbHeight + "px";
     thumb.style.transform = "translateY(" + thumbTop + "px)";
+  }
+
+  function bindPanelScrollbar(panel) {
+    const section = panel.closest(".locations-map-section");
+    if (!section || panel.dataset.scrollbarBound === "1") return;
+
+    const trackWrap = section.querySelector(".locations-map-panel__scrollbar");
+    const track = section.querySelector(".locations-map-panel__scrollbar-track");
+    const thumb = section.querySelector(".locations-map-panel__scrollbar-thumb");
+    if (!trackWrap || !track || !thumb) return;
+
+    panel.dataset.scrollbarBound = "1";
+
+    let dragPointerId = null;
+    let dragStartY = 0;
+    let dragStartScrollTop = 0;
+
+    function setScrollFromThumbTop(thumbTop) {
+      const { maxScroll, maxThumbTop } = getPanelScrollbarMetrics(panel, track);
+      if (maxScroll <= 0 || maxThumbTop <= 0) return;
+
+      const clampedTop = Math.max(0, Math.min(maxThumbTop, thumbTop));
+      panel.scrollTop = (clampedTop / maxThumbTop) * maxScroll;
+      updatePanelScrollbar(panel);
+    }
+
+    thumb.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      dragPointerId = event.pointerId;
+      dragStartY = event.clientY;
+      dragStartScrollTop = panel.scrollTop;
+      thumb.setPointerCapture(event.pointerId);
+    });
+
+    thumb.addEventListener("pointermove", (event) => {
+      if (dragPointerId !== event.pointerId) return;
+
+      const { maxScroll, thumbHeight, maxThumbTop } = getPanelScrollbarMetrics(panel, track);
+      if (maxScroll <= 0 || maxThumbTop <= 0) return;
+
+      const deltaY = event.clientY - dragStartY;
+      const scrollDelta = (deltaY / maxThumbTop) * maxScroll;
+      panel.scrollTop = Math.max(0, Math.min(maxScroll, dragStartScrollTop + scrollDelta));
+      updatePanelScrollbar(panel);
+    });
+
+    function endDrag(event) {
+      if (dragPointerId === null || (event && event.pointerId !== dragPointerId)) return;
+      thumb.releasePointerCapture(dragPointerId);
+      dragPointerId = null;
+    }
+
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+
+    track.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 || event.target === thumb) return;
+      event.preventDefault();
+
+      const rect = track.getBoundingClientRect();
+      const { thumbHeight, maxThumbTop } = getPanelScrollbarMetrics(panel, track);
+      const clickY = event.clientY - rect.top;
+      setScrollFromThumbTop(clickY - thumbHeight / 2);
+    });
   }
 
   function initLocationsMap(container) {
@@ -236,6 +307,7 @@ $matrix_locations_map_script_printed = true;
 
     const panel = document.getElementById(sectionId + "-panel");
     if (panel) {
+      bindPanelScrollbar(panel);
       panel.addEventListener("scroll", () => updatePanelScrollbar(panel), { passive: true });
       updatePanelScrollbar(panel);
       window.addEventListener("resize", () => {

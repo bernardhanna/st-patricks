@@ -20,10 +20,10 @@ function matrix_get_what_we_offer_accent_color($service_row, $index = 0)
     }
 
     $palette = [
-        '#6FC9C0',
-        '#C3DBAE',
-        '#B4A8CE',
-        '#E4B8D6',
+        '#6FC9C0', // Teal
+        '#FDFD96', // Lemon
+        '#9DC183', // Sage
+        '#F4C2C2', // Blush
     ];
 
     return $palette[max(0, (int) $index) % count($palette)];
@@ -38,9 +38,9 @@ function matrix_get_what_we_offer_intro_two_column_icon_background(string $accen
 
     $secondary_colors = [
         '6FC9C0' => '#6FC9C0',
-        'C3DBAE' => '#C3DBAE',
-        'B4A8CE' => '#B4A8CE',
-        'E4B8D6' => '#E4B8D6',
+        'FDFD96' => '#FDFD96',
+        '9DC183' => '#9DC183',
+        'F4C2C2' => '#F4C2C2',
     ];
 
     if (isset($secondary_colors[$normalized_accent])) {
@@ -78,7 +78,7 @@ function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', 
     }
 
     if ($state === 'hover') {
-        return str_replace('opacity="0.25"', 'opacity="1"', $svg);
+        return str_replace('opacity=\"0.25\"', 'opacity=\"1\"', $svg);
     }
 
     return $svg;

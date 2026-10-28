@@ -122,18 +122,25 @@ $ways_to_get_involved = [
     ],
 ];
 
+$suas_url = home_url('/service-users-and-visitors/service-user-participation/service-user-and-supporters-council/');
+$suan_url = home_url('/service-users-and-visitors/service-user-participation/service-user-advisory-network/');
+$fcs_url = home_url('/service-users-and-visitors/service-user-participation/family-carers-and-supporters-advisory-network/');
+
 $engagement_groups = [
     [
         'title' => 'Service User and Supporters Council (SUAS)',
         'description' => 'Our Service User and Supporters Council provides invaluable input to all that we do at SPMHS.',
+        'url' => $suas_url,
     ],
     [
         'title' => 'Service User Advisory Network (SUAN)',
         'description' => 'SUAN helps ensure service user voices inform how our services are developed and delivered.',
+        'url' => $suan_url,
     ],
     [
         'title' => 'Family, Carers and Supporters (FCS) Advisory Network',
         'description' => 'The FCS Advisory Network supports the involvement of families, carers and supporters in our work.',
+        'url' => $fcs_url,
     ],
 ];
 
@@ -208,7 +215,11 @@ foreach ($engagement_groups as $group) {
         'image_url' => '',
         'title' => $group['title'],
         'description' => $group['description'],
-        'link' => '',
+        'link' => [
+            'title' => $group['title'],
+            'url' => $group['url'],
+            'target' => '',
+        ],
         'card_tone' => 'bg1',
     ];
 }
@@ -244,6 +255,7 @@ $flexi_rows = [
         'intro_color' => '#4A4B37',
         'columns' => '3',
         'layout_style' => 'image_feature',
+        'vertical_padding' => 'no_bottom',
         'padding_settings' => $section_padding,
     ],
     [
@@ -262,6 +274,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'about_links_grid',
         'heading_tag' => 'h2',
         'heading_text' => 'See our service user engagement groups',
+        'vertical_padding' => 'no_top',
         'intro_text' => '',
         'links' => $group_cards,
         'bg_color' => '#FFFFFF',

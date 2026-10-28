@@ -13,7 +13,7 @@ $section_id = 'story-slider-' . wp_generate_uuid4();
 // Content
 $show_heading  = get_sub_field('show_heading');
 $heading_tag   = get_sub_field('heading_tag') ?: 'h2';
-$heading_text  = get_sub_field('heading_text') ?: 'Voices of hope and healing';
+$heading_text  = get_sub_field('heading_text') ?: 'Recovery stories';
 $intro_text    = get_sub_field('intro_text');
 
 // Slides
@@ -56,6 +56,7 @@ if (have_rows('slides')) {
 
     $video_type = 'none';
     $video_embed_url = '';
+    $video_thumb_url = '';
 
     if ($video_url) {
       if (preg_match('/\.(mp4|webm|ogg)(\?.*)?$/i', $video_url)) {
@@ -63,6 +64,8 @@ if (have_rows('slides')) {
       } elseif (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/i', $video_url, $yt_match)) {
         $video_type = 'youtube';
         $video_embed_url = 'https://www.youtube.com/embed/' . rawurlencode($yt_match[1]) . '?rel=0&modestbranding=1';
+        // Pull the YouTube thumbnail through automatically so story cards use the video still.
+        $video_thumb_url = 'https://i.ytimg.com/vi/' . rawurlencode($yt_match[1]) . '/hqdefault.jpg';
       } elseif (preg_match('/vimeo\.com\/(?:video\/)?([0-9]+)/i', $video_url, $vm_match)) {
         $video_type = 'vimeo';
         $video_embed_url = 'https://player.vimeo.com/video/' . rawurlencode($vm_match[1]) . '?title=0&byline=0&portrait=0';
@@ -71,7 +74,8 @@ if (have_rows('slides')) {
       }
     }
 
-    $img_url   = $img_id ? wp_get_attachment_image_url($img_id, 'large') : '';
+    // Video slides show the YouTube thumbnail instead of the uploaded still.
+    $img_url   = $video_thumb_url ? $video_thumb_url : ($img_id ? wp_get_attachment_image_url($img_id, 'large') : '');
     $img_alt   = $img_id ? get_post_meta($img_id, '_wp_attachment_image_alt', true) : '';
     $img_title = $img_id ? get_the_title($img_id) : '';
 

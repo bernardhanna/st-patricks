@@ -241,6 +241,32 @@ function matrix_normalize_contact_directory_columns($columns, $auto_locations = 
     ];
 }
 
+/**
+ * Inpatient campus locations list switchboard/visiting windows — label as visitor hours on Contact Us.
+ *
+ * @param array<string, mixed> $item
+ */
+function matrix_get_contact_directory_opening_hours_heading_text(array $item): string
+{
+    $visitor_location_slugs = [
+        'st-patricks-university-hospital',
+        'st-patricks-hospital-lucan',
+        'willow-grove-adolescent-unit',
+    ];
+
+    $location_id = (int) ($item['location_id'] ?? 0);
+
+    if ($location_id > 0) {
+        $slug = (string) get_post_field('post_name', $location_id);
+
+        if (in_array($slug, $visitor_location_slugs, true)) {
+            return __('Visitor hours', 'matrix-starter');
+        }
+    }
+
+    return __('Opening hours', 'matrix-starter');
+}
+
 function matrix_get_contact_directory_opening_hours_heading_class_names(): string
 {
     return 'pt-2 font-primary text-[16px] font-semibold leading-[28px] text-[#08284B]';

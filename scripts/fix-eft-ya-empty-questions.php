@@ -27,7 +27,7 @@ if (! $post instanceof WP_Post) {
 
 $content = <<<'HTML'
 <p>Emotion-Focused Therapy for Young Adults (EFT-YA) is a specialist group programme for young adults aged 18 to 25 who are experiencing a sense of feeling stuck in their thoughts, emotions or behaviours.</p>
-<p>Many people describe this as feeling unable to move forward in life, often alongside self-critical thoughts, anxiety, frustration, hopelessness or loneliness. EFT-YA supports service users to better understand these experiences and develop new ways of responding to them.</p>
+<p>EFT-YA supports service users to better understand these experiences and develop new ways of responding to them.</p>
 <h2>What does the programme involve?</h2>
 <p>The programme focuses on understanding emotional experiences, addressing self-critical patterns and developing healthier ways of relating to oneself and others.</p>
 <h2>Who delivers the programme?</h2>

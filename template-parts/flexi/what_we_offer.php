@@ -66,7 +66,11 @@ if (!empty($services) && is_array($services)) {
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex overflow-hidden relative"
          style="background: <?php echo esc_attr($background_gradient); ?>;">
-    <div class="flex flex-col items-center w-full mx-auto max-w-container <?php echo esc_attr($section_padding_classes); ?> max-lg:px-5 max-sm:px-6">
+    <?php
+    $section_inner_classes = 'flex flex-col w-full mx-auto max-w-container ' . $section_padding_classes . ' max-lg:px-5 max-sm:px-6';
+    $section_inner_classes .= $layout_style === 'intro_two_column' ? ' items-stretch' : ' items-center';
+    ?>
+    <div class="<?php echo esc_attr($section_inner_classes); ?>">
 
         <!-- Header Section -->
         <?php if (!empty($heading)) : ?>
@@ -191,7 +195,7 @@ if (!empty($services) && is_array($services)) {
         <?php if ($layout_style === 'intro_two_column') : ?>
             <div class="mt-16 w-full max-w-[1018px] max-md:mt-10">
                 <?php if ($intro_text !== '') : ?>
-                    <div class="max-w-[606px] text-base font-medium leading-7 text-[#08284B] wp_editor">
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]')); ?>">
                         <?php echo wpautop(esc_html($intro_text)); ?>
                     </div>
                 <?php endif; ?>

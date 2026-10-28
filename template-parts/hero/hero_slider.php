@@ -15,7 +15,6 @@ if ($background_color === '' || $background_color === null) {
     $background_color = '#C6ECF4';
 }
 
-$hero_slider_gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);
 
 // Slides
 $slides = array();
@@ -26,7 +25,7 @@ if (have_rows('slides')) {
         $tag     = get_sub_field('heading_tag');
         $text    = get_sub_field('heading_text');
         $desc    = get_sub_field('description');
-        $pbtn    = get_sub_field('primary_button');
+        $pbtn    = matrix_canonical_cta_link(get_sub_field('primary_button'));
         $sbtn    = get_sub_field('secondary_button');
         $img     = get_sub_field('hero_image');
         $img_mob = get_sub_field('mobile_optimised_image');
@@ -126,15 +125,6 @@ $is_slider = count($slides) > 1;
                              title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
                              class="object-cover w-full h-auto rounded-none max-md:object-contain"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-                        <div
-                            class="absolute inset-0 pointer-events-none"
-                            style="background: <?php echo esc_attr(matrix_build_hero_image_split_mobile_bottom_fade_gradient(
-                                $hero_slider_gradient_vars['gradient_clear'],
-                                $hero_slider_gradient_vars['gradient_soft'],
-                                $hero_slider_gradient_vars['gradient_solid']
-                            )); ?>;"
-                            aria-hidden="true"
-                        ></div>
                     </div>
                 <?php } ?>
 
@@ -187,9 +177,19 @@ $is_slider = count($slides) > 1;
                         </div>
                     <?php } ?>
 
-                    <?php if (!empty($sl['text'])) { ?>
+                    <?php if (empty($GLOBALS['matrix_hero_heading_css'])): $GLOBALS['matrix_hero_heading_css'] = true; ?>
+<style>
+/* Banner heading: 3 lines on desktop + looser leading */
+.hero-slide-heading { line-height: 34px !important; }
+@media (min-width: 1024px) {
+  .hero-slide-text { max-width: 680px; }
+  .hero-slide-heading { font-size: 46px !important; line-height: 54px !important; letter-spacing: -0.55px !important; }
+}
+</style>
+<?php endif; ?>
+<?php if (!empty($sl['text'])) { ?>
                         <<?php echo esc_attr($sl['tag']); ?>
-                            class="mb-4 text-[#08284B] !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
+                            class="hero-slide-heading mb-4 text-[#08284B] !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
                             style="color: #08284B;"
                             id="<?php echo esc_attr($heading_id); ?>">
                             <?php echo esc_html($sl['text']); ?>
@@ -238,17 +238,6 @@ $is_slider = count($slides) > 1;
                              title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
                              class="object-contain h-full max-h-[600px]"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-
-                        <!-- Left-edge fade into hero background (matches image-split heroes) -->
-                        <div class="absolute inset-0 pointer-events-none"
-                             style="background: linear-gradient(90deg, <?php echo esc_attr($hero_slider_gradient_vars['gradient_solid']); ?> 0%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_soft']); ?> 14.69%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_clear']); ?> 45.97%);"
-                             aria-hidden="true"></div>
-
-                        <!-- Right-side gradient fade on wide screens -->
-                        <div class="hidden absolute inset-y-0 right-0 w-1/3 pointer-events-none xl:block"
-                             style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);"
-                             aria-hidden="true">
-                        </div>
                     </div>
                 <?php } ?>
 

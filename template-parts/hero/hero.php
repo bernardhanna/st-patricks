@@ -14,7 +14,7 @@ $section_id      = 'hero-' . ( function_exists('wp_generate_uuid4') ? wp_generat
 $heading_tag     = get_sub_field('heading_tag') ?: 'h1';
 $heading_text    = get_sub_field('heading_text') ?: '';
 $description     = get_sub_field('description'); // WYSIWYG
-$primary_btn     = get_sub_field('primary_button');
+$primary_btn     = matrix_canonical_cta_link(get_sub_field('primary_button'));
 $secondary_btn   = get_sub_field('secondary_button');
 $hero_image      = get_sub_field('hero_image');
 

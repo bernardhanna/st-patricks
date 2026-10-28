@@ -254,9 +254,9 @@ if (is_array($support)) {
 
         if ($layout === 'about_links_grid' && str_contains(strtolower($heading), 'engagement')) {
             $group_urls = [
-                'suas' => $participation_url . '#service-user-and-supporters-council-suas',
-                'suan' => $participation_url . '#service-user-advisory-network-suan',
-                'fcs' => $participation_url . '#family-members-carers-and-supporters-fcs-advisory-network',
+                'suas' => $permalink('service-users-and-visitors/service-user-participation/service-user-and-supporters-council'),
+                'suan' => $permalink('service-users-and-visitors/service-user-participation/service-user-advisory-network'),
+                'fcs' => $permalink('service-users-and-visitors/service-user-participation/family-carers-and-supporters-advisory-network'),
             ];
             $links = $row['links'] ?? [];
             if (is_array($links)) {

@@ -46,7 +46,7 @@ if (!$mobile_footer_logo) {
 $about_heading = get_field('about_heading', 'option') ?: 'About us';
 $about_links   = get_field('about_links', 'option');
 
-$quick_heading = get_field('quick_links_heading', 'option') ?: 'Quick Links';
+$quick_heading = get_field('quick_links_heading', 'option') ?: 'Quick links';
 $quick_links   = get_field('quick_links', 'option');
 
 $media_heading = get_field('media_heading', 'option') ?: 'Media';
@@ -56,7 +56,7 @@ $careers_heading = get_field('careers_heading', 'option') ?: 'Careers';
 $careers_links   = get_field('careers_links', 'option');
 
 $contact_heading    = get_field('contact_heading', 'option') ?: 'Contact us';
-$locations_heading  = get_field('locations_heading', 'option') ?: 'Our Locations';
+$locations_heading  = get_field('locations_heading', 'option') ?: 'Our locations';
 $locations_map_url  = home_url('/contact-us/');
 $contact_phone_link = get_field('contact_phone_link', 'option');
 $contact_email_link = get_field('contact_email_link', 'option');
@@ -73,7 +73,7 @@ if (!$copyright_text) {
     $copyright_text = preg_replace('/\b(?:19|20)\d{2}\b/', date('Y'), $copyright_text, 1);
 }
 $legal_links           = get_field('legal_links', 'option');
-$developer_credit      = get_field('developer_credit', 'option') ?: 'Designed & Developed by';
+$developer_credit      = get_field('developer_credit', 'option') ?: 'Designed & developed by';
 $developer_credit_link = get_field('developer_credit_link', 'option');
 
 // Helper
