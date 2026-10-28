@@ -165,7 +165,16 @@ $contact_column_1 = [
     matrix_seed_contact_directory_location_item('st-patricks-university-hospital', "St Patrick's University Hospital (Dublin 8)"),
     matrix_seed_contact_directory_location_item('dean-clinic-cork', 'Dean Clinic Cork'),
     matrix_seed_contact_directory_location_item('dean-clinic-st-patricks', "Dean Clinic St Patrick's"),
-    matrix_seed_contact_directory_manual_item('Pharmacy', '01 249 3256', 'pharmacy@stpatricks.ie'),
+    matrix_seed_contact_directory_manual_item(
+        'Pharmacy',
+        '01 249 3256',
+        'pharmacy@stpatricks.ie',
+        [],
+        [
+            ['day_label' => 'Mon - Fri', 'hours' => '9am - 1pm'],
+            ['day_label' => 'Mon - Fri', 'hours' => '2pm - 5pm'],
+        ]
+    ),
     matrix_seed_contact_directory_location_item('willow-grove-adolescent-unit', 'Willow Grove Adolescent Unit'),
 ];
 

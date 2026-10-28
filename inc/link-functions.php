@@ -685,6 +685,11 @@ if (! function_exists('matrix_process_external_links_in_html')) {
                 continue;
             }
 
+            $existing_aria = trim($anchor->getAttribute('aria-label'));
+            if ($existing_aria !== '' && ! matrix_is_vague_link_text($existing_aria)) {
+                continue;
+            }
+
             $label = matrix_resolve_link_accessible_name($visible_for_check, $href);
 
             if ($label === '' || strcasecmp($label, $visible_for_check) === 0) {
@@ -807,6 +812,78 @@ if (! function_exists('matrix_kses_rich_text')) {
     }
 }
 
+if (! function_exists('matrix_build_pipe_delimited_list_item_html')) {
+    /** Workbook-style list rows: normal-weight copy; "Label | body" stays plain text. */
+    function matrix_build_pipe_delimited_list_item_html(string $attrs, string $text): string
+    {
+        $parts = preg_split('/\s\|\s/u', $text, 2);
+
+        if ($parts === false || count($parts) !== 2) {
+            return '<li' . $attrs . '>' . esc_html($text) . '</li>';
+        }
+
+        $label = trim($parts[0]);
+        $body = trim($parts[1]);
+
+        if ($label === '' || $body === '') {
+            return '<li' . $attrs . '>' . esc_html($text) . '</li>';
+        }
+
+        return '<li' . $attrs . '>' . esc_html($label) . ' | ' . esc_html($body) . '</li>';
+    }
+}
+
+if (! function_exists('matrix_format_pipe_delimited_list_item_html')) {
+    function matrix_format_pipe_delimited_list_item_html(string $html): string
+    {
+        if ($html === '' || stripos($html, '<li') === false || ! str_contains($html, '|')) {
+            return $html;
+        }
+
+        return (string) preg_replace_callback(
+            '#<li([^>]*)>(.*?)</li>#is',
+            static function (array $matches): string {
+                $attrs = $matches[1];
+                $inner = $matches[2];
+
+                if (preg_match('#^\s*<(strong|b)(\s[^>]*)?>\s*(.*?)\s*</\1>\s*$#is', $inner, $bold_match)) {
+                    $text = trim(html_entity_decode(wp_strip_all_tags($bold_match[3]), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+                    if ($text !== '' && str_contains($text, '|')) {
+                        return matrix_build_pipe_delimited_list_item_html($attrs, $text);
+                    }
+
+                    return $matches[0];
+                }
+
+                if (preg_match('#<[^>]+>#', $inner)) {
+                    return $matches[0];
+                }
+
+                $text = trim(html_entity_decode($inner, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+                if ($text === '' || ! str_contains($text, '|')) {
+                    return $matches[0];
+                }
+
+                return matrix_build_pipe_delimited_list_item_html($attrs, $text);
+            },
+            $html
+        );
+    }
+}
+
+if (! function_exists('matrix_filter_pipe_delimited_list_items_in_content')) {
+    function matrix_filter_pipe_delimited_list_items_in_content(string $content): string
+    {
+        if ($content === '' || is_admin()) {
+            return $content;
+        }
+
+        return matrix_format_pipe_delimited_list_item_html($content);
+    }
+}
+
 if (! function_exists('matrix_filter_external_links_in_content')) {
     function matrix_filter_external_links_in_content(string $content): string
     {
@@ -857,6 +934,7 @@ if (! function_exists('matrix_filter_acf_link_target')) {
 }
 
 if (function_exists('add_filter')) {
+    add_filter('the_content', 'matrix_filter_pipe_delimited_list_items_in_content', 14);
     add_filter('the_content', 'matrix_filter_external_links_in_content', 25);
     add_filter('acf/format_value/type=link', 'matrix_filter_acf_link_target', 20);
 }
@@ -987,4 +1065,37 @@ if (! function_exists('matrix_maybe_redirect_theme_paths')) {
 if (function_exists('add_action')) {
     // Run before Password Protected (priority -10) so legacy paths redirect even when gated.
     add_action('template_redirect', 'matrix_maybe_redirect_theme_paths', -20);
+}
+
+if (! function_exists('matrix_canonical_cta_link')) {
+    /**
+     * Keep shared CTA labels pointing at one canonical page.
+     *
+     * "Looking for help?" is used in the header and in hero banners/carousel
+     * slides; the same label must not lead to different pages (FAQ vs Contact).
+     * The header CTA (Appearance > Theme Options) uses Contact Us, so that is
+     * the canonical destination here too.
+     *
+     * @param array|null $link ACF link array (url/title/target) or null.
+     * @return array|null
+     */
+    function matrix_canonical_cta_link($link)
+    {
+        if (! is_array($link) || empty($link['title'])) {
+            return $link;
+        }
+
+        $label = strtolower((string) preg_replace('/\s+/', ' ', wp_strip_all_tags($link['title'])));
+        $label = rtrim(trim($label), '? ');
+
+        $map = array(
+            'looking for help' => '/contact-us/',
+        );
+
+        if (isset($map[$label])) {
+            $link['url'] = home_url($map[$label]);
+        }
+
+        return $link;
+    }
 }

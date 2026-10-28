@@ -479,11 +479,11 @@ if (! function_exists('matrix_drive3_update_homepage')) {
 
         $slides = [
             [
-                'heading' => "Ireland's largest independent, not-for-profit mental health service",
+                'heading' => "Ireland's largest independent not-for-profit mental health service",
                 'description' => "<p>Welcome to St Patrick's Mental Health Services, Ireland's largest independent not-for-profit mental healthcare provider.</p>",
             ],
             [
-                'heading' => 'High quality mental healthcare',
+                'heading' => 'High-quality mental healthcare',
                 'description' => '<p>We provide multidisciplinary care and treatment for adults and adolescents experiencing mental health difficulties, including complex and enduring mental illness.</p>',
                 'image' => $nursing,
             ],

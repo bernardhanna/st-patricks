@@ -122,6 +122,17 @@ $about_links_grid
             ],
             'default_value' => '3',
         ])
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => 'Use “Bottom only” to sit flush under the previous section.',
+            'choices' => [
+                'default' => 'Top & bottom (100px desktop)',
+                'no_bottom' => 'Top only (no bottom on desktop)',
+                'no_top' => 'Bottom only (no top on desktop)',
+            ],
+            'default_value' => 'default',
+            'ui' => 1,
+        ])
         ->addTrueFalse('allow_title_wrap', [
             'label' => 'Allow long titles to wrap onto two lines',
             'instructions' => 'On larger screens, card titles normally stay on a single line. Turn this on if a longer title looks cramped or is being cut off, so it can flow onto a second line instead.',

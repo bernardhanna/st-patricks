@@ -252,7 +252,7 @@ footer a:not(.btn):not(.w-8):focus-visible {
   .is-not-woo .wp_editor.blog-single-content li,
   .editor-body-content li,
   .blog-single-content li {
-  @apply font-medium;
+  @apply font-normal;
  }
  .editor-body-content ul,
   .blog-single-content ul {
@@ -725,13 +725,15 @@ footer a:not(.btn):not(.w-8):focus-visible {
  @apply text-primary-dark border-l-[#6FC9C0];
 }
 .locations-map-panel {
+ @apply overscroll-contain touch-pan-y max-h-full;
  scrollbar-width: none;
+ -webkit-overflow-scrolling: touch;
 }
 .locations-map-panel::-webkit-scrollbar {
  @apply hidden;
 }
 .locations-map-panel-card {
- @apply rounded-custom-sm;
+ @apply rounded-custom-sm h-[min(39.3125rem,70vh)] max-h-[min(39.3125rem,70vh)] lg:h-[39.3125rem] lg:max-h-[39.3125rem];
 }
 .locations-map-panel__scrollbar-thumb {
  @apply min-h-28;

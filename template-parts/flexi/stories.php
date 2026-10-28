@@ -56,7 +56,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
           <?php if (!empty($posts)) : foreach ($posts as $p) :
             setup_postdata($p);
             $post_date  = matrix_format_blog_post_date($p->ID);
-            $post_title = get_the_title($p->ID);
+            $post_title = matrix_get_blog_post_title($p->ID);
             $post_excerpt = get_the_excerpt($p->ID);
             $mobile_excerpt = !empty($post_excerpt)
               ? wp_trim_words($post_excerpt, 20)
@@ -141,7 +141,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
               <?php foreach ($slide_posts as $card_index => $sp):
                 setup_postdata($sp);
                 $post_date  = matrix_format_blog_post_date($sp->ID);
-                $post_title = get_the_title($sp->ID);
+                $post_title = matrix_get_blog_post_title($sp->ID);
                 $post_excerpt = get_the_excerpt($sp->ID);
                 $post_url   = get_permalink($sp->ID);
                 $post_thumb = get_the_post_thumbnail_url($sp->ID, 'medium_large') ?: '';

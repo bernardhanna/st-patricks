@@ -325,6 +325,7 @@ function matrix_get_content_rich_text_wrapper_class_names($weight = 'medium', $t
         '[&_ol]:list-decimal',
         '[&_ol]:pl-6',
         '[&_li]:mb-2',
+        '[&_li]:font-normal',
         '[&_a]:font-medium',
     ]);
 

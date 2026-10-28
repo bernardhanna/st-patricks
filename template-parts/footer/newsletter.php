@@ -25,7 +25,7 @@ $bg_left_op = get_field('bg_logo_opacity', 'option');
 $bg_left_op = ($bg_left_op === '' || $bg_left_op === null) ? 0.03 : (float) $bg_left_op;
 
 // Content
-$heading = get_field('newsletter_heading', 'option') ?: 'Latest News, Events, and Expert advice from SPMHS';
+$heading = get_field('newsletter_heading', 'option') ?: 'Latest news, events and expert advice from St Patrick’s Mental Health Services';
 if (array_key_exists('heading', $newsletter_args) && trim((string) $newsletter_args['heading']) !== '') {
   $heading = trim((string) $newsletter_args['heading']);
 }
@@ -55,6 +55,10 @@ if (! in_array($heading_tag, ['h1', 'h2', 'h3'], true)) {
   $heading_tag = 'h1';
 }
 $healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
+$gp_note_text = trim((string) get_field('newsletter_gp_note', 'option'));
+if ($gp_note_text === '') {
+  $gp_note_text = 'If you are a GP, subscribe to our dedicated quarterly GP e-newsletter';
+}
 
 if ($link_healthcare_signup && ! empty($subtext)) {
   $subtext = (string) $subtext;
@@ -222,6 +226,14 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                 </div>
               </div>
             </div>
+
+            <?php if ($link_healthcare_signup): ?>
+              <!-- GP e-newsletter (after the general sign-up fields, before the privacy checkbox) -->
+              <p class="w-full text-xs md:text-sm font-medium leading-5 text-white">
+                <?php echo esc_html($gp_note_text); ?>
+                <a href="<?php echo esc_url($healthcare_newsletter_url); ?>" class="text-[#C6ECF4] hover:underline">here</a>.
+              </p>
+            <?php endif; ?>
 
             <!-- Terms -->
             <?php if ($require_tc): ?>

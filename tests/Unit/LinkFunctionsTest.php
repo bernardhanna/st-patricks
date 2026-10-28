@@ -102,13 +102,13 @@ test('matrix_get_theme_path_redirect_map includes deleted page redirects', funct
     $map = matrix_get_theme_path_redirect_map();
 
     expect($map)->toHaveKey('advocacy-services')
-        ->and($map['advocacy-services'])->toBe('/about-us/our-present-and-future/advocacy-centre/')
+        ->and($map['advocacy-services'])->toBe('/about-us/advocacy/')
         ->and($map)->toHaveKey('advocacy-services/youth-advocacy')
-        ->and($map['advocacy-services/youth-advocacy'])->toBe('/about-us/advocacy/youth-advocacy/')
+        ->and($map['advocacy-services/youth-advocacy'])->toBe('/about-us/advocacy/')
         ->and($map)->toHaveKey('public-education-anti-stigma-campaigns')
-        ->and($map['public-education-anti-stigma-campaigns'])->toBe('/about-us/advocacy/public-education-anti-stigma-campaigns/')
+        ->and($map['public-education-anti-stigma-campaigns'])->toBe('/about-us/advocacy/')
         ->and($map)->toHaveKey('collaborative-efforts')
-        ->and($map['collaborative-efforts'])->toBe('/about-us/advocacy/collaborative-efforts/')
+        ->and($map['collaborative-efforts'])->toBe('/about-us/advocacy/')
         ->and($map)->toHaveKey('referrals')
         ->and($map['referrals'])->toBe('/healthcare-professionals/')
         ->and($map)->toHaveKey('getting-help')

@@ -5,7 +5,9 @@ $section_id = trim((string) ($section['section_id'] ?? ''));
 $data_block = trim((string) ($section['data_block'] ?? 'useful-links'));
 $heading = trim((string) ($section['heading'] ?? ''));
 $heading_tag = (string) ($section['heading_tag'] ?? 'h2');
-$background_color = (string) ($section['background_color'] ?? '#E9E2F7');
+$background_color = matrix_resolve_willow_grove_lavender_color(
+    (string) ($section['background_color'] ?? '#E9E2F7')
+);
 $heading_color = (string) ($section['heading_color'] ?? '#1E244B');
 $link_color = (string) ($section['link_color'] ?? '#1E244B');
 $variant = (string) ($section['variant'] ?? 'flexi');
@@ -34,7 +36,7 @@ if ($wrapper_classes === '') {
 
 $link_classes = $variant === 'search'
     ? 'group inline-flex min-h-11 items-center no-underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:underline hover:underline-offset-2 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
-    : 'group inline-flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
+    : 'group flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
 
 $grid_classes = $variant === 'search'
     ? 'mt-8 grid grid-cols-1 gap-y-4 lg:mt-8 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-4'
@@ -70,7 +72,7 @@ $grid_classes = $variant === 'search'
                         rel="noopener noreferrer"
                     <?php } ?>
                 >
-                    <span class="transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
+                    <span class="min-w-0 flex-1 break-words transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
                     <?php if ($link['target'] === '_blank') { ?>
                         <span class="sr-only"> (opens in a new tab)</span>
                     <?php } ?>

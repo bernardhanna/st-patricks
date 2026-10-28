@@ -17,8 +17,8 @@ $partners
     ])
     ->addText('heading_text', [
       'label'         => 'Heading Text',
-      'placeholder'   => 'Committed to quality care, human rights, and innovation',
-      'default_value' => 'Committed to quality care, human rights, and innovation',
+      'placeholder'   => 'Committed to quality care, human rights and innovation',
+      'default_value' => 'Committed to quality care, human rights and innovation',
     ])
     ->addRepeater('partners', [
       'label'        => 'Partner Logos',

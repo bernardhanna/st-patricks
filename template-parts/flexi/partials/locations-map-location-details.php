@@ -57,7 +57,9 @@ $contact_text_class_names = matrix_get_locations_map_panel_contact_text_class_na
     <?php if ($opening_hours !== []) { ?>
         <div>
             <p class="<?php echo esc_attr(matrix_get_locations_map_panel_opening_hours_heading_class_names()); ?>">
-                <?php echo esc_html__('Opening hours', 'matrix-starter'); ?>
+                <?php echo esc_html(matrix_get_contact_directory_opening_hours_heading_text([
+                    'location_id' => (int) ($marker['id'] ?? 0),
+                ])); ?>
             </p>
             <dl class="<?php echo esc_attr(matrix_get_locations_map_panel_opening_hours_grid_class_names()); ?>">
                 <?php foreach ($opening_hours as $hours_row) { ?>

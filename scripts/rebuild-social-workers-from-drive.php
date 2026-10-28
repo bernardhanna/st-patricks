@@ -155,14 +155,6 @@ $flexi = [
     matrix_orlaith_hero_row('Social workers', $hero_intro, $img_id),
     matrix_orlaith_content_row('', $about, 'white'),
     matrix_orlaith_content_row('What our social workers do', $what_they_do, 'cream'),
-    matrix_orlaith_useful_links_row([
-        'Our team' => 'about-us/our-team',
-        'About us' => 'about-us',
-        'Family supports' => 'service-users-and-visitors/carers-and-supporters',
-        'Stories and support' => 'service-users-and-visitors/stories-and-support',
-        'Safeguarding' => 'about-us/policies-and-publications/safeguarding',
-        'Service user information' => 'service-users-and-visitors',
-    ]),
     [
         'acf_fc_layout' => 'multidisciplinary_team_grid',
         'heading_tag' => 'h2',
@@ -171,6 +163,14 @@ $flexi = [
         'cards' => $mdt_cards,
         'background_color' => '#FFFFFF',
     ],
+    matrix_orlaith_useful_links_row([
+        'Our team' => 'about-us/our-team',
+        'About us' => 'about-us',
+        'Family supports' => 'service-users-and-visitors/carers-and-supporters',
+        'Stories and support' => 'service-users-and-visitors/stories-and-support',
+        'Safeguarding' => 'about-us/policies-and-publications/safeguarding',
+        'Service user information' => 'service-users-and-visitors',
+    ]),
 ];
 
 wp_update_post([

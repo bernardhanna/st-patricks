@@ -198,6 +198,139 @@ function matrix_format_blog_post_date($post_id = null)
     return get_the_date(matrix_get_post_date_display_format(), $post_id);
 }
 
+/**
+ * Sentence case for blog titles (first word + proper nouns/acronyms only).
+ */
+function matrix_format_blog_post_title(string $title): string
+{
+    $title = trim($title);
+    if ($title === '') {
+        return '';
+    }
+
+    $acronyms = ['GP', 'GPs', 'CBT', 'DBT', 'OCD', 'ACT', 'SPMHS', 'REC', 'BOSS', 'HIV', 'ADHD', 'PTSD', 'COVID-19'];
+    $acronym_forms = ['gp' => 'GP', 'gps' => 'GPs'];
+    $small_words = [
+        'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is',
+        'it', 'be', 'are', 'was', 'were', 'what', 'how', 'why', 'when', 'our', 'your', 'their', 'its', 'into', 'through',
+    ];
+
+    $protected = [
+        "St Patrick's Mental Health Services",
+        "St Patrick's",
+        'Trinity College Dublin',
+        'Your Portal',
+        'Dr Colman Noctor',
+        'Dr Declan Lyons',
+        'Assisted Decision-Making (Capacity) Act',
+        'Eventbrite',
+        'Dean Clinics',
+        'Jonathan Swift',
+    ];
+
+    $placeholders = [];
+    foreach ($protected as $phrase) {
+        $pattern = '/' . preg_quote($phrase, '/') . '/iu';
+        $title = preg_replace_callback($pattern, function () use (&$placeholders, $phrase) {
+            $key = '%%MTRX' . count($placeholders) . '%%';
+            $placeholders[$key] = $phrase;
+
+            return $key;
+        }, $title);
+    }
+
+    $title = preg_replace('/\btrinity college dublin\b/iu', '%%MTRXTRINITY%%', $title);
+    $placeholders['%%MTRXTRINITY%%'] = 'Trinity College Dublin';
+
+    $st_patrick = "/\bst patrick(?:'|'|'|\x{2019})s(?: mental health services)?\b/iu";
+    $title = preg_replace_callback($st_patrick, static function (array $m): string {
+        return stripos($m[0], 'mental health services') !== false ? '%%MTRXSPMHS%%' : '%%MTRXSTPAT%%';
+    }, $title);
+    $placeholders['%%MTRXSPMHS%%'] = "St Patrick's Mental Health Services";
+    $placeholders['%%MTRXSTPAT%%'] = "St Patrick's";
+
+    $title = preg_replace_callback('/\bdr\s+([a-z]+(?:\s+[a-z]+)*)\b/iu', function ($m) {
+        $name = implode(' ', array_map(
+            static fn (string $part): string => mb_strtoupper(mb_substr($part, 0, 1)) . mb_substr($part, 1),
+            preg_split('/\s+/', trim($m[1])) ?: []
+        ));
+
+        return 'Dr ' . $name;
+    }, $title);
+
+    $title = preg_replace_callback('/:\s+(\p{Lu})(\p{Ll}+)/u', static function ($m) use ($acronyms) {
+        $word = $m[1] . $m[2];
+        foreach ($acronyms as $acr) {
+            if (strcasecmp($word, $acr) === 0) {
+                return ': ' . $acr;
+            }
+        }
+
+        return ': ' . mb_strtolower($word, 'UTF-8');
+    }, $title);
+
+    $segments = preg_split('/(\s+)/u', $title, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $word_index = 0;
+    foreach ($segments as $i => $segment) {
+        if ($segment === '' || preg_match('/^\s+$/u', $segment)) {
+            continue;
+        }
+        if (preg_match('/^%%MTRX/u', $segment)) {
+            ++$word_index;
+
+            continue;
+        }
+        if (! preg_match('/\p{L}/u', $segment)) {
+            continue;
+        }
+        if (! preg_match('/^([^\p{L}]*)([\p{L}][\p{L}\'-]*?)([^\p{L}]*)$/u', $segment, $parts)) {
+            continue;
+        }
+
+        [, $prefix, $word, $suffix] = $parts;
+        $lower = mb_strtolower($word, 'UTF-8');
+        $stem = preg_replace("/'s$/u", '', $lower);
+        $upper_stem = strtoupper($stem);
+
+        if ($word_index === 0) {
+            $word = mb_strtoupper(mb_substr($lower, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($lower, 1, null, 'UTF-8');
+        } elseif (in_array($lower, $small_words, true)) {
+            $word = $lower;
+        } elseif (isset($acronym_forms[$lower])) {
+            $word = $acronym_forms[$lower];
+        } elseif (in_array($upper_stem, $acronyms, true) || in_array(strtoupper($lower), $acronyms, true)) {
+            $acr = in_array(strtoupper($lower), $acronyms, true) ? strtoupper($lower) : $upper_stem;
+            $word = $acr . (str_ends_with($lower, "'s") ? "'s" : '');
+        } elseif (preg_match('/^[A-Z]{2,}$/', $word)) {
+            // Keep existing acronyms.
+        } else {
+            $word = $lower;
+        }
+
+        $segments[$i] = $prefix . $word . $suffix;
+        ++$word_index;
+    }
+
+    $title = implode('', $segments);
+    foreach ($placeholders as $key => $phrase) {
+        $title = str_replace($key, $phrase, $title);
+    }
+
+    return $title;
+}
+
+function matrix_get_blog_post_title($post_id = null): string
+{
+    $post_id = (int) ($post_id ?: (function_exists('get_the_ID') ? get_the_ID() : 0));
+    if ($post_id < 1) {
+        return '';
+    }
+
+    $raw = function_exists('get_the_title') ? (string) get_the_title($post_id) : '';
+
+    return matrix_format_blog_post_title($raw);
+}
+
 function matrix_get_clean_post_excerpt($post_id = null, $word_count = 40)
 {
     $post_id = $post_id ?: get_the_ID();

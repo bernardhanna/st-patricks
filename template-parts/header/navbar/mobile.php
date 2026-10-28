@@ -88,7 +88,7 @@ $top_items = is_array($nav_array) && array_key_exists('items', $nav_array) ? $na
 $menu_data = matrix_mobile_nav_normalize_items($top_items);
 
 $nav_settings = get_field('navigation_settings_start', 'option') ?: [];
-$help_btn = $nav_settings['looking_help_button'] ?? null;
+$help_btn = matrix_canonical_cta_link($nav_settings['looking_help_button'] ?? null);
 $referral_btn = $nav_settings['referral_button'] ?? null;
 $topbar_phone = get_field('topbar_phone_link', 'option');
 $contact_email = get_field('contact_email_link', 'option');
@@ -396,6 +396,13 @@ function navSlide(config) {
     const enableSearch = config.enableSearch !== false;
 
     return {
+        init() {
+            window.addEventListener('matrix-nav-scroll-dismiss', () => {
+                if (this.open) {
+                    this.close();
+                }
+            });
+        },
         get open() {
             return Alpine.store('nav').open;
         },

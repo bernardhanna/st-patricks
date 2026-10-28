@@ -207,7 +207,6 @@ function matrix_orlaith_rebuild_depression_layout(int $post_id): void
                             . '<ul>'
                             . '<li><a href="https://www.aware.ie/information/depression/">Aware</a></li>'
                             . '<li><a href="https://www2.hse.ie/mental-health/">Health Service Executive | Your Mental Health</a></li>'
-                            . '<li><a href="https://www.mentalhealthireland.ie/a-to-z/d/#depression">Mental Health Ireland</a></li>'
                             . '<li><a href="https://www.pieta.ie/">Pieta</a></li>'
                             . '<li><a href="https://www.samaritans.org/ireland/how-we-can-help/if-youre-having-difficult-time/">Samaritans</a></li>'
                             . '</ul>'

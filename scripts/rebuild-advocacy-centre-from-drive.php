@@ -56,7 +56,7 @@ $body = $p('The Advocacy Centre is a core component of our '
     . '<li>educating on mental health rights and equality issues</li>'
     . '<li>engaging the public to support positive change in areas such as climate change and mental health, among others.</li>'
     . '</ul>'
-    . $p('It is intended that the Advocacy Centre will align with European child mental health advocacy goals and with the vision of the World Health Organisation (WHO) Mental Health Action Plan, and will have a particular focus on child mental health.');
+    . $p('It is intended that the Advocacy Centre will align with European child mental health advocacy goals and with the vision of the <a href="https://www.who.int/publications/i/item/9789240031029">World Health Organisation (WHO) Mental Health Action Plan</a>, and will have a particular focus on child mental health.');
 
 $hero = matrix_orlaith_hero_row('Advocacy Centre', $hero_intro, $hero_image);
 $hero['layout_style'] = $hero_image > 0 ? 'image_split' : 'title_accent';

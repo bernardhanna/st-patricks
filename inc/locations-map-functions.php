@@ -247,12 +247,12 @@ function matrix_get_locations_map_panel_background_style(): string
 
 function matrix_get_locations_map_panel_card_class_names(): string
 {
-    return 'locations-map-panel-card relative flex h-[39.3125rem] max-h-[39.3125rem] w-full flex-col overflow-hidden rounded-[4px] border border-[#E7E5E0] bg-white lg:w-[23.8125rem] lg:border-0';
+    return 'locations-map-panel-card relative flex w-full min-h-0 flex-col overflow-hidden rounded-[4px] border border-[#E7E5E0] bg-white lg:w-[23.8125rem] lg:border-0';
 }
 
 function matrix_get_locations_map_panel_scroll_class_names(): string
 {
-    return 'locations-map-panel flex h-full w-full flex-col items-start gap-2.5 overflow-y-auto p-8 pr-10 lg:p-6 lg:pr-8';
+    return 'locations-map-panel flex min-h-0 flex-1 w-full flex-col items-start gap-2.5 overflow-y-auto overscroll-y-contain touch-pan-y p-8 pr-10 lg:p-6 lg:pr-8';
 }
 
 function matrix_get_locations_map_panel_item_class_names(): string
@@ -326,7 +326,7 @@ function matrix_get_locations_map_location_divider_class_names(): string
 
 function matrix_get_locations_map_panel_scrollbar_class_names(): string
 {
-    return 'locations-map-panel__scrollbar pointer-events-none absolute bottom-8 right-2 top-8 z-[1] flex w-3 flex-col lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2';
+    return 'locations-map-panel__scrollbar pointer-events-auto absolute bottom-8 right-2 top-8 z-[1] flex w-3 flex-col lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2';
 }
 
 function matrix_get_locations_map_panel_scrollbar_track_class_names(): string
@@ -336,7 +336,7 @@ function matrix_get_locations_map_panel_scrollbar_track_class_names(): string
 
 function matrix_get_locations_map_panel_scrollbar_thumb_class_names(): string
 {
-    return 'locations-map-panel__scrollbar-thumb absolute left-0 top-0 w-3 rounded-[0.375rem] bg-[#024B79]';
+    return 'locations-map-panel__scrollbar-thumb absolute left-0 top-0 w-3 cursor-grab rounded-[0.375rem] bg-[#024B79] active:cursor-grabbing';
 }
 
 function matrix_get_locations_map_button_class_names(): string

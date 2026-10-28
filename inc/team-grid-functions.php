@@ -45,6 +45,11 @@ function matrix_normalize_multidisciplinary_team_cards($cards)
 
         if (is_array($raw_link) && ! empty($raw_link['url'])) {
             $url = (string) $raw_link['url'];
+
+            if (function_exists('matrix_migrate_rewrite_internal_url')) {
+                $url = matrix_migrate_rewrite_internal_url($url);
+            }
+
             $link = [
                 'url' => $url,
                 'title' => trim((string) ($raw_link['title'] ?? '')),

@@ -16,7 +16,7 @@ if ($logo_alt === '') {
 
 $nav_settings      = get_field('navigation_settings_start', 'option') ?: [];
 $enable_search     = ! empty($nav_settings['enable_search']);
-$help_btn          = $nav_settings['looking_help_button'] ?? null;   // ACF link array
+$help_btn          = matrix_canonical_cta_link($nav_settings['looking_help_button'] ?? null);   // ACF link array
 $referral_btn      = $nav_settings['referral_button'] ?? null;       // ACF link array
 
 // Map dropdown images to menu item IDs
@@ -52,9 +52,32 @@ function matrixSyncNavMegaPointer() {
   }
 }
 
+function matrixDismissOpenNavOnScroll() {
+  if (typeof Alpine !== 'undefined' && typeof Alpine.store === 'function') {
+    var mega = Alpine.store('navMega');
+    if (mega) {
+      // Scrolling under a stationary pointer re-fires mouseenter on the sticky bar,
+      // which re-opens the panel straight away. Stay shut until the scroll settles.
+      mega.hoverSuppressed = true;
+      if (mega.activeKey) {
+        mega.close();
+      }
+      // Release once scrolling stops so hover works again without needing a mousemove.
+      clearTimeout(window.matrixNavScrollReleaseTimer);
+      window.matrixNavScrollReleaseTimer = setTimeout(function () {
+        mega.hoverSuppressed = false;
+      }, 250);
+    }
+  }
+  window.dispatchEvent(new CustomEvent('matrix-nav-scroll-dismiss', { bubbles: true }));
+}
+
 document.addEventListener('DOMContentLoaded', matrixSyncSiteHeaderHeight);
 window.addEventListener('resize', matrixSyncSiteHeaderHeight);
-window.addEventListener('scroll', matrixSyncSiteHeaderHeight, { passive: true });
+window.addEventListener('scroll', function () {
+  matrixSyncSiteHeaderHeight();
+  matrixDismissOpenNavOnScroll();
+}, { passive: true });
 
 document.addEventListener('alpine:init', () => {
   if (!Alpine.store('nav')) Alpine.store('nav', { open: false });
@@ -62,7 +85,11 @@ document.addEventListener('alpine:init', () => {
     activeKey: null,
     pointerLeft: 0,
     closeTimer: null,
+    hoverSuppressed: false,
     open(key) {
+      if (this.hoverSuppressed) {
+        return;
+      }
       clearTimeout(this.closeTimer);
       this.closeTimer = null;
       matrixSyncSiteHeaderHeight();
@@ -163,6 +190,25 @@ document.addEventListener('alpine:init', () => {
       store.close();
     }
   });
+  // Click anywhere outside the header closes an open mega panel (reliable close
+  // that does not depend on the pointer leaving the bar).
+  document.addEventListener('click', (event) => {
+    const store = Alpine.store('navMega');
+    if (!store || !store.activeKey) return;
+    if (store.isWithinNavMegaZone(event.target)) return;
+    store.close();
+  }, true);
+  // Release the scroll suppression as soon as the pointer/keyboard moves again.
+  const matrixReleaseHoverSuppress = () => {
+    const mega = Alpine.store('navMega');
+    if (mega && mega.hoverSuppressed) {
+      mega.hoverSuppressed = false;
+    }
+  };
+  window.addEventListener('mousemove', matrixReleaseHoverSuppress, { passive: true });
+  window.addEventListener('pointerdown', matrixReleaseHoverSuppress, { passive: true });
+  window.addEventListener('keydown', matrixReleaseHoverSuppress);
+
   Alpine.data('navbarSearch', () => ({
     searchOpen: false,
     query: '',
@@ -271,6 +317,7 @@ document.addEventListener('alpine:init', () => {
   x-effect="$store.nav.open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
   class="overflow-visible bg-white"
   role="banner"
+  @matrix-nav-scroll-dismiss.window="searchOpen && closeSearch()"
   @open-navbar-search="openSearch()"
   @mouseenter="$store.navMega.cancelClose()"
   @mouseleave="$store.navMega.scheduleCloseFromEvent($event)"

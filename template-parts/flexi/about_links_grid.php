@@ -42,6 +42,11 @@ $card_partial = function_exists('matrix_get_about_links_grid_card_partial')
         ? 'template-parts/flexi/partials/about-links-grid-card-compact-row'
         : 'template-parts/flexi/partials/about-links-grid-card-image-feature');
 
+$vertical_padding = get_sub_field('vertical_padding') ?: 'default';
+$wrapper_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
+    ? matrix_get_locations_grid_vertical_padding_classes($vertical_padding)
+    : 'py-12 lg:py-[100px]';
+
 $padding_classes = [];
 if (have_rows('padding_settings')) {
     while (have_rows('padding_settings')) {
@@ -69,7 +74,7 @@ if (have_rows('padding_settings')) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($bg_color); ?>;">
 
-    <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 py-12 lg:gap-8 lg:py-[100px] xl:px-0 <?php echo esc_attr(implode(' ', $padding_classes)); ?>">
+    <div class="mx-auto flex w-full max-w-[1018px] flex-col gap-8 px-4 lg:gap-8 xl:px-0 <?php echo esc_attr(trim($wrapper_padding . ' ' . implode(' ', $padding_classes))); ?>">
         <?php if ($heading_text || $intro_text) : ?>
             <div class="flex w-full flex-col gap-8">
                 <?php if ($heading_text) : ?>

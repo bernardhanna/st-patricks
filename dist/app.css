@@ -1124,7 +1124,7 @@ input:where([type='file']):focus {
   .is-not-woo .wp_editor.blog-single-content li,
   .editor-body-content li,
   .blog-single-content li {
-  font-weight: 500;
+  font-weight: 400;
 }
 .editor-body-content ul,
   .blog-single-content ul {
@@ -1378,9 +1378,9 @@ input:where([type='file']):focus {
 .inset-0 {
   inset: 0px;
 }
-.inset-y-0 {
-  top: 0px;
-  bottom: 0px;
+.inset-x-0 {
+  left: 0px;
+  right: 0px;
 }
 .-bottom-16 {
   bottom: -4rem;
@@ -1865,9 +1865,6 @@ input:where([type='file']):focus {
 .h-\[380px\] {
   height: 380px;
 }
-.h-\[39\.3125rem\] {
-  height: 39.3125rem;
-}
 .h-\[402px\] {
   height: 402px;
 }
@@ -1918,9 +1915,6 @@ input:where([type='file']):focus {
 }
 .max-h-\[387px\] {
   max-height: 387px;
-}
-.max-h-\[39\.3125rem\] {
-  max-height: 39.3125rem;
 }
 .max-h-\[600px\] {
   max-height: 600px;
@@ -2387,9 +2381,6 @@ input:where([type='file']):focus {
 .max-w-\[599px\] {
   max-width: 599px;
 }
-.max-w-\[606px\] {
-  max-width: 606px;
-}
 .max-w-\[63\.625rem\] {
   max-width: 63.625rem;
 }
@@ -2826,6 +2817,9 @@ input:where([type='file']):focus {
 }
 .overflow-x-clip {
   overflow-x: clip;
+}
+.overscroll-y-contain {
+  overscroll-behavior-y: contain;
 }
 .overscroll-x-contain {
   overscroll-behavior-x: contain;
@@ -4777,6 +4771,17 @@ input:where([type='file']):focus {
 }
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
+}
+.bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+.from-\[\#001F33\]\/90 {
+  --tw-gradient-from: rgb(0 31 51 / 0.9) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(0 31 51 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.to-transparent {
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
 }
 .bg-\[length\:16px_16px\] {
   background-size: 16px 16px;
@@ -45462,6 +45467,9 @@ input:where([type='file']):focus {
 .\[\&_li\]\:mb-2 li {
   margin-bottom: 0.5rem;
 }
+.\[\&_li\]\:font-normal li {
+  font-weight: 400;
+}
 .\[\&_li\]\:text-white li {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -45528,9 +45536,6 @@ input:where([type='file']):focus {
 }
 .\[\&_p\]\:leading-\[24px\] p {
   line-height: 24px;
-}
-.\[\&_p\]\:leading-\[26px\] p {
-  line-height: 26px;
 }
 .\[\&_p\]\:leading-\[28px\] p {
   line-height: 28px;
@@ -46632,13 +46637,27 @@ footer a:not(.btn):not(.checkbox-wrapper):focus-visible {
   color: rgb(2 75 121 / var(--tw-text-opacity, 1));
 }
 .locations-map-panel {
+  max-height: 100%;
+  --tw-pan-y: pan-y;
+  touch-action: var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom);
+  overscroll-behavior: contain;
  scrollbar-width: none;
+ -webkit-overflow-scrolling: touch;
 }
 .locations-map-panel::-webkit-scrollbar {
   display: none;
 }
 .locations-map-panel-card {
+  height: min(39.3125rem, 70vh);
+  max-height: min(39.3125rem, 70vh);
   border-radius: 4px;
+}
+@media (min-width: 1100px) {
+
+  .locations-map-panel-card {
+    height: 39.3125rem;
+    max-height: 39.3125rem;
+  }
 }
 .locations-map-panel__scrollbar-thumb {
   min-height: 7rem;

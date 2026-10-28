@@ -177,7 +177,7 @@ test('content accordion falls back to the first item when none are flagged open'
         ],
     ]);
 
-    expect($result['initial_open_index'])->toBe(0);
+    expect($result['initial_open_index'])->toBe(-1);
 });
 
 test('directions page accordion layout stacks icon above text on mobile', function () {

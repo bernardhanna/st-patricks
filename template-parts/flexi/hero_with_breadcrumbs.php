@@ -9,7 +9,7 @@ matrix_render_hero_with_breadcrumbs([
     'heading' => get_sub_field('heading'),
     'heading_tag' => get_sub_field('heading_tag'),
     'content' => get_sub_field('content'),
-    'primary_button' => get_sub_field('primary_button'),
+    'primary_button' => matrix_canonical_cta_link(get_sub_field('primary_button')),
     'primary_button_show_icon' => get_sub_field('primary_button_show_icon'),
     'hero_image' => get_sub_field('hero_image'),
     'show_breadcrumbs' => (bool) get_sub_field('show_breadcrumbs'),

@@ -6,7 +6,7 @@ function matrix_get_contact_form_defaults()
         'form_style' => 'your_portal',
         'background_color' => '#FBF8F3',
         'background_type' => 'cream',
-        'submit_label' => 'Submit to Register for Your Portal',
+        'submit_label' => 'Submit to register for Your Portal',
         'success_message' => 'Thanks! Your registration request has been sent.',
         'form_name' => 'Your Portal Registration',
         'subject' => 'Your Portal – new registration request',

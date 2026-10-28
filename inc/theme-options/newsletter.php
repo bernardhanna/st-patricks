@@ -69,7 +69,7 @@ $newsletter
   ->addAccordion('newsletter_left_acc', ['label' => 'Left Content'])
     ->addText('newsletter_heading', [
       'label'         => 'Heading',
-      'default_value' => "Latest News, Events, and Expert advice from SPMHS",
+      'default_value' => "Latest news, events and expert advice from St Patrick’s Mental Health Services",
     ])
     ->addWysiwyg('newsletter_subtext', [
       'label'         => 'Subtext (supports link)',

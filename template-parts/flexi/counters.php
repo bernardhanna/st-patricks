@@ -41,7 +41,9 @@ $total_counter_items = count($counter_items);
                     $suffix = isset($item['suffix']) ? (string) $item['suffix'] : '';
                     $title = isset($item['title']) ? (string) $item['title'] : '';
                     $description = isset($item['description']) ? (string) $item['description'] : '';
-                    $display_value = $value . $suffix;
+                    // Format whole numbers with thousands separators, e.g. 3152 -> 3,152
+                    $formatted_value = (floor($value) == $value) ? number_format($value, 0, '.', ',') : (string) $value;
+                    $display_value = $formatted_value . $suffix;
                     $article_classes = 'flex flex-col max-md:flex-row max-md:items-center max-md:gap-4';
                     if ($index > 0) {
                         $article_classes .= ' relative md:pl-8';
@@ -108,6 +110,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var root = document.getElementById('<?php echo esc_js($section_id); ?>');
     if (!root) return;
 
+    function formatNumber(n) {
+        if (Math.round(n) === n) {
+            return n.toLocaleString('en-US');
+        }
+        return String(n);
+    }
+
     var counterElements = root.querySelectorAll('[data-counter]');
     if (!counterElements.length) return;
 
@@ -118,8 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var suffix = element.getAttribute('data-suffix') || '';
             var valueSpan = element.querySelector('.counter-value');
             if (valueSpan) {
-                valueSpan.textContent = target + suffix;
-                valueSpan.setAttribute('aria-label', target + suffix);
+                valueSpan.textContent = formatNumber(target) + suffix;
+                valueSpan.setAttribute('aria-label', formatNumber(target) + suffix);
             }
         });
         return;
@@ -151,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var easedProgress = progress * (2 - progress);
                 var currentValue = Math.round(startValue + (target - startValue) * easedProgress);
 
-                var displayValue = currentValue + suffix;
+                var displayValue = formatNumber(currentValue) + suffix;
                 valueSpan.textContent = displayValue;
                 valueSpan.setAttribute('aria-label', displayValue);
 
@@ -159,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     requestAnimationFrame(animateCounter);
                 } else {
                     // Ensure final value is exact
-                    var finalValue = target + suffix;
+                    var finalValue = formatNumber(target) + suffix;
                     valueSpan.textContent = finalValue;
                     valueSpan.setAttribute('aria-label', finalValue);
                 }

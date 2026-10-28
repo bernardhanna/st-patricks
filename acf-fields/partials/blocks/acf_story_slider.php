@@ -35,7 +35,7 @@ $story_slider
         ])
         ->addText('heading_text', [
             'label' => 'Heading Text',
-            'default_value' => 'Voices of hope and healing',
+            'default_value' => 'Recovery stories',
             'wrapper' => ['width' => 50],
             'conditional_logic' => [[['field' => 'show_heading','operator' => '==','value' => 1]]],
         ])

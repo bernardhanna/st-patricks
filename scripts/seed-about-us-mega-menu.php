@@ -84,21 +84,15 @@ $top_level = [
         ['Research library / SPIRE', $home . 'research/spire/'],
         ['Research Ethics Committee', $home . 'research-ethics-committee/'],
     ]],
-    ['Advocacy', $home . 'about-us/advocacy/', [
-        ['Human Rights Advocacy', $home . 'human-rights-advocacy/'],
-        ['Public Education & Anti-Stigma Campaigns', $home . 'about-us/advocacy/public-education-anti-stigma-campaigns/'],
-        ['Collaborative Efforts', $home . 'about-us/advocacy/collaborative-efforts/'],
-        ['Advocacy Services', $home . 'advocacy-services/'],
-        ['Youth Advocacy', $home . 'about-us/advocacy/youth-advocacy/'],
-    ]],
+    ['Advocacy', $home . 'about-us/advocacy/'],
     ['Support us', $home . 'about-us/support-us/'],
     ['Our Locations', $home . 'about-us/our-locations/'],
     ['Media Queries', $home . 'about-us/media-queries/'],
     ['Our History', $home . 'about-us/our-history/'],
     ['Our Present and Future', $home . 'about-us/our-present-and-future/', [
-        ['New hospital', $home . 'new-hospital/'],
-        ['Extending and enhancing our services', $home . 'extending-and-enhancing-our-services/'],
-        ['National centre', $home . 'national-centre/'],
+        ['New hospital', $home . 'about-us/our-present-and-future/new-hospital/'],
+        ['Extending and enhancing our services', $home . 'about-us/our-present-and-future/extending-and-enhancing-our-services/'],
+        ['National centre', $home . 'about-us/our-present-and-future/national-centre/'],
     ]],
 ];
 
