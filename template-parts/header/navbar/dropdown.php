@@ -32,6 +32,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
 
 <div
     class="<?php echo esc_attr(matrix_get_nav_mega_menu_shell_classes()); ?>"
+    style="top: var(--site-header-height, 8.5rem);"
     <?php matrix_render_nav_mega_menu_shell_attrs($index); ?>
     role="region"
     aria-label="<?php echo esc_attr($item->label); ?> submenu"

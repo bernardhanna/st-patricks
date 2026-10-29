@@ -15,6 +15,8 @@ if ($background_color === '' || $background_color === null) {
     $background_color = '#C6ECF4';
 }
 
+$hero_slider_gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);
+
 
 // Slides
 $slides = array();
@@ -125,6 +127,15 @@ $is_slider = count($slides) > 1;
                              title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
                              class="object-cover w-full h-auto rounded-none max-md:object-contain"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
+                        <div
+                            class="absolute inset-0 pointer-events-none"
+                            style="background: <?php echo esc_attr(matrix_build_hero_image_split_mobile_bottom_fade_gradient(
+                                $hero_slider_gradient_vars['gradient_clear'],
+                                $hero_slider_gradient_vars['gradient_soft'],
+                                $hero_slider_gradient_vars['gradient_solid']
+                            )); ?>;"
+                            aria-hidden="true"
+                        ></div>
                     </div>
                 <?php } ?>
 
@@ -238,6 +249,15 @@ $is_slider = count($slides) > 1;
                              title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
                              class="object-contain h-full max-h-[600px]"
                              loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
+
+                        <div class="absolute inset-0 pointer-events-none"
+                             style="background: linear-gradient(90deg, <?php echo esc_attr($hero_slider_gradient_vars['gradient_solid']); ?> 0%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_soft']); ?> 14.69%, <?php echo esc_attr($hero_slider_gradient_vars['gradient_clear']); ?> 45.97%);"
+                             aria-hidden="true"></div>
+
+                        <div class="hidden absolute inset-y-0 right-0 w-1/3 pointer-events-none xl:block"
+                             style="background: linear-gradient(to right, transparent, <?php echo esc_attr($background_color); ?>);"
+                             aria-hidden="true">
+                        </div>
                     </div>
                 <?php } ?>
 

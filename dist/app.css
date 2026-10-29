@@ -1469,6 +1469,9 @@ input:where([type='file']):focus {
 .top-\[calc\(var\(--site-header-height\2c 8\.5rem\)\+0\.75rem\)\] {
   top: calc(var(--site-header-height,8.5rem) + 0.75rem);
 }
+.top-\[var\(--site-header-height\2c 8\.5rem\)\] {
+  top: var(--site-header-height,8.5rem);
+}
 .top-full {
   top: 100%;
 }
