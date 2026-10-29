@@ -43,16 +43,23 @@ $open_panel_background_style = matrix_get_content_accordion_background_style(
 );
 $section_background_style = matrix_get_content_accordion_background_style($section_background, '#FFFFFF');
 
+$heading = function_exists('matrix_resolve_content_accordion_heading')
+    ? matrix_resolve_content_accordion_heading(get_sub_field('heading'))
+    : trim((string) get_sub_field('heading'));
 $vertical_padding = function_exists('matrix_resolve_content_accordion_vertical_padding')
     ? matrix_resolve_content_accordion_vertical_padding(get_sub_field('vertical_padding'))
     : 'default';
 $padding_classes = function_exists('matrix_get_content_accordion_vertical_padding_classes')
     ? matrix_get_content_accordion_vertical_padding_classes($vertical_padding, $layout_style)
     : '';
+// Bottom-only padding sets pt-0. Keep a top gap on this section anyway.
+$section_extra_style = ($vertical_padding === 'bottom_only' && strcasecmp($heading, 'Crisis support') === 0)
+    ? 'padding-top:4rem;'
+    : '';
 $wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !== '' ? ' ' . $padding_classes : ''));
-$heading = function_exists('matrix_resolve_content_accordion_heading')
-    ? matrix_resolve_content_accordion_heading(get_sub_field('heading'))
-    : trim((string) get_sub_field('heading'));
+$accordion_wrapper_style = (function_exists('is_page') && is_page('service-user-experience-survey'))
+    ? 'padding-top:2.5rem;'
+    : '';
 $section_id = function_exists('matrix_flexi_heading_section_id')
     ? matrix_flexi_heading_section_id($heading, 'content-accordion')
     : 'content-accordion-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
@@ -69,7 +76,7 @@ $heading_classes = function_exists('matrix_get_content_accordion_heading_class_n
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="relative flex overflow-hidden"
-    style="<?php echo esc_attr($section_background_style); ?>"
+    style="<?php echo esc_attr($section_background_style . $section_extra_style); ?>"
     <?php if ($heading !== '') { ?>
         aria-labelledby="<?php echo esc_attr($heading_id); ?>"
     <?php } ?>
@@ -78,6 +85,7 @@ $heading_classes = function_exists('matrix_get_content_accordion_heading_class_n
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
         x-init="(() => { const hash = (window.location.hash || '').replace('#', ''); if (!hash) { return; } const match = $el.querySelector('[data-accordion-slug=\'' + hash + '\']'); if (match && match.dataset.accordionIndex) { activeIndex = parseInt(match.dataset.accordionIndex, 10); } })()"
         class="<?php echo esc_attr($wrapper_classes); ?>"
+        <?php echo $accordion_wrapper_style !== '' ? 'style="' . esc_attr($accordion_wrapper_style) . '"' : ''; ?>
     >
         <?php if ($heading !== '') { ?>
             <header class="mb-4 flex w-full flex-col gap-4 lg:mb-8 lg:gap-8">

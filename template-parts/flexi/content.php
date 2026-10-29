@@ -84,7 +84,18 @@ $background_image_alt = $uses_background_image
 $image_column_class = matrix_get_content_image_column_class_names($layout_style, $column_layout);
 $content_column_class = matrix_get_content_content_column_class_names($layout_style, $column_layout);
 
-$wrapper_classes = matrix_get_content_wrapper_class_names(get_sub_field('vertical_padding'));
+$content_padding = get_sub_field('vertical_padding');
+$wrapper_style = '';
+if (function_exists('is_page') && is_page('service-user-experience-survey')) {
+    if (strcasecmp($heading, 'Understanding your experience') === 0) {
+        $content_padding = 'no_bottom';
+        $wrapper_style = 'padding-bottom:0;';
+    } elseif (strcasecmp($heading, 'Surveys') === 0) {
+        $content_padding = 'no_bottom';
+        $wrapper_style = 'padding-top:2.5rem;padding-bottom:0;';
+    }
+}
+$wrapper_classes = matrix_get_content_wrapper_class_names($content_padding);
 
 
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
@@ -115,7 +126,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
         </div>
     <?php } ?>
 
-    <div class="<?php echo esc_attr($wrapper_classes . ($uses_background_image ? ' relative z-[1]' : '')); ?>">
+    <div class="<?php echo esc_attr($wrapper_classes . ($uses_background_image ? ' relative z-[1]' : '')); ?>"<?php echo $wrapper_style !== '' ? ' style="' . esc_attr($wrapper_style) . '"' : ''; ?>>
         <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout, $layout_style)); ?>">
             <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
                 <?php if ($show_heading) { ?>

@@ -410,7 +410,8 @@ document.addEventListener('alpine:init', () => {
     </div>
 
     <div
-      class="pointer-events-none fixed top-[calc(var(--site-header-height,8.5rem)+0.75rem)] z-[76] hidden xl:block"
+      class="pointer-events-none fixed top-[var(--site-header-height,8.5rem)] z-[76] hidden xl:block"
+      style="top: var(--site-header-height, 8.5rem);"
       x-show="$store.navMega.activeKey"
       x-cloak
       :style="'left:' + $store.navMega.pointerLeft + 'px;'"

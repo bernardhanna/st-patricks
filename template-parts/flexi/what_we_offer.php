@@ -67,7 +67,7 @@ if (!empty($services) && is_array($services)) {
          class="flex overflow-hidden relative"
          style="background: <?php echo esc_attr($background_gradient); ?>;">
     <?php
-    $section_inner_classes = 'flex flex-col w-full mx-auto max-w-container ' . $section_padding_classes . ' max-lg:px-5 max-sm:px-6';
+    $section_inner_classes = 'flex flex-col w-full mx-auto max-w-[1018px] ' . $section_padding_classes . ' max-lg:px-5 max-sm:px-6';
     $section_inner_classes .= $layout_style === 'intro_two_column' ? ' items-stretch' : ' items-center';
     ?>
     <div class="<?php echo esc_attr($section_inner_classes); ?>">

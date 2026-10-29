@@ -3,7 +3,7 @@
 if (! function_exists('matrix_get_nav_mega_menu_shell_classes')) {
     function matrix_get_nav_mega_menu_shell_classes(): string
     {
-        return 'pointer-events-none fixed left-0 top-[calc(var(--site-header-height,8.5rem)+0.75rem)] z-[75] flex w-screen flex-col bg-transparent';
+        return 'pointer-events-none fixed left-0 top-[var(--site-header-height,8.5rem)] z-[75] flex w-screen flex-col bg-transparent';
     }
 }
 
@@ -230,6 +230,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
         ?>
         <div
             class="<?php echo esc_attr(matrix_get_nav_mega_menu_shell_classes()); ?>"
+            style="top: var(--site-header-height, 8.5rem);"
             <?php matrix_render_nav_mega_menu_shell_attrs($index); ?>
             role="region"
             aria-label="<?php echo esc_attr($item->label); ?> submenu"

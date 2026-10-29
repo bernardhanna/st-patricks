@@ -5,7 +5,7 @@ require_once dirname(__DIR__, 2) . '/inc/mega-menu-render.php';
 test('mega menu shell sits below the site header so it does not cover the logo', function () {
     $classes = matrix_get_nav_mega_menu_shell_classes();
 
-    expect($classes)->toContain('top-[calc(var(--site-header-height,8.5rem)+0.75rem)]')
+    expect($classes)->toContain('top-[var(--site-header-height,8.5rem)]')
         ->and($classes)->toContain('z-[75]');
 });
 
