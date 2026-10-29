@@ -26,7 +26,14 @@ if ($cards === []) {
 $vertical_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
     ? matrix_get_locations_grid_vertical_padding_classes(get_sub_field('vertical_padding'))
     : 'py-12 lg:py-[100px]';
-$wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
+$wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
+
+// "Find us" follows the hero. no_top zeroes the gap, which is tighter than other About Us sections.
+if ($heading === 'Find us') {
+    $vertical_padding = 'py-12 lg:py-[100px]';
+} else {
+    $wrapper_classes[] = 'pt-5';
+}
 
 ?>
 
