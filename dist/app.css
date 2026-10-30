@@ -1037,6 +1037,12 @@ input:where([type='file']):focus {
   line-height: 36px;
   letter-spacing: -0.225px;
 }
+.single-post .is-not-woo .wp_editor.editor-body-content h2,
+  .single-post .is-not-woo .wp_editor.blog-single-content h2,
+  .single-post .editor-body-content h2,
+  .single-post .blog-single-content h2 {
+  margin-top: 1.5rem;
+}
 .is-not-woo .wp_editor.editor-body-content h2::after,
   .is-not-woo .wp_editor.blog-single-content h2::after,
   .editor-body-content h2::after,
@@ -1152,6 +1158,7 @@ input:where([type='file']):focus {
   .is-not-woo .wp_editor.blog-single-content .section-head h2,
   .editor-body-content .section-head h2,
   .blog-single-content .section-head h2 {
+  margin-top: 1.5rem;
   margin-bottom: 2rem;
   font-size: 30px;
   font-weight: 600;

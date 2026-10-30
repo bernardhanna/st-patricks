@@ -23,7 +23,7 @@ if (! $related_query->have_posts()) {
     return;
 }
 
-$heading = (string) ($defaults['related_heading'] ?? 'Related Links');
+$heading = (string) ($defaults['related_heading'] ?? 'Related links');
 ?>
 
 <aside class="w-full lg:w-[328px] lg:shrink-0" aria-label="<?php echo esc_attr($heading); ?>">
