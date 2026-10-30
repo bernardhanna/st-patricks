@@ -8,7 +8,7 @@ function matrix_get_blog_single_defaults()
         'published_by_label' => 'Published by',
         'author_fallback' => 'St Patrick Hospital Team',
         'share_label' => 'Share on:',
-        'related_heading' => 'Related Links',
+        'related_heading' => 'Related links',
         'previous_label' => 'Previous article',
         'next_label' => 'Next article',
         'previous_label_event' => 'Previous',

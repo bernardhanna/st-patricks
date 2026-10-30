@@ -20,18 +20,18 @@ $copy_link_id = 'blog-share-copy-' . get_the_ID();
 ?>
 
 <div class="flex w-full flex-col gap-8 pt-12">
-    <div class="flex flex-col gap-6 border-y border-[#80CCD9] py-4 lg:flex-row lg:items-center lg:justify-between">
-        <div class="font-primary text-[16px] leading-[28px] text-[#08284B]">
-            <p class="font-medium"><?php echo esc_html((string) ($defaults['published_by_label'] ?? 'Published by')); ?></p>
-            <p class="font-bold"><?php echo esc_html($author_name); ?></p>
-        </div>
+    <div class="flex flex-col gap-4 border-y border-[#80CCD9] py-4 lg:flex-row lg:items-center lg:justify-between">
+        <p class="font-primary text-[16px] leading-[28px] text-[#08284B] lg:shrink-0 lg:whitespace-nowrap">
+            <span class="font-medium"><?php echo esc_html((string) ($defaults['published_by_label'] ?? 'Published by')); ?></span>
+            <span class="font-bold"><?php echo esc_html($author_name); ?></span>
+        </p>
 
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <p class="font-primary text-[16px] font-bold leading-[24px] text-[#08284B]">
+        <div class="flex shrink-0 items-center gap-2">
+            <p class="whitespace-nowrap font-primary text-[16px] font-bold leading-[24px] text-[#08284B]">
                 <?php echo esc_html((string) ($defaults['share_label'] ?? 'Share on:')); ?>
             </p>
 
-            <ul class="flex flex-wrap items-center gap-3" role="list">
+            <ul class="flex flex-nowrap items-center gap-2" role="list">
                 <?php foreach ($share_links as $share_link) { ?>
                     <?php
                     $is_copy = ! empty($share_link['is_copy']);

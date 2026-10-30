@@ -260,6 +260,13 @@ footer a:not(.btn):not(.w-8):focus-visible {
     @apply mb-8 text-[30px] font-semibold leading-[36px] tracking-[-0.225px];
   }
 
+  .single-post .is-not-woo .wp_editor.editor-body-content h2,
+  .single-post .is-not-woo .wp_editor.blog-single-content h2,
+  .single-post .editor-body-content h2,
+  .single-post .blog-single-content h2 {
+    @apply mt-6;
+  }
+
   .is-not-woo .wp_editor.editor-body-content h2::after,
   .is-not-woo .wp_editor.blog-single-content h2::after,
   .editor-body-content h2::after,
@@ -349,7 +356,7 @@ footer a:not(.btn):not(.w-8):focus-visible {
   .is-not-woo .wp_editor.blog-single-content .section-head h2,
   .editor-body-content .section-head h2,
   .blog-single-content .section-head h2 {
-    @apply mb-8 text-[30px] font-semibold leading-[36px] tracking-[-0.225px];
+    @apply mt-6 mb-8 text-[30px] font-semibold leading-[36px] tracking-[-0.225px];
   }
 
   .is-not-woo .wp_editor.editor-body-content .section-head h2::after,
