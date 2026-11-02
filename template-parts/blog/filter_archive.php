@@ -91,7 +91,6 @@ $colors = array_merge([
 
 $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
-$controls_classes = matrix_get_filter_archive_controls_class_names();
 $chip_scroll_classes = matrix_get_blog_filter_archive_horizontal_scroll_class_names();
 $chip_group_classes = matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names();
 $grid_classes = matrix_get_filter_archive_card_grid_class_names();
@@ -193,7 +192,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                 <div class="mt-6 h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>
             <?php } ?>
 
-            <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?><?php echo esc_attr($controls_classes); ?>">
+            <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?>flex flex-col gap-6">
                 <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
                     <p
                         class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
