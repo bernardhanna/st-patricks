@@ -193,7 +193,12 @@ if (!empty($services) && is_array($services)) {
         <?php endif; ?>
 
         <?php if ($layout_style === 'intro_two_column') : ?>
-            <div class="mt-16 w-full max-w-[1018px] max-md:mt-10">
+            <?php
+            $intro_block_spacing = (function_exists('is_page') && is_page('what-we-offer'))
+                ? 'mt-8'
+                : 'mt-16 max-md:mt-10';
+            ?>
+            <div class="<?php echo esc_attr($intro_block_spacing); ?> w-full max-w-[1018px]">
                 <?php if ($intro_text !== '') : ?>
                     <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]')); ?>">
                         <?php echo wpautop(esc_html($intro_text)); ?>
