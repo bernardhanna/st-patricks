@@ -44,6 +44,18 @@ test('blog single maps related post cards', function () {
     expect(function_exists('matrix_map_blog_related_post_card'))->toBeTrue();
 });
 
+test('legacy blog tag paragraphs are removed from article content', function () {
+    $html = '<p>Body copy stays.</p>'
+        . '<p>Tags: <br><a href="http://patricks.local/media-centre/news?tag=Young%20people"><br><u>Young people</u></a></p>';
+
+    $formatted = matrix_remove_legacy_blog_tag_paragraphs($html);
+
+    expect($formatted)->toContain('Body copy stays.')
+        ->and($formatted)->not->toContain('Tags:')
+        ->and($formatted)->not->toContain('adolescent service')
+        ->and($formatted)->not->toContain('Young people');
+});
+
 test('migrated post content formatter removes duplicate umbraco headings', function () {
     expect(function_exists('matrix_format_migrated_post_content'))->toBeTrue();
 
