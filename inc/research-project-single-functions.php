@@ -5,9 +5,9 @@ function matrix_get_research_project_single_defaults()
     return [
         'back_label' => 'Back to research projects',
         'published_by_label' => 'Published by',
-        'author_fallback' => 'St Patrick Hospital Team',
+        'author_fallback' => "St Patrick's Mental Health Services",
         'share_label' => 'Share on:',
-        'related_heading' => 'Related Links',
+        'related_heading' => 'Related links',
         'previous_label' => 'Previous project',
         'next_label' => 'Next project',
         'related_count' => 3,
@@ -58,7 +58,7 @@ function matrix_get_research_project_author_name($post_id = null)
         return $researcher_name;
     }
 
-    return (string) ($defaults['author_fallback'] ?? 'St Patrick Hospital Team');
+    return (string) ($defaults['author_fallback'] ?? "St Patrick's Mental Health Services");
 }
 
 function matrix_get_research_project_share_links($post_id = null)

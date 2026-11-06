@@ -133,7 +133,8 @@ function matrix_get_filter_archive_controls_class_names($vertical_align = 'cente
 {
     $align_class = $vertical_align === 'start' ? 'lg:items-start' : 'lg:items-center';
 
-    return 'flex flex-col-reverse gap-6 lg:flex-row ' . $align_class . ' lg:justify-between';
+    // Stack search below filter chips so the search field never covers chips.
+    return 'flex flex-col gap-6';
 }
 
 function matrix_get_filter_archive_card_grid_class_names()

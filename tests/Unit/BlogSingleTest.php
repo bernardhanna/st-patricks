@@ -32,7 +32,8 @@ test('blog single resolves author name with fallback', function () {
     expect(function_exists('matrix_get_blog_post_author_name'))->toBeTrue();
 
     $defaults = matrix_get_blog_single_defaults();
-    expect($defaults['author_fallback'])->toBe('St Patrick Hospital Team');
+    expect($defaults['author_fallback'])->toBe("St Patrick's Mental Health Services");
+    expect($defaults['related_heading'])->toBe('Related links');
 });
 
 test('page-style flexi helper exists for campaign posts', function () {
