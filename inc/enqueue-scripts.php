@@ -76,6 +76,16 @@ function matrix_starter_enqueue_scripts()
   // Optional: prevent flash of cloaked content
   wp_add_inline_style('matrix-starter', '[x-cloak]{display:none !important;}');
 
+  // The article body styles every span at body size. On this page the SAFER
+  // headings wrap only the first letter in a span, so that letter was smaller
+  // than the rest of the title. Keep the rule on this post only.
+  if (is_singular('post') && is_single('mental-health-medication-choices')) {
+    wp_add_inline_style(
+      'matrix-starter',
+      '.is-not-woo .wp_editor.blog-single-content :is(h1,h2,h3,h4,h5,h6)>span.color--pink{font-size:inherit;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;}'
+    );
+  }
+
   // Theme forms (footer)
   wp_enqueue_script(
     'theme-forms',
