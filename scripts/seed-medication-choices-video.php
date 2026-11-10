@@ -80,9 +80,32 @@ if (! $updated) {
     return;
 }
 
-wp_update_post([
-    'ID' => (int) $post->ID,
-    'post_content' => $content,
-]);
+// Bypass wp_kses_post: iframe embeds are stripped for non-unfiltered_html contexts
+// (including unauthenticated web runs of this seed).
+global $wpdb;
+$saved = $wpdb->update(
+    $wpdb->posts,
+    [
+        'post_content' => $content,
+        'post_modified' => current_time('mysql'),
+        'post_modified_gmt' => current_time('mysql', true),
+    ],
+    ['ID' => (int) $post->ID],
+    ['%s', '%s', '%s'],
+    ['%d']
+);
+
+clean_post_cache((int) $post->ID);
+
+if ($saved === false) {
+    echo "FAIL db update on #{$post->ID}\n";
+    return;
+}
+
+$verify = (string) get_post_field('post_content', (int) $post->ID);
+if (! str_contains($verify, $youtube_id)) {
+    echo "FAIL verify missing {$youtube_id} on #{$post->ID}\n";
+    return;
+}
 
 echo "DONE inserted {$youtube_id} on #{$post->ID} {$slug}\n";
