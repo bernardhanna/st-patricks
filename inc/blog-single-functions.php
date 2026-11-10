@@ -6,7 +6,7 @@ function matrix_get_blog_single_defaults()
         'back_label' => 'Back to blog',
         'date_label' => 'Date posted:',
         'published_by_label' => 'Published by',
-        'author_fallback' => 'St Patrick Hospital Team',
+        'author_fallback' => "St Patrick's Mental Health Services",
         'share_label' => 'Share on:',
         'related_heading' => 'Related links',
         'previous_label' => 'Previous article',
@@ -371,7 +371,7 @@ function matrix_get_blog_post_author_name($post_id = null)
         }
     }
 
-    return (string) ($defaults['author_fallback'] ?? 'St Patrick Hospital Team');
+    return (string) ($defaults['author_fallback'] ?? "St Patrick's Mental Health Services");
 }
 
 function matrix_get_blog_post_share_links($post_id = null)
@@ -436,18 +436,44 @@ function matrix_get_blog_related_posts($post_id = null, $count = 3)
         $args['category__in'] = $categories;
     }
 
-    $query = new WP_Query($args);
+    $query = matrix_query_blog_related_posts_with_content($args, $count);
 
     if (! $query->have_posts()) {
-        $query = new WP_Query([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => $count,
-            'post__not_in' => [$post_id],
-            'orderby' => 'date',
-            'order' => 'DESC',
-        ]);
+        unset($args['category__in']);
+        $query = matrix_query_blog_related_posts_with_content($args, $count);
     }
+
+    return $query;
+}
+
+/**
+ * Related-post query that drops empty-content placeholders.
+ */
+function matrix_query_blog_related_posts_with_content(array $args, int $count): WP_Query
+{
+    $args['posts_per_page'] = max($count * 4, 12);
+    $query = new WP_Query($args);
+    $keep = [];
+
+    foreach ($query->posts as $post) {
+        if (! ($post instanceof WP_Post)) {
+            continue;
+        }
+
+        $text = trim(wp_strip_all_tags((string) $post->post_content));
+        if ($text === '') {
+            continue;
+        }
+
+        $keep[] = $post;
+        if (count($keep) >= $count) {
+            break;
+        }
+    }
+
+    $query->posts = $keep;
+    $query->post_count = count($keep);
+    $query->found_posts = count($keep);
 
     return $query;
 }

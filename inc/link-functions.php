@@ -1054,6 +1054,15 @@ if (! function_exists('matrix_maybe_redirect_theme_paths')) {
                 ? $destination
                 : home_url($destination);
 
+            // External hosts fail wp_safe_redirect (falls through to wp-admin).
+            $is_external = str_starts_with($target, 'http')
+                && (string) (wp_parse_url($target, PHP_URL_HOST) ?? '') !== (string) (wp_parse_url(home_url('/'), PHP_URL_HOST) ?? '');
+
+            if ($is_external && function_exists('wp_redirect')) {
+                wp_redirect($target, 301);
+                exit;
+            }
+
             if (function_exists('wp_safe_redirect')) {
                 wp_safe_redirect($target, 301);
                 exit;

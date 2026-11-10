@@ -100,10 +100,9 @@ test('blog filter archive pagination collapses large page counts', function () {
     ]);
 });
 
-test('filter archive controls stack search above filters on mobile', function () {
-    expect(matrix_get_filter_archive_controls_class_names())->toContain('flex-col-reverse')
-        ->and(matrix_get_filter_archive_controls_class_names())->toContain('lg:items-center')
-        ->and(matrix_get_filter_archive_controls_class_names('start'))->toContain('lg:items-start');
+test('filter archive controls stack search below filter chips', function () {
+    expect(matrix_get_filter_archive_controls_class_names())->toBe('flex flex-col gap-6')
+        ->and(matrix_get_filter_archive_controls_class_names('start'))->toBe('flex flex-col gap-6');
 });
 
 test('filter archive card grid uses one column on the smallest screens', function () {

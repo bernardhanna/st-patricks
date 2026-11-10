@@ -260,7 +260,7 @@ function matrix_get_contact_directory_opening_hours_heading_text(array $item): s
         $slug = (string) get_post_field('post_name', $location_id);
 
         if (in_array($slug, $visitor_location_slugs, true)) {
-            return __('Visitor hours', 'matrix-starter');
+            return __('Visiting hours', 'matrix-starter');
         }
     }
 
