@@ -16,3 +16,6 @@ vendor/.env
 # Legacy site scrape and migration artefacts
 old/
 .bernd-worktrees/
+
+# Local scratch folder
+new/
