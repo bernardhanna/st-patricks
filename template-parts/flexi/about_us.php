@@ -110,7 +110,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
             <div class="about-us-columns grid w-full gap-4 items-stretch max-[1084px]:grid-cols-2 max-sm:grid-cols-1 lg:grid-cols-[minmax(240px,315px)_minmax(0,1fr)_minmax(240px,315px)]" role="main">
 
                 <!-- Left Column: first 3 cards -->
-                <div class="about-us-cards-col flex h-full flex-col gap-4 lg:justify-between">
+                <div class="about-us-cards-col flex h-full flex-col gap-4">
                     <?php for ($i = 0; $i < 3; $i++) :
                         if (!isset($cards[$i])) {
                             continue;
@@ -203,7 +203,7 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
                 <?php endif; ?>
 
                 <!-- Right Column: last 3 cards -->
-                <div class="about-us-cards-col flex h-full flex-col gap-4 lg:justify-between">
+                <div class="about-us-cards-col flex h-full flex-col gap-4">
                     <?php for ($i = 3; $i < 6; $i++) :
                         if (!isset($cards[$i])) {
                             continue;
@@ -339,7 +339,12 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
             height: 100%;
         }
 
+        #<?php echo esc_attr($section_id); ?> .about-us-cards-col {
+            justify-content: flex-start;
+        }
+
         #<?php echo esc_attr($section_id); ?> .mental-health-card {
+            flex: 1 1 0%;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
         }
 
@@ -352,3 +357,40 @@ $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
         }
     }
 </style>
+<script>
+(function () {
+    var root = document.getElementById(<?php echo wp_json_encode($section_id); ?>);
+    if (!root) {
+        return;
+    }
+
+    var cards = root.querySelectorAll('.mental-health-card');
+    var desktop = window.matchMedia('(min-width: 1085px)');
+
+    function equalize() {
+        cards.forEach(function (card) {
+            card.style.minHeight = '';
+        });
+
+        if (!desktop.matches || cards.length === 0) {
+            return;
+        }
+
+        var max = 0;
+        cards.forEach(function (card) {
+            max = Math.max(max, card.getBoundingClientRect().height);
+        });
+
+        var height = Math.ceil(max) + 'px';
+        cards.forEach(function (card) {
+            card.style.minHeight = height;
+        });
+    }
+
+    equalize();
+    window.addEventListener('resize', equalize);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(equalize);
+    }
+})();
+</script>
