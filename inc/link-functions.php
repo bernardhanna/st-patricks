@@ -1050,6 +1050,12 @@ if (! function_exists('matrix_maybe_redirect_theme_paths')) {
                 continue;
             }
 
+            // Identity entries (same path → same path) cause infinite 301 loops.
+            if (! str_starts_with((string) $destination, 'http')
+                && $path === trim((string) $destination, '/')) {
+                continue;
+            }
+
             $target = str_starts_with($destination, 'http')
                 ? $destination
                 : home_url($destination);
