@@ -191,7 +191,7 @@ extract($hero, EXTR_SKIP);
 @media (min-width: 1100px) {
   nav.hero-breadcrumb-nav,
   .hero-with-breadcrumbs-copy {
-    padding-left: 44px;
+    padding-left: 66px;
   }
 }
 </style>
