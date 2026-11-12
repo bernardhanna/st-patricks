@@ -129,7 +129,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
     <div class="flex overflow-hidden relative justify-center items-center px-5 py-12 mx-auto lg:py-24 max-w-container_md">
 
-      <div class="relative z-10 w-full max-w-[578px]">
+      <div class="relative z-10 w-full max-w-[800px]">
         <div class="flex flex-col gap-8 items-center md:gap-12">
 
           <!-- Header Section -->
@@ -162,7 +162,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
           <div class="flex flex-col gap-3 justify-end items-start w-full">
             <div class="flex flex-col gap-2 items-end w-full md:flex-row">
               <!-- Full Name -->
-              <div class="flex flex-col flex-1 gap-1.5 items-start w-full">
+              <div class="flex flex-col flex-1 min-w-0 gap-1.5 items-start w-full">
                 <label for="<?php echo esc_attr($section_id); ?>-name" class="text-sm font-medium leading-5 text-white">
                   <?php echo esc_html($name_label); ?>
                 </label>
@@ -182,49 +182,45 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                 </div>
               </div>
 
-              <!-- Email + Subscribe -->
-              <div class="flex flex-col gap-1.5 items-start w-full md:w-auto">
+              <!-- Email -->
+              <div class="flex flex-col flex-1 min-w-0 gap-1.5 items-start w-full">
                 <label for="<?php echo esc_attr($section_id); ?>-email" class="text-sm font-medium leading-5 text-white">
                   <?php echo esc_html($email_label); ?>
                 </label>
-                <div class="flex gap-2 items-center w-full max-sm:flex-col md:w-96">
-                  <input
-                    id="<?php echo esc_attr($section_id); ?>-email"
-                    type="email"
-                    name="email"
-                    autocomplete="email"
-                    placeholder="<?php echo esc_attr($email_ph); ?>"
-                    class="flex flex-1 items-center px-3 py-2 text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent max-sm:w-full"
-                    required
-                    <?php if ($action !== ''): ?>
-                      form="<?php echo esc_attr($section_id); ?>-form"
-                    <?php endif; ?>
-                  />
-
-                  <?php if ($action === ''): ?>
-                    <!-- Brevo AJAX submit -->
-                    <button
-                      type="button"
-                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary max-sm:w-full"
-                      id="<?php echo esc_attr($section_id); ?>-submit"
-                      aria-label="<?php echo esc_attr($submit_text); ?>"
-                    >
-                      <?php echo esc_html($submit_text); ?>
-                    </button>
-                  <?php else: ?>
-                    <!-- Direct POST submit -->
-                    <button
-                      form="<?php echo esc_attr($section_id); ?>-form"
-                      type="submit"
-                      class="flex gap-2.5 justify-center items-center px-4 py-2 text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary max-sm:w-full"
-                      aria-label="<?php echo esc_attr($submit_text); ?>"
-                      id="<?php echo esc_attr($section_id); ?>-submit"
-                    >
-                      <?php echo esc_html($submit_text); ?>
-                    </button>
+                <input
+                  id="<?php echo esc_attr($section_id); ?>-email"
+                  type="email"
+                  name="email"
+                  autocomplete="email"
+                  placeholder="<?php echo esc_attr($email_ph); ?>"
+                  class="flex items-center px-3 py-2 w-full text-base font-normal leading-6 text-white bg-transparent rounded border border-slate-300 placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-spmhs-blue-light focus:border-transparent"
+                  required
+                  <?php if ($action !== ''): ?>
+                    form="<?php echo esc_attr($section_id); ?>-form"
                   <?php endif; ?>
-                </div>
+                />
               </div>
+
+              <?php if ($action === ''): ?>
+                <button
+                  type="button"
+                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary shrink-0 md:w-auto"
+                  id="<?php echo esc_attr($section_id); ?>-submit"
+                  aria-label="<?php echo esc_attr($submit_text); ?>"
+                >
+                  <?php echo esc_html($submit_text); ?>
+                </button>
+              <?php else: ?>
+                <button
+                  form="<?php echo esc_attr($section_id); ?>-form"
+                  type="submit"
+                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary shrink-0 md:w-auto"
+                  aria-label="<?php echo esc_attr($submit_text); ?>"
+                  id="<?php echo esc_attr($section_id); ?>-submit"
+                >
+                  <?php echo esc_html($submit_text); ?>
+                </button>
+              <?php endif; ?>
             </div>
 
             <?php if ($link_healthcare_signup): ?>
