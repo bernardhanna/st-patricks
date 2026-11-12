@@ -244,7 +244,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                 >
                     <?php matrix_render_nav_mega_menu_decorative_symbol(); ?>
 
-                    <div class="relative mx-auto flex w-full max-w-container items-start justify-start gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8 <?php echo esc_attr($min_height); ?>">
+                    <div class="relative mx-auto flex w-full max-w-container items-start justify-start gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8 lg:px-5 <?php echo esc_attr($min_height); ?>">
                         <?php
                         get_template_part('template-parts/header/navbar/mega-menu-header', null, [
                             'title' => $item->label,
