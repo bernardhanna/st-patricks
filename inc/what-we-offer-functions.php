@@ -60,7 +60,16 @@ function matrix_get_what_we_offer_intro_two_column_icon_urls($base_url = '')
     ];
 }
 
-function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', $accent_color = '#6FC9C0')
+function matrix_get_what_we_offer_icon_color($index = 0, $is_front_page = false)
+{
+    if ($is_front_page && (int) $index === 1) {
+        return '#E4E4E4';
+    }
+
+    return '';
+}
+
+function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', $accent_color = '#6FC9C0', $icon_color = '')
 {
     $theme_dir = function_exists('get_template_directory')
         ? get_template_directory()
@@ -77,8 +86,21 @@ function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', 
         return '';
     }
 
+    $icon_color = trim((string) $icon_color);
+    if ($icon_color !== '' && preg_match('/^#?[0-9A-Fa-f]{6}$/', $icon_color)) {
+        if ($icon_color[0] !== '#') {
+            $icon_color = '#' . $icon_color;
+        }
+
+        $svg = str_replace('fill="white"', 'fill="' . $icon_color . '"', $svg);
+        $opacity = $state === 'hover' ? '1' : '0.4';
+        $svg = str_replace('opacity="0.25"', 'opacity="' . $opacity . '"', $svg);
+
+        return $svg;
+    }
+
     if ($state === 'hover') {
-        return str_replace('opacity=\"0.25\"', 'opacity=\"1\"', $svg);
+        return str_replace('opacity="0.25"', 'opacity="1"', $svg);
     }
 
     return $svg;
@@ -92,6 +114,7 @@ function matrix_get_what_we_offer_intro_two_column_icon_svg($state = 'default', 
 function matrix_render_what_we_offer_service_rail(array $service): void
 {
     $accent_color = (string) ($service['accent_color'] ?? '#6FC9C0');
+    $icon_color = (string) ($service['icon_color'] ?? '');
     $icon_background = (string) ($service['icon_background'] ?? matrix_get_what_we_offer_intro_two_column_icon_background($accent_color));
     $safe_background = function_exists('esc_attr')
         ? esc_attr($icon_background)
@@ -109,7 +132,7 @@ function matrix_render_what_we_offer_service_rail(array $service): void
             style="background-color: <?php echo $safe_background; ?>;"
         >
             <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 transition-opacity duration-300 group-hover:opacity-0">
-                <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('default', $accent_color); ?>
+                <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('default', $accent_color, $icon_color); ?>
             </div>
         </div>
         <div
@@ -117,7 +140,7 @@ function matrix_render_what_we_offer_service_rail(array $service): void
             style="background-color: <?php echo $safe_accent; ?>;"
         >
             <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('hover', $accent_color); ?>
+                <?php echo matrix_get_what_we_offer_intro_two_column_icon_svg('hover', $accent_color, $icon_color); ?>
             </div>
         </div>
     </div>
