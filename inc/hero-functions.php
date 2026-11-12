@@ -276,7 +276,7 @@ function matrix_get_hero_with_breadcrumbs_heading_max_width_class(
 
 function matrix_get_hero_with_breadcrumbs_container_class_names()
 {
-  return 'mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0 lg:min-h-[320px]';
+  return 'mx-auto flex w-full max-w-[1280px] flex-col max-xl:px-0 lg:min-h-[320px]';
 }
 
 function matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names()
@@ -351,7 +351,7 @@ function matrix_get_hero_with_breadcrumbs_register_intro_button_class_names()
 
 function matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names()
 {
-  return 'mx-auto flex w-full max-w-[1160px] flex-col py-16 max-xl:px-0';
+  return 'mx-auto flex w-full max-w-[1280px] flex-col py-16 max-xl:px-0';
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_heading_class_names(
@@ -386,10 +386,10 @@ function matrix_get_hero_with_breadcrumbs_image_split_content_class_names($text_
 function matrix_get_hero_with_breadcrumbs_image_split_column_class_names($text_max_width = 'default')
 {
   if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
-    return 'order-1 flex w-full flex-col gap-5 px-4 lg:gap-6 lg:px-0';
+    return 'hero-with-breadcrumbs-copy order-1 flex w-full flex-col gap-5 px-4 lg:gap-6 lg:px-0';
   }
 
-  return 'order-2 flex w-full flex-col justify-center gap-5 px-4 py-8 lg:order-1 lg:gap-6 lg:pr-8 lg:py-10';
+  return 'hero-with-breadcrumbs-copy order-2 flex w-full flex-col justify-center gap-5 px-4 py-8 lg:order-1 lg:gap-6 lg:pr-8 lg:py-10';
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_gradient_layout($text_max_width = 'default')

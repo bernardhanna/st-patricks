@@ -129,7 +129,7 @@ test('hero external link icon helper returns accessible svg markup', function ()
 
 test('hero with breadcrumbs container uses 1160px content width', function () {
     expect(matrix_get_hero_with_breadcrumbs_container_class_names())->toBe(
-        'mx-auto flex w-full max-w-[1160px] flex-col max-xl:px-0 lg:min-h-[320px]'
+        'mx-auto flex w-full max-w-[1280px] flex-col max-xl:px-0 lg:min-h-[320px]'
     );
 });
 
@@ -182,7 +182,7 @@ test('hero with breadcrumbs heading max width can span full column width', funct
 });
 
 test('hero image split wide text max width uses single column stacked layout', function () {
-    expect(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->toBe('mx-auto flex w-full max-w-[1160px] flex-col py-16 max-xl:px-0')
+    expect(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->toBe('mx-auto flex w-full max-w-[1280px] flex-col py-16 max-xl:px-0')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names('wide'))->not->toContain('lg:grid')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->toContain('order-2')
         ->and(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names('wide'))->not->toContain('lg:border-l-2')
@@ -206,7 +206,7 @@ test('utility page hero config uses wide stacked image split hero', function () 
     expect($view['layout_style'])->toBe('image_split')
         ->and($view['text_max_width'])->toBe('wide')
         ->and($view['breadcrumb_current_label'])->toBe('Accessibility')
-        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($view['text_max_width']))->toContain('max-w-[1160px]');
+        ->and(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($view['text_max_width']))->toContain('max-w-[1280px]');
 });
 
 test('hero image split gradient vars derive rgba stops from hex background', function () {
