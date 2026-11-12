@@ -71,10 +71,10 @@ function matrix_get_faq_section_wrapper_classes($layout_style = 'default', $show
     $show_heading = (bool) $show_heading;
 
     if ($layout_style === 'page') {
-        $classes = ['flex', 'w-full', 'max-w-[1160px]', 'flex-col', 'mx-auto', 'px-5', 'xl:px-0'];
+        $classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'xl:px-0'];
         $desktop_bottom = 'xl:pb-[100px]';
     } else {
-        $classes = ['flex', 'w-full', 'max-w-[1160px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5'];
+        $classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5'];
         $desktop_bottom = 'lg:pb-[100px]';
     }
 

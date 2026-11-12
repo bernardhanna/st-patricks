@@ -25,7 +25,7 @@ $card_base = $show_card_style
 
 // Match the previous academic logo strip: fixed height, auto width,
 // object-contain, no overflow clipping.
-$logo_img_class = 'block h-12 w-auto max-w-[14rem] object-contain';
+$logo_img_class = 'block h-10 w-auto max-w-[14rem] object-contain';
 $logo_link_class = 'inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-highlight-primary';
 
 ?>
@@ -39,7 +39,7 @@ $logo_link_class = 'inline-flex items-center justify-center focus:outline-none f
         <div class="flex flex-col gap-8 w-full lg:flex-row lg:items-center lg:justify-between lg:gap-10">
 
             <!-- Heading Section -->
-            <div class="w-full lg:max-w-[295px]">
+            <div class="w-full lg:max-w-[295px] lg:shrink-0">
                 <?php if (!empty($heading_text)) : ?>
                     <<?php echo tag_escape($heading_tag); ?>
                         class="text-[18px] mob:text-xl font-medium tracking-normal leading-7 text-left"
@@ -54,7 +54,7 @@ $logo_link_class = 'inline-flex items-center justify-center focus:outline-none f
                 <?php if (!empty($partners) && is_array($partners)) : ?>
 
                     <!-- Desktop / tablet layout (≥ sm) -->
-                    <div class="hidden flex-nowrap gap-6 justify-center items-center sm:flex md:gap-8 lg:justify-end lg:gap-10">
+                    <div class="hidden flex-nowrap gap-6 justify-center items-center sm:flex md:gap-8 lg:justify-end lg:gap-6">
                         <?php foreach ($partners as $row) :
                             $logo = $row['logo'] ?? null;
                             if (!$logo || empty($logo['url'])) {
