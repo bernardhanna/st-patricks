@@ -54,6 +54,10 @@ if (!empty($services) && is_array($services)) {
             'has_link' => $has_service_link,
             'show_icon' => $show_service_icon,
             'accent_color' => matrix_get_what_we_offer_accent_color($service, $index),
+            'icon_color' => matrix_get_what_we_offer_icon_color(
+                $index,
+                function_exists('is_front_page') && is_front_page()
+            ),
             'icon_background' => matrix_get_what_we_offer_intro_two_column_icon_background(
                 matrix_get_what_we_offer_accent_color($service, $index)
             ),
