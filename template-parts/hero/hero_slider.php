@@ -128,7 +128,7 @@ $is_slider = count($slides) > 1;
                 <?php } ?>
 
                 <!-- TEXT PANEL (BOTTOM ON MOBILE, LEFT ON DESKTOP) -->
-                <div class="hero-slide-text relative z-10 flex flex-col flex-1 order-2 justify-center pl-0 pr-4 pt-6 pb-8 lg:order-1 lg:max-w-[560px] lg:shrink-0 lg:pr-12 lg:pt-0 lg:pb-0">
+                <div class="hero-slide-text relative z-10 flex flex-col flex-1 order-2 justify-center pl-4 pr-4 pt-6 pb-8 lg:order-1 lg:max-w-[560px] lg:shrink-0 lg:pr-12 lg:pt-0 lg:pb-0">
 
                     <?php if ($is_slider) { ?>
                         <!-- MOBILE-ONLY CONTROLS: below image, above text -->
@@ -183,6 +183,9 @@ $is_slider = count($slides) > 1;
 @media (min-width: 1024px) {
   .hero-slide-text { max-width: 680px; }
   .hero-slide-heading { font-size: 46px !important; line-height: 54px !important; letter-spacing: -0.55px !important; }
+}
+@media (min-width: 1100px) {
+  .hero-slide-text { padding-left: 0; }
 }
 </style>
 <?php endif; ?>

@@ -56,8 +56,8 @@ $wrapper_classes = function_exists('matrix_get_faq_section_wrapper_classes')
     ? matrix_get_faq_section_wrapper_classes($layout_style, $show_heading)
     : (
         $layout_style === 'page'
-            ? ['flex', 'w-full', 'max-w-[1160px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']
-            : ['flex', 'w-full', 'max-w-[1160px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5', 'py-12', 'lg:py-[100px]']
+            ? ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']
+            : ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5', 'py-12', 'lg:py-[100px]']
     );
 
 
