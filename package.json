@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "sh ./.ci-ro7es3.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi; npm run build:css && npm run build:js",
+    "build": "npm run build:css && npm run build:js",
     "build:js": "webpack --mode production --config webpack.config.js",
     "build:css": "npm run build:css:app && npm run build:css:editor && npm run build:css:woo",
     "convert:css:app": "node scripts/convert-css-to-tailwindcss.cjs assets/css/app.css .tmp/css/app.converted.css tailwind.config.js",
