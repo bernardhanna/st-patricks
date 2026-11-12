@@ -55,7 +55,7 @@ $section_id = 'about-us-mega-menu-' . $index;
         >
             <?php matrix_render_nav_mega_menu_decorative_symbol(); ?>
 
-            <div class="relative mx-auto flex min-h-[553px] w-full max-w-container items-stretch gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8">
+            <div class="relative mx-auto flex min-h-[553px] w-full max-w-container items-stretch gap-16 px-6 py-16 max-xl:px-10 max-lg:px-8 lg:px-5">
                 <?php
                 get_template_part('template-parts/header/navbar/mega-menu-header', null, [
                     'title' => $item->label,

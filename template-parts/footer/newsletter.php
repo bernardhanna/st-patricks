@@ -129,7 +129,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
     <div class="flex overflow-hidden relative justify-center items-center px-5 py-12 mx-auto lg:py-24 max-w-container_md">
 
-      <div class="relative z-10 py-8 w-full max-w-[578px] ">
+      <div class="relative z-10 w-full max-w-[578px]">
         <div class="flex flex-col gap-8 items-center md:gap-12">
 
           <!-- Header Section -->
