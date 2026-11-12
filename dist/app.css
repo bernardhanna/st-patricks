@@ -2409,6 +2409,9 @@ input:where([type='file']):focus {
 .max-w-\[745px\] {
   max-width: 745px;
 }
+.max-w-\[750px\] {
+  max-width: 750px;
+}
 .max-w-\[768px\] {
   max-width: 768px;
 }
