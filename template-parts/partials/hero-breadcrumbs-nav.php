@@ -11,10 +11,15 @@ if ($breadcrumb_items === [] && $current_label === '') {
 if ($background_color === '') {
     $background_color = '#F1F8F9';
 }
+
+$align_with_hero = ! empty($args['align_with_hero']);
+$nav_class = $align_with_hero
+    ? 'hero-breadcrumb-nav mx-auto w-full max-w-[1280px] lg:px-5'
+    : 'mx-auto w-full max-w-[1203px] lg:px-5';
 ?>
 <div class="flex w-full items-center px-4 py-3 lg:h-[42px] lg:px-0 lg:py-0" style="background-color: <?php echo esc_attr($background_color); ?>;">
     <nav
-        class="mx-auto w-full max-w-[1203px] lg:px-5"
+        class="<?php echo esc_attr($nav_class); ?>"
         aria-label="Breadcrumb"
     >
         <ol class="flex flex-wrap items-center gap-3" role="list">

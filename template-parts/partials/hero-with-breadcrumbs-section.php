@@ -28,6 +28,7 @@ extract($hero, EXTR_SKIP);
             'items' => $breadcrumb_items,
             'current_label' => $breadcrumb_current_label,
             'background_color' => $breadcrumb_background_color,
+            'align_with_hero' => true,
         ]);
         ?>
     <?php } ?>
@@ -185,3 +186,13 @@ extract($hero, EXTR_SKIP);
     </div>
     <?php } ?>
 </section>
+<?php if (empty($GLOBALS['matrix_hero_breadcrumb_align_css'])) { $GLOBALS['matrix_hero_breadcrumb_align_css'] = true; ?>
+<style>
+@media (min-width: 1100px) {
+  nav.hero-breadcrumb-nav,
+  .hero-with-breadcrumbs-copy {
+    padding-left: 44px;
+  }
+}
+</style>
+<?php } ?>
