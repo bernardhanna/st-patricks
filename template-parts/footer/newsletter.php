@@ -145,7 +145,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 </svg>
 
 
-    <div class="flex overflow-hidden relative justify-center items-center px-5 py-12 mx-auto lg:py-24 max-w-container_md">
+    <div class="flex relative flex-col items-center py-12 mx-auto w-full max-w-container_md lg:py-24 max-lg:px-5 max-sm:px-6">
 
       <div class="relative z-10 w-full">
         <div class="flex flex-col gap-8 w-full lg:gap-10">
