@@ -159,7 +159,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
             </div>
           <?php endif; ?>
 
-          <div class="grid items-start w-full grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+          <div class="grid items-start w-full grid-cols-1 gap-14 lg:grid-cols-2">
             <div class="flex flex-col gap-4 items-start w-full">
               <<?php echo $left_heading_tag; ?> class="<?php echo esc_attr($left_heading_class); ?>">
                 <?php echo esc_html($left_heading); ?>
