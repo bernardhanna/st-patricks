@@ -140,7 +140,7 @@ foreach ($slides as $slide_index => $slide) {
 
 #<?php echo esc_attr($section_id); ?> .hero-slide,
 #<?php echo esc_attr($section_id); ?> .slick-slide {
-    height: 640px;
+    height: auto;
 }
 
 #<?php echo esc_attr($section_id); ?> .hero-slide-image,
@@ -163,16 +163,13 @@ foreach ($slides as $slide_index => $slide) {
 }
 
 #<?php echo esc_attr($section_id); ?> .hero-slide-panel {
-    position: absolute;
-    top: 240px;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    position: relative;
     z-index: 2;
+    padding-top: 240px;
 }
 
 #<?php echo esc_attr($section_id); ?> .hero-slide-text {
-    height: 100%;
+    height: auto;
     border-radius: 20px 20px 0 0;
     background: #91CEDE;
 }
@@ -189,7 +186,13 @@ foreach ($slides as $slide_index => $slide) {
     }
 
     #<?php echo esc_attr($section_id); ?> .hero-slide-panel {
+        position: absolute;
         top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin-top: 0;
+        padding-top: 0;
     }
 
     #<?php echo esc_attr($section_id); ?> .hero-slide-panel-align {
@@ -431,7 +434,7 @@ foreach ($slides as $slide_index => $slide) {
             speed: 600,
             autoplay: true,
             autoplaySpeed: 5500,
-            adaptiveHeight: false,
+            adaptiveHeight: true,
             pauseOnHover: false,
             pauseOnFocus: false
         });
