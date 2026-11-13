@@ -1,6 +1,6 @@
 <?php
 /**
- * Hero Slider (Flexi Block) – Desktop + Mobile Layouts
+ * Hero Slider (Flexi Block) – full-bleed photo with a content card.
  */
 
 if (!defined('ABSPATH')) {
@@ -9,10 +9,19 @@ if (!defined('ABSPATH')) {
 
 $section_id = 'hero-slider-' . (function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid());
 
-// Background color
+// Card colour. The photograph is full-bleed behind the card.
 $background_color = get_sub_field('background_color');
 if ($background_color === '' || $background_color === null) {
     $background_color = '#C6ECF4';
+}
+
+$hero_phone = function_exists('get_field') ? get_field('topbar_phone_link', 'option') : null;
+if (!is_array($hero_phone) || empty($hero_phone['url']) || empty($hero_phone['title'])) {
+    $hero_phone = array(
+        'url' => 'tel:+35312493200',
+        'title' => '01 249 3200',
+        'target' => '_self',
+    );
 }
 
 // Slides
@@ -96,209 +105,208 @@ $is_slider = count($slides) > 1;
 #<?php echo esc_attr($section_id); ?> .slick-slide:not(.slick-active) {
     pointer-events: none;
 }
+
+#<?php echo esc_attr($section_id); ?> .hero-slider-container .slick-track {
+    display: block;
+    gap: 0;
+}
+
+@media (min-width: 1100px) {
+    /* Older banner files include a pale wash on the left. Shift those
+       photos so the wash sits off-canvas, matching the first slide. */
+    #<?php echo esc_attr($section_id); ?> .hero-slide-image.is-washed img {
+        object-position: right center;
+        transform: scale(1.5);
+        transform-origin: right center;
+    }
+}
+
+#<?php echo esc_attr($section_id); ?> .slider-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background-color: #7ED0E0;
+    flex: none;
+}
+
+#<?php echo esc_attr($section_id); ?> .slider-dot[aria-current="true"] {
+    width: 22px;
+    background-color: #0f172a;
+}
+
+#<?php echo esc_attr($section_id); ?> .slider-pause .icon-play {
+    display: none;
+}
+
+#<?php echo esc_attr($section_id); ?> .slider-pause.is-paused .icon-pause {
+    display: none;
+}
+
+#<?php echo esc_attr($section_id); ?> .slider-pause.is-paused .icon-play {
+    display: block;
+}
 </style>
 
 <section id="<?php echo esc_attr($section_id); ?>"
-         class="flex overflow-hidden relative"
-         style="background-color: <?php echo esc_attr($background_color); ?>;"
+         class="relative overflow-hidden"
          role="banner"
          aria-label="Hero section">
 
-    <div class="flex flex-col items-center mx-auto w-full max-w-container lg:px-5">
+    <?php if ($is_slider) { ?>
+        <div class="w-full hero-slider-container" data-slider-id="<?php echo esc_attr($section_id); ?>">
+    <?php } ?>
 
-        <?php if ($is_slider) { ?>
-            <div class="w-full hero-slider-container" data-slider-id="<?php echo esc_attr($section_id); ?>">
-        <?php } ?>
+    <?php foreach ($slides as $i => $sl) {
+        $heading_id = $section_id . '-heading-' . $i;
+        ?>
+        <div class="hero-slide relative flex w-full flex-col">
 
-        <?php foreach ($slides as $i => $sl) {
-            $heading_id = $section_id . '-heading-' . $i;
-            ?>
-            <!-- SLIDE -->
-            <div class="hero-slide flex flex-col items-stretch w-full min-h-[520px] lg:min-h-[600px] lg:flex-row">
+            <?php if (!empty($sl['desktop_img']['url'])) { ?>
+                <div class="hero-slide-image absolute inset-0 z-0 hidden lg:block<?php echo $i === 0 ? '' : ' is-washed'; ?>">
+                    <img src="<?php echo esc_url($sl['desktop_img']['url']); ?>"
+                         alt="<?php echo esc_attr($sl['desktop_img']['alt']); ?>"
+                         title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
+                         class="h-full w-full object-cover"
+                         loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
+                </div>
+            <?php } ?>
 
-                <!-- MOBILE IMAGE (TOP, < lg) -->
-                <?php if (!empty($sl['mobile_img']['url'])) { ?>
-                    <div class="relative mb-0 w-full lg:hidden">
-                        <img src="<?php echo esc_url($sl['mobile_img']['url']); ?>"
-                             alt="<?php echo esc_attr($sl['mobile_img']['alt']); ?>"
-                             title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
-                             class="object-cover w-full h-auto rounded-none max-md:object-contain"
-                             loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-                    </div>
-                <?php } ?>
+            <?php if (!empty($sl['mobile_img']['url'])) { ?>
+                <div class="relative w-full lg:hidden">
+                    <img src="<?php echo esc_url($sl['mobile_img']['url']); ?>"
+                         alt="<?php echo esc_attr($sl['mobile_img']['alt']); ?>"
+                         title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
+                         class="h-auto w-full object-cover"
+                         loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
+                </div>
+            <?php } ?>
 
-                <!-- TEXT PANEL (BOTTOM ON MOBILE, LEFT ON DESKTOP) -->
-                <div class="hero-slide-text relative z-10 flex flex-col flex-1 order-2 justify-center pl-4 pr-4 pt-6 pb-8 lg:order-1 lg:max-w-[560px] lg:shrink-0 lg:pr-12 lg:pt-0 lg:pb-0">
-
-                    <?php if ($is_slider) { ?>
-                        <!-- MOBILE-ONLY CONTROLS: below image, above text -->
-                        <div class="flex justify-between items-center w-full mb-4 lg:hidden">
-
-                            <!-- Mobile Prev -->
-                            <button
-                                class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0]"
-                                aria-label="Previous slide">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                    <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
-                                          class="stroke-[#020617] transition-colors"
-                                          stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-
-                            <!-- Dots (mobile) -->
-                            <div class="flex gap-2">
-                                <?php for ($d = 0; $d < count($slides); $d++) {
-                                    $is_active = $d === 0;
-                                    $dot_color = $is_active ? '#0f172a' : '#7ED0E0'; // active vs primary
-                                    ?>
-                                    <button
-                                        class="w-3 h-3 rounded-full transition-colors slider-dot"
-                                        data-slide="<?php echo esc_attr($d); ?>"
-                                        aria-label="<?php echo esc_attr('Go to slide ' . ($d + 1)); ?>"
-                                        <?php echo $is_active ? 'aria-current="true"' : ''; ?>
-                                        style="background-color: <?php echo esc_attr($dot_color); ?>;">
-                                    </button>
-                                <?php } ?>
-                            </div>
-
-                            <!-- Mobile Next -->
-                            <button
-                                class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0]"
-                                aria-label="Next slide">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                    <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
-                                          class="stroke-[#020617] transition-colors"
-                                          stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
-                    <?php } ?>
+            <div class="relative z-10 mx-auto flex w-full max-w-container items-center px-4 py-8 lg:px-5 lg:py-10">
+                <div class="hero-slide-text flex w-full flex-col rounded-2xl px-6 py-8 lg:max-w-[560px] lg:shrink-0 lg:px-10 lg:py-10"
+                     style="background-color: <?php echo esc_attr($background_color); ?>;">
 
                     <?php if (empty($GLOBALS['matrix_hero_heading_css'])): $GLOBALS['matrix_hero_heading_css'] = true; ?>
-<style>
-/* Banner heading: 3 lines on desktop + looser leading */
-.hero-slide-heading { line-height: 34px !important; }
-@media (min-width: 1024px) {
-  .hero-slide-text { max-width: 680px; }
-  .hero-slide-heading { font-size: 46px !important; line-height: 54px !important; letter-spacing: -0.55px !important; }
-}
-@media (min-width: 1100px) {
-  .hero-slide-text { padding-left: 0; }
-}
-</style>
-<?php endif; ?>
-<?php if (!empty($sl['text'])) { ?>
+                    <style>
+                    .hero-slide-heading { line-height: 34px !important; }
+.hero-slide-rule { display: block; width: 48px; height: 3px; margin-top: 16px; background: #08284B; }
+                    @media (min-width: 1024px) {
+                      .hero-slide-heading { font-size: 46px !important; line-height: 54px !important; letter-spacing: -0.55px !important; }
+                    }
+                    </style>
+                    <?php endif; ?>
+
+                    <?php if (!empty($sl['text'])) { ?>
                         <<?php echo esc_attr($sl['tag']); ?>
-                            class="hero-slide-heading mb-4 text-[#08284B] !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
+                            class="hero-slide-heading text-[#08284B] !text-[28px] !not-italic !font-bold !leading-[28px] !tracking-[-0.336px] lg:!text-[48px] lg:!leading-[48px] lg:!tracking-[-0.576px]"
                             style="color: #08284B;"
                             id="<?php echo esc_attr($heading_id); ?>">
                             <?php echo esc_html($sl['text']); ?>
                         </<?php echo esc_attr($sl['tag']); ?>>
+                        <span class="hero-slide-rule mt-4 block" aria-hidden="true"></span>
                     <?php } ?>
 
                     <?php if (!empty($sl['desc'])) { ?>
-                        <div class="mb-6 text-large text-[#08284B] md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
+                        <div class="mt-5 text-large text-[#08284B] md:text-lead wp_editor !text-[18px] !not-italic !font-normal !leading-[22.75px] !tracking-[-0.09px] !text-[#001F33] md:!text-[20px] md:!font-medium md:!leading-[28px] md:!tracking-[-0.1px]">
                             <?php echo matrix_kses_rich_text($sl['desc']); ?>
                         </div>
                     <?php } ?>
 
-                    <!-- BUTTONS -->
-                    <div class="flex flex-row flex-wrap gap-4">
-                        <?php
-                        if (!empty($sl['pbtn']['url'])) {
-                            ?>
+                    <div class="mt-6 flex flex-row flex-wrap gap-4">
+                        <?php if (!empty($sl['pbtn']['url'])) { ?>
                             <a href="<?php echo esc_url($sl['pbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['pbtn']['target'] ? $sl['pbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['pbtn']['title'] ? $sl['pbtn']['title'] : 'Primary action'); ?>"
-                               class="btn flex h-[44px] items-center justify-center gap-2.5 rounded-md bg-primary-dark text-white border border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark font-primary !text-[14px] not-italic font-medium leading-6 px-8">
+                               class="btn flex h-[44px] items-center justify-center gap-2.5 rounded-md bg-primary-dark text-white border border-transparent px-8 font-primary !text-[14px] not-italic font-medium leading-6 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark">
                                 <?php echo esc_html($sl['pbtn']['title']); ?>
                             </a>
-                        <?php
-                        }
+                        <?php } ?>
 
-                        if (!empty($sl['sbtn']['url'])) {
-                            ?>
+                        <?php if (!empty($sl['sbtn']['url'])) { ?>
                             <a href="<?php echo esc_url($sl['sbtn']['url']); ?>"
                                target="<?php echo esc_attr($sl['sbtn']['target'] ? $sl['sbtn']['target'] : '_self'); ?>"
                                aria-label="<?php echo esc_attr($sl['sbtn']['title'] ? $sl['sbtn']['title'] : 'Secondary action'); ?>"
-                               class="btn flex h-[44px] items-center justify-center gap-2.5 px-3 rounded-md border border-primary-dark text-primary-dark bg-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px] font-primary !text-[14px] not-italic font-medium leading-6">
+                               class="btn flex h-[44px] items-center justify-center gap-2.5 rounded-md border border-primary-dark bg-transparent px-3 font-primary !text-[14px] not-italic font-medium leading-6 text-primary-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark lg:min-w-[180px]">
                                 <?php echo esc_html($sl['sbtn']['title']); ?>
                             </a>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                </div>
-
-                <!-- DESKTOP IMAGE (RIGHT, >= lg) -->
-                <?php if (!empty($sl['desktop_img']['url'])) { ?>
-                    <div class="hero-slide-image hidden relative z-0 flex-1 order-1 justify-end h-full overflow-hidden lg:flex lg:order-2">
-                        <img src="<?php echo esc_url($sl['desktop_img']['url']); ?>"
-                             alt="<?php echo esc_attr($sl['desktop_img']['alt']); ?>"
-                             title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
-                             class="object-contain h-full max-h-[600px]"
-                             loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-                    </div>
-                <?php } ?>
-
-            </div>
-        <?php } ?>
-
-        <?php if ($is_slider) { ?>
-            </div>
-
-            <!-- DESKTOP CONTROLS (absolute, centered, lg+) -->
-            <div class="hidden absolute bottom-8 left-1/2 z-20 flex-col gap-4 items-center -translate-x-1/2 lg:flex">
-
-                <div class="flex gap-6 items-center">
-                    <!-- Desktop Prev -->
-                    <button
-                        class="group slider-prev flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
-                        aria-label="Previous slide">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                            <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
-                                  class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
-
-                    <!-- Dots (desktop) -->
-                    <div class="flex gap-3">
-                        <?php
-                        for ($d = 0; $d < count($slides); $d++) {
-                            $is_active = $d === 0;
-                            $dot_color = $is_active ? '#0f172a' : '#7ED0E0';
-                            ?>
-                            <button
-                                class="w-3 h-3 rounded-full transition-colors slider-dot"
-                                data-slide="<?php echo esc_attr($d); ?>"
-                                aria-label="<?php echo esc_attr('Go to slide ' . ($d + 1)); ?>"
-                                <?php echo $is_active ? 'aria-current="true"' : ''; ?>
-                                style="background-color: <?php echo esc_attr($dot_color); ?>;">
-                            </button>
                         <?php } ?>
                     </div>
 
-                    <!-- Desktop Next -->
-                    <button
-                        class="group slider-next flex justify-center items-center w-8 h-8 rounded-full border border-[#7ED0E0] bg-white transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33]"
-                        aria-label="Next slide">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                            <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
-                                  class="stroke-[#020617] transition-colors group-hover:stroke-white group-active:stroke-white group-focus:stroke-white"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round" stroke-linejoin="round" />
+                    <p class="mt-5 flex items-center gap-2 text-sm font-medium leading-5 text-[#08284B]">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M6.5 3.5h2.2l1.2 3-1.6 1a12.5 12.5 0 0 0 6 6l1-1.6 3 1.2v2.2c0 .6-.4 1.1-1 1.2A15.5 15.5 0 0 1 5.3 4.5c.1-.6.6-1 1.2-1Z" stroke="#08284B" stroke-width="1.5" stroke-linejoin="round"/>
                         </svg>
-                    </button>
+                        <span>Or call us on
+                            <a href="<?php echo esc_url($hero_phone['url']); ?>"
+                               class="font-bold text-[#08284B] hover:underline"
+                               aria-label="<?php echo esc_attr('Call ' . $hero_phone['title']); ?>">
+                                <?php echo esc_html($hero_phone['title']); ?>
+                            </a>
+                        </span>
+                    </p>
+
+                    <?php if ($is_slider) { ?>
+                        <!-- SLIDER CONTROLS -->
+                        <div class="mt-8 flex w-full items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <?php for ($d = 0; $d < count($slides); $d++) {
+                                    $is_active = $d === 0;
+                                    ?>
+                                    <button
+                                        type="button"
+                                        class="slider-dot"
+                                        data-slide="<?php echo esc_attr($d); ?>"
+                                        aria-label="<?php echo esc_attr('Go to slide ' . ($d + 1)); ?>"
+                                        <?php echo $is_active ? 'aria-current="true"' : ''; ?>>
+                                    </button>
+                                <?php } ?>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <button
+                                    type="button"
+                                    class="slider-prev group flex h-8 w-8 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] lg:hover:border-[#7ED0E0] lg:hover:bg-[#001F33] lg:active:bg-black lg:focus:bg-[#001F33]"
+                                    aria-label="Previous slide">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                        <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167"
+                                              class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white"
+                                              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="slider-next group flex h-8 w-8 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] lg:hover:border-[#7ED0E0] lg:hover:bg-[#001F33] lg:active:bg-black lg:focus:bg-[#001F33]"
+                                    aria-label="Next slide">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                        <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167"
+                                              class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white"
+                                              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="slider-pause group flex h-8 w-8 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] lg:hover:bg-[#001F33] lg:focus:bg-[#001F33]"
+                                    aria-label="Pause slideshow"
+                                    aria-pressed="false">
+                                    <svg class="icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
+                                        <path d="M1 1v10M9 1v10" class="stroke-[#020617] lg:group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                    <svg class="icon-play" width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
+                                        <path d="M1 1.5v9l8-4.5-8-4.5Z" class="stroke-[#020617] lg:group-hover:stroke-white" stroke-width="1.5" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    <?php } ?>
                 </div>
-
             </div>
-        <?php } ?>
+        </div>
+    <?php } ?>
 
-    </div>
+    <?php if ($is_slider) { ?>
+        </div>
+    <?php } ?>
 </section>
 
 <?php if ($is_slider) { ?>
@@ -328,21 +336,36 @@ $is_slider = count($slides) > 1;
             speed: 600,
             autoplay: true,
             autoplaySpeed: 5500,
-            adaptiveHeight: false
+            adaptiveHeight: true
         });
 
         var dots = document.querySelectorAll('#' + id + ' .slider-dot');
+        var pauseBtns = document.querySelectorAll('#' + id + ' .slider-pause');
+        var paused = false;
 
         function setActiveDots(index) {
             dots.forEach(function(d) {
                 var dotIndex = parseInt(d.getAttribute('data-slide') || '-1', 10);
                 var active = dotIndex === index;
-                d.style.backgroundColor = active ? '#0f172a' : '#7ED0E0';
                 if (active) {
                     d.setAttribute('aria-current', 'true');
                 } else {
                     d.removeAttribute('aria-current');
                 }
+            });
+        }
+
+        function setPaused(next) {
+            paused = next;
+            if (paused) {
+                $(container).slick('slickPause');
+            } else {
+                $(container).slick('slickPlay');
+            }
+            pauseBtns.forEach(function(btn) {
+                btn.classList.toggle('is-paused', paused);
+                btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+                btn.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
             });
         }
 
@@ -371,6 +394,12 @@ $is_slider = count($slides) > 1;
         nextBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
                 $(container).slick('slickNext');
+            });
+        });
+
+        pauseBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                setPaused(!paused);
             });
         });
 
