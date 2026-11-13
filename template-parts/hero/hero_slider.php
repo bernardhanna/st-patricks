@@ -153,6 +153,12 @@ foreach ($slides as $slide_index => $slide) {
 }
 
 #<?php echo esc_attr($section_id); ?> .hero-slide-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
     object-position: var(--focal, 50% 25%);
 }
 
@@ -182,6 +188,7 @@ foreach ($slides as $slide_index => $slide) {
 
     #<?php echo esc_attr($section_id); ?> .hero-slide-image,
     #<?php echo esc_attr($section_id); ?> .hero-slide-tint {
+        bottom: 0;
         height: 100%;
     }
 
@@ -274,7 +281,7 @@ foreach ($slides as $slide_index => $slide) {
                          alt="<?php echo esc_attr($sl['desktop_img']['alt']); ?>"
                          title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
                          class="h-full w-full object-cover"
-                         style="--focal: <?php echo esc_attr($sl['focal'] ?? '50% 25%'); ?>"
+                         style="--focal: <?php echo esc_attr($sl['focal'] ?? '50% 25%'); ?>; object-position: <?php echo esc_attr($sl['focal'] ?? '50% 25%'); ?>"
                          loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
                 </div>
                 <div class="hero-slide-tint" aria-hidden="true"></div>
