@@ -82,6 +82,33 @@ if (have_rows('slides')) {
 }
 
 $is_slider = count($slides) > 1;
+
+$hero_focals = array(
+    '01-nurse-portrait' => '50% 25%',
+    '02-garden-stone-building' => '50% 40%',
+    '03-grounds-period-house' => '50% 55%',
+    '04-two-nurses-sitting' => '50% 15%',
+    '05-staff-pair-entrance' => '50% 20%',
+);
+
+foreach ($slides as $slide_index => $slide) {
+    $slides[$slide_index]['focal'] = '50% 25%';
+    $slides[$slide_index]['srcset'] = '';
+    $image_url = (string) ($slide['desktop_img']['url'] ?? '');
+    if (!preg_match('#^(.*?/)(\d{2}-[a-z0-9-]+)-(768|1440|1920|2560)\.(jpe?g|png|webp)$#i', $image_url, $image_match)) {
+        continue;
+    }
+    $stem = $image_match[2];
+    if (isset($hero_focals[$stem])) {
+        $slides[$slide_index]['focal'] = $hero_focals[$stem];
+    }
+    $srcset = array();
+    foreach (array(768, 1440, 1920, 2560) as $width) {
+        $srcset[] = $image_match[1] . $stem . '-' . $width . '.' . $image_match[4] . ' ' . $width . 'w';
+    }
+    $slides[$slide_index]['srcset'] = implode(', ', $srcset);
+    $slides[$slide_index]['desktop_img']['url'] = $image_match[1] . $stem . '-1920.' . $image_match[4];
+}
 ?>
 
 <style>
@@ -111,13 +138,83 @@ $is_slider = count($slides) > 1;
     gap: 0;
 }
 
+#<?php echo esc_attr($section_id); ?> .hero-slide,
+#<?php echo esc_attr($section_id); ?> .slick-slide {
+    height: 640px;
+}
+
+#<?php echo esc_attr($section_id); ?> .hero-slide-image,
+#<?php echo esc_attr($section_id); ?> .hero-slide-tint {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 270px;
+}
+
+#<?php echo esc_attr($section_id); ?> .hero-slide-image img {
+    object-position: var(--focal, 50% 25%);
+}
+
+#<?php echo esc_attr($section_id); ?> .hero-slide-tint {
+    background: #2A62A0;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+#<?php echo esc_attr($section_id); ?> .hero-slide-panel {
+    position: absolute;
+    top: 240px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+#<?php echo esc_attr($section_id); ?> .hero-slide-text {
+    height: 100%;
+    border-radius: 20px 20px 0 0;
+    background: #91CEDE;
+}
+
+@media (min-width: 768px) {
+    #<?php echo esc_attr($section_id); ?> .hero-slide,
+    #<?php echo esc_attr($section_id); ?> .slick-slide {
+        height: clamp(600px, 41.67vw, 760px);
+    }
+
+    #<?php echo esc_attr($section_id); ?> .hero-slide-image,
+    #<?php echo esc_attr($section_id); ?> .hero-slide-tint {
+        height: 100%;
+    }
+
+    #<?php echo esc_attr($section_id); ?> .hero-slide-panel {
+        top: auto;
+    }
+
+    #<?php echo esc_attr($section_id); ?> .hero-slide-panel-align {
+        width: 100%;
+        max-width: 1280px;
+        margin-right: auto;
+        margin-left: auto;
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    #<?php echo esc_attr($section_id); ?> .hero-slide-text {
+        height: auto;
+        max-width: 560px;
+        border-radius: 16px 16px 0 0;
+        background: rgba(145, 206, 222, 0.92);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+    }
+}
+
 @media (min-width: 1100px) {
-    /* Older banner files include a pale wash on the left. Shift those
-       photos so the wash sits off-canvas, matching the first slide. */
-    #<?php echo esc_attr($section_id); ?> .hero-slide-image.is-washed img {
-        object-position: right center;
-        transform: scale(1.5);
-        transform-origin: right center;
+    #<?php echo esc_attr($section_id); ?> .hero-slide-panel-align {
+        padding-right: 20px;
+        padding-left: 20px;
     }
 }
 
@@ -125,14 +222,15 @@ $is_slider = count($slides) > 1;
     width: 8px;
     height: 8px;
     padding: 0;
-    border: 0;
+    border: 1.5px solid #08284B;
     border-radius: 999px;
-    background-color: #7ED0E0;
+    background-color: transparent;
     flex: none;
 }
 
 #<?php echo esc_attr($section_id); ?> .slider-dot[aria-current="true"] {
     width: 22px;
+    border-color: #0f172a;
     background-color: #0f172a;
 }
 
@@ -164,28 +262,24 @@ $is_slider = count($slides) > 1;
         <div class="hero-slide relative flex w-full flex-col">
 
             <?php if (!empty($sl['desktop_img']['url'])) { ?>
-                <div class="hero-slide-image absolute inset-0 z-0 hidden lg:block<?php echo $i === 0 ? '' : ' is-washed'; ?>">
+                <div class="hero-slide-image z-0">
                     <img src="<?php echo esc_url($sl['desktop_img']['url']); ?>"
+                         <?php if (!empty($sl['srcset'])) { ?>
+                         srcset="<?php echo esc_attr($sl['srcset']); ?>"
+                         sizes="100vw"
+                         <?php } ?>
                          alt="<?php echo esc_attr($sl['desktop_img']['alt']); ?>"
                          title="<?php echo esc_attr($sl['desktop_img']['title']); ?>"
                          class="h-full w-full object-cover"
+                         style="--focal: <?php echo esc_attr($sl['focal'] ?? '50% 25%'); ?>"
                          loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
                 </div>
+                <div class="hero-slide-tint" aria-hidden="true"></div>
             <?php } ?>
 
-            <?php if (!empty($sl['mobile_img']['url'])) { ?>
-                <div class="relative w-full lg:hidden">
-                    <img src="<?php echo esc_url($sl['mobile_img']['url']); ?>"
-                         alt="<?php echo esc_attr($sl['mobile_img']['alt']); ?>"
-                         title="<?php echo esc_attr($sl['mobile_img']['title']); ?>"
-                         class="h-auto w-full object-cover"
-                         loading="<?php echo $i === 0 ? 'eager' : 'lazy'; ?>">
-                </div>
-            <?php } ?>
-
-            <div class="relative z-10 mx-auto flex w-full max-w-container items-center px-4 py-8 lg:px-5 lg:py-10">
-                <div class="hero-slide-text flex w-full flex-col rounded-2xl px-6 py-8 lg:max-w-[560px] lg:shrink-0 lg:px-10 lg:py-10"
-                     style="background-color: <?php echo esc_attr($background_color); ?>;">
+            <div class="hero-slide-panel">
+                <div class="hero-slide-panel-align">
+                <div class="hero-slide-text flex w-full flex-col px-6 py-8 lg:max-w-[560px] lg:shrink-0 lg:px-10 lg:py-8">
 
                     <?php if (empty($GLOBALS['matrix_hero_heading_css'])): $GLOBALS['matrix_hero_heading_css'] = true; ?>
                     <style>
@@ -286,19 +380,20 @@ $is_slider = count($slides) > 1;
                                 </button>
                                 <button
                                     type="button"
-                                    class="slider-pause group flex h-8 w-8 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] lg:hover:bg-[#001F33] lg:focus:bg-[#001F33]"
+                                    class="slider-pause group flex h-8 w-8 items-center justify-center rounded-full border border-[#001F33] bg-[#001F33] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] lg:hover:bg-[#001F33] lg:focus:bg-[#001F33]"
                                     aria-label="Pause slideshow"
                                     aria-pressed="false">
                                     <svg class="icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-                                        <path d="M1 1v10M9 1v10" class="stroke-[#020617] lg:group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M1 1v10M9 1v10" stroke="#FFFFFF" class="lg:group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round"/>
                                     </svg>
                                     <svg class="icon-play" width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-                                        <path d="M1 1.5v9l8-4.5-8-4.5Z" class="stroke-[#020617] lg:group-hover:stroke-white" stroke-width="1.5" stroke-linejoin="round"/>
+                                        <path d="M1 1.5v9l8-4.5-8-4.5Z" stroke="#FFFFFF" class="lg:group-hover:stroke-white" stroke-width="1.5" stroke-linejoin="round"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
                     <?php } ?>
+                </div>
                 </div>
             </div>
         </div>
@@ -336,7 +431,9 @@ $is_slider = count($slides) > 1;
             speed: 600,
             autoplay: true,
             autoplaySpeed: 5500,
-            adaptiveHeight: true
+            adaptiveHeight: false,
+            pauseOnHover: false,
+            pauseOnFocus: false
         });
 
         var dots = document.querySelectorAll('#' + id + ' .slider-dot');
@@ -369,10 +466,19 @@ $is_slider = count($slides) > 1;
             });
         }
 
+        function keepPlayingUnlessPaused() {
+            if (paused) {
+                $(container).slick('slickPause');
+            } else {
+                $(container).slick('slickPlay');
+            }
+        }
+
         dots.forEach(function(dot) {
             dot.addEventListener('click', function() {
                 var target = parseInt(dot.getAttribute('data-slide') || '0', 10) || 0;
                 $(container).slick('slickGoTo', target);
+                keepPlayingUnlessPaused();
             });
         });
 
@@ -388,12 +494,14 @@ $is_slider = count($slides) > 1;
         prevBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
                 $(container).slick('slickPrev');
+                keepPlayingUnlessPaused();
             });
         });
 
         nextBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
                 $(container).slick('slickNext');
+                keepPlayingUnlessPaused();
             });
         });
 
