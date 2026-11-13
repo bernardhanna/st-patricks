@@ -150,9 +150,19 @@ extract($hero, EXTR_SKIP);
 
                 <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_column_class_names($text_max_width)); ?>">
                     <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_text_group_class_names()); ?>">
+                    <?php
+                    $image_split_heading_class = matrix_get_hero_with_breadcrumbs_image_split_heading_class_names($text_max_width, $heading_max_width);
+                    if (function_exists('is_page') && is_page('subscribe-to-our-gp-enewsletter')) {
+                        $image_split_heading_class = str_replace(
+                            ['text-[28px]', 'leading-[28px]', 'lg:text-[48px]'],
+                            ['text-[44px]', 'leading-tight', 'lg:text-[44px]'],
+                            $image_split_heading_class
+                        );
+                    }
+                    ?>
                         <<?php echo esc_attr($heading_tag); ?>
                             id="<?php echo esc_attr($hero_heading_id); ?>"
-                            class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_heading_class_names($text_max_width, $heading_max_width)); ?>"
+                            class="<?php echo esc_attr($image_split_heading_class); ?>"
                             style="color: <?php echo esc_attr($heading_color); ?>;"
                         >
                             <?php echo esc_html($heading); ?>

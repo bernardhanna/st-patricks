@@ -54,6 +54,24 @@ $heading_tag = strtolower((string) ($newsletter_args['heading_tag'] ?? 'h1'));
 if (! in_array($heading_tag, ['h1', 'h2', 'h3'], true)) {
   $heading_tag = 'h1';
 }
+$brand_heading = 'St Patrick’s Mental Health Services';
+$show_brand_heading = $heading_tag === 'h1';
+$left_heading = $heading;
+if ($show_brand_heading) {
+  $left_heading = preg_replace(
+    '/\s+from\s+St Patrick[’\']s Mental Health Services\s*$/u',
+    '',
+    $left_heading
+  ) ?? $left_heading;
+  $left_heading = trim($left_heading);
+  if ($left_heading === '') {
+    $left_heading = 'Latest news, events and expert advice';
+  }
+}
+$left_heading_tag = $show_brand_heading ? 'h3' : $heading_tag;
+$left_heading_class = $left_heading_tag === 'h3'
+  ? 'text-white text-left font-bold text-[44px] leading-none tracking-[-0.576px]'
+  : 'text-white text-left font-bold text-[44px] leading-tight tracking-[-0.576px]';
 $healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
 $gp_note_text = trim((string) get_field('newsletter_gp_note', 'option'));
 if ($gp_note_text === '') {
@@ -129,38 +147,40 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
     <div class="flex overflow-hidden relative justify-center items-center px-5 py-12 mx-auto lg:py-24 max-w-container_md">
 
-      <div class="relative z-10 w-full max-w-[750px]">
-        <div class="flex flex-col gap-8 items-center md:gap-12">
+      <div class="relative z-10 w-full">
+        <div class="flex flex-col gap-8 w-full lg:gap-10">
 
-          <!-- Header Section -->
-          <div class="flex flex-col gap-6 items-start w-full">
-            <div class="flex flex-col gap-6 justify-center items-center w-full md:gap-8">
-              <!-- Title -->
-              <<?php echo $heading_tag; ?> class="text-white text-center font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-[-0.576px]">
-                <?php echo esc_html($heading); ?>
-              </<?php echo $heading_tag; ?>>
-
-              <!-- Decorative Line -->
+          <?php if ($show_brand_heading): ?>
+            <div class="flex flex-col gap-4 items-center w-full">
+              <h2 class="text-white text-center font-bold text-[44px] leading-tight tracking-[-0.576px]">
+                <?php echo esc_html($brand_heading); ?>
+              </h2>
               <div class="w-10 h-1" style="background-color: <?php echo esc_attr($accent_line_color); ?>;"></div>
             </div>
+          <?php endif; ?>
 
-            <!-- Subtitle -->
-            <?php if (!empty($subtext)): ?>
-              <div class="w-full text-base font-medium leading-7 text-center text-white wp_editor [&_a]:!text-[#C6ECF4] [&_a]:no-underline [&_a:hover]:underline">
-                <?php
-                  $subtext_html = (string) $subtext;
-                  if ($link_healthcare_signup && function_exists('matrix_link_newsletter_subtext_click_here')) {
-                    $subtext_html = matrix_link_newsletter_subtext_click_here($subtext_html);
-                  }
-                  echo matrix_kses_rich_text($subtext_html);
-                ?>
-              </div>
-            <?php endif; ?>
-          </div>
+          <div class="grid items-start w-full grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+            <div class="flex flex-col gap-4 items-start w-full">
+              <<?php echo $left_heading_tag; ?> class="<?php echo esc_attr($left_heading_class); ?>">
+                <?php echo esc_html($left_heading); ?>
+              </<?php echo $left_heading_tag; ?>>
+
+              <?php if (!empty($subtext)): ?>
+                <div class="w-full text-base font-medium leading-7 text-left text-white wp_editor [&_a]:!text-[#C6ECF4] [&_a]:no-underline [&_a:hover]:underline">
+                  <?php
+                    $subtext_html = (string) $subtext;
+                    if ($link_healthcare_signup && function_exists('matrix_link_newsletter_subtext_click_here')) {
+                      $subtext_html = matrix_link_newsletter_subtext_click_here($subtext_html);
+                    }
+                    echo matrix_kses_rich_text($subtext_html);
+                  ?>
+                </div>
+              <?php endif; ?>
+            </div>
 
           <!-- Newsletter Form -->
           <div class="flex flex-col gap-3 justify-end items-start w-full">
-            <div class="flex flex-col gap-2 items-end w-full md:flex-row">
+            <div class="flex flex-col gap-3 items-stretch w-full">
               <!-- Full Name -->
               <div class="flex flex-col flex-1 min-w-0 gap-1.5 items-start w-full">
                 <label for="<?php echo esc_attr($section_id); ?>-name" class="text-sm font-medium leading-5 text-white">
@@ -204,7 +224,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               <?php if ($action === ''): ?>
                 <button
                   type="button"
-                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary shrink-0 md:w-auto"
+                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary"
                   id="<?php echo esc_attr($section_id); ?>-submit"
                   aria-label="<?php echo esc_attr($submit_text); ?>"
                 >
@@ -214,7 +234,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                 <button
                   form="<?php echo esc_attr($section_id); ?>-form"
                   type="submit"
-                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 whitespace-nowrap rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary shrink-0 md:w-auto"
+                  class="flex gap-2.5 justify-center items-center px-4 py-2 w-full text-sm font-medium leading-6 rounded transition-colors bg-primary-sky text-secondary-darker hover:bg-secondary"
                   aria-label="<?php echo esc_attr($submit_text); ?>"
                   id="<?php echo esc_attr($section_id); ?>-submit"
                 >
@@ -233,8 +253,8 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Terms -->
             <?php if ($require_tc): ?>
-              <div class="flex items-center gap-3 w-full min-h-[38px]">
-                <div class="flex flex-1 gap-2 items-center">
+              <div class="flex gap-3 w-full min-h-[38px]">
+                <div class="flex flex-1 gap-3">
                   <input
                     id="<?php echo esc_attr($section_id); ?>-terms"
                     type="checkbox"
@@ -311,8 +331,9 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               <button type="submit" tabindex="-1"><?php echo esc_html($submit_text); ?></button>
             </form>
           <?php endif; ?>
+          </div>
         </div>
-              </div>
+        </div>
       </div>
     </div>
 </section>
