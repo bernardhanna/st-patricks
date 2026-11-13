@@ -12,23 +12,23 @@ function matrix_get_template_segment(string $template_path, string $start_marker
     return substr($template, $start, $end - $start);
 }
 
-test('hero slider mobile navigation spans full width and keeps white arrow buttons', function () {
+test('hero slider controls sit in the card and keep dark hover states for desktop only', function () {
     $segment = matrix_get_template_segment(
         dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php',
-        '<!-- MOBILE-ONLY CONTROLS',
-        '</div>
-                    <?php } ?>'
+        '<!-- SLIDER CONTROLS -->',
+        'aria-label="Pause slideshow"'
     );
 
     expect($segment)->toContain('w-full')
         ->and($segment)->toContain('justify-between')
         ->and($segment)->toContain('bg-white')
-        ->and($segment)->not->toContain('hover:bg-[#001F33]')
-        ->and($segment)->not->toContain('active:bg-black')
-        ->and($segment)->not->toContain('focus:bg-[#001F33]')
-        ->and($segment)->not->toContain('group-hover:stroke-white')
-        ->and($segment)->not->toContain('group-active:stroke-white')
-        ->and($segment)->not->toContain('group-focus:stroke-white');
+        ->and($segment)->toContain('slider-pause')
+        ->and($segment)->not->toContain(' hover:bg-[#001F33]')
+        ->and($segment)->not->toContain(' active:bg-black')
+        ->and($segment)->not->toContain(' focus:bg-[#001F33]')
+        ->and($segment)->not->toContain(' group-hover:stroke-white')
+        ->and($segment)->toContain('lg:hover:bg-[#001F33]')
+        ->and($segment)->toContain('lg:group-hover:stroke-white');
 });
 
 test('hero slider desktop text panel stays in-flow and does not offset under the image', function () {
@@ -44,17 +44,12 @@ test('hero slider desktop text panel stays in-flow and does not offset under the
 });
 
 test('hero slider desktop first indicator uses the same active colour as news and events', function () {
-    $path = dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php';
-    $template = file_get_contents($path);
-    $segment = matrix_get_template_segment(
-        $path,
-        '<!-- Dots (desktop) -->',
-        '<!-- Desktop Next -->'
-    );
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php');
 
-    expect($segment)->toContain('#0f172a')
-        ->and($segment)->toContain('#7ED0E0')
-        ->and($segment)->not->toContain('#80CCD9')
+    expect($template)->toContain('#0f172a')
+        ->and($template)->toContain('#7ED0E0')
+        ->and($template)->not->toContain('#80CCD9')
+        ->and($template)->toContain('width: 22px;')
         ->and($template)->toContain('setActiveDots(0)');
 });
 
