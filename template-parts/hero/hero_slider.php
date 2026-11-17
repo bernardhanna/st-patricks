@@ -183,7 +183,9 @@ foreach ($slides as $slide_index => $slide) {
 @media (min-width: 768px) {
     #<?php echo esc_attr($section_id); ?> .hero-slide,
     #<?php echo esc_attr($section_id); ?> .slick-slide {
-        height: clamp(600px, 41.67vw, 760px);
+        /* 50vw keeps the same crop as a 1200px window. The old 760px cap
+           left wide screens short, so cover zoomed in and cut the building. */
+        height: clamp(600px, 50vw, 1280px);
     }
 
     #<?php echo esc_attr($section_id); ?> .hero-slide-image,
