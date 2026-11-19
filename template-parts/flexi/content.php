@@ -66,7 +66,11 @@ if ($image) {
 }
 
 if ($image_alt === '') {
-    $image_alt = $heading !== '' ? $heading : 'Section image';
+    $image_alt = $heading !== '' ? '' : 'Section image';
+}
+
+if (function_exists('matrix_alt_unless_same_as') && $heading !== '') {
+    $image_alt = matrix_alt_unless_same_as($image_alt, $heading);
 }
 
 $heading_id = $section_id . '-heading';

@@ -91,7 +91,7 @@ if ($wrapper_classes === '') {
                                 <?php
                                 echo wp_get_attachment_image($image_id, 'large', false, [
                                     'class' => 'absolute inset-0 h-full w-full object-cover',
-                                    'alt' => $title,
+                                    'alt' => '',
                                     'loading' => 'lazy',
                                     'decoding' => 'async',
                                 ]);

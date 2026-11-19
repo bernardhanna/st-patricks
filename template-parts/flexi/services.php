@@ -82,7 +82,15 @@ $resolve_link = function($link) {
           $wm       = $card['watermark'] ?? null;
 
           $img_url  = $image['url']  ?? '';
-          $img_alt  = ($image['alt'] ?? '') ?: ($title ?: 'Service image');
+          $img_alt  = ($image['alt'] ?? '');
+          if (function_exists('matrix_alt_unless_same_as')) {
+            $img_alt = matrix_alt_unless_same_as($img_alt, $title);
+          } elseif ($img_alt === $title) {
+            $img_alt = '';
+          }
+          if ($img_alt === '' && $title === '') {
+            $img_alt = 'Service image';
+          }
           $img_ttl  = ($image['title'] ?? '') ?: $img_alt;
 
           $wm_url   = $wm['url'] ?? '';

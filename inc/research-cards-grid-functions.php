@@ -138,9 +138,9 @@ function matrix_normalize_research_cards_grid_card_from_post($post)
             ? trim((string) get_post_meta($image_id, '_wp_attachment_image_alt', true))
             : '';
 
-        if ($image_alt === '') {
-            $image_alt = $title;
-        }
+        $image_alt = function_exists('matrix_alt_unless_same_as')
+            ? matrix_alt_unless_same_as($image_alt, $title)
+            : ($image_alt === $title ? '' : $image_alt);
 
         $image = [
             'ID' => $image_id,
@@ -182,7 +182,9 @@ function matrix_build_research_cards_grid_card_from_data(array $post)
         $image = [
             'ID' => $image_id,
             'url' => (string) ($post['image_url'] ?? ''),
-            'alt' => $image_alt !== '' ? $image_alt : $title,
+            'alt' => function_exists('matrix_alt_unless_same_as')
+                ? matrix_alt_unless_same_as($image_alt !== '' ? $image_alt : $title, $title)
+                : ($image_alt !== '' && $image_alt !== $title ? $image_alt : ''),
         ];
     }
 

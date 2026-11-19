@@ -170,7 +170,7 @@ if ($layout_style === 'spokespeople_grid') {
                         <div class="h-[92px] w-full overflow-hidden xs:h-[110px] mob:h-[134px] lg:h-[240px]">
                             <img
                                 src="<?php echo esc_url($team_item['image']['url']); ?>"
-                                alt="<?php echo esc_attr($team_item['image']['alt'] ?? $team_item['name']); ?>"
+                                alt="<?php echo esc_attr(function_exists('matrix_alt_unless_same_as') ? matrix_alt_unless_same_as((string) ($team_item['image']['alt'] ?? ''), (string) $team_item['name']) : ''); ?>"
                                 class="object-cover w-full h-full"
                             />
                         </div>

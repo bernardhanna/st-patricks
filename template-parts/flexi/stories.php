@@ -67,7 +67,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
             <article class="flex w-[237px] shrink-0 snap-start flex-col overflow-hidden rounded-lg shadow-sm" style="background: var(--StPatricks_Aux_DarkBG2, #FBF8F3);">
               <a href="<?php echo esc_url($post_url); ?>" class="group flex h-full flex-col" aria-label="<?php echo esc_attr(sprintf('Read more: %s', $post_title)); ?>">
                 <?php if ($img_url): ?>
-                  <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($post_title); ?>" class="h-[142px] w-full shrink-0 object-cover" />
+                  <img src="<?php echo esc_url($img_url); ?>" alt="" class="h-[142px] w-full shrink-0 object-cover" />
                 <?php endif; ?>
                 <div class="flex flex-1 flex-col gap-3 p-4">
                   <?php if ($show_date): ?>
@@ -163,7 +163,7 @@ $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
                       <?php if ($show_thumbnail_layout && !empty($post_thumb)): ?>
                         <img
                           src="<?php echo esc_url($post_thumb); ?>"
-                          alt="<?php echo esc_attr($post_title); ?>"
+                          alt=""
                           class="h-[142px] w-full shrink-0 rounded object-cover"
                           loading="lazy"
                         />

@@ -10,7 +10,10 @@ $title = trim((string) ($card['title'] ?? ''));
 $description = trim((string) ($card['description'] ?? ''));
 $image_url = trim((string) ($card['image_url'] ?? ''));
 $icon_url = trim((string) ($card['icon_url'] ?? ''));
-$icon_alt = trim((string) ($card['icon_alt'] ?? $title));
+$icon_alt = trim((string) ($card['icon_alt'] ?? ''));
+$icon_alt = function_exists('matrix_alt_unless_same_as')
+    ? matrix_alt_unless_same_as($icon_alt, $title)
+    : ($icon_alt === $title ? '' : $icon_alt);
 $has_link = ! empty($card['has_link']);
 $link_url = (string) ($card['link_url'] ?? '');
 $link_target = (string) ($card['link_target'] ?? '_self');
@@ -51,7 +54,7 @@ $card_attrs = $has_link
                 <?php if ($image_url !== '') { ?>
                     <img
                         src="<?php echo esc_url($image_url); ?>"
-                        alt="<?php echo esc_attr($title); ?>"
+                        alt=""
                         class="h-full w-full object-cover"
                         loading="lazy"
                         decoding="async"
