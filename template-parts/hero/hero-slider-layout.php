@@ -7,6 +7,7 @@
     position: relative;
     overflow: hidden;
     margin: 0;
+    container-type: inline-size;
     background: var(--spmhs-panel);
     font-family: Inter, system-ui, sans-serif;
 }
@@ -47,7 +48,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 56px 72px 72px 80px;
+    padding: 56px 72px 72px 20px;
+    padding-left: max(20px, calc((100cqw - 1280px) / 2 + 20px));
     color: #fff;
     overflow: hidden;
 }
@@ -173,7 +175,7 @@
 #<?php echo esc_attr($section_id); ?> .slider-pause.is-paused .icon-pause { display: none; }
 #<?php echo esc_attr($section_id); ?> .slider-pause.is-paused .icon-play { display: block; }
 @media (max-width: 1100px) {
-    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding: 48px 48px 64px; }
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-top: 48px; padding-right: 48px; padding-bottom: 64px; }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__title { font-size: 38px; }
 }
 @media (max-width: 860px) {
@@ -188,7 +190,7 @@
     }
     #<?php echo esc_attr($section_id); ?> .hero-slide-image { order: -1; height: 250px; }
     #<?php echo esc_attr($section_id); ?> .hero-slide-image img { object-position: 62% 28%; }
-    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding: 36px 24px 64px; }
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-top: 36px; padding-right: 24px; padding-bottom: 64px; }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__watermark {
         right: auto;
         top: auto;
@@ -211,6 +213,15 @@
         height: 124px;
         transform: none;
     }
+}
+@media (max-width: 1099px) {
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-left: 24px; }
+}
+@media (max-width: 767px) {
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-left: 20px; }
+}
+@media (max-width: 639px) {
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-left: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
     #<?php echo esc_attr($section_id); ?> .spmhs-btn { transition: none; }
