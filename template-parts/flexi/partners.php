@@ -64,6 +64,7 @@ if (function_exists('is_front_page') && is_front_page()) {
         font-size: 18px;
         line-height: 1.4;
         font-weight: 600;
+        font-family: Inter, system-ui, sans-serif;
         color: var(--spmhs-navy);
     }
     .spmhs-partners__logos {

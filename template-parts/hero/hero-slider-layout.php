@@ -72,6 +72,7 @@
     font-size: 46px;
     line-height: 1.12;
     font-weight: 700;
+    font-family: Inter, system-ui, sans-serif;
     letter-spacing: -.02em;
     color: #fff;
 }
@@ -80,9 +81,10 @@
     max-width: 520px;
     font-size: 18px;
     line-height: 1.55;
+    font-family: Inter, system-ui, sans-serif;
     color: var(--spmhs-soft);
 }
-#<?php echo esc_attr($section_id); ?> .spmhs-hero__intro p { margin: 0; }
+#<?php echo esc_attr($section_id); ?> .spmhs-hero__intro p { margin: 0; font-family: Inter, system-ui, sans-serif; }
 #<?php echo esc_attr($section_id); ?> .spmhs-hero__actions {
     display: flex;
     flex-wrap: wrap;
@@ -92,6 +94,7 @@
 #<?php echo esc_attr($section_id); ?> .spmhs-hero__call {
     margin: 0;
     font-size: 15px;
+    font-family: Inter, system-ui, sans-serif;
     color: var(--spmhs-soft);
 }
 #<?php echo esc_attr($section_id); ?> .spmhs-hero__call a {
@@ -132,6 +135,7 @@
     border-radius: 6px;
     font-size: 16px;
     line-height: 1.2;
+    font-family: Inter, system-ui, sans-serif;
     text-decoration: none;
     transition: background-color .2s, border-color .2s, color .2s;
 }
