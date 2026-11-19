@@ -24,10 +24,10 @@ function matrix_get_location_card_image(int $post_id): ?array
     }
 
     $alt = trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true));
-
-    if ($alt === '') {
-        $alt = get_the_title($post_id);
-    }
+    $title = get_the_title($post_id);
+    $alt = function_exists('matrix_alt_unless_same_as')
+        ? matrix_alt_unless_same_as($alt, $title)
+        : ($alt === $title ? '' : $alt);
 
     return [
         'ID' => $thumbnail_id,

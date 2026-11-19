@@ -39,6 +39,30 @@ if (! function_exists('matrix_is_external_url')) {
     }
 }
 
+if (! function_exists('matrix_alt_unless_same_as')) {
+    /**
+     * Drop alt text that repeats the words already next to the image.
+     * An empty alt leaves the picture on screen and stops the words being read twice.
+     */
+    function matrix_alt_unless_same_as(string $alt, string $beside): string
+    {
+        $normalize = static function (string $value): string {
+            $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $value = trim(preg_replace('/\s+/u', ' ', $value) ?? '');
+
+            return function_exists('mb_strtolower') ? mb_strtolower($value) : strtolower($value);
+        };
+
+        $alt_text = $normalize($alt);
+
+        if ($alt_text === '' || $alt_text === $normalize($beside)) {
+            return '';
+        }
+
+        return $alt;
+    }
+}
+
 if (! function_exists('matrix_is_pdf_url')) {
     function matrix_is_pdf_url(string $url): bool
     {
@@ -546,6 +570,72 @@ if (! function_exists('matrix_normalize_absolute_embeds_in_html')) {
     }
 }
 
+if (! function_exists('matrix_clear_repeated_image_alts')) {
+    /**
+     * Clear an image alt when a heading or caption in the same card already says the same words.
+     */
+    function matrix_clear_repeated_image_alts(DOMDocument $dom): void
+    {
+        foreach ($dom->getElementsByTagName('img') as $img) {
+            if (! $img instanceof DOMElement) {
+                continue;
+            }
+
+            $alt = trim($img->getAttribute('alt'));
+
+            if ($alt === '') {
+                continue;
+            }
+
+            $scope = null;
+            $node = $img->parentNode;
+
+            while ($node instanceof DOMElement) {
+                $tag = strtolower($node->tagName);
+
+                if ($tag === 'a' || $tag === 'figure') {
+                    $scope = $node;
+                    break;
+                }
+
+                $node = $node->parentNode;
+            }
+
+            $matched = false;
+
+            if ($scope instanceof DOMElement) {
+                foreach (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'figcaption', 'p'] as $tag) {
+                    foreach ($scope->getElementsByTagName($tag) as $text_node) {
+                        if ($text_node instanceof DOMElement && matrix_alt_unless_same_as($alt, $text_node->textContent) === '') {
+                            $matched = true;
+                            break 2;
+                        }
+                    }
+                }
+            } elseif ($img->parentNode instanceof DOMElement) {
+                foreach ($img->parentNode->childNodes as $child) {
+                    if (! $child instanceof DOMElement) {
+                        continue;
+                    }
+
+                    if (! in_array(strtolower($child->tagName), ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'figcaption', 'p'], true)) {
+                        continue;
+                    }
+
+                    if (matrix_alt_unless_same_as($alt, $child->textContent) === '') {
+                        $matched = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($matched) {
+                $img->setAttribute('alt', '');
+            }
+        }
+    }
+}
+
 if (! function_exists('matrix_process_external_links_in_html')) {
     function matrix_process_external_links_in_html(string $html): string
     {
@@ -553,6 +643,7 @@ if (! function_exists('matrix_process_external_links_in_html')) {
             $html === ''
             || (! str_contains($html, '<a')
                 && ! str_contains($html, '<iframe')
+                && ! str_contains($html, '<img')
                 && ! str_contains($html, '<ul')
                 && ! str_contains($html, '<ol'))
         ) {
@@ -590,6 +681,8 @@ if (! function_exists('matrix_process_external_links_in_html')) {
 
             $iframe->setAttribute('title', matrix_iframe_title_for_src(trim($iframe->getAttribute('src'))));
         }
+
+        matrix_clear_repeated_image_alts($dom);
 
         // Remove Word/Office leftover fragment anchors (empty / comment links).
         foreach (iterator_to_array($dom->getElementsByTagName('a')) as $anchor) {

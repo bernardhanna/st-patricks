@@ -11,10 +11,7 @@ $is_vector_logo = $placeholder_id < 1 && str_ends_with(strtolower($placeholder_u
 
 <div
     class="<?php echo esc_attr($wrapper_class); ?>"
-    <?php if ($title !== '') { ?>
-        role="img"
-        aria-label="<?php echo esc_attr($title); ?>"
-    <?php } else { ?>
+    <?php if ($placeholder_id > 0 || $is_vector_logo || $title === '') { ?>
         aria-hidden="true"
     <?php } ?>
 >
@@ -22,7 +19,7 @@ $is_vector_logo = $placeholder_id < 1 && str_ends_with(strtolower($placeholder_u
         <?php
         echo wp_get_attachment_image($placeholder_id, $context === 'related' ? 'medium_large' : 'large', false, [
             'class' => $context === 'related' ? 'h-[186px] w-full object-cover' : 'h-auto max-h-[387px] w-full object-cover',
-            'alt' => $title !== '' ? $title : '',
+            'alt' => '',
         ]);
         ?>
     <?php } elseif ($is_vector_logo) { ?>

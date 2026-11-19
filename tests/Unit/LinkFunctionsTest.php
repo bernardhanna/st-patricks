@@ -134,3 +134,30 @@ test('matrix_get_theme_path_redirect_map includes deleted page redirects', funct
         ->and($map)->toHaveKey('extending-our-services')
         ->and($map['extending-our-services'])->toBe('/about-us/our-present-and-future/extending-and-enhancing-our-services/');
 });
+
+test('matrix_alt_unless_same_as drops text that repeats the heading', function () {
+    expect(matrix_alt_unless_same_as('Anxiety', 'Anxiety'))->toBe('')
+        ->and(matrix_alt_unless_same_as('  Anxiety ', 'anxiety'))->toBe('')
+        ->and(matrix_alt_unless_same_as('Garden at the hospital', 'Anxiety'))->toBe('Garden at the hospital')
+        ->and(matrix_alt_unless_same_as('', 'Anxiety'))->toBe('');
+});
+
+test('matrix_process_external_links_in_html clears an image alt that repeats the card heading', function () {
+    $html = '<a href="/anxiety/"><img alt="Anxiety" src="a.jpg"><h3>Anxiety</h3></a>';
+    $processed = matrix_process_external_links_in_html($html);
+
+    expect($processed)->toContain('alt=""')
+        ->and($processed)->not->toContain('alt="Anxiety"');
+});
+
+test('matrix_process_external_links_in_html keeps an image alt that describes the picture', function () {
+    $html = '<a href="/anxiety/"><img alt="Garden at the hospital" src="a.jpg"><h3>Anxiety</h3></a>';
+
+    expect(matrix_process_external_links_in_html($html))->toContain('alt="Garden at the hospital"');
+});
+
+test('matrix_process_external_links_in_html keeps a descriptive image alt when no heading repeats it', function () {
+    $html = '<p><img alt="St Patrick\'s crest" src="logo.jpg"></p>';
+
+    expect(matrix_process_external_links_in_html($html))->toContain('St Patrick');
+});

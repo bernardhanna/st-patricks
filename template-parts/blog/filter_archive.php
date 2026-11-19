@@ -294,8 +294,8 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             $thumbnail_alt = trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true));
                         }
 
-                        if ($thumbnail_alt === '') {
-                            $thumbnail_alt = $title;
+                        if ($thumbnail_alt === '' || (function_exists('matrix_alt_unless_same_as') && matrix_alt_unless_same_as($thumbnail_alt, $title) === '')) {
+                            $thumbnail_alt = '';
                         }
                         ?>
                         <article

@@ -274,6 +274,8 @@ $nav_slide_config = [
                 <button
                     type="button"
                     class="inline-flex items-center gap-2 text-base font-semibold text-[#024B79] transition-colors hover:text-[#08284B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                    aria-label="Back"
+                    :aria-label="parentTitle || 'Back'"
                     @click="back()"
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0">

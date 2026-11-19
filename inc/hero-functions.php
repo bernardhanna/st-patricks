@@ -598,8 +598,14 @@ function matrix_prepare_hero_with_breadcrumbs_view_model(array $config, $post_id
     $hero_image_title = (string) get_the_title($hero_image);
   }
 
-  if ($hero_image_alt === '') {
-    $hero_image_alt = $hero_image_title !== '' ? $hero_image_title : $heading;
+  if ($hero_image_alt === '' && $hero_image_title !== '' && $hero_image_title !== $heading) {
+    $hero_image_alt = $hero_image_title;
+  }
+
+  if (function_exists('matrix_alt_unless_same_as')) {
+    $hero_image_alt = matrix_alt_unless_same_as($hero_image_alt, $heading);
+  } elseif ($hero_image_alt === $heading) {
+    $hero_image_alt = '';
   }
 
   $gradient_vars = matrix_get_hero_with_breadcrumbs_gradient_vars($background_color);

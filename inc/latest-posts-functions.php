@@ -43,10 +43,9 @@ function matrix_normalize_latest_posts_card($post_id)
     $thumbnail_id = (int) get_post_thumbnail_id($post_id);
     $thumbnail_url = $thumbnail_id > 0 ? (string) wp_get_attachment_image_url($thumbnail_id, 'medium_large') : '';
     $thumbnail_alt = $thumbnail_id > 0 ? trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true)) : '';
-
-    if ($thumbnail_alt === '') {
-        $thumbnail_alt = $title;
-    }
+    $thumbnail_alt = function_exists('matrix_alt_unless_same_as')
+        ? matrix_alt_unless_same_as($thumbnail_alt, $title)
+        : ($thumbnail_alt === $title ? '' : $thumbnail_alt);
 
     if (! is_string($permalink) || $permalink === '') {
         return null;

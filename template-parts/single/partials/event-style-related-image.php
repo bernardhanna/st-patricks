@@ -26,11 +26,13 @@ $use_webinar_placeholder = ! empty($card['use_webinar_placeholder']);
         <?php
         echo wp_get_attachment_image($image_id, 'medium_large', false, [
             'class' => $image_class,
-            'alt' => $image_alt !== '' ? $image_alt : $title,
+            'alt' => function_exists('matrix_alt_unless_same_as')
+                ? matrix_alt_unless_same_as($image_alt, $title)
+                : ($image_alt === $title ? '' : $image_alt),
         ]);
         ?>
     <?php } else { ?>
-        <div class="<?php echo esc_attr($placeholder_class); ?>" role="img" aria-label="<?php echo esc_attr($title); ?>">
+        <div class="<?php echo esc_attr($placeholder_class); ?>">
             <?php echo esc_html($title); ?>
         </div>
     <?php } ?>

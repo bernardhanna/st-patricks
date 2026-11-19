@@ -25,13 +25,17 @@ $force_webinar_placeholder = function_exists('matrix_should_force_webinar_single
         ?>
     <?php } elseif ($thumbnail_id > 0) { ?>
         <?php
+        $stored_alt = trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true));
+        $image_alt = function_exists('matrix_alt_unless_same_as')
+            ? matrix_alt_unless_same_as($stored_alt, $title)
+            : ($stored_alt === $title ? '' : $stored_alt);
         echo wp_get_attachment_image($thumbnail_id, 'large', false, [
             'class' => $image_class,
-            'alt' => $title,
+            'alt' => $image_alt,
         ]);
         ?>
     <?php } else { ?>
-        <div class="<?php echo esc_attr($placeholder_class); ?>" role="img" aria-label="<?php echo esc_attr($title); ?>">
+        <div class="<?php echo esc_attr($placeholder_class); ?>">
             <?php echo esc_html($title); ?>
         </div>
     <?php } ?>

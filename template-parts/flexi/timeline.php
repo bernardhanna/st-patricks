@@ -50,8 +50,10 @@ $render_timeline_card = static function (array $item, bool $include_mobile_date 
         $image_alt = trim((string) get_post_meta($image_id, '_wp_attachment_image_alt', true));
     }
 
-    if ($image_alt === '') {
-        $image_alt = $item['item_heading'];
+    if (function_exists('matrix_alt_unless_same_as')) {
+        $image_alt = matrix_alt_unless_same_as($image_alt, (string) $item['item_heading']);
+    } elseif ($image_alt === $item['item_heading']) {
+        $image_alt = '';
     }
     ?>
     <article

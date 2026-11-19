@@ -438,10 +438,12 @@ function matrix_get_search_results_image_alt($image_id, $fallback = '')
     $alt = trim((string) get_post_meta($image_id, '_wp_attachment_image_alt', true));
 
     if ($alt !== '') {
-        return $alt;
+        return function_exists('matrix_alt_unless_same_as')
+            ? matrix_alt_unless_same_as($alt, (string) $fallback)
+            : ($alt === trim((string) $fallback) ? '' : $alt);
     }
 
-    return trim((string) $fallback);
+    return '';
 }
 
 function matrix_format_search_results_date_value($raw_date, $fallback_post = null)
