@@ -28,6 +28,101 @@ $card_base = $show_card_style
 $logo_img_class = 'block h-10 w-auto max-w-[14rem] object-contain';
 $logo_link_class = 'inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-highlight-primary';
 
+if (function_exists('is_front_page') && is_front_page()) {
+    ?>
+    <style>
+    .spmhs-partners-band {
+        background: var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #F8F6F3 3.24%, #F5F6ED 90.88%));
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+    }
+    .spmhs-partners {
+        --spmhs-navy: #08284B;
+        --spmhs-aqua: #7ED0E0;
+        position: relative;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1200px;
+        margin: -48px auto 0;
+        padding: 24px 36px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 12px 32px rgba(8,40,75,.12);
+        font-family: Inter, system-ui, sans-serif;
+        box-sizing: border-box;
+    }
+    .spmhs-partners * { box-sizing: border-box; }
+    .spmhs-partners__title {
+        flex-shrink: 0;
+        max-width: 300px;
+        margin: 0;
+        padding-right: 32px;
+        border-right: 1px solid #E5E7EB;
+        font-size: 18px;
+        line-height: 1.4;
+        font-weight: 600;
+        color: var(--spmhs-navy);
+    }
+    .spmhs-partners__logos {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 40px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .spmhs-partners__logos a { display: flex; }
+    .spmhs-partners__logos img { display: block; height: 44px; width: auto; }
+    .spmhs-partners a:focus-visible { outline: 3px solid var(--spmhs-aqua); outline-offset: 3px; }
+    @media (max-width: 1100px) {
+        .spmhs-partners { margin: -40px 24px 0; }
+    }
+    @media (max-width: 860px) {
+        .spmhs-partners { flex-direction: column; align-items: flex-start; gap: 16px; margin: -36px 16px 0; padding: 20px; }
+        .spmhs-partners__title { max-width: none; padding-right: 0; border-right: 0; font-size: 16px; }
+        .spmhs-partners__logos { width: 100%; justify-content: space-between; gap: 12px; }
+        .spmhs-partners__logos img { height: 32px; }
+    }
+    </style>
+    <div class="spmhs-partners-band">
+    <div class="spmhs-partners">
+        <?php if ($heading_text !== '') { ?>
+            <<?php echo tag_escape($heading_tag); ?> class="spmhs-partners__title"><?php echo esc_html($heading_text); ?></<?php echo tag_escape($heading_tag); ?>>
+        <?php } ?>
+        <?php if (!empty($partners) && is_array($partners)) { ?>
+            <ul class="spmhs-partners__logos">
+                <?php foreach ($partners as $row) {
+                    $logo = $row['logo'] ?? null;
+                    if (!$logo || empty($logo['url'])) {
+                        continue;
+                    }
+                    $logo_url = $logo['url'];
+                    $logo_alt = $logo['alt'] ?: 'Partner logo';
+                    $link = $row['link'] ?? null;
+                    $has_link = is_array($link) && !empty($link['url']);
+                    ?>
+                    <li>
+                        <?php if ($has_link) { ?>
+                            <a href="<?php echo esc_url($link['url']); ?>" target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" <?php echo ($link['target'] ?? '') === '_blank' ? 'rel="noopener noreferrer"' : ''; ?>>
+                                <img src="<?php echo esc_url($logo_url); ?>" alt="<?php echo esc_attr($logo_alt); ?>" height="44">
+                            </a>
+                        <?php } else { ?>
+                            <img src="<?php echo esc_url($logo_url); ?>" alt="<?php echo esc_attr($logo_alt); ?>" height="44">
+                        <?php } ?>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
+    </div>
+    </div>
+    <?php
+    return;
+}
+
 ?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
