@@ -14,7 +14,7 @@ function matrix_get_template_segment(string $template_path, string $start_marker
 
 test('hero slider controls sit in the card and keep dark hover states for desktop only', function () {
     $segment = matrix_get_template_segment(
-        dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php',
+        dirname(__DIR__, 2) . '/template-parts/hero/hero-slider-layout.php',
         '<!-- SLIDER CONTROLS -->',
         'aria-label="Pause slideshow"'
     );
@@ -32,7 +32,7 @@ test('hero slider controls sit in the card and keep dark hover states for deskto
 });
 
 test('hero slider desktop text panel stays in-flow and does not offset under the image', function () {
-    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php');
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero-slider-layout.php');
 
     expect($template)->toContain('hero-slide-text')
         ->and($template)->toContain('lg:max-w-[560px]')
@@ -44,13 +44,13 @@ test('hero slider desktop text panel stays in-flow and does not offset under the
 });
 
 test('hero slider desktop first indicator uses the same active colour as news and events', function () {
-    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php');
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero-slider-layout.php');
 
     expect($template)->toContain('#0f172a')
         ->and($template)->toContain('#7ED0E0')
         ->and($template)->not->toContain('#80CCD9')
         ->and($template)->toContain('width: 22px;')
-        ->and($template)->toContain('setActiveDots(0)');
+        ->and(file_get_contents(dirname(__DIR__, 2) . '/template-parts/hero/hero_slider.php'))->toContain('setActiveDots(0)');
 });
 
 test('story slider mobile navigation spans full width and preserves desktop hover states', function () {
