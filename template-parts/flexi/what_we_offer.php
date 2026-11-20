@@ -204,7 +204,7 @@ if (!empty($services) && is_array($services)) {
             ?>
             <div class="<?php echo esc_attr($intro_block_spacing); ?> w-full max-w-[1018px]">
                 <?php if ($intro_text !== '') : ?>
-                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium', 'max-w-[720px]')); ?>">
+                    <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('medium')); ?>">
                         <?php echo wpautop(esc_html($intro_text)); ?>
                     </div>
                 <?php endif; ?>
