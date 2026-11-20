@@ -188,6 +188,7 @@ $placeholders = matrix_get_contact_form_field_placeholders();
                             >
                                 <?php echo matrix_get_contact_form_date_of_birth_info_icon_svg(); ?>
                             </button>
+                            <div id="<?php echo esc_attr($dob_help_id); ?>-toast" class="portal-contact-form__toast" hidden></div>
                         <?php } ?>
                         <?php if ($form['date_of_birth_help'] !== '') { ?>
                             <p id="<?php echo esc_attr($dob_help_id); ?>" class="sr-only">

@@ -278,21 +278,28 @@
         const field = button.closest('.portal-contact-form__label-row');
         if (!field) return;
 
-        const toastId = `${button.getAttribute('aria-controls') || 'portal-dob-help'}-toast`;
-        field.querySelectorAll('.portal-contact-form__toast').forEach(el => el.remove());
+        const toastId = button.getAttribute('aria-controls') || 'portal-dob-help-toast';
+        let toast = document.getElementById(toastId);
 
-        const toast = document.createElement('div');
-        toast.id = toastId;
-        toast.className = 'portal-contact-form__toast is-visible';
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = toastId;
+          toast.className = 'portal-contact-form__toast';
+          field.appendChild(toast);
+        }
+
         toast.setAttribute('role', 'status');
         toast.setAttribute('aria-live', 'polite');
         toast.textContent = message;
-        field.appendChild(toast);
+        toast.classList.add('is-visible');
+        toast.removeAttribute('hidden');
         button.setAttribute('aria-expanded', 'true');
 
         window.clearTimeout(button._portalDobToastTimer);
         button._portalDobToastTimer = window.setTimeout(() => {
-          toast.remove();
+          toast.setAttribute('hidden', '');
+          toast.classList.remove('is-visible');
+          toast.textContent = '';
           button.setAttribute('aria-expanded', 'false');
         }, 6000);
       });

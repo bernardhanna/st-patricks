@@ -316,7 +316,6 @@ document.addEventListener('alpine:init', () => {
   x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1280) { closeSearch() } if (window.innerWidth >= 1280) { $store.nav.open = false } })"
   x-effect="$store.nav.open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
   class="overflow-visible bg-white"
-  role="banner"
   @matrix-nav-scroll-dismiss.window="searchOpen && closeSearch()"
   @open-navbar-search="openSearch()"
   @mouseenter="$store.navMega.cancelClose()"
@@ -327,7 +326,6 @@ document.addEventListener('alpine:init', () => {
   <!-- WHITE BAR -->
   <nav
   class="box-border flex overflow-visible relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-md:p-5 max-sm:p-4 lg:px-5 max-w-container"
-  role="navigation"
   aria-label="Main navigation"
   @mouseenter="$store.navMega.cancelClose()"
 >

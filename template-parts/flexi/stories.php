@@ -392,10 +392,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Build dots
     if (dotsWrap){
       dotsWrap.innerHTML = '';
+      dotsWrap.setAttribute('role', 'tablist');
+      dotsWrap.setAttribute('aria-label', 'Story slides');
       cards.forEach(function(_, idx){
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'w-2.5 h-2.5 min-h-[10px] min-w-[10px] rounded-full transition-colors duration-200';
+        b.setAttribute('role', 'tab');
         b.setAttribute('aria-label', 'Go to card ' + (idx + 1));
         b.dataset.index = idx;
         dotsWrap.appendChild(b);
