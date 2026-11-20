@@ -26,7 +26,7 @@ test('newsletter subtext links plain click here to the gp enewsletter signup', f
     ]);
 
     expect($html)->toContain(
-        '<a href="https://example.test/campaigns/subscribe-to-our-gp-enewsletter/" class="text-[#C6ECF4] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>'
+        '<a href="https://example.test/campaigns/subscribe-to-our-gp-enewsletter/" class="text-[#C6ECF4] underline underline-offset-2">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>'
     );
 });
 
@@ -54,7 +54,7 @@ test('newsletter terms links use the light aqua colour at 12px', function () {
         'privacy_link' => ['url' => 'https://example.test/privacy', 'title' => 'Privacy Policy', 'target' => '_self'],
     ]);
 
-    expect($html)->toContain('class="text-[12px] font-medium leading-4 text-[#C6ECF4] hover:underline"')
+    expect($html)->toContain('class="text-[12px] font-medium leading-4 text-[#C6ECF4] underline underline-offset-2"')
         ->and($html)->toContain('Terms &amp; Conditions');
 });
 

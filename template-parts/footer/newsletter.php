@@ -92,7 +92,7 @@ if ($link_healthcare_signup && ! empty($subtext)) {
   } else {
     $subtext = preg_replace(
       '/\bclick here\b/i',
-      '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#C6ECF4] hover:underline">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>',
+      '<a href="' . esc_url($healthcare_newsletter_url) . '" class="text-[#C6ECF4] underline underline-offset-2">subscribe to our GP e-newsletter<span class="sr-only"> (healthcare professionals)</span></a>',
       $subtext,
       1
     ) ?? $subtext;
@@ -134,6 +134,12 @@ $admin_ajax  = esc_url(admin_url('admin-ajax.php'));
 $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 ?>
 <section id="<?php echo esc_attr($section_id); ?>" class="overflow-hidden relative" style="background-color: <?php echo esc_attr($bg_color); ?>;">
+    <style>
+      #<?php echo esc_attr($section_id); ?> .spmhs-newsletter-copy a {
+        text-decoration-line: underline;
+        text-underline-offset: 2px;
+      }
+    </style>
       <!-- Decorative Background Images -->
     <div class="relative w-full h-full">
 
@@ -166,7 +172,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
               </<?php echo $left_heading_tag; ?>>
 
               <?php if (!empty($subtext)): ?>
-                <div class="w-full text-base font-medium leading-7 text-left text-white wp_editor [&_a]:!text-[#C6ECF4] [&_a]:no-underline [&_a:hover]:underline">
+                <div class="spmhs-newsletter-copy w-full text-base font-medium leading-7 text-left text-white wp_editor [&_a]:!text-[#C6ECF4]">
                   <?php
                     $subtext_html = (string) $subtext;
                     if ($link_healthcare_signup && function_exists('matrix_link_newsletter_subtext_click_here')) {
@@ -245,9 +251,9 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <?php if ($link_healthcare_signup): ?>
               <!-- GP e-newsletter (after the general sign-up fields, before the privacy checkbox) -->
-              <p class="w-full text-xs md:text-sm font-medium leading-5 text-white">
+              <p class="spmhs-newsletter-copy w-full text-xs md:text-sm font-medium leading-5 text-white">
                 <?php echo esc_html($gp_note_text); ?>
-                <a href="<?php echo esc_url($healthcare_newsletter_url); ?>" class="text-[#C6ECF4] hover:underline">here</a>.
+                <a href="<?php echo esc_url($healthcare_newsletter_url); ?>" class="text-[#C6ECF4] underline underline-offset-2">here</a>.
               </p>
             <?php endif; ?>
 
@@ -266,11 +272,11 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                       form="<?php echo esc_attr($section_id); ?>-form"
                     <?php endif; ?>
                   />
-                  <label for="<?php echo esc_attr($section_id); ?>-terms" class="flex-1 text-xs font-medium leading-4 text-white cursor-pointer">
+                  <label for="<?php echo esc_attr($section_id); ?>-terms" class="spmhs-newsletter-copy flex-1 text-xs font-medium leading-4 text-white cursor-pointer">
                     <?php echo esc_html($terms_prefix); ?>
-                    <a href="<?php echo $terms_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] hover:underline" target="<?php echo $terms_target; ?>"><?php echo $terms_title; ?></a>
+                    <a href="<?php echo $terms_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] underline underline-offset-2" target="<?php echo $terms_target; ?>"><?php echo $terms_title; ?></a>
                     &
-                    <a href="<?php echo $priv_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] hover:underline" target="<?php echo $priv_target; ?>"><?php echo $priv_title; ?></a>.
+                    <a href="<?php echo $priv_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] underline underline-offset-2" target="<?php echo $priv_target; ?>"><?php echo $priv_title; ?></a>.
                   </label>
                 </div>
               </div>

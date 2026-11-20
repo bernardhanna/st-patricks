@@ -20,7 +20,6 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
 <section
   id="<?php echo esc_attr($section_id); ?>"
   class="md:flex flex-col items-start w-full h-[52px] max-md:hidden"
-  role="banner"
   aria-label="Top bar navigation"
   style="background-color: <?php echo esc_attr( $topbar_bg_color ?: '#08284B' ); ?>;"
 >
@@ -33,7 +32,6 @@ if ( ($topbar_links && is_array($topbar_links) && count($topbar_links)) || $topb
       <nav
         class="flex gap-6 items-center max-md:gap-4 max-sm:hidden"
         aria-label="Top navigation links"
-        role="navigation"
       >
         <?php foreach ($topbar_links as $row) :
           $link = isset($row['link']) ? $row['link'] : null;
