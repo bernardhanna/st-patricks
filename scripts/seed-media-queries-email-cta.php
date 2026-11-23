@@ -42,22 +42,28 @@ $cta_body = '<p data-matrix-seed="' . esc_attr($cta_marker) . '"><strong>'
     . '<a href="mailto:communications@stpatricks.ie">communications@stpatricks.ie</a>.'
     . '</strong></p>';
 
+// Use a standard content block (heading + content) so it always renders.
 $cta_row = [
-    'acf_fc_layout' => 'content_cta',
-    'heading_tag' => 'h2',
+    'acf_fc_layout' => 'content',
     'heading' => 'Media enquiries',
-    'body' => $cta_body,
-    'button_link' => [
+    'heading_tag' => 'h2',
+    'accent_position' => 'below_heading',
+    'intro_text' => '',
+    'content' => $cta_body,
+    'background_type' => 'light_blue',
+    'color_scheme' => 'default',
+    'column_layout' => 'one_column',
+    'layout_style' => 'image_left',
+    'image_height_mode' => 'match_text',
+    'text_width' => 'full',
+    'image' => '',
+    'vertical_padding' => 'medium',
+    'primary_button' => [
         'title' => 'Email communications@stpatricks.ie',
         'url' => 'mailto:communications@stpatricks.ie',
         'target' => '',
     ],
-    'layout_style' => 'default',
-    'background_type' => 'color',
-    'background_color' => '#C6ECF4',
-    'color_scheme' => 'default',
 ];
-
 $rows = get_field('flexible_content_blocks', $post_id);
 if (! is_array($rows) || $rows === []) {
     $log[] = 'FAIL no flexible_content_blocks';
@@ -72,25 +78,21 @@ foreach ($rows as $i => $row) {
     $layout = (string) ($row['acf_fc_layout'] ?? '');
     $blob = wp_json_encode($row) ?: '';
 
-    if (str_contains($blob, $cta_marker)
+    $is_our_cta = str_contains($blob, $cta_marker)
         || (
-            $layout === 'content_cta'
+            in_array($layout, ['content', 'content_cta'], true)
             && str_contains($blob, 'communications@stpatricks.ie')
             && str_contains($blob, 'arrange an interview')
         )
-        || (
-            $layout === 'content'
-            && str_contains($blob, $cta_marker)
-        )
-        // Remove the empty content stub left by the first seed attempt (row with no heading/body).
-        || (
-            $layout === 'content'
-            && trim((string) ($row['heading'] ?? '')) === ''
-            && trim(strip_tags((string) ($row['intro_text'] ?? ''))) === ''
-            && trim(strip_tags((string) ($row['content'] ?? ''))) === ''
-            && empty($row['image'])
-        )
-    ) {
+        || strcasecmp((string) ($row['heading'] ?? ''), 'Media enquiries') === 0;
+
+    $is_empty_stub = $layout === 'content'
+        && trim((string) ($row['heading'] ?? '')) === ''
+        && trim(strip_tags((string) ($row['intro_text'] ?? ''))) === ''
+        && trim(strip_tags((string) ($row['content'] ?? ''))) === ''
+        && empty($row['image']);
+
+    if ($is_our_cta || $is_empty_stub) {
         $existing_indexes[] = (int) $i;
     }
 
@@ -124,9 +126,19 @@ update_field('flexible_content_blocks', $rows, $post_id);
 clean_post_cache($post_id);
 
 $verify = get_field('flexible_content_blocks', $post_id);
-$verify_blob = is_array($verify) ? (wp_json_encode($verify) ?: '') : '';
-$log[] = str_contains($verify_blob, 'communications@stpatricks.ie')
-    ? 'OK saved email in flexi'
-    : 'FAIL email missing after save';
+if (! is_array($verify)) {
+    $log[] = 'FAIL verify read empty';
+} else {
+    foreach ($verify as $i => $row) {
+        $layout = (string) ($row['acf_fc_layout'] ?? '?');
+        $heading = trim((string) ($row['heading'] ?? ''));
+        $has_mail = str_contains(wp_json_encode($row) ?: '', 'communications@stpatricks.ie');
+        $log[] = sprintf('ROW %d %s heading=%s mail=%s', $i, $layout, $heading !== '' ? $heading : '-', $has_mail ? 'yes' : 'no');
+    }
+    $verify_blob = wp_json_encode($verify) ?: '';
+    $log[] = str_contains($verify_blob, 'communications@stpatricks.ie')
+        ? 'OK saved email in flexi'
+        : 'FAIL email missing after save';
+}
 $log[] = 'OK hub updated ' . get_permalink($post_id);
 echo implode("\n", $log) . "\n";
