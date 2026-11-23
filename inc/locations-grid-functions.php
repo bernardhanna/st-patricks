@@ -1,7 +1,16 @@
 <?php
 
-function matrix_get_locations_grid_vertical_padding_classes($vertical_padding = 'default'): string
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_locations_grid_vertical_padding_classes($vertical_padding = 'default', $padding_settings = []): string
 {
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
+
+    if (function_exists('matrix_get_shared_vertical_padding_classes')) {
+        return matrix_get_shared_vertical_padding_classes((string) $vertical_padding, $padding_settings);
+    }
+
     $vertical_padding = trim((string) $vertical_padding);
 
     if ($vertical_padding === 'no_bottom') {
@@ -10,6 +19,14 @@ function matrix_get_locations_grid_vertical_padding_classes($vertical_padding = 
 
     if ($vertical_padding === 'no_top') {
         return 'pt-0 pb-12 lg:pt-0 lg:pb-[100px]';
+    }
+
+    if ($vertical_padding === 'none') {
+        return 'py-0';
+    }
+
+    if ($vertical_padding === 'medium') {
+        return 'py-12 lg:py-[60px]';
     }
 
     return 'py-12 lg:py-[100px]';

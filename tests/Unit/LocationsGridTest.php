@@ -112,5 +112,10 @@ test('locations grid card wrapper uses beige surface behind short titles', funct
 test('locations grid vertical padding can sit flush under the previous section', function () {
     expect(matrix_get_locations_grid_vertical_padding_classes('default'))->toBe('py-12 lg:py-[100px]')
         ->and(matrix_get_locations_grid_vertical_padding_classes('no_top'))->toContain('lg:pt-0')
-        ->and(matrix_get_locations_grid_vertical_padding_classes('no_bottom'))->toContain('lg:pb-0');
+        ->and(matrix_get_locations_grid_vertical_padding_classes('no_bottom'))->toContain('lg:pb-0')
+        ->and(matrix_get_locations_grid_vertical_padding_classes('none'))->toBe('py-0')
+        ->and(matrix_get_locations_grid_vertical_padding_classes('medium'))->toBe('py-12 lg:py-[60px]')
+        ->and(matrix_get_locations_grid_vertical_padding_classes('custom', [
+            ['screen_size' => 'md', 'padding_top' => 3, 'padding_bottom' => 3],
+        ]))->toBe('md:pt-[3rem] md:pb-[3rem]');
 });

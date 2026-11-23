@@ -43,27 +43,23 @@ $card_partial = function_exists('matrix_get_about_links_grid_card_partial')
         : 'template-parts/flexi/partials/about-links-grid-card-image-feature');
 
 $vertical_padding = get_sub_field('vertical_padding') ?: 'default';
-$wrapper_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
-    ? matrix_get_locations_grid_vertical_padding_classes($vertical_padding)
-    : 'py-12 lg:py-[100px]';
+$padding_settings = get_sub_field('padding_settings');
+$padding_settings = is_array($padding_settings) ? $padding_settings : [];
 
-$padding_classes = [];
-if (have_rows('padding_settings')) {
-    while (have_rows('padding_settings')) {
-        the_row();
-
-        $screen_size = get_sub_field('screen_size');
-        $padding_top = get_sub_field('padding_top');
-        $padding_bottom = get_sub_field('padding_bottom');
-
-        if ($screen_size !== '' && $padding_top !== '' && $padding_top !== null) {
-            $padding_classes[] = "{$screen_size}:pt-[{$padding_top}rem]";
-        }
-
-        if ($screen_size !== '' && $padding_bottom !== '' && $padding_bottom !== null) {
-            $padding_classes[] = "{$screen_size}:pb-[{$padding_bottom}rem]";
-        }
-    }
+// Custom mode uses padding_settings only. Other presets keep prior merge behaviour
+// so existing rows with leftover padding_settings meta are unchanged.
+if ($vertical_padding === 'custom') {
+    $wrapper_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
+        ? matrix_get_locations_grid_vertical_padding_classes($vertical_padding, $padding_settings)
+        : 'py-12 lg:py-[100px]';
+    $padding_classes = [];
+} else {
+    $wrapper_padding = function_exists('matrix_get_locations_grid_vertical_padding_classes')
+        ? matrix_get_locations_grid_vertical_padding_classes($vertical_padding)
+        : 'py-12 lg:py-[100px]';
+    $padding_classes = function_exists('matrix_build_breakpoint_padding_classes')
+        ? matrix_build_breakpoint_padding_classes($padding_settings)
+        : [];
 }
 
 ?>

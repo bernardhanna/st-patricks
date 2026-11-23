@@ -89,6 +89,7 @@ $image_column_class = matrix_get_content_image_column_class_names($layout_style,
 $content_column_class = matrix_get_content_content_column_class_names($layout_style, $column_layout);
 
 $content_padding = get_sub_field('vertical_padding');
+$padding_settings = get_sub_field('padding_settings');
 $wrapper_style = '';
 if (function_exists('is_page') && is_page('service-user-experience-survey')) {
     if (strcasecmp($heading, 'Understanding your experience') === 0) {
@@ -99,7 +100,10 @@ if (function_exists('is_page') && is_page('service-user-experience-survey')) {
         $wrapper_style = 'padding-top:2.5rem;padding-bottom:0;';
     }
 }
-$wrapper_classes = matrix_get_content_wrapper_class_names($content_padding);
+$wrapper_classes = matrix_get_content_wrapper_class_names(
+    $content_padding,
+    is_array($padding_settings) ? $padding_settings : []
+);
 
 
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';

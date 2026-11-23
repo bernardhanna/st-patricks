@@ -644,16 +644,104 @@ function matrix_resolve_content_vertical_padding($value = '')
 {
     $value = trim((string) $value);
 
-    if (in_array($value, ['no_bottom', 'no_top'], true)) {
+    if (in_array($value, ['no_bottom', 'no_top', 'none', 'medium', 'custom'], true)) {
         return $value;
     }
 
     return 'default';
 }
 
-function matrix_get_content_wrapper_class_names($vertical_padding = 'default')
+/**
+ * Build Tailwind padding classes from ACF padding_settings rows (rem per breakpoint).
+ *
+ * @param array<int, array<string, mixed>>|mixed $rows
+ * @return array<int, string>
+ */
+function matrix_build_breakpoint_padding_classes($rows): array
+{
+    if (! is_array($rows)) {
+        return [];
+    }
+
+    $allowed_screens = ['mob', 'sm', 'md', 'lg', 'xl'];
+    $classes = [];
+
+    foreach ($rows as $row) {
+        if (! is_array($row)) {
+            continue;
+        }
+
+        $screen_size = trim((string) ($row['screen_size'] ?? ''));
+        if ($screen_size === '' || ! in_array($screen_size, $allowed_screens, true)) {
+            continue;
+        }
+
+        $padding_top = $row['padding_top'] ?? null;
+        $padding_bottom = $row['padding_bottom'] ?? null;
+
+        if ($padding_top !== '' && $padding_top !== null && is_numeric($padding_top)) {
+            $top = (float) $padding_top;
+            $classes[] = $top == 0.0
+                ? "{$screen_size}:pt-0"
+                : "{$screen_size}:pt-[{$padding_top}rem]";
+        }
+
+        if ($padding_bottom !== '' && $padding_bottom !== null && is_numeric($padding_bottom)) {
+            $bottom = (float) $padding_bottom;
+            $classes[] = $bottom == 0.0
+                ? "{$screen_size}:pb-0"
+                : "{$screen_size}:pb-[{$padding_bottom}rem]";
+        }
+    }
+
+    return $classes;
+}
+
+/**
+ * Shared vertical padding class string for content / grid presets.
+ * Existing keys (default, no_bottom, no_top) keep their current output.
+ *
+ * @param array<int, array<string, mixed>> $padding_settings
+ */
+function matrix_get_shared_vertical_padding_classes(string $vertical_padding = 'default', array $padding_settings = []): string
 {
     $vertical_padding = matrix_resolve_content_vertical_padding($vertical_padding);
+
+    if ($vertical_padding === 'custom') {
+        $custom = matrix_build_breakpoint_padding_classes($padding_settings);
+        if ($custom !== []) {
+            return implode(' ', $custom);
+        }
+
+        return 'py-12 lg:py-[100px]';
+    }
+
+    if ($vertical_padding === 'none') {
+        return 'py-0';
+    }
+
+    if ($vertical_padding === 'medium') {
+        return 'py-12 lg:py-[60px]';
+    }
+
+    if ($vertical_padding === 'no_bottom') {
+        return 'py-12 lg:pt-[100px] lg:pb-0';
+    }
+
+    if ($vertical_padding === 'no_top') {
+        return 'pt-0 pb-12 lg:pt-0 lg:pb-[100px]';
+    }
+
+    return 'py-12 lg:py-[100px]';
+}
+
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_content_wrapper_class_names($vertical_padding = 'default', $padding_settings = [])
+{
+    $vertical_padding = matrix_resolve_content_vertical_padding($vertical_padding);
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
 
     $classes = [
         'mx-auto',
@@ -665,18 +753,9 @@ function matrix_get_content_wrapper_class_names($vertical_padding = 'default')
         'lg:px-0',
     ];
 
-    if ($vertical_padding === 'no_bottom') {
-        $classes[] = 'py-12';
-        $classes[] = 'lg:pt-[100px]';
-        $classes[] = 'lg:pb-0';
-    } elseif ($vertical_padding === 'no_top') {
-        $classes[] = 'pt-0';
-        $classes[] = 'pb-12';
-        $classes[] = 'lg:pt-0';
-        $classes[] = 'lg:pb-[100px]';
-    } else {
-        $classes[] = 'py-12';
-        $classes[] = 'lg:py-[100px]';
+    $padding = matrix_get_shared_vertical_padding_classes($vertical_padding, $padding_settings);
+    foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+        $classes[] = $class;
     }
 
     return implode(' ', $classes);

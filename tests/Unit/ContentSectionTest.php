@@ -97,6 +97,24 @@ test('content wrapper padding resolves default, top-only, and bottom-only deskto
         ->and(matrix_resolve_content_vertical_padding('no_top'))->toBe('no_top');
 });
 
+test('content wrapper padding supports none, medium, and custom breakpoint rem rows', function () {
+    expect(matrix_resolve_content_vertical_padding('none'))->toBe('none')
+        ->and(matrix_resolve_content_vertical_padding('medium'))->toBe('medium')
+        ->and(matrix_resolve_content_vertical_padding('custom'))->toBe('custom')
+        ->and(matrix_get_content_wrapper_class_names('none'))->toContain('py-0')
+        ->and(matrix_get_content_wrapper_class_names('none'))->not->toContain('lg:py-[100px]')
+        ->and(matrix_get_content_wrapper_class_names('medium'))->toContain('lg:py-[60px]')
+        ->and(matrix_get_content_wrapper_class_names('medium'))->not->toContain('lg:py-[100px]')
+        ->and(matrix_get_content_wrapper_class_names('custom', [
+            ['screen_size' => 'lg', 'padding_top' => 2, 'padding_bottom' => 4],
+            ['screen_size' => 'mob', 'padding_top' => 1, 'padding_bottom' => 1],
+        ]))->toContain('lg:pt-[2rem]')
+        ->and(matrix_get_content_wrapper_class_names('custom', [
+            ['screen_size' => 'lg', 'padding_top' => 2, 'padding_bottom' => 4],
+        ]))->toContain('lg:pb-[4rem]')
+        ->and(matrix_get_content_wrapper_class_names('custom', []))->toContain('lg:py-[100px]');
+});
+
 test('flexi heading section ids slug the heading and fall back when empty', function () {
     expect(matrix_flexi_heading_section_id('Role of the REC'))->toBe('role-of-the-rec')
         ->and(matrix_flexi_heading_section_id(''))->toStartWith('section-');

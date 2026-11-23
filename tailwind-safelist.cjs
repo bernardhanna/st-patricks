@@ -26,6 +26,10 @@ module.exports = [
   { pattern: /-?translate-(x|y)-(0|full|\d+)/ },
   { pattern: /opacity-(0|25|50|75|100)/ },
 
+  // Section vertical padding presets (medium = 60px desktop)
+  'py-0',
+  'lg:py-[60px]',
+
   ...Array.from({ length: 101 }, (_, i) => `p-[${i + 1}rem]`),
   ...Array.from({ length: 101 }, (_, i) => `px-[${i + 1}rem]`),
   ...Array.from({ length: 101 }, (_, i) => `py-[${i + 1}rem]`),

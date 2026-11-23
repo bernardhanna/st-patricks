@@ -90,14 +90,53 @@ $locations_grid
         ])
         ->addSelect('vertical_padding', [
             'label' => 'Vertical Padding',
-            'instructions' => 'Use “Bottom only” to sit flush under the previous section.',
+            'instructions' => 'Use “Bottom only” to sit flush under the previous section. “None”, “60px”, and “Custom” are optional extras — existing choices are unchanged.',
             'choices' => [
                 'default' => 'Top & bottom (100px desktop)',
                 'no_bottom' => 'Top only (no bottom on desktop)',
                 'no_top' => 'Bottom only (no top on desktop)',
+                'medium' => 'Top & bottom (60px desktop)',
+                'none' => 'No padding',
+                'custom' => 'Custom (per breakpoint)',
             ],
             'default_value' => 'default',
             'ui' => 1,
-        ]);
+        ])
+        ->addRepeater('padding_settings', [
+            'label' => 'Custom Padding',
+            'instructions' => 'Only used when Vertical Padding is “Custom”. Enter rem values per breakpoint (e.g. 2 = 32px).',
+            'button_label' => 'Add Breakpoint',
+            'layout' => 'table',
+            'conditional_logic' => [[
+                [
+                    'field' => 'vertical_padding',
+                    'operator' => '==',
+                    'value' => 'custom',
+                ],
+            ]],
+        ])
+            ->addSelect('screen_size', [
+                'label' => 'Breakpoint',
+                'choices' => [
+                    'mob' => 'Mobile (mob)',
+                    'sm' => 'Small (sm)',
+                    'md' => 'Medium (md)',
+                    'lg' => 'Large (lg)',
+                    'xl' => 'Extra large (xl)',
+                ],
+                'default_value' => 'lg',
+                'ui' => 1,
+            ])
+            ->addNumber('padding_top', [
+                'label' => 'Top (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+            ->addNumber('padding_bottom', [
+                'label' => 'Bottom (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+        ->endRepeater();
 
 return $locations_grid;
