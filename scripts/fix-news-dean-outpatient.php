@@ -27,12 +27,17 @@ if ($posts === []) {
 }
 
 $post = $posts[0];
-$from = '/what-we-offer/outpatient-clinics/about-the-dean-clinics';
-$to = home_url('/what-we-offer/outpatient-care-dean-clinics/');
+$home = home_url();
+$good = $home . '/what-we-offer/outpatient-care-dean-clinics/';
+$html = (string) $post->post_content;
+$html = str_replace($home . $good, $good, $html);
 $html = str_replace(
-    [$from, $from . '/'],
-    [$to, $to],
-    (string) $post->post_content
+    [
+        $home . '/what-we-offer/outpatient-clinics/about-the-dean-clinics',
+        '/what-we-offer/outpatient-clinics/about-the-dean-clinics',
+    ],
+    [$good, $good],
+    $html
 );
 if ($html === $post->post_content) {
     echo "unchanged #{$post->ID}\n";
