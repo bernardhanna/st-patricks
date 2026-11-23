@@ -139,6 +139,7 @@ foreach ($exact_excerpts as $slug => $excerpt) {
 foreach ([
     'https://www.stpatricks.ie/media-centre/podcasts/2019/march/self-injury-awareness-day-conference-2019-podcasts',
     'https://www.stpatricks.ie/campaigns/shac2020',
+    'https://www2.hse.ie/conditions/coronavirus/coronavirus.html',
 ] as $url) {
     $response = wp_remote_head($url, ['timeout' => 15, 'redirection' => 3]);
     $code = is_wp_error($response) ? $response->get_error_message() : (string) wp_remote_retrieve_response_code($response);
