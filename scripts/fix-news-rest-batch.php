@@ -114,3 +114,33 @@ foreach ($slugs as $slug) {
         echo '  marks: ' . implode(' ', array_unique($marks[0])) . "\n";
     }
 }
+
+$exact_excerpts = [
+    'enjoying-wellbeing-and-healthy-aging-in-older-adulthood' => '“We don’t stop playing because we grow old. We grow old because we stop playing.” Dr Declan Lyons, Catríona Lee and Masashi Terao discuss healthy ageing and wellbeing in older adulthood.',
+    'the-mirror-view-a-reflection-on-self-stigma' => 'We are often highly critical of ourselves, both physically and mentally. We all need to remind ourselves we are unique, talented individuals with lots of abilities and skills.',
+    'supporting-those-bereaved-by-suicide' => 'Bereavement by suicide is perhaps one of the most sensitive topics we can discuss. We share how we can talk to and support people experiencing grief following the death of a family member or friend by suicide.',
+];
+
+foreach ($exact_excerpts as $slug => $excerpt) {
+    $posts = get_posts([
+        'name' => $slug,
+        'post_type' => 'post',
+        'post_status' => 'any',
+        'posts_per_page' => 1,
+    ]);
+    if ($posts === []) {
+        echo "MISSING excerpt $slug\n";
+        continue;
+    }
+    wp_update_post(['ID' => (int) $posts[0]->ID, 'post_excerpt' => $excerpt]);
+    echo "set excerpt $slug\n";
+}
+
+foreach ([
+    'https://www.stpatricks.ie/media-centre/podcasts/2019/march/self-injury-awareness-day-conference-2019-podcasts',
+    'https://www.stpatricks.ie/campaigns/shac2020',
+] as $url) {
+    $response = wp_remote_head($url, ['timeout' => 15, 'redirection' => 3]);
+    $code = is_wp_error($response) ? $response->get_error_message() : (string) wp_remote_retrieve_response_code($response);
+    echo "remote $code $url\n";
+}
