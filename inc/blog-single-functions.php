@@ -681,7 +681,9 @@ function matrix_format_migrated_post_content(string $content, int $post_id = 0):
 
 function matrix_remove_legacy_blog_tag_paragraphs(string $content): string
 {
-    return (string) preg_replace('/<p>\s*Tags:.*?<\/p>/isu', '', $content);
+    $content = (string) preg_replace('/<p>\s*Tags:.*?<\/p>/isu', '', $content);
+
+    return (string) preg_replace('/<p>\s*<u>[^<]{1,80}<\/u>\s*<\/p>/iu', '', $content);
 }
 
 function matrix_filter_blog_single_content(string $content): string

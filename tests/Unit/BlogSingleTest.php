@@ -51,10 +51,15 @@ test('legacy blog tag paragraphs are removed from article content', function () 
 
     $formatted = matrix_remove_legacy_blog_tag_paragraphs($html);
 
+    $underlined = $formatted . '<p>Keep this <u>emphasis</u> in a sentence.</p><p><u>service user engagement</u></p>';
+    $underlined = matrix_remove_legacy_blog_tag_paragraphs($underlined);
+
     expect($formatted)->toContain('Body copy stays.')
         ->and($formatted)->not->toContain('Tags:')
         ->and($formatted)->not->toContain('adolescent service')
-        ->and($formatted)->not->toContain('Young people');
+        ->and($formatted)->not->toContain('Young people')
+        ->and($underlined)->toContain('Keep this <u>emphasis</u> in a sentence.')
+        ->and($underlined)->not->toContain('service user engagement');
 });
 
 test('migrated post content formatter removes duplicate umbraco headings', function () {
