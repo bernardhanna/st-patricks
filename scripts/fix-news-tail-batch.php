@@ -44,7 +44,7 @@ $jobs = [
     'vulnerability-hacking-social-media-and-eating-disorders' => ['author' => true],
     'what-is-depression' => ['author' => true, 'mindfulness' => true],
     'burnout-stress-syndrome' => ['practical' => true],
-    'depression-in-older-adults' => ['dementia' => true, 'panicky' => true],
+    'depression-in-older-adults' => ['dementia' => true, 'panicky' => true, 'world' => true],
     'antipsychotic-induced-weight-gain' => ['study' => true, 'help' => true],
     'family-therapy-in-mental-health-recovery' => ['panic' => true, 'children' => true, 'guide' => true],
     'compassion-focused-therapy-in-gp-surgery' => ['work' => true],
@@ -101,6 +101,15 @@ foreach ($jobs as $slug => $flags) {
 
     if (! empty($flags['panicky'])) {
         $html = matrix_fix_news_tail_replace_anchor($html, 'Feeling panicky', $panic_page);
+    }
+
+    if (! empty($flags['world']) && ! str_contains($html, '>Get out in to the world<')) {
+        $html = (string) preg_replace(
+            '#Get out in to the world#',
+            '<a href="' . esc_url($home . '/new-routine/') . '">Get out in to the world</a>',
+            $html,
+            1
+        );
     }
 
     if (! empty($flags['panic'])) {
