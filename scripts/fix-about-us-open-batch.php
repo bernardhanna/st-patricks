@@ -36,11 +36,50 @@ $log = [];
 $theme = get_template_directory();
 $changes = $theme . '/new/SPMHS-Content-Gathering-Library/change-requests';
 
-$sideload = static function (string $path, string $title, int $parent = 0): int {
-    if (! is_readable($path)) {
-        return 0;
+$find_upload = static function (string $filename): int {
+    $candidates = [
+        home_url('/wp-content/uploads/2026/11/' . $filename),
+        home_url('/wp-content/uploads/2026/10/' . $filename),
+        home_url('/wp-content/uploads/2025/11/' . $filename),
+    ];
+    foreach ($candidates as $url) {
+        $id = (int) attachment_url_to_postid($url);
+        if ($id > 0) {
+            return $id;
+        }
     }
+    $by_name = matrix_orlaith_find_image(0, $filename);
+    if ($by_name > 0) {
+        return $by_name;
+    }
+    // Fuzzy title search (Media 1 / Career 1).
+    $title = preg_replace('/\.[^.]+$/', '', str_replace('-', ' ', $filename)) ?: '';
+    if ($title !== '') {
+        $found = get_posts([
+            'post_type' => 'attachment',
+            'post_status' => 'inherit',
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+            's' => $title,
+        ]);
+        if ($found !== []) {
+            return (int) $found[0];
+        }
+    }
+
+    return 0;
+};
+
+$sideload = static function (string $path, string $title, int $parent = 0) use ($find_upload): int {
     $basename = basename($path);
+    $hyphen = str_replace(' ', '-', $basename);
+    foreach ([$basename, $hyphen] as $name) {
+        $id = $find_upload($name);
+        if ($id > 0) {
+            return $id;
+        }
+    }
+
     $existing = get_posts([
         'post_type' => 'attachment',
         'post_status' => 'inherit',
@@ -54,10 +93,9 @@ $sideload = static function (string $path, string $title, int $parent = 0): int 
     if ($existing !== []) {
         return (int) $existing[0];
     }
-    // Also try by filename in uploads.
-    $by_name = matrix_orlaith_find_image(0, $basename);
-    if ($by_name > 0) {
-        return $by_name;
+
+    if (! is_readable($path)) {
+        return 0;
     }
 
     $tmp = wp_tempnam($basename);
