@@ -66,6 +66,13 @@ foreach ($slugs as $slug) {
 
     $html = (string) $post->post_content;
     $orig = $html;
+    if ($slug === 'coronavirus-anxiety') {
+        $html = preg_replace(
+            '#<a\b[^>]*href=["\']https://www2\.hse\.ie/conditions/coronavirus/coronavirus\.html["\'][^>]*>(.*?)</a>#is',
+            '$1',
+            $html
+        ) ?? $html;
+    }
     if ($slug === 'self-harm-awareness') {
         foreach ($replacements as $from => $to) {
             foreach ([$from, $from . '/'] as $variant) {
