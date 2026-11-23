@@ -93,3 +93,44 @@ function matrix_get_programmes_therapies_intro($post_id = null)
 
     return matrix_get_programmes_therapies_post_summary($post_id);
 }
+
+/**
+ * Resolve a programme brochure PDF URL from post content or flexi blocks.
+ */
+function matrix_get_programmes_therapies_brochure_url($post_id = null): string
+{
+    $post_id = (int) ($post_id ?: get_the_ID());
+    if ($post_id < 1) {
+        return '';
+    }
+
+    $content = (string) get_post_field('post_content', $post_id);
+    if (preg_match('/href=["\']([^"\']+\.pdf[^"\']*)["\']/i', $content, $match)) {
+        return html_entity_decode($match[1], ENT_QUOTES | ENT_HTML5);
+    }
+
+    $blobs = [];
+    foreach (['flexible_content_blocks', 'hero_content_blocks'] as $field) {
+        $rows = function_exists('get_field') ? get_field($field, $post_id) : null;
+        if (is_array($rows)) {
+            $blobs[] = wp_json_encode($rows);
+        }
+    }
+
+    foreach ($blobs as $blob) {
+        if (! is_string($blob) || $blob === '') {
+            continue;
+        }
+        if (preg_match('/https?:\\\\\/\\\\\/[^"\\\\]+\\.pdf[^"\\\\]*/i', $blob, $match)) {
+            return stripslashes(str_replace('\\/', '/', $match[0]));
+        }
+        if (preg_match('/https?:\/\/[^"\\\\]+\.pdf[^"\\\\]*/i', $blob, $match)) {
+            return $match[0];
+        }
+        if (preg_match('/"url"\s*:\s*"([^"]+\.pdf[^"]*)"/i', $blob, $match)) {
+            return stripslashes(str_replace('\\/', '/', $match[1]));
+        }
+    }
+
+    return '';
+}

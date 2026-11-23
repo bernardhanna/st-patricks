@@ -25,7 +25,22 @@ $intro = matrix_get_programmes_therapies_intro();
                 <?php the_title(); ?>
             </h1>
 
-            <?php if ($intro !== '') { ?>
+            <?php
+            $brochure_url = '';
+            if ($intro === 'Get the programme brochure') {
+                $brochure_url = matrix_get_programmes_therapies_brochure_url();
+            }
+            ?>
+            <?php if ($brochure_url !== '') { ?>
+                <a
+                    class="inline-flex w-fit items-center font-primary text-[18px] font-semibold leading-[28px] text-[#024B79] underline"
+                    href="<?php echo esc_url($brochure_url); ?>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <?php echo esc_html($intro); ?>
+                </a>
+            <?php } elseif ($intro !== '') { ?>
                 <p class="max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">
                     <?php echo esc_html($intro); ?>
                 </p>
