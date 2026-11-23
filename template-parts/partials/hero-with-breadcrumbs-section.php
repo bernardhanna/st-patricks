@@ -122,6 +122,8 @@ extract($hero, EXTR_SKIP);
                         'title' => esc_attr($hero_image_title),
                         'class' => 'absolute inset-0 !h-full !w-full object-cover object-center',
                         'loading' => 'eager',
+                        // Prefer a larger srcset candidate so split heroes stay sharp on retina.
+                        'sizes' => '(max-width: 767px) 100vw, 1200px',
                     ]);
                     ?>
                     <?php
