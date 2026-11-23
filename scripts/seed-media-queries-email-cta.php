@@ -114,16 +114,29 @@ foreach ($existing_indexes as $idx) {
     }
 }
 
-if ($press_index !== null) {
-    array_splice($rows, $press_index, 0, [$cta_row]);
-    $log[] = 'OK inserted CTA before press releases at index ' . $press_index;
-} else {
-    $rows[] = $cta_row;
-    $log[] = 'OK appended CTA (no press releases block found)';
-}
+$insert_at = $press_index !== null ? $press_index : count($rows);
+array_splice($rows, $insert_at, 0, [$cta_row]);
+$log[] = $press_index !== null
+    ? 'OK inserted CTA before press releases at index ' . $insert_at
+    : 'OK appended CTA at index ' . $insert_at;
 
 update_field('flexible_content_blocks', $rows, $post_id);
 clean_post_cache($post_id);
+
+// Content-gathering can leave a row index marked disabled; clear so the CTA renders.
+if (defined('MATRIX_EXPORT_DISABLED_BLOCKS_OPTION')) {
+    $disabled_map = get_option(MATRIX_EXPORT_DISABLED_BLOCKS_OPTION, []);
+    if (is_array($disabled_map) && isset($disabled_map[$post_id]['flexible_content_blocks'])) {
+        $before = $disabled_map[$post_id]['flexible_content_blocks'];
+        $disabled_map[$post_id]['flexible_content_blocks'] = array_values(array_filter(
+            array_map('intval', (array) $before),
+            static fn (int $idx): bool => $idx !== $insert_at
+        ));
+        update_option(MATRIX_EXPORT_DISABLED_BLOCKS_OPTION, $disabled_map, false);
+        $log[] = 'OK cleared disabled flag for row ' . $insert_at
+            . ' (was ' . wp_json_encode($before) . ')';
+    }
+}
 
 $verify = get_field('flexible_content_blocks', $post_id);
 if (! is_array($verify)) {
