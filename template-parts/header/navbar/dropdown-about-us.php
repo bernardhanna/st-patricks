@@ -33,7 +33,7 @@ foreach ($item_children as $child_index => $child) {
     $default_panel_index = $child_index;
 }
 
-$application_form_url = home_url('/application-form/');
+$application_form_url = home_url('/about-us/application-form/');
 $section_id = 'about-us-mega-menu-' . $index;
 ?>
 

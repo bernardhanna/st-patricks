@@ -10,6 +10,9 @@ if ($form === []) {
     return;
 }
 
+$standalone = ! empty($form['standalone']);
+$heading = trim((string) ($form['heading'] ?? '')) ?: ($standalone ? 'Application form' : 'Apply for this role');
+
 $render_yes_no = static function (string $name, string $label, array $options, string $form_id, bool $required = true) {
     $group_id = $form_id . '-' . $name;
     ?>
@@ -48,7 +51,7 @@ $render_yes_no = static function (string $name, string $label, array $options, s
             id="<?php echo esc_attr((string) $form['form_id']); ?>-heading"
             class="mb-6 w-full font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px]"
         >
-            Apply for this role
+            <?php echo esc_html($heading); ?>
         </h2>
 
         <form
@@ -69,8 +72,25 @@ $render_yes_no = static function (string $name, string $label, array $options, s
             <input type="hidden" name="_theme_save_to_db" value="1" />
             <input type="hidden" name="_cfg_subject" value="<?php echo esc_attr((string) $form['subject']); ?>" />
             <input type="hidden" name="_cfg_to" value="<?php echo esc_attr((string) $form['recipient_email']); ?>" />
-            <input type="hidden" name="vacancy_title" value="<?php echo esc_attr((string) $form['job_title']); ?>" />
             <input type="hidden" name="vacancy_id" value="<?php echo esc_attr((string) ($form['post_id'] ?? 0)); ?>" />
+            <?php if ($standalone) { ?>
+                <div class="portal-contact-form__field">
+                    <label class="portal-contact-form__label" for="<?php echo esc_attr((string) $form['form_id']); ?>-vacancy-title">
+                        Role / vacancy title<span class="portal-contact-form__required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                        class="portal-contact-form__input"
+                        type="text"
+                        id="<?php echo esc_attr((string) $form['form_id']); ?>-vacancy-title"
+                        name="vacancy_title"
+                        value="<?php echo esc_attr((string) $form['job_title']); ?>"
+                        placeholder="Role title"
+                        required
+                    />
+                </div>
+            <?php } else { ?>
+                <input type="hidden" name="vacancy_title" value="<?php echo esc_attr((string) $form['job_title']); ?>" />
+            <?php } ?>
 
             <div class="portal-contact-form__field">
                 <label class="portal-contact-form__label" for="<?php echo esc_attr((string) $form['form_id']); ?>-title">

@@ -233,26 +233,39 @@ function matrix_get_careers_application_yes_no_options(): array
 function matrix_prepare_careers_application_form(int $post_id, array $args = []): array
 {
     $defaults = matrix_get_careers_application_form_defaults();
-    $job_title = get_the_title($post_id);
+    $standalone = ! empty($args['standalone']) || $post_id <= 0;
+    $job_title = $standalone
+        ? trim((string) ($args['job_title'] ?? ''))
+        : get_the_title($post_id);
     $privacy_url = home_url('/about-us/policies-and-publications/data-protection/');
 
     $recipient = trim((string) ($args['recipient_email'] ?? ''));
-    if ($recipient === '' && function_exists('get_field')) {
+    if ($recipient === '' && $post_id > 0 && function_exists('get_field')) {
         $recipient = trim((string) get_field('career_application_email', $post_id));
     }
     if ($recipient === '') {
         $recipient = (string) $defaults['recipient_email'];
     }
 
+    $form_id_suffix = $standalone ? 'page' : (string) $post_id;
+    $subject = trim((string) ($args['subject'] ?? ''));
+    if ($subject === '') {
+        $subject = $standalone
+            ? ((string) $defaults['subject_prefix'] . ' – website form')
+            : ((string) $defaults['subject_prefix'] . ' – ' . $job_title);
+    }
+
     return [
         'post_id' => $post_id,
         'job_title' => $job_title,
-        'form_id' => 'careers-application-' . $post_id,
-        'section_id' => 'careers-application-' . $post_id,
+        'standalone' => $standalone,
+        'heading' => trim((string) ($args['heading'] ?? '')) ?: ($standalone ? 'Application form' : 'Apply for this role'),
+        'form_id' => 'careers-application-' . $form_id_suffix,
+        'section_id' => 'careers-application-' . $form_id_suffix,
         'submit_label' => trim((string) ($args['submit_label'] ?? '')) ?: (string) $defaults['submit_label'],
         'success_message' => trim((string) ($args['success_message'] ?? '')) ?: (string) $defaults['success_message'],
         'form_name' => trim((string) ($args['form_name'] ?? '')) ?: (string) $defaults['form_name'],
-        'subject' => trim((string) ($args['subject'] ?? '')) ?: ($defaults['subject_prefix'] . ' – ' . $job_title),
+        'subject' => $subject,
         'recipient_email' => $recipient,
         'privacy_policy_url' => $privacy_url,
         'privacy_policy_label' => (string) $defaults['privacy_policy_label'],
