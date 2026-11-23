@@ -182,7 +182,7 @@ if (! function_exists('matrix_seed_build_your_stay_in_hospital_rows')) {
                 'acf_fc_layout' => 'hero_with_breadcrumbs',
                 'layout_style' => 'image_split',
                 'show_breadcrumbs' => 1,
-                'breadcrumb_source' => 'manual',
+                'breadcrumb_source' => 'auto',
                 'manual_breadcrumbs' => [
                     ['breadcrumb_link' => ['title' => 'Home', 'url' => $home, 'target' => '']],
                     ['breadcrumb_link' => ['title' => 'Service Users and Visitors', 'url' => $service_users_url, 'target' => '']],

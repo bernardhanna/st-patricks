@@ -263,7 +263,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'hero_with_breadcrumbs',
         'layout_style' => 'image_split',
         'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
+        'breadcrumb_source' => 'auto',
         'manual_breadcrumbs' => [
             [
                 'breadcrumb_link' => [

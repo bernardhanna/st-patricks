@@ -715,7 +715,7 @@ if (! function_exists('matrix_migrate_build_structured_flexi_rows')) {
             'acf_fc_layout' => 'hero_with_breadcrumbs',
             'show_breadcrumbs' => 1,
             'text_max_width' => 'default',
-            'breadcrumb_source' => 'manual',
+            'breadcrumb_source' => 'auto',
             'manual_breadcrumbs' => $manual_breadcrumbs,
             'current_crumb_label' => $current_crumb,
             'hero_image' => $hero_image_id,

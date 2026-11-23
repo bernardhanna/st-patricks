@@ -344,7 +344,7 @@ $landing_rows = [
         'acf_fc_layout' => 'hero_with_breadcrumbs',
         'layout_style' => 'image_split',
         'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
+        'breadcrumb_source' => 'auto',
         'manual_breadcrumbs' => [
             [
                 'breadcrumb_link' => [
@@ -462,7 +462,7 @@ if ($learning_hub_id > 0) {
             'acf_fc_layout' => 'hero_with_breadcrumbs',
             'layout_style' => 'image_split',
             'show_breadcrumbs' => 1,
-            'breadcrumb_source' => 'manual',
+            'breadcrumb_source' => 'auto',
             'manual_breadcrumbs' => [
                 ['breadcrumb_link' => ['title' => 'Home', 'url' => $home, 'target' => '']],
                 ['breadcrumb_link' => ['title' => 'Getting Help', 'url' => $getting_help_url, 'target' => '']],

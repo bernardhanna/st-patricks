@@ -153,7 +153,7 @@ if (! function_exists('matrix_seed_get_involved_hero_block')) {
             'acf_fc_layout' => 'hero_with_breadcrumbs',
             'layout_style' => 'image_split',
             'show_breadcrumbs' => 1,
-            'breadcrumb_source' => 'manual',
+            'breadcrumb_source' => 'auto',
             'manual_breadcrumbs' => $breadcrumbs,
             'current_crumb_label' => (string) ($config['crumb_label'] ?? $config['heading'] ?? ''),
             'heading_tag' => matrix_page_seed_heading(1),

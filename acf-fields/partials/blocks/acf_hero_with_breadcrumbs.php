@@ -33,7 +33,7 @@ $hero_with_breadcrumbs
                 'auto' => 'Auto',
                 'manual' => 'Manual',
             ],
-            'default_value' => 'manual',
+            'default_value' => 'auto',
             'conditional_logic' => [
                 [
                     [

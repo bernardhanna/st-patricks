@@ -258,7 +258,7 @@ if (! function_exists('matrix_seed_build_location_detail_rows')) {
                 'acf_fc_layout' => 'hero_with_breadcrumbs',
                 'layout_style' => 'image_split',
                 'show_breadcrumbs' => 1,
-                'breadcrumb_source' => 'manual',
+                'breadcrumb_source' => 'auto',
                 'manual_breadcrumbs' => [
                     ['breadcrumb_link' => ['title' => 'Home', 'url' => $home, 'target' => '']],
                     ['breadcrumb_link' => ['title' => 'About us', 'url' => $about_us_url, 'target' => '']],
@@ -535,7 +535,7 @@ $flexi_rows = [
         'acf_fc_layout' => 'hero_with_breadcrumbs',
         'layout_style' => 'image_split',
         'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
+        'breadcrumb_source' => 'auto',
         'manual_breadcrumbs' => [
             ['breadcrumb_link' => ['title' => 'Home', 'url' => $home, 'target' => '']],
             ['breadcrumb_link' => ['title' => 'About us', 'url' => $about_us_url, 'target' => '']],

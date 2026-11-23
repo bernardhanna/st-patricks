@@ -96,9 +96,13 @@ function matrix_resolve_hero_breadcrumbs($source, $manual_items = array(), $curr
     );
   }
 
+  // Auto trail from page hierarchy; allow an explicit current label override when set.
+  $auto_current = (string) ($auto_data['current_label'] ?? '');
+  $override_current = trim((string) $current_label);
+
   return array(
     'items' => is_array($auto_data['items']) ? array_values($auto_data['items']) : array(),
-    'current_label' => (string) $auto_data['current_label'],
+    'current_label' => $override_current !== '' ? $override_current : $auto_current,
   );
 }
 
@@ -465,14 +469,8 @@ function matrix_get_utility_page_hero_config($heading, $intro = '', array $overr
     'layout_style' => 'image_split',
     'text_max_width' => 'wide',
     'show_breadcrumbs' => true,
-    'breadcrumb_source' => 'manual',
-    'manual_breadcrumb_items' => [
-      [
-        'title' => 'Home',
-        'url' => home_url('/'),
-        'target' => '',
-      ],
-    ],
+    'breadcrumb_source' => 'auto',
+    'manual_breadcrumb_items' => [],
     'current_crumb_label' => $heading,
     'heading_tag' => 'h1',
     'heading' => $heading,

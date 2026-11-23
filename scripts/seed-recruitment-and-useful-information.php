@@ -190,7 +190,7 @@ if (! function_exists('matrix_seed_recruitment_hero_block')) {
             'acf_fc_layout' => 'hero_with_breadcrumbs',
             'layout_style' => 'image_split',
             'show_breadcrumbs' => 1,
-            'breadcrumb_source' => 'manual',
+            'breadcrumb_source' => 'auto',
             'manual_breadcrumbs' => $breadcrumbs,
             'current_crumb_label' => $heading,
             'heading_tag' => 'h1',

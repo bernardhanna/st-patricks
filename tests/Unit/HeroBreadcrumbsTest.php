@@ -199,6 +199,7 @@ test('utility page hero config uses wide stacked image split hero', function () 
     expect($config['layout_style'])->toBe('image_split')
         ->and($config['text_max_width'])->toBe('wide')
         ->and($config['background_color'])->toBe('#C6ECF4')
+        ->and($config['breadcrumb_source'])->toBe('auto')
         ->and($config['content'])->toBe('<p>Intro copy.</p>');
 
     $view = matrix_prepare_hero_with_breadcrumbs_view_model($config);

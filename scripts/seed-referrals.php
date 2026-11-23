@@ -336,7 +336,7 @@ if (! function_exists('matrix_seed_referrals_ensure_bed_vacancies_hero')) {
             'acf_fc_layout' => 'hero_with_breadcrumbs',
             'layout_style' => 'image_split',
             'show_breadcrumbs' => 1,
-            'breadcrumb_source' => 'manual',
+            'breadcrumb_source' => 'auto',
             'manual_breadcrumbs' => [
                 ['breadcrumb_link' => ['title' => 'Home', 'url' => home_url('/'), 'target' => '']],
                 ['breadcrumb_link' => ['title' => 'GPs & Referrals', 'url' => $referrals_url, 'target' => '']],
@@ -458,7 +458,7 @@ $landing_rows = [
         'acf_fc_layout' => 'hero_with_breadcrumbs',
         'layout_style' => 'image_split',
         'show_breadcrumbs' => 1,
-        'breadcrumb_source' => 'manual',
+        'breadcrumb_source' => 'auto',
         'manual_breadcrumbs' => [
             [
                 'breadcrumb_link' => [

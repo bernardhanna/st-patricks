@@ -207,7 +207,7 @@ if (! function_exists('matrix_build_research_page_flexi_rows')) {
                 'acf_fc_layout' => 'hero_with_breadcrumbs',
                 'layout_style' => 'image_split',
                 'show_breadcrumbs' => 1,
-                'breadcrumb_source' => 'manual',
+                'breadcrumb_source' => 'auto',
                 'manual_breadcrumbs' => $manual_breadcrumbs,
                 'current_crumb_label' => 'Research',
                 'heading_tag' => 'h1',

@@ -202,7 +202,7 @@ if (! function_exists('matrix_seed_build_programmes_therapies_flexi_rows')) {
                 'acf_fc_layout' => 'hero_with_breadcrumbs',
                 'layout_style' => 'image_split',
                 'show_breadcrumbs' => 1,
-                'breadcrumb_source' => 'manual',
+                'breadcrumb_source' => 'auto',
                 'manual_breadcrumbs' => $config['manual_breadcrumbs'],
                 'current_crumb_label' => $config['current_crumb_label'],
                 'heading_tag' => 'h1',

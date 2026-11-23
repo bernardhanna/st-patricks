@@ -38,8 +38,9 @@ $ways_grid_index = null;
 foreach ($rows as $index => $row) {
     if (($row['acf_fc_layout'] ?? '') === 'content') {
         $content_heading = trim((string) ($row['heading'] ?? ''));
-        if ($content_heading === 'Our fundraising principles and standards' && ($row['vertical_padding'] ?? '') === 'default') {
-            $rows[$index]['vertical_padding'] = 'no_bottom';
+        // Keep default vertical padding so this block retains bottom space.
+        if ($content_heading === 'Our fundraising principles and standards') {
+            $rows[$index]['vertical_padding'] = 'default';
         }
     }
 
@@ -51,7 +52,7 @@ foreach ($rows as $index => $row) {
 
     if ($heading === 'ways to get involved') {
         $ways_grid_index = $index;
-        $rows[$index]['vertical_padding'] = 'no_bottom';
+        $rows[$index]['vertical_padding'] = 'default';
         continue;
     }
 
