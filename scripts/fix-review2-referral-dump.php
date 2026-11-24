@@ -37,7 +37,21 @@ foreach ([
             continue;
         }
         echo "block {$i} {$layout}\n";
-        echo substr(wp_json_encode($row, JSON_PRETTY_PRINT), 0, 2500) . "\n\n";
+        if (! empty($row['slides']) && is_array($row['slides'])) {
+            foreach ($row['slides'] as $si => $slide) {
+                if (! is_array($slide)) {
+                    continue;
+                }
+                $slim = $slide;
+                unset($slim['poster_image']);
+                echo "  slide {$si}: " . wp_json_encode($slim) . "\n";
+            }
+        } else {
+            $slim = $row;
+            unset($slim['poster_image'], $slim['image'], $slim['background_image']);
+            echo substr(wp_json_encode($slim), 0, 2000) . "\n";
+        }
+        echo "\n";
     }
 }
 echo "DONE\n";
