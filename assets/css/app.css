@@ -312,11 +312,12 @@ footer a:not(.btn):not(.w-8):focus-visible {
     @apply mt-3;
   }
 
+  /* Nested subheads under a parent H2/H3 — lighter so they don't read as new sections */
   .is-not-woo .wp_editor.editor-body-content h4,
   .is-not-woo .wp_editor.blog-single-content h4,
   .editor-body-content h4,
   .blog-single-content h4 {
-    @apply mb-3 mt-8 text-[20px] font-semibold leading-[32px] tracking-[-0.12px];
+    @apply mb-2 mt-5 text-[18px] font-medium leading-[28px] tracking-[-0.08px] text-[#4A5568];
   }
 
   .is-not-woo .wp_editor.editor-body-content :is(p, li, span, td, th),

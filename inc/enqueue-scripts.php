@@ -193,6 +193,17 @@ function matrix_starter_enqueue_scripts()
           var headroom = null;
           var stickyThreshold = 100;
 
+          function getOrCreateHeaderSpacer() {
+            var spacer = document.getElementById('site-nav-spacer');
+            if (!spacer) {
+              spacer = document.createElement('div');
+              spacer.id = 'site-nav-spacer';
+              spacer.setAttribute('aria-hidden', 'true');
+              header.parentNode.insertBefore(spacer, header.nextSibling);
+            }
+            return spacer;
+          }
+
           function removeFixedHeaderState() {
             if (headroom && typeof headroom.destroy === 'function') {
               headroom.destroy();
@@ -200,6 +211,8 @@ function matrix_starter_enqueue_scripts()
             headroom = null;
             headroomStarted = false;
             header.classList.remove('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0','-translate-y-full');
+            var spacer = document.getElementById('site-nav-spacer');
+            if (spacer) spacer.style.height = '0px';
             if (typeof matrixSyncSiteHeaderHeight === 'function') matrixSyncSiteHeaderHeight();
           }
 
@@ -212,6 +225,8 @@ function matrix_starter_enqueue_scripts()
             if (headroomStarted) return;
             headroomStarted = true;
 
+            var spacer = getOrCreateHeaderSpacer();
+            spacer.style.height = header.offsetHeight + 'px';
             header.classList.add('fixed','top-0','left-0','w-full','z-50','transition-transform','duration-300','ease-in-out','translate-y-0');
 
             headroom = new Headroom(header, { tolerance: 5, offset: 100 });

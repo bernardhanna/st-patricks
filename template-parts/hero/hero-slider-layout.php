@@ -249,7 +249,7 @@
                 <div class="hero-slide-text flex w-full flex-col lg:max-w-[560px] lg:shrink-0">
                     <?php if (!empty($sl['text'])) { ?>
                         <<?php echo esc_attr($sl['tag']); ?> class="spmhs-hero__title" id="<?php echo esc_attr($heading_id); ?>">
-                            <?php echo esc_html($sl['text']); ?>
+                            <?php echo nl2br(esc_html($sl['text']), false); ?>
                         </<?php echo esc_attr($sl['tag']); ?>>
                     <?php } ?>
                     <?php if (!empty($sl['desc'])) { ?>

@@ -1104,16 +1104,19 @@ input:where([type='file']):focus {
   .blog-single-content h3 + ul {
   margin-top: 0.75rem;
 }
+/* Nested subheads under a parent H2/H3 — lighter so they don't read as new sections */
 .is-not-woo .wp_editor.editor-body-content h4,
   .is-not-woo .wp_editor.blog-single-content h4,
   .editor-body-content h4,
   .blog-single-content h4 {
-  margin-bottom: 0.75rem;
-  margin-top: 2rem;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -0.12px;
+  margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.08px;
+  --tw-text-opacity: 1;
+  color: rgb(74 85 104 / var(--tw-text-opacity, 1));
 }
 .is-not-woo .wp_editor.editor-body-content :is(p, li, span, td, th),
   .is-not-woo .wp_editor.blog-single-content :is(p, li, span, td, th),
@@ -1472,9 +1475,6 @@ input:where([type='file']):focus {
 }
 .top-\[4\.375rem\] {
   top: 4.375rem;
-}
-.top-\[calc\(var\(--site-header-height\2c 8\.5rem\)\+0\.75rem\)\] {
-  top: calc(var(--site-header-height,8.5rem) + 0.75rem);
 }
 .top-\[var\(--site-header-height\2c 8\.5rem\)\] {
   top: var(--site-header-height,8.5rem);
@@ -1884,9 +1884,6 @@ input:where([type='file']):focus {
 .h-\[42px\] {
   height: 42px;
 }
-.h-\[44px\] {
-  height: 44px;
-}
 .h-\[46px\] {
   height: 46px;
 }
@@ -1925,9 +1922,6 @@ input:where([type='file']):focus {
 }
 .max-h-\[387px\] {
   max-height: 387px;
-}
-.max-h-\[600px\] {
-  max-height: 600px;
 }
 .max-h-\[min\(70vh\2c 420px\)\] {
   max-height: min(70vh, 420px);
@@ -2007,9 +2001,6 @@ input:where([type='file']):focus {
 }
 .min-h-\[48px\] {
   min-height: 48px;
-}
-.min-h-\[520px\] {
-  min-height: 520px;
 }
 .min-h-\[52px\] {
   min-height: 52px;
@@ -2349,9 +2340,6 @@ input:where([type='file']):focus {
 .max-w-\[14rem\] {
   max-width: 14rem;
 }
-.max-w-\[183px\] {
-  max-width: 183px;
-}
 .max-w-\[1920px\] {
   max-width: 1920px;
 }
@@ -2409,9 +2397,6 @@ input:where([type='file']):focus {
 .max-w-\[745px\] {
   max-width: 745px;
 }
-.max-w-\[750px\] {
-  max-width: 750px;
-}
 .max-w-\[768px\] {
   max-width: 768px;
 }
@@ -2468,6 +2453,9 @@ input:where([type='file']):focus {
 }
 .flex-\[1_0_0\] {
   flex: 1 0 0;
+}
+.flex-shrink {
+  flex-shrink: 1;
 }
 .flex-shrink-0 {
   flex-shrink: 0;
@@ -2654,9 +2642,6 @@ input:where([type='file']):focus {
 }
 .flex-col {
   flex-direction: column;
-}
-.flex-col-reverse {
-  flex-direction: column-reverse;
 }
 .flex-wrap {
   flex-wrap: wrap;
@@ -4510,6 +4495,10 @@ input:where([type='file']):focus {
 .border-none {
   border-style: none;
 }
+.border-\[\#001F33\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 31 51 / var(--tw-border-opacity, 1));
+}
 .border-\[\#024B79\] {
   --tw-border-opacity: 1;
   border-color: rgb(2 75 121 / var(--tw-border-opacity, 1));
@@ -4574,10 +4563,6 @@ input:where([type='file']):focus {
   --tw-border-opacity: 1;
   border-color: rgb(126 208 224 / var(--tw-border-opacity, 1));
 }
-.border-primary-dark {
-  --tw-border-opacity: 1;
-  border-color: rgb(2 75 121 / var(--tw-border-opacity, 1));
-}
 .border-primary-light {
   --tw-border-opacity: 1;
   border-color: rgb(241 248 249 / var(--tw-border-opacity, 1));
@@ -4617,6 +4602,10 @@ input:where([type='file']):focus {
 .\!bg-\[\#6FC9C0\] {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(111 201 192 / var(--tw-bg-opacity, 1)) !important;
+}
+.bg-\[\#001F33\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 31 51 / var(--tw-bg-opacity, 1));
 }
 .bg-\[\#024B79\] {
   --tw-bg-opacity: 1;
@@ -4731,14 +4720,6 @@ input:where([type='file']):focus {
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: rgb(126 208 224 / var(--tw-bg-opacity, 1));
-}
-.bg-primary-dark {
-  --tw-bg-opacity: 1;
-  background-color: rgb(2 75 121 / var(--tw-bg-opacity, 1));
-}
-.bg-primary-light {
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 248 249 / var(--tw-bg-opacity, 1));
 }
 .bg-primary-sky {
   --tw-bg-opacity: 1;
@@ -7460,15 +7441,6 @@ input:where([type='file']):focus {
 .font-primary {
   font-family: Inter, system-ui, sans-serif;
 }
-.\!text-\[14px\] {
-  font-size: 14px !important;
-}
-.\!text-\[18px\] {
-  font-size: 18px !important;
-}
-.\!text-\[28px\] {
-  font-size: 28px !important;
-}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -8412,11 +8384,6 @@ input:where([type='file']):focus {
 .text-base {
   font-size: 16px;
 }
-.text-large {
-  font-size: 1.12rem;
-  line-height: 1.75rem;
-  letter-spacing: 0rem;
-}
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -8431,12 +8398,6 @@ input:where([type='file']):focus {
 }
 .text-xs {
   font-size: 14px;
-}
-.\!font-bold {
-  font-weight: 700 !important;
-}
-.\!font-normal {
-  font-weight: 400 !important;
 }
 .font-bold {
   font-weight: 700;
@@ -8462,17 +8423,8 @@ input:where([type='file']):focus {
 .italic {
   font-style: italic;
 }
-.\!not-italic {
-  font-style: normal !important;
-}
 .not-italic {
   font-style: normal;
-}
-.\!leading-\[22\.75px\] {
-  line-height: 22.75px !important;
-}
-.\!leading-\[28px\] {
-  line-height: 28px !important;
 }
 .leading-3 {
   line-height: .75rem;
@@ -8549,12 +8501,6 @@ input:where([type='file']):focus {
 .leading-tight {
   line-height: 1.25;
 }
-.\!tracking-\[-0\.09px\] {
-  letter-spacing: -0.09px !important;
-}
-.\!tracking-\[-0\.336px\] {
-  letter-spacing: -0.336px !important;
-}
 .tracking-\[-0\.00525rem\] {
   letter-spacing: -0.00525rem;
 }
@@ -8614,10 +8560,6 @@ input:where([type='file']):focus {
 }
 .tracking-tight {
   letter-spacing: -0.025em;
-}
-.\!text-\[\#001F33\] {
-  --tw-text-opacity: 1 !important;
-  color: rgb(0 31 51 / var(--tw-text-opacity, 1)) !important;
 }
 .text-\[\#001F33\] {
   --tw-text-opacity: 1;
@@ -8703,10 +8645,6 @@ input:where([type='file']):focus {
 .text-primary {
   --tw-text-opacity: 1;
   color: rgb(126 208 224 / var(--tw-text-opacity, 1));
-}
-.text-primary-dark {
-  --tw-text-opacity: 1;
-  color: rgb(2 75 121 / var(--tw-text-opacity, 1));
 }
 .text-red-600 {
   --tw-text-opacity: 1;
@@ -9385,6 +9323,9 @@ input:where([type='file']):focus {
 .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
 }
+.disabled\:opacity-40:disabled {
+  opacity: 0.4;
+}
 .disabled\:opacity-50:disabled {
   opacity: 0.5;
 }
@@ -9714,11 +9655,6 @@ input:where([type='file']):focus {
   .max-md\:border-b-\[\#D6DFE4\] {
     --tw-border-opacity: 1;
     border-bottom-color: rgb(214 223 228 / var(--tw-border-opacity, 1));
-  }
-
-  .max-md\:object-contain {
-    -o-object-fit: contain;
-       object-fit: contain;
   }
 
   .max-md\:p-5 {
@@ -21702,11 +21638,6 @@ input:where([type='file']):focus {
     line-height: 2.25rem;
   }
 
-  .sm\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-
   .sm\:text-\[0em\] {
     font-size: 0em;
   }
@@ -23014,10 +22945,6 @@ input:where([type='file']):focus {
     width: 16rem;
   }
 
-  .md\:w-96 {
-    width: 24rem;
-  }
-
   .md\:w-\[170px\] {
     width: 170px;
   }
@@ -23028,10 +22955,6 @@ input:where([type='file']):focus {
 
   .md\:w-\[500px\] {
     width: 500px;
-  }
-
-  .md\:w-auto {
-    width: auto;
   }
 
   .md\:max-w-\[240px\] {
@@ -23052,20 +22975,12 @@ input:where([type='file']):focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .md\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .md\:flex-row {
     flex-direction: row;
   }
 
   .md\:flex-row-reverse {
     flex-direction: row-reverse;
-  }
-
-  .md\:items-center {
-    align-items: center;
   }
 
   .md\:justify-between {
@@ -26175,10 +26090,6 @@ input:where([type='file']):focus {
     padding-top: 9rem;
   }
 
-  .md\:\!text-\[20px\] {
-    font-size: 20px !important;
-  }
-
   .md\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
@@ -27396,15 +27307,14 @@ input:where([type='file']):focus {
     font-size: 9rem;
   }
 
-  .md\:text-lead {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    letter-spacing: 0rem;
-  }
-
   .md\:text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
+  }
+
+  .md\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 
   .md\:text-xl {
@@ -27412,20 +27322,8 @@ input:where([type='file']):focus {
     line-height: 1.75rem;
   }
 
-  .md\:\!font-medium {
-    font-weight: 500 !important;
-  }
-
-  .md\:\!leading-\[28px\] {
-    line-height: 28px !important;
-  }
-
   .md\:leading-\[40px\] {
     line-height: 40px;
-  }
-
-  .md\:\!tracking-\[-0\.1px\] {
-    letter-spacing: -0.1px !important;
   }
 
   .md\:tracking-\[-0\.432px\] {
@@ -27685,10 +27583,6 @@ input:where([type='file']):focus {
     min-height: 320px;
   }
 
-  .lg\:min-h-\[600px\] {
-    min-height: 600px;
-  }
-
   .lg\:min-h-screen {
     min-height: 100vh;
   }
@@ -27761,10 +27655,6 @@ input:where([type='file']):focus {
     width: auto;
   }
 
-  .lg\:min-w-\[180px\] {
-    min-width: 180px;
-  }
-
   .lg\:max-w-\[295px\] {
     max-width: 295px;
   }
@@ -27832,10 +27722,6 @@ input:where([type='file']):focus {
 
   .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .lg\:grid-cols-6 {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-\[auto_minmax\(0\2c 1fr\)\] {
@@ -28412,11 +28298,6 @@ input:where([type='file']):focus {
   .lg\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
-  }
-
-  .lg\:px-12 {
-    padding-left: 3rem;
-    padding-right: 3rem;
   }
 
   .lg\:px-16 {
@@ -29277,6 +29158,11 @@ input:where([type='file']):focus {
   .lg\:py-\[5rem\] {
     padding-top: 5rem;
     padding-bottom: 5rem;
+  }
+
+  .lg\:py-\[60px\] {
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
 
   .lg\:py-\[60rem\] {
@@ -31195,10 +31081,6 @@ input:where([type='file']):focus {
     text-align: right;
   }
 
-  .lg\:\!text-\[48px\] {
-    font-size: 48px !important;
-  }
-
   .lg\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
@@ -32425,10 +32307,6 @@ input:where([type='file']):focus {
     font-weight: 500;
   }
 
-  .lg\:\!leading-\[48px\] {
-    line-height: 48px !important;
-  }
-
   .lg\:leading-8 {
     line-height: 2rem;
   }
@@ -32461,10 +32339,6 @@ input:where([type='file']):focus {
     line-height: 48px;
   }
 
-  .lg\:\!tracking-\[-0\.576px\] {
-    letter-spacing: -0.576px !important;
-  }
-
   .lg\:tracking-\[-0\.144px\] {
     letter-spacing: -0.144px;
   }
@@ -32495,6 +32369,11 @@ input:where([type='file']):focus {
 
   .lg\:\[scrollbar-width\:none\] {
     scrollbar-width: none;
+  }
+
+  .lg\:hover\:border-\[\#7ED0E0\]:hover {
+    --tw-border-opacity: 1;
+    border-color: rgb(126 208 224 / var(--tw-border-opacity, 1));
   }
 
   .lg\:hover\:bg-\[\#001F33\]:hover {
@@ -45430,9 +45309,6 @@ input:where([type='file']):focus {
 .\[\&_a\.btn\]\:no-underline a.btn {
   text-decoration-line: none;
 }
-.\[\&_a\:hover\]\:underline a:hover {
-  text-decoration-line: underline;
-}
 .\[\&_a\:hover\]\:no-underline a:hover {
   text-decoration-line: none;
 }
@@ -45463,9 +45339,6 @@ input:where([type='file']):focus {
 }
 .\[\&_a\]\:underline a {
   text-decoration-line: underline;
-}
-.\[\&_a\]\:no-underline a {
-  text-decoration-line: none;
 }
 .hover\:\[\&_a\]\:no-underline a:hover {
   text-decoration-line: none;
