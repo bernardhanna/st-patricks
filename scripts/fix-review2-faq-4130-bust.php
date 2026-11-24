@@ -1,6 +1,6 @@
 <?php
 /**
- * Bust caches and force FAQ 4130 + Dean directions FAQ wording.
+ * Bust caches and force FAQ 4130/4129 Dean Clinic wording.
  *
  *   /wp-content/themes/matrix-starter/scripts/fix-review2-faq-4130-bust.php?key=fix-faq4130b
  */
@@ -29,24 +29,42 @@ clean_post_cache(4130);
 wp_cache_delete(4130, 'posts');
 echo "4130 set with here+aria-label\n";
 
-// FAQ 4129 directions wording
 $raw_4129 = (string) $wpdb->get_var("SELECT post_content FROM {$wpdb->posts} WHERE ID=4129");
-$from_4129 = 'addresses and directions for our Dean Clinics <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.';
-$to_4129 = 'addresses and directions for our Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.';
-$next_4129 = str_replace($from_4129, $to_4129, $raw_4129);
+if (preg_match('/addresses and directions for our Dean Clinics.{0,120}/s', $raw_4129, $m)) {
+    echo 'RAW CTX=[' . $m[0] . "]\n";
+}
+
+$next_4129 = $raw_4129;
+$next_4129 = str_replace(
+    'Dean Clinics <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
+    'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
+    $next_4129
+);
+$next_4129 = str_replace(
+    'Dean Clinics <a href="/contact-us/">Contact Us</a>.',
+    'Dean Clinics. See <a href="/contact-us/">Contact Us</a>.',
+    $next_4129
+);
+$next_4129 = str_replace(
+    'Dean Clinics <a href="http://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
+    'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
+    $next_4129
+);
+
 if ($next_4129 === $raw_4129) {
     $next_4129 = preg_replace(
-        '#addresses and directions for our Dean Clinics\s*<a href="[^"]*contact-us[^"]*">\s*Contact Us\s*</a>\.?#i',
-        'addresses and directions for our Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
+        '#Dean Clinics\s*<a\s+href="[^"]*contact-us[^"]*"[^>]*>\s*Contact Us\s*</a>\.?#i',
+        'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
         $raw_4129
     ) ?? $raw_4129;
 }
+
 if ($next_4129 !== $raw_4129) {
     $wpdb->update($wpdb->posts, ['post_content' => $next_4129], ['ID' => 4129]);
     clean_post_cache(4129);
     echo "4129 directions wording patched\n";
 } else {
-    echo "4129 no change; contains Contact Us after Clinics? " . (str_contains($raw_4129, 'Dean Clinics <a') ? 'yes' : 'no') . "\n";
+    echo "4129 no change\n";
 }
 
 wp_cache_flush();
