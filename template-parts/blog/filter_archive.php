@@ -231,89 +231,9 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
             <?php } ?>
 
             <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?>flex flex-col gap-6">
-                <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
-                    <p
-                        class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
-                        style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
-                    >
-                        <?php echo esc_html($filter_label); ?>
-                    </p>
-
+                <div class="flex flex-col gap-3">
                     <div
-                        x-ref="chipScroll"
-                        class="<?php echo esc_attr($chip_scroll_classes); ?>"
-                        @scroll.passive="updateChipScrollEdges()"
-                        @pointerdown="onChipScrollPointerDown($event)"
-                        @pointermove="onChipScrollPointerMove($event)"
-                        @pointerup="onChipScrollPointerUp($event)"
-                        @pointercancel="onChipScrollPointerUp($event)"
-                        @pointerleave="onChipScrollPointerUp($event)"
-                    >
-                        <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
-                            <?php foreach ($chips as $chip) { ?>
-                                <?php
-                                $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
-                                $chip_label = trim((string) ($chip['label'] ?? ''));
-
-                                if ($chip_slug === '' || $chip_label === '') {
-                                    continue;
-                                }
-                                ?>
-                                <button
-                                    type="button"
-                                    class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
-                                    :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
-                                    :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
-                                    @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
-                                >
-                                    <?php echo esc_html($chip_label); ?>
-                                </button>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex w-full flex-wrap items-center gap-3">
-                    <form
-                        x-ref="form"
-                        method="get"
-                        action="<?php echo esc_url($base_url); ?>"
-                        class="flex w-full max-w-[384px] items-center gap-2"
-                        @submit="$refs.pageInput.value = 1"
-                    >
-                        <input type="hidden" name="blog_category" x-ref="categoryInput" :value="category" />
-                        <input type="hidden" name="blog_page" x-ref="pageInput" value="<?php echo esc_attr((string) $current_page); ?>" />
-
-                        <div class="min-w-0 flex-1">
-                            <label for="<?php echo esc_attr($search_input_id); ?>" class="sr-only">
-                                <?php echo esc_html($search_placeholder); ?>
-                            </label>
-                            <input
-                                id="<?php echo esc_attr($search_input_id); ?>"
-                                type="search"
-                                name="blog_search"
-                                value="<?php echo esc_attr((string) $state['search']); ?>"
-                                placeholder="<?php echo esc_attr($search_placeholder); ?>"
-                                class="min-h-[40px] w-full rounded-[6px] border border-[#E2E8F0] px-3 py-2 font-primary text-[16px] leading-[24px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
-                                style="color: <?php echo esc_attr($colors['search_input_text']); ?>; border-color: <?php echo esc_attr($colors['search_input_border']); ?>;"
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            class="btn inline-flex h-[36px] shrink-0 items-center justify-center gap-2 rounded-[6px] px-3 text-[14px] font-medium leading-[24px]"
-                            style="background-color: <?php echo esc_attr($colors['search_button_background']); ?>; color: <?php echo esc_attr($colors['search_button_text']); ?>;"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
-                                <path d="M6.99935 12.6667C9.94487 12.6667 12.3327 10.2789 12.3327 7.33333C12.3327 4.38781 9.94487 2 6.99935 2C4.05383 2 1.66602 4.38781 1.66602 7.33333C1.66602 10.2789 4.05383 12.6667 6.99935 12.6667Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.6656 14L10.7656 11.1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <?php echo esc_html($search_button_label); ?>
-                        </button>
-                    </form>
-
-                    <div
-                        class="flex items-center gap-2"
+                        class="flex items-center justify-end gap-2"
                         x-show="canScrollLeft || canScrollRight"
                         x-cloak
                         role="group"
@@ -327,7 +247,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             @click="scrollChips('prev')"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white group-disabled:stroke-[#020617]" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                         <button
@@ -338,11 +258,91 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                             @click="scrollChips('next')"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white group-disabled:stroke-[#020617]" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                     </div>
+
+                    <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
+                        <p
+                            class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
+                            style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
+                        >
+                            <?php echo esc_html($filter_label); ?>
+                        </p>
+
+                        <div
+                            x-ref="chipScroll"
+                            class="<?php echo esc_attr($chip_scroll_classes); ?>"
+                            @scroll.passive="updateChipScrollEdges()"
+                            @pointerdown="onChipScrollPointerDown($event)"
+                            @pointermove="onChipScrollPointerMove($event)"
+                            @pointerup="onChipScrollPointerUp($event)"
+                            @pointercancel="onChipScrollPointerUp($event)"
+                            @pointerleave="onChipScrollPointerUp($event)"
+                        >
+                            <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
+                                <?php foreach ($chips as $chip) { ?>
+                                    <?php
+                                    $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
+                                    $chip_label = trim((string) ($chip['label'] ?? ''));
+
+                                    if ($chip_slug === '' || $chip_label === '') {
+                                        continue;
+                                    }
+                                    ?>
+                                    <button
+                                        type="button"
+                                        class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
+                                        :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
+                                        :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
+                                        @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
+                                    >
+                                        <?php echo esc_html($chip_label); ?>
+                                    </button>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <form
+                    x-ref="form"
+                    method="get"
+                    action="<?php echo esc_url($base_url); ?>"
+                    class="flex w-full max-w-[384px] items-center gap-2"
+                    @submit="$refs.pageInput.value = 1"
+                >
+                    <input type="hidden" name="blog_category" x-ref="categoryInput" :value="category" />
+                    <input type="hidden" name="blog_page" x-ref="pageInput" value="<?php echo esc_attr((string) $current_page); ?>" />
+
+                    <div class="min-w-0 flex-1">
+                        <label for="<?php echo esc_attr($search_input_id); ?>" class="sr-only">
+                            <?php echo esc_html($search_placeholder); ?>
+                        </label>
+                        <input
+                            id="<?php echo esc_attr($search_input_id); ?>"
+                            type="search"
+                            name="blog_search"
+                            value="<?php echo esc_attr((string) $state['search']); ?>"
+                            placeholder="<?php echo esc_attr($search_placeholder); ?>"
+                            class="min-h-[40px] w-full rounded-[6px] border border-[#E2E8F0] px-3 py-2 font-primary text-[16px] leading-[24px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#024B79]"
+                            style="color: <?php echo esc_attr($colors['search_input_text']); ?>; border-color: <?php echo esc_attr($colors['search_input_border']); ?>;"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn inline-flex h-[36px] shrink-0 items-center justify-center gap-2 rounded-[6px] px-3 text-[14px] font-medium leading-[24px]"
+                        style="background-color: <?php echo esc_attr($colors['search_button_background']); ?>; color: <?php echo esc_attr($colors['search_button_text']); ?>;"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="shrink-0">
+                            <path d="M6.99935 12.6667C9.94487 12.6667 12.3327 10.2789 12.3327 7.33333C12.3327 4.38781 9.94487 2 6.99935 2C4.05383 2 1.66602 4.38781 1.66602 7.33333C1.66602 10.2789 4.05383 12.6667 6.99935 12.6667Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13.6656 14L10.7656 11.1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <?php echo esc_html($search_button_label); ?>
+                    </button>
+                </form>
             </div>
 
             <?php if ($has_posts) { ?>
