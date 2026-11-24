@@ -34,30 +34,12 @@ if (preg_match('/addresses and directions for our Dean Clinics.{0,120}/s', $raw_
     echo 'RAW CTX=[' . $m[0] . "]\n";
 }
 
-$next_4129 = $raw_4129;
-$next_4129 = str_replace(
-    'Dean Clinics <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
-    'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
-    $next_4129
-);
-$next_4129 = str_replace(
-    'Dean Clinics <a href="/contact-us/">Contact Us</a>.',
-    'Dean Clinics. See <a href="/contact-us/">Contact Us</a>.',
-    $next_4129
-);
-$next_4129 = str_replace(
-    'Dean Clinics <a href="http://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
-    'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
-    $next_4129
-);
-
-if ($next_4129 === $raw_4129) {
-    $next_4129 = preg_replace(
-        '#Dean Clinics\s*<a\s+href="[^"]*contact-us[^"]*"[^>]*>\s*Contact Us\s*</a>\.?#i',
-        'Dean Clinics. See <a href="https://st-patricks.s1.matrix-test.com/contact-us/">Contact Us</a>.',
-        $raw_4129
-    ) ?? $raw_4129;
-}
+// DB may already say "here" (vague) which front-end rewrites to "Contact Us".
+$next_4129 = preg_replace(
+    '#Dean Clinics\s*<a\s+href="([^"]*contact-us[^"]*)"[^>]*>\s*(?:Contact Us|here)\s*</a>\.?#i',
+    'Dean Clinics. See <a href="$1">Contact Us</a>.',
+    $raw_4129
+) ?? $raw_4129;
 
 if ($next_4129 !== $raw_4129) {
     $wpdb->update($wpdb->posts, ['post_content' => $next_4129], ['ID' => 4129]);
