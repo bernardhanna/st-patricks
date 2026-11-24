@@ -1,6 +1,6 @@
 <?php
 /**
- * Rename footer legal menu labels (force by object id / fuzzy title).
+ * Rename footer ACF legal_links labels.
  *
  *   /wp-content/themes/matrix-starter/scripts/fix-review2-footer-labels.php?key=fix-foot1
  */
@@ -15,54 +15,50 @@ if (! defined('ABSPATH')) {
     header('Content-Type: text/plain; charset=utf-8');
 }
 
-global $wpdb;
+if (! function_exists('get_field') || ! function_exists('update_field')) {
+    echo "no ACF\n";
+    exit;
+}
 
-$cookie_page = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_type='page' AND post_name LIKE '%cookie%' AND post_status='publish' LIMIT 1");
-$data_page = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_type='page' AND (post_name LIKE '%data-protection%' OR post_title LIKE 'Data Protection%') AND post_status='publish' LIMIT 1");
-echo "cookie_page={$cookie_page} data_page={$data_page}\n";
+$rows = get_field('legal_links', 'option');
+if (! is_array($rows)) {
+    echo "no legal_links\n";
+    exit;
+}
 
-$items = $wpdb->get_results(
-    "SELECT p.ID, p.post_title, m.meta_value AS object_id
-     FROM {$wpdb->posts} p
-     INNER JOIN {$wpdb->postmeta} m ON m.post_id=p.ID AND m.meta_key='_menu_item_object_id'
-     WHERE p.post_type='nav_menu_item' AND p.post_status='publish'"
-);
-
-$n = 0;
-foreach ($items as $item) {
-    $oid = (int) $item->object_id;
-    $title = (string) $item->post_title;
-    $new = null;
-    if ($cookie_page && $oid === $cookie_page) {
-        $new = 'Cookie policy';
-    } elseif ($data_page && $oid === $data_page) {
-        $new = 'Data Protection Statement';
-    } elseif (stripos($title, 'cookie') !== false && stripos($title, 'privacy') !== false) {
-        $new = 'Cookie policy';
-    } elseif (stripos($title, 'data protection policy') !== false) {
-        $new = 'Data Protection Statement';
-    }
-
-    if ($new === null) {
+$changed = 0;
+foreach ($rows as &$row) {
+    $link = $row['link'] ?? null;
+    if (! is_array($link)) {
+        echo 'row keys=' . implode(',', array_keys($row)) . "\n";
         continue;
     }
+    $title = (string) ($link['title'] ?? '');
+    $url = (string) ($link['url'] ?? '');
+    echo "before title=[{$title}] url={$url}\n";
 
-    $wpdb->update($wpdb->posts, ['post_title' => $new], ['ID' => (int) $item->ID]);
-    echo "menu {$item->ID} object={$oid} title=[{$title}] -> {$new}\n";
-    $n++;
+    $new = null;
+    if (preg_match('/cookie/i', $title) && preg_match('/privacy/i', $title)) {
+        $new = 'Cookie policy';
+    } elseif (preg_match('/data protection policy/i', $title)) {
+        $new = 'Data Protection Statement';
+    } elseif (preg_match('/cookie/i', $url) && preg_match('/privacy|cookie/i', $title)) {
+        $new = 'Cookie policy';
+    } elseif (preg_match('/data-protection/i', $url)) {
+        $new = 'Data Protection Statement';
+    }
+
+    if ($new !== null && $new !== $title) {
+        $row['link']['title'] = $new;
+        $changed++;
+        echo "  -> {$new}\n";
+    }
+}
+unset($row);
+
+if ($changed > 0) {
+    update_field('legal_links', $rows, 'option');
+    wp_cache_flush();
 }
 
-// Dump remaining fuzzy matches for debug
-$dbg = $wpdb->get_results(
-    "SELECT p.ID, p.post_title, m.meta_value AS object_id
-     FROM {$wpdb->posts} p
-     INNER JOIN {$wpdb->postmeta} m ON m.post_id=p.ID AND m.meta_key='_menu_item_object_id'
-     WHERE p.post_type='nav_menu_item' AND p.post_status='publish'
-       AND (p.post_title LIKE '%ookie%' OR p.post_title LIKE '%rotection%' OR m.meta_value IN ('{$cookie_page}','{$data_page}'))"
-);
-foreach ($dbg as $d) {
-    echo "dbg menu {$d->ID} object={$d->object_id} title=[{$d->post_title}]\n";
-}
-
-wp_cache_flush();
-echo "updated={$n}\nDONE\n";
+echo "changed={$changed}\nDONE\n";
