@@ -120,11 +120,34 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                 startX: 0,
                 scrollStart: 0,
                 moved: false,
+                canScrollLeft: false,
+                canScrollRight: false,
                 submitCategory(slug) {
                     this.category = slug;
                     this.$refs.categoryInput.value = slug;
                     this.$refs.pageInput.value = 1;
                     this.$refs.form.submit();
+                },
+                updateChipScrollEdges() {
+                    const el = this.$refs.chipScroll;
+                    if (! el) {
+                        this.canScrollLeft = false;
+                        this.canScrollRight = false;
+                        return;
+                    }
+
+                    const maxScroll = el.scrollWidth - el.clientWidth;
+                    this.canScrollLeft = el.scrollLeft > 2;
+                    this.canScrollRight = maxScroll > 2 && el.scrollLeft < maxScroll - 2;
+                },
+                scrollChips(direction) {
+                    const el = this.$refs.chipScroll;
+                    if (! el) {
+                        return;
+                    }
+
+                    const step = Math.max(160, Math.round(el.clientWidth * 0.7));
+                    el.scrollBy({ left: direction === 'next' ? step : -step, behavior: 'smooth' });
                 },
                 onChipScrollPointerDown(event) {
                     if (event.pointerType === 'mouse' && event.button !== 0) {
@@ -154,6 +177,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
 
                     if (this.dragging) {
                         this.$refs.chipScroll.scrollLeft = this.scrollStart - distance;
+                        this.updateChipScrollEdges();
                     }
                 },
                 onChipScrollPointerUp(event) {
@@ -167,6 +191,8 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         this.dragging = false;
                         this.$refs.chipScroll.releasePointerCapture?.(event.pointerId);
                     }
+
+                    this.updateChipScrollEdges();
                 },
                 onChipClick(event, slug) {
                     if (this.moved) {
@@ -179,6 +205,18 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     this.submitCategory(slug);
                 }
             }"
+            x-init="$nextTick(() => {
+                updateChipScrollEdges();
+                const onResize = () => updateChipScrollEdges();
+                window.addEventListener('resize', onResize);
+                if (typeof ResizeObserver !== 'undefined' && $refs.chipScroll) {
+                    const ro = new ResizeObserver(onResize);
+                    ro.observe($refs.chipScroll);
+                    if ($refs.chipScroll.firstElementChild) {
+                        ro.observe($refs.chipScroll.firstElementChild);
+                    }
+                }
+            })"
             class="w-full"
         >
             <?php if ($show_heading && $heading !== '') { ?>
@@ -201,36 +239,68 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         <?php echo esc_html($filter_label); ?>
                     </p>
 
-                    <div
-                        x-ref="chipScroll"
-                        class="<?php echo esc_attr($chip_scroll_classes); ?>"
-                        @pointerdown="onChipScrollPointerDown($event)"
-                        @pointermove="onChipScrollPointerMove($event)"
-                        @pointerup="onChipScrollPointerUp($event)"
-                        @pointercancel="onChipScrollPointerUp($event)"
-                        @pointerleave="onChipScrollPointerUp($event)"
-                    >
-                        <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
-                            <?php foreach ($chips as $chip) { ?>
-                                <?php
-                                $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
-                                $chip_label = trim((string) ($chip['label'] ?? ''));
+                    <div class="relative min-w-0 flex-1">
+                        <button
+                            type="button"
+                            class="group absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#7ED0E0] bg-white shadow-sm transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:pointer-events-none disabled:opacity-0"
+                            aria-label="Scroll filters left"
+                            :disabled="! canScrollLeft"
+                            :aria-hidden="canScrollLeft ? 'false' : 'true'"
+                            :tabindex="canScrollLeft ? 0 : -1"
+                            @click="scrollChips('prev')"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
 
-                                if ($chip_slug === '' || $chip_label === '') {
-                                    continue;
-                                }
-                                ?>
-                                <button
-                                    type="button"
-                                    class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
-                                    :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
-                                    :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
-                                    @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
-                                >
-                                    <?php echo esc_html($chip_label); ?>
-                                </button>
-                            <?php } ?>
+                        <div
+                            x-ref="chipScroll"
+                            class="<?php echo esc_attr($chip_scroll_classes); ?>"
+                            :class="{ 'pl-10': canScrollLeft, 'pr-10': canScrollRight }"
+                            @scroll.passive="updateChipScrollEdges()"
+                            @pointerdown="onChipScrollPointerDown($event)"
+                            @pointermove="onChipScrollPointerMove($event)"
+                            @pointerup="onChipScrollPointerUp($event)"
+                            @pointercancel="onChipScrollPointerUp($event)"
+                            @pointerleave="onChipScrollPointerUp($event)"
+                        >
+                            <div class="<?php echo esc_attr($chip_group_classes); ?>" role="group" aria-label="<?php echo esc_attr($filter_label); ?>">
+                                <?php foreach ($chips as $chip) { ?>
+                                    <?php
+                                    $chip_slug = sanitize_title((string) ($chip['slug'] ?? ''));
+                                    $chip_label = trim((string) ($chip['label'] ?? ''));
+
+                                    if ($chip_slug === '' || $chip_label === '') {
+                                        continue;
+                                    }
+                                    ?>
+                                    <button
+                                        type="button"
+                                        class="<?php echo esc_attr(matrix_get_blog_filter_archive_chip_button_class_names()); ?>"
+                                        :aria-pressed="category === '<?php echo esc_js($chip_slug); ?>' ? 'true' : 'false'"
+                                        :style="category === '<?php echo esc_js($chip_slug); ?>' ? 'border-color: <?php echo esc_js($colors['active_chip_background']); ?>; background-color: <?php echo esc_js($colors['active_chip_background']); ?>; color: <?php echo esc_js($colors['active_chip_text']); ?>;' : 'border-color: <?php echo esc_js($colors['chip_border']); ?>; background-color: <?php echo esc_js($colors['inactive_chip_background']); ?>; color: <?php echo esc_js($colors['chip_text']); ?>;'"
+                                        @click="onChipClick($event, '<?php echo esc_js($chip_slug); ?>')"
+                                    >
+                                        <?php echo esc_html($chip_label); ?>
+                                    </button>
+                                <?php } ?>
+                            </div>
                         </div>
+
+                        <button
+                            type="button"
+                            class="group absolute right-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#7ED0E0] bg-white shadow-sm transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:pointer-events-none disabled:opacity-0"
+                            aria-label="Scroll filters right"
+                            :disabled="! canScrollRight"
+                            :aria-hidden="canScrollRight ? 'false' : 'true'"
+                            :tabindex="canScrollRight ? 0 : -1"
+                            @click="scrollChips('next')"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
