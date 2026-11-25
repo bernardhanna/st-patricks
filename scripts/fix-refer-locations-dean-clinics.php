@@ -32,6 +32,41 @@ $pages = [
     'healthcare-professionals/refer-for-outpatient-care' => 'keep_dean',
 ];
 
+// Resolve missing paths via slug/title search (staging slugs can drift).
+$discover = get_posts([
+    'post_type' => 'page',
+    'post_status' => ['publish', 'draft', 'private'],
+    'posts_per_page' => 50,
+    's' => 'Refer',
+    'orderby' => 'title',
+    'order' => 'ASC',
+]);
+
+foreach ($discover as $candidate) {
+    if (! $candidate instanceof WP_Post) {
+        continue;
+    }
+    $slug = (string) $candidate->post_name;
+    $title = (string) $candidate->post_title;
+    $permalink_path = trim((string) (wp_parse_url(get_permalink($candidate), PHP_URL_PATH) ?? ''), '/');
+
+    $is_dean_page = stripos($title, 'Dean Clinic') !== false
+        || stripos($slug, 'outpatient') !== false
+        || stripos($permalink_path, 'refer-for-outpatient-care') !== false;
+
+    $is_refer_page = stripos($title, 'Refer') !== false
+        || str_starts_with($slug, 'refer-')
+        || str_contains($permalink_path, '/refer-');
+
+    if (! $is_refer_page) {
+        continue;
+    }
+
+    if ($permalink_path !== '' && ! isset($pages[$permalink_path])) {
+        $pages[$permalink_path] = $is_dean_page ? 'keep_dean' : 'strip';
+    }
+}
+
 /**
  * @param array<int, mixed> $cards
  * @return array{0: array<int, mixed>, 1: list<string>}
