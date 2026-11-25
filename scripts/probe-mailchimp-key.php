@@ -10,12 +10,18 @@ if (! defined('ABSPATH')) {
         http_response_code(403);
         exit;
     }
+    define('WP_DISABLE_FATAL_ERROR_HANDLER', true);
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
     require dirname(__DIR__, 4) . '/wp-load.php';
-    header('Content-Type: application/json; charset=utf-8');
+    header('Content-Type: text/plain; charset=utf-8');
 }
 
 $describe = static function ($value): array {
     $value = is_string($value) ? trim($value) : '';
+    if ($value === '') {
+        return ['present' => false, 'length' => 0, 'datacenter' => ''];
+    }
     $dc = function_exists('matrix_get_mailchimp_datacenter')
         ? matrix_get_mailchimp_datacenter($value)
         : '';
@@ -27,11 +33,12 @@ $describe = static function ($value): array {
     ];
 };
 
+try {
 $constant = (defined('MATRIX_MAILCHIMP_KEY') && is_string(MATRIX_MAILCHIMP_KEY))
     ? MATRIX_MAILCHIMP_KEY
     : '';
 $acf = function_exists('get_field') ? get_field('mailchimp_api_key', 'option') : null;
-$option = get_option('options_mailchimp_api_key');
+$option = function_exists('get_option') ? get_option('options_mailchimp_api_key', '') : '';
 $resolved = function_exists('matrix_get_mailchimp_api_key') ? matrix_get_mailchimp_api_key() : '';
 
 echo json_encode([
@@ -45,3 +52,6 @@ echo json_encode([
     'resolved' => $describe($resolved),
     'default_list_len' => strlen((string) (function_exists('get_field') ? get_field('mailchimp_list_id', 'option') : '')),
 ], JSON_PRETTY_PRINT);
+} catch (Throwable $e) {
+    echo $e::class . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine();
+}
