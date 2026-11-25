@@ -101,8 +101,8 @@ test('blog filter archive pagination collapses large page counts', function () {
 });
 
 test('filter archive controls stack search below filter chips', function () {
-    expect(matrix_get_filter_archive_controls_class_names())->toBe('flex flex-col gap-6')
-        ->and(matrix_get_filter_archive_controls_class_names('start'))->toBe('flex flex-col gap-6');
+    expect(matrix_get_filter_archive_controls_class_names())->toBe('flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between')
+        ->and(matrix_get_filter_archive_controls_class_names('start'))->toBe('flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between');
 });
 
 test('filter archive card grid uses one column on the smallest screens', function () {

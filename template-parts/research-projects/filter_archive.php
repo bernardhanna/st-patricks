@@ -253,7 +253,7 @@ $uses_path_category_urls = matrix_is_research_project_main_archive_url($base_url
                     x-ref="form"
                     method="get"
                     action="<?php echo esc_url($base_url); ?>"
-                    class="flex w-full max-w-[384px] items-center gap-2"
+                    class="flex w-full max-w-[384px] shrink-0 items-center gap-2 lg:ml-auto"
                     @submit.prevent="redirectWithFilters(1)"
                 >
                     <div class="min-w-0 flex-1">
