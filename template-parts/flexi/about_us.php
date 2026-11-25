@@ -81,8 +81,6 @@ $cards = [
 
 // Section background
 $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -91,6 +89,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-12 lg:py-24'
     )
     : 'py-12 lg:py-24';
+
+?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"

@@ -58,7 +58,6 @@ $resolve_link = function($link) {
   ];
 };
 
-?>
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -67,6 +66,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-32'
     )
     : 'py-32';
+
+?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"

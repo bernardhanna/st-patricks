@@ -26,7 +26,6 @@ $posts_query = new WP_Query([
 $posts = $posts_query->posts;
 
 $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
-?>
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -35,6 +34,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'pt-5 pb-24 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10'
     )
     : 'pt-5 pb-24 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10';
+
+?>
 
 <section
   id="<?php echo esc_attr($section_id); ?>"

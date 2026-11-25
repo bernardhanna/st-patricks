@@ -19,8 +19,6 @@ $total_counter_items = count($counter_items);
 
 // Layout padding classes
 
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -29,6 +27,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'pt-20 pb-20'
     )
     : 'pt-20 pb-20';
+
+?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"

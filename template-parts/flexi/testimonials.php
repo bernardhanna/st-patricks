@@ -125,8 +125,6 @@ $tone_backgrounds = [
     'lavender' => $card_lavender_color,
     'mauve' => $card_mauve_color,
 ];
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -135,6 +133,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-12 lg:py-[100px]'
     )
     : 'py-12 lg:py-[100px]';
+
+?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"

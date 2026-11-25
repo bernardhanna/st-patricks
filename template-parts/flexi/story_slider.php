@@ -110,7 +110,6 @@ $card_radius       = get_sub_field('card_radius') ?: 'rounded-md';
 
 // Layout: padding classes
 
-?>
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -119,6 +118,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'pt-5 pb-0'
     )
     : 'pt-5 pb-0';
+
+?>
 
 <section id="<?php echo esc_attr($section_id); ?>" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>" class="flex overflow-hidden relative" aria-label="Story slider"  style="background-image: linear-gradient(135deg, <?php echo esc_attr($bg_from); ?>, <?php echo esc_attr($bg_via); ?>, <?php echo esc_attr($bg_to); ?>);">
   <div class="flex flex-col items-center w-full mx-auto max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">

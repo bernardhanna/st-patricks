@@ -15,8 +15,6 @@ $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
 // Get padding settings
 
 
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -25,6 +23,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'pt-24 pb-12 max-sm:pt-16 max-sm:pb-16'
     )
     : 'pt-24 pb-12 max-sm:pt-16 max-sm:pb-16';
+
+?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"

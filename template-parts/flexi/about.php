@@ -70,8 +70,6 @@ $rotate_deg                 = isset($image_left['rotate_deg']) ? (int)$image_lef
 $allowed_tags = ['h1','h2','h3','h4','h5','h6','span','p'];
 if (!in_array($heading_tag, $allowed_tags, true)) $heading_tag = 'h2';
 
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -80,6 +78,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-24'
     )
     : 'py-24';
+
+?>
 
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"

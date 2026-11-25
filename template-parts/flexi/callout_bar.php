@@ -9,8 +9,6 @@ $message = matrix_resolve_callout_bar_message(
 if ($message === '') {
     return;
 }
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -19,6 +17,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-[10px]'
     )
     : 'py-[10px]';
+
+?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"

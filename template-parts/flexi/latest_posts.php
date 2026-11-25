@@ -52,8 +52,6 @@ if ($latest_posts_query->have_posts()) {
 
     wp_reset_postdata();
 }
-?>
-
 $padding_settings = get_sub_field('padding_settings');
 $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
     ? matrix_flexi_resolve_vertical_padding_classes(
@@ -62,6 +60,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         'py-12 pb-16 lg:py-[100px] lg:pb-[120px]'
     )
     : 'py-12 pb-16 lg:py-[100px] lg:pb-[120px]';
+
+?>
 
 <section
     id="<?php echo esc_attr($section_id); ?>"
