@@ -115,7 +115,13 @@ function matrix_get_webinar_single_placeholder_figma_key()
 
 function matrix_should_force_webinar_single_placeholder($post_id = null)
 {
-    return matrix_is_webinar_post($post_id);
+    if (! matrix_is_webinar_post($post_id)) {
+        return false;
+    }
+
+    // Prefer the real featured image when one is set; use the branded
+    // placeholder only as a fallback for webinars without media.
+    return (int) get_post_thumbnail_id($post_id) < 1;
 }
 
 function matrix_get_webinar_single_placeholder_image_id()
@@ -306,7 +312,7 @@ function matrix_map_webinar_related_post_card($post_id)
         'category_name' => $display_term instanceof WP_Term ? $display_term->name : '',
         'category_slug' => $type_slug,
         'badge_background' => (string) ($theme['badge_background'] ?? '#F9E5F2'),
-        'use_webinar_placeholder' => true,
+        'use_webinar_placeholder' => (int) $thumbnail_id < 1,
         'image_id' => (int) $thumbnail_id,
         'image_url' => $thumbnail_id ? (string) wp_get_attachment_image_url($thumbnail_id, 'medium_large') : '',
         'image_alt' => $thumbnail_id ? trim((string) get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true)) : '',

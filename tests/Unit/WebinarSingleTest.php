@@ -63,5 +63,20 @@ test('event style layout includes webinars post type', function () {
         ->and(matrix_should_force_webinar_single_placeholder($post_id))->toBeTrue()
         ->and(matrix_get_webinar_single_placeholder_figma_key())->toBe('webinar-single-placeholder-3279-17604');
 
+    if (function_exists('set_post_thumbnail') && function_exists('wp_insert_attachment')) {
+        $attachment_id = wp_insert_attachment([
+            'post_mime_type' => 'image/jpeg',
+            'post_title' => 'Webinar featured image fixture',
+            'post_status' => 'inherit',
+            'post_content' => '',
+        ], false, $post_id);
+
+        if (! is_wp_error($attachment_id) && (int) $attachment_id > 0) {
+            set_post_thumbnail($post_id, (int) $attachment_id);
+            expect(matrix_should_force_webinar_single_placeholder($post_id))->toBeFalse();
+            wp_delete_attachment((int) $attachment_id, true);
+        }
+    }
+
     wp_delete_post($post_id, true);
 });
