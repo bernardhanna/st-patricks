@@ -272,28 +272,6 @@ add_action( 'wp_footer', function () {
 } );
 
 wp_enqueue_script('jquery-ui-draggable');
-
-/**
- * Temporary admin one-shot: re-enable SPIRE flexi rows hidden by content-gathering.
- * Visit /wp-admin/?matrix_fix_spire_enable=1 while logged in as an admin, then remove this hook.
- */
-add_action('admin_init', static function (): void {
-    if (! current_user_can('manage_options')) {
-        return;
-    }
-
-    if (! isset($_GET['matrix_fix_spire_enable']) || (string) $_GET['matrix_fix_spire_enable'] !== '1') {
-        return;
-    }
-
-    if (! defined('MATRIX_SPIRE_ENABLE_BLOCKS_ALLOW_WEB')) {
-        define('MATRIX_SPIRE_ENABLE_BLOCKS_ALLOW_WEB', true);
-    }
-
-    require get_template_directory() . '/scripts/fix-spire-enable-blocks.php';
-    exit;
-});
-
 /**
  * Fill the choices with every top-level item in the “primary” menu.
  */

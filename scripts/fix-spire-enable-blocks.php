@@ -112,6 +112,13 @@ foreach ($rows as $index => $row) {
         $log(sprintf('Row %d: renamed Meeting dates → Referrals', $index));
     }
 
+    // Truncated video heading from incomplete content gathering.
+    if ($layout === 'video_showcase' && preg_match('/^Research and training on$/i', $heading)) {
+        $rows[$index]['heading'] = 'Research and training on video';
+        $content_changed = true;
+        $log(sprintf('Row %d: completed video showcase heading', $index));
+    }
+
     // REC "Sharing your research" body landed on SPIRE; restore migrate copy.
     if ($layout === 'content' && strcasecmp($heading, 'Sharing your research') === 0) {
         $rows[$index]['heading'] = 'Continue to research projects';
