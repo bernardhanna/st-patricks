@@ -196,7 +196,7 @@ $grid = matrix_orlaith_about_links_grid_row($target_heading, $links, [
     'heading_color' => '#08284B',
     'intro_color' => '#08284B',
     'card_bg_color' => '#F1F8F9',
-    'columns' => '3',
+    'columns' => '4',
     'layout_style' => 'flush_image',
     'allow_title_wrap' => 1,
     'vertical_padding' => $existing['vertical_padding'] ?? 'default',
@@ -208,7 +208,7 @@ $rows[$section_index] = $grid;
 echo ($dry ? "DRY RUN\n" : "APPLY\n");
 echo "page=#{$post_id} " . get_permalink($post_id) . "\n";
 echo "section_index={$section_index}\n";
-echo "layout=about_links_grid flush_image columns=3 cards=" . count($links) . "\n";
+echo "layout=about_links_grid flush_image columns=4 cards=" . count($links) . "\n";
 echo "LINKS:\n" . implode("\n", $linked) . "\n";
 
 if ($missing !== []) {
