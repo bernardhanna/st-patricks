@@ -890,12 +890,127 @@ if (! function_exists('matrix_process_external_links_in_html')) {
     }
 }
 
+if (! function_exists('matrix_clean_pasted_editor_html')) {
+    /**
+     * Neutralise Word/Office paste artefacts so theme typography can apply.
+     * Strips inline styles, Mso* classes, empty spans, and blank paragraphs.
+     */
+    function matrix_clean_pasted_editor_html(string $html): string
+    {
+        if ($html === '') {
+            return '';
+        }
+
+        $html = preg_replace('/<!--\[if[^\]]*\]>.*?<!\[endif\]-->/is', '', $html) ?? $html;
+        $html = preg_replace('/<!--.*?-->/s', '', $html) ?? $html;
+
+        if (! class_exists('DOMDocument')) {
+            return $html;
+        }
+
+        $previous = libxml_use_internal_errors(true);
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $wrapped = '<?xml encoding="UTF-8"><div id="matrix-paste-root">' . $html . '</div>';
+        $loaded = $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        if ($loaded === false) {
+            return $html;
+        }
+
+        $root = $dom->getElementById('matrix-paste-root');
+
+        if (! $root instanceof DOMElement) {
+            return $html;
+        }
+
+        $nodes = [];
+
+        // Collect first so live DOM mutations stay safe.
+        $xpath = new DOMXPath($dom);
+        foreach ($xpath->query('.//*', $root) ?: [] as $node) {
+            if ($node instanceof DOMElement) {
+                $nodes[] = $node;
+            }
+        }
+
+        foreach ($nodes as $el) {
+            if (! $el->parentNode) {
+                continue;
+            }
+
+            $tag = strtolower($el->tagName);
+            $class = trim($el->getAttribute('class'));
+
+            if ($el->hasAttribute('style')) {
+                $el->removeAttribute('style');
+            }
+
+            if ($class !== '' && preg_match('/\b(Mso\w*|normaltextrun|paragraph)\b/i', $class)) {
+                $cleaned_class = trim(preg_replace('/\b(Mso\w*|normaltextrun|paragraph)\b/i', '', $class) ?? '');
+                if ($cleaned_class === '') {
+                    $el->removeAttribute('class');
+                } else {
+                    $el->setAttribute('class', $cleaned_class);
+                }
+            }
+
+            if ($tag === 'span' && class_exists('DOMElement')) {
+                $is_comment_ref = (bool) preg_match('/\bMsoCommentReference\b/i', $class);
+                $has_attrs = false;
+
+                if ($el->hasAttributes()) {
+                    foreach ($el->attributes as $attr) {
+                        if ($attr->name === 'class' && trim($attr->value) === '') {
+                            continue;
+                        }
+                        $has_attrs = true;
+                        break;
+                    }
+                }
+
+                if ($is_comment_ref || ! $has_attrs) {
+                    while ($el->firstChild) {
+                        $el->parentNode->insertBefore($el->firstChild, $el);
+                    }
+                    $el->parentNode->removeChild($el);
+                }
+            }
+        }
+
+        // Drop empty paragraphs left by Word spacing.
+        foreach ($xpath->query('.//p', $root) ?: [] as $p) {
+            if (! $p instanceof DOMElement || ! $p->parentNode) {
+                continue;
+            }
+
+            $text = trim(html_entity_decode($p->textContent, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            $text = preg_replace('/\x{00A0}/u', '', $text) ?? $text;
+            $text = trim($text);
+
+            if ($text === '' && $p->getElementsByTagName('img')->length === 0) {
+                $p->parentNode->removeChild($p);
+            }
+        }
+
+        $out = '';
+        foreach ($root->childNodes as $child) {
+            $out .= $dom->saveHTML($child);
+        }
+
+        return $out;
+    }
+}
+
 if (! function_exists('matrix_kses_rich_text')) {
     function matrix_kses_rich_text(string $html): string
     {
         if ($html === '') {
             return '';
         }
+
+        $html = matrix_clean_pasted_editor_html($html);
 
         $cleaned = function_exists('matrix_kses_post_with_embeds')
             ? matrix_kses_post_with_embeds($html)

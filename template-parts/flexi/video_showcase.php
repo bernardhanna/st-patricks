@@ -8,6 +8,8 @@ $layout_style = matrix_resolve_video_showcase_layout_style(get_sub_field('layout
 $video_surface_size = matrix_resolve_video_showcase_surface_size(get_sub_field('video_surface_size'));
 $text_max_width = matrix_resolve_video_showcase_text_width(get_sub_field('text_max_width'));
 $vertical_padding = matrix_resolve_video_showcase_vertical_padding(get_sub_field('vertical_padding'));
+$padding_settings = get_sub_field('padding_settings');
+$padding_settings = is_array($padding_settings) ? $padding_settings : [];
 $section_background = (string) get_sub_field('section_background');
 
 $show_heading = $heading !== '';
@@ -96,7 +98,7 @@ $show_slide_meta = $initial_caption !== '' || $slides_have_cta;
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(matrix_get_video_showcase_section_wrapper_class_names($vertical_padding)); ?>">
+    <div class="<?php echo esc_attr(matrix_get_video_showcase_section_wrapper_class_names($vertical_padding, $padding_settings)); ?>">
         <?php if ($show_header) { ?>
             <div class="<?php echo esc_attr($heading_wrap_width_class); ?>">
                 <?php if ($show_heading) { ?>
@@ -110,7 +112,7 @@ $show_slide_meta = $initial_caption !== '' || $slides_have_cta;
                 <?php } ?>
 
                 <?php if ($show_intro) { ?>
-                    <div class="wp_editor <?php echo $show_heading ? 'mt-6' : ''; ?> [&_p:last-child]:mb-0 [&_p]:font-primary [&_p]:text-[16px] [&_p]:font-medium [&_p]:leading-[28px] [&_p]:text-[#08284B] [&_a]:font-medium [&_a]:text-[#024B79] [&_a]:underline hover:[&_a]:no-underline">
+                    <div class="wp_editor editor-body-content <?php echo $show_heading ? 'mt-6' : ''; ?> [&_p]:mb-4 [&_p:last-child]:mb-0 [&_a]:font-medium [&_a]:text-[#024B79] [&_a]:underline hover:[&_a]:no-underline">
                         <?php echo matrix_kses_rich_text($intro); ?>
                     </div>
                 <?php } ?>

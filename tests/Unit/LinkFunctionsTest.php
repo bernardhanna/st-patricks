@@ -161,3 +161,31 @@ test('matrix_process_external_links_in_html keeps a descriptive image alt when n
 
     expect(matrix_process_external_links_in_html($html))->toContain('St Patrick');
 });
+
+test('matrix_clean_pasted_editor_html strips Word styles classes and empty paragraphs', function () {
+    $html = '<p class="MsoNormal" style="line-height: 150%"><span style="font-size: 12.0pt">Hello <a href="/x/">link</a></span></p>'
+        . '<p class="MsoNormal" style="line-height: 150%">&nbsp;</p>'
+        . '<h2 class="paragraph" style="margin: 0cm"><span class="normaltextrun"><span style="font-family: Aptos">Heading</span></span></h2>'
+        . '<p>Body<!-- [if !supportAnnotations]--> text</p>';
+
+    $cleaned = matrix_clean_pasted_editor_html($html);
+
+    expect($cleaned)->toContain('<a href="/x/">link</a>')
+        ->and($cleaned)->toContain('>Heading<')
+        ->and($cleaned)->toContain('>Body')
+        ->and($cleaned)->not->toContain('MsoNormal')
+        ->and($cleaned)->not->toContain('font-size:')
+        ->and($cleaned)->not->toContain('Aptos')
+        ->and($cleaned)->not->toContain('normaltextrun')
+        ->and($cleaned)->not->toContain('supportAnnotations');
+});
+
+test('matrix_kses_rich_text cleans Word paste then keeps links', function () {
+    $html = '<p class="MsoNormal" style="line-height: 150%"><span style="font-size: 12.0pt">See <a href="https://example.com/doc">the doc</a>.</span></p>';
+    $out = matrix_kses_rich_text($html);
+
+    expect($out)->toContain('href="https://example.com/doc"')
+        ->and($out)->toContain('target="_blank"')
+        ->and($out)->not->toContain('MsoNormal')
+        ->and($out)->not->toContain('font-size:');
+});
