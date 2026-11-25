@@ -94,6 +94,10 @@ function matrix_normalize_useful_links($rows, $exclude_url = null, $exclude_post
             continue;
         }
 
+        if (function_exists('matrix_format_useful_link_title')) {
+            $title = matrix_format_useful_link_title($title);
+        }
+
         $url = (string) $link['url'];
 
         if ($exclude_url !== '' && matrix_useful_link_is_current_page($url, $exclude_url, $exclude_post_id)) {
@@ -108,6 +112,23 @@ function matrix_normalize_useful_links($rows, $exclude_url = null, $exclude_post
     }
 
     return $items;
+}
+
+/**
+ * Normalize Useful links section heading to sentence case (e.g. Useful Links → Useful links).
+ */
+function matrix_format_useful_links_heading(string $heading): string
+{
+    $heading = trim($heading);
+    if ($heading === '') {
+        return 'Useful links';
+    }
+
+    if (function_exists('matrix_format_useful_link_title')) {
+        return matrix_format_useful_link_title($heading);
+    }
+
+    return $heading;
 }
 
 function matrix_get_search_results_useful_links_defaults()
@@ -134,21 +155,21 @@ function matrix_get_search_results_useful_links_defaults()
         'link_color' => '#1E244B',
         'variant' => 'search',
         'links' => [
-            $link('Day Programmes', 'what-we-offer/day-programmes/'),
-            $link('Inpatient Care', 'inpatient-care/'),
-            $link('Outpatient Care - Dean Clinics', 'what-we-offer/outpatient-care-dean-clinics/'),
+            $link('Day programmes', 'what-we-offer/day-programmes/'),
+            $link('Inpatient care', 'inpatient-care/'),
+            $link('Outpatient care - Dean Clinics', 'what-we-offer/outpatient-care-dean-clinics/'),
             $link('About Your Portal', 'about-your-portal/'),
             [
                 'link' => [
-                    'title' => 'Make a Payment',
+                    'title' => 'Make a payment',
                     'url' => 'https://buy.stripe.com/aFa4gy8Yide50e9erjbwk00',
                     'target' => '_blank',
                 ],
             ],
-            $link('Directions and Parking', 'directions-and-parking/'),
-            $link('Clinician Insights', 'healthcare-professionals/clinician-insights/'),
-            $link('Sitemap (All website links)', 'sitemap/'),
-            $link('Media Queries', 'about-us/media-queries/'),
+            $link('Directions and parking', 'directions-and-parking/'),
+            $link('Clinician insights', 'healthcare-professionals/clinician-insights/'),
+            $link('Sitemap (all website links)', 'sitemap/'),
+            $link('Media queries', 'about-us/media-queries/'),
         ],
     ];
 }

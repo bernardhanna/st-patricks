@@ -14,7 +14,9 @@ $variant = (string) ($section['variant'] ?? 'flexi');
 $wrapper_classes = trim((string) ($section['wrapper_classes'] ?? ''));
 $links = matrix_normalize_useful_links($section['links'] ?? []);
 
-if ($heading === '') {
+if (function_exists('matrix_format_useful_links_heading')) {
+    $heading = matrix_format_useful_links_heading($heading);
+} elseif ($heading === '') {
     $heading = 'Useful links';
 }
 

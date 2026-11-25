@@ -11,6 +11,11 @@ $heading_text = (string) (get_sub_field('heading_text') ?: '');
 $intro_text   = (string) (get_sub_field('intro_text') ?: '');
 $links        = get_sub_field('links');
 $links        = is_array($links) ? $links : [];
+$is_useful_links_heading = $heading_text !== '' && strcasecmp(trim($heading_text), 'Useful links') === 0;
+
+if ($is_useful_links_heading && function_exists('matrix_format_useful_links_heading')) {
+    $heading_text = matrix_format_useful_links_heading($heading_text);
+}
 
 $bg_color         = get_sub_field('bg_color') ?: '#FFFFFF';
 $heading_color    = get_sub_field('heading_color') ?: '#1E244B';
@@ -104,10 +109,17 @@ if ($vertical_padding === 'custom') {
                         ? matrix_get_about_links_grid_card_background($layout_style, $card_tone, $card_bg_color)
                         : matrix_get_about_links_grid_card_footer_background($card_tone, $card_bg_color);
 
+                    if ($is_useful_links_heading && $title !== '' && function_exists('matrix_format_useful_link_title')) {
+                        $title = matrix_format_useful_link_title($title);
+                    }
+
                     $has_link = is_array($link) && ! empty($link['url']);
                     $link_url = $has_link ? $link['url'] : '';
                     $link_target = $has_link ? ($link['target'] ?: '_self') : '_self';
                     $link_title = $has_link ? (string) ($link['title'] ?: $title) : $title;
+                    if ($is_useful_links_heading && $link_title !== '' && function_exists('matrix_format_useful_link_title')) {
+                        $link_title = matrix_format_useful_link_title($link_title);
+                    }
 
                     $icon_url = is_array($icon) ? ($icon['url'] ?? '') : '';
                     $icon_alt = is_array($icon) ? ($icon['alt'] ?? ($icon['title'] ?? $title)) : $title;
