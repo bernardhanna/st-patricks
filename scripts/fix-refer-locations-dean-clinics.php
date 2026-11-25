@@ -27,6 +27,7 @@ $dry = isset($_GET['dry']) || (defined('WP_CLI') && WP_CLI && in_array('--dry', 
 $pages = [
     'healthcare-professionals/refer-an-adult-for-inpatient-care' => 'strip',
     'healthcare-professionals/refer-an-adolescent-for-inpatient-care' => 'strip',
+    'healthcare-professionals/refer-an-adolescent' => 'strip',
     'healthcare-professionals/refer-to-the-st-patricks-at-home-service' => 'strip',
     'healthcare-professionals/refer-to-a-day-programme' => 'strip',
     'healthcare-professionals/refer-for-outpatient-care' => 'keep_dean',
