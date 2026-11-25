@@ -117,15 +117,27 @@ $intro_row = matrix_orlaith_content_row(
     ['vertical_padding' => 'no_bottom']
 );
 
+// Navy style bar (callout). Fallback to navy content banner if callout is stripped on save.
 $willow_message = 'Please note that inpatient care for adolescent service users is provided through '
     . $willow
     . '.';
-$willow_row = [
+$willow_callout = [
     'acf_fc_layout' => 'callout_bar',
     'message' => $willow_message,
     'bar_style' => 'navy',
     'vertical_padding' => 'none',
 ];
+$willow_content_fallback = matrix_orlaith_content_row(
+    '',
+    '<p>' . $willow_message . '</p>',
+    'navy',
+    0,
+    'image_left',
+    [
+        'vertical_padding' => 'none',
+        'color_scheme' => 'inverse',
+    ]
+);
 
 // Drop any previous injects from a re-run (match by heading / telltale copy).
 $cleaned = [];
@@ -138,6 +150,7 @@ foreach ($rows as $row) {
     $content = (string) ($row['content'] ?? '');
     $intro = (string) ($row['intro'] ?? '');
     $message = (string) ($row['message'] ?? '');
+    $blob = $content . "\n" . $message;
 
     if ($layout === 'video_showcase' && (
         $heading === 'Videos about our inpatient services'
@@ -146,14 +159,14 @@ foreach ($rows as $row) {
         continue;
     }
 
-    if ($layout === 'content' && $heading === '' && (
-        str_contains($content, 'We provide inpatient care to adult service users')
-        || str_contains($content, 'inpatient care for adolescent service users is provided through Willow Grove')
-    )) {
+    if ($layout === 'content' && $heading === '' && str_contains($content, 'We provide inpatient care to adult service users')) {
         continue;
     }
 
-    if ($layout === 'callout_bar' && str_contains($message, 'inpatient care for adolescent service users')) {
+    if (
+        str_contains($blob, 'inpatient care for adolescent service users')
+        && in_array($layout, ['content', 'callout_bar'], true)
+    ) {
         continue;
     }
 
@@ -171,35 +184,56 @@ $rows[0]['content'] = $hero_short;
 $tail = array_slice($rows, 1);
 $rows = array_merge(
     [$rows[0]],
-    [$intro_row, $video_row, $willow_row],
+    [$intro_row, $video_row, $willow_callout],
     $tail
 );
 
-// Tighten content → accordion pairs: drop bottom padding on the intro content block.
-for ($i = 0, $count = count($rows); $i < $count - 1; $i++) {
-    $current = $rows[$i] ?? null;
-    $next = $rows[$i + 1] ?? null;
-    if (! is_array($current) || ! is_array($next)) {
-        continue;
+$tighten_pairs = static function (array $rows): array {
+    for ($i = 0, $count = count($rows); $i < $count - 1; $i++) {
+        $current = $rows[$i] ?? null;
+        $next = $rows[$i + 1] ?? null;
+        if (! is_array($current) || ! is_array($next)) {
+            continue;
+        }
+        if (($current['acf_fc_layout'] ?? '') !== 'content') {
+            continue;
+        }
+        if (($next['acf_fc_layout'] ?? '') !== 'content_accordion') {
+            continue;
+        }
+        $rows[$i]['vertical_padding'] = 'no_bottom';
+        $next_pad = (string) ($rows[$i + 1]['vertical_padding'] ?? '');
+        if ($next_pad === '' || $next_pad === 'default') {
+            $rows[$i + 1]['vertical_padding'] = 'bottom_only';
+        }
     }
-    if (($current['acf_fc_layout'] ?? '') !== 'content') {
-        continue;
-    }
-    if (($next['acf_fc_layout'] ?? '') !== 'content_accordion') {
-        continue;
-    }
-    $rows[$i]['vertical_padding'] = 'no_bottom';
-    if (($rows[$i + 1]['vertical_padding'] ?? '') === '' || ($rows[$i + 1]['vertical_padding'] ?? '') === 'default') {
-        $rows[$i + 1]['vertical_padding'] = 'bottom_only';
-    }
-}
 
+    return $rows;
+};
+
+$rows = $tighten_pairs($rows);
 matrix_orlaith_save_page($post_id, $rows, true, 0);
 
 $verify = get_field('flexible_content_blocks', $post_id);
 $layouts = is_array($verify)
     ? array_map(static fn ($r) => (string) ($r['acf_fc_layout'] ?? ''), $verify)
     : [];
+
+if (! in_array('callout_bar', $layouts, true)) {
+    // ACF dropped the callout layout — use a navy content banner instead.
+    $rows = array_merge(
+        [$rows[0]],
+        [$intro_row, $video_row, $willow_content_fallback],
+        $tail
+    );
+    $rows = $tighten_pairs($rows);
+    matrix_orlaith_save_page($post_id, $rows, true, 0);
+    $verify = get_field('flexible_content_blocks', $post_id);
+    $layouts = is_array($verify)
+        ? array_map(static fn ($r) => (string) ($r['acf_fc_layout'] ?? ''), $verify)
+        : [];
+    echo "WARN callout_bar not persisted; used navy content fallback\n";
+}
 
 echo "OK adult stay #{$post_id}: blocks=" . count($layouts)
     . ' slides=' . count($slides)
