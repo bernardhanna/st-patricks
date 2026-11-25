@@ -1,6 +1,7 @@
 <?php
 /**
- * Wire "Learn about mental health difficulties" labels to condition pages.
+ * Replace "Learn about mental health difficulties" text links with an
+ * about_links_grid (thumb + title cards) linking to each condition page.
  *
  * HTTP (staging/local):
  *   /wp-content/themes/matrix-starter/scripts/fix-about-mental-health-difficulty-links.php?key=fix-amh-difficulty-links
@@ -21,6 +22,8 @@ if (! defined('ABSPATH')) {
 }
 
 require_once get_template_directory() . '/inc/mental-health-functions.php';
+require_once get_template_directory() . '/inc/migrate-functions.php';
+require_once get_template_directory() . '/scripts/lib/orlaith-page-helpers.php';
 
 $dry = isset($_GET['dry']) || (defined('WP_CLI') && WP_CLI && in_array('--dry', $_SERVER['argv'] ?? [], true));
 
@@ -43,31 +46,95 @@ if (! is_array($rows) || $rows === []) {
 }
 
 /**
- * Label (as shown on page) => mental_health CPT slug.
+ * Same label set as the About mental health list, with hub thumbnail paths.
  *
- * @var array<string, string>
+ * @var list<array{title:string,slug:string,image:string,tone:string}>
  */
-$label_to_slug = [
-    'Addiction and dual diagnosis' => 'addiction-dual-diagnosis',
-    'Anxiety' => 'anxiety',
-    'Bipolar disorder' => 'bipolar-disorder',
-    'Depression' => 'depression',
-    'Eating disorders' => 'eating-disorders',
-    'Personality disorder' => 'personality-disorders',
-    'Personality disorders' => 'personality-disorders',
-    'Schizophrenia and psychosis' => 'schizophrenia-psychosis',
-    'Mental health difficulties in young adults' => 'young-adults',
+$cards_def = [
+    [
+        'title' => 'Addiction and dual diagnosis',
+        'slug' => 'addiction-dual-diagnosis',
+        'image' => '/media/1639/personality-disorder.jpeg',
+        'tone' => 'bg1',
+    ],
+    [
+        'title' => 'Anxiety',
+        'slug' => 'anxiety',
+        'image' => '/media/3279/anxiety-featured-image.png',
+        'tone' => 'bg1',
+    ],
+    [
+        'title' => 'Bipolar disorder',
+        'slug' => 'bipolar-disorder',
+        'image' => '/media/3263/bipolar-disorder-featured-image.png',
+        'tone' => 'bg1',
+    ],
+    [
+        'title' => 'Depression',
+        'slug' => 'depression',
+        'image' => '/media/3264/depression-featured-image.jpg',
+        'tone' => 'bg2',
+    ],
+    [
+        'title' => 'Eating disorders',
+        'slug' => 'eating-disorders',
+        'image' => '/media/1863/eating-disorders-causes-characteristics-common-misconceptions.jpg',
+        'tone' => 'bg2',
+    ],
+    [
+        'title' => 'Personality disorder',
+        'slug' => 'personality-disorders',
+        'image' => '/media/2113/what-are-personality-disorders.jpg',
+        'tone' => 'bg2',
+    ],
+    [
+        'title' => 'Schizophrenia and psychosis',
+        'slug' => 'schizophrenia-psychosis',
+        'image' => '/media/3292/still-just-me-psychosis-featured-image.jpg',
+        'tone' => 'bg3',
+    ],
+    [
+        'title' => 'Mental health difficulties in young adults',
+        'slug' => 'young-adults',
+        'image' => '/media/1662/adobestock_88353473.jpeg',
+        'tone' => 'bg3',
+    ],
 ];
+
+$image_url_for = static function (string $source_path): string {
+    if (function_exists('matrix_migrate_attachment_id_for_source_path')) {
+        $attachment_id = matrix_migrate_attachment_id_for_source_path($source_path);
+        if ($attachment_id > 0) {
+            $url = wp_get_attachment_url($attachment_id);
+            if (is_string($url) && $url !== '') {
+                return $url;
+            }
+        }
+    }
+
+    if (function_exists('matrix_migrate_live_url')) {
+        return (string) matrix_migrate_live_url($source_path);
+    }
+
+    return '';
+};
 
 $target_heading = 'Learn about mental health difficulties';
 $section_index = null;
 
 foreach ($rows as $index => $row) {
-    if (! is_array($row) || ($row['acf_fc_layout'] ?? '') !== 'content') {
+    if (! is_array($row)) {
         continue;
     }
 
-    $heading = trim(wp_strip_all_tags((string) ($row['heading'] ?? '')));
+    $layout = (string) ($row['acf_fc_layout'] ?? '');
+    $heading = '';
+    if ($layout === 'content') {
+        $heading = trim(wp_strip_all_tags((string) ($row['heading'] ?? '')));
+    } elseif ($layout === 'about_links_grid') {
+        $heading = trim(wp_strip_all_tags((string) ($row['heading_text'] ?? '')));
+    }
+
     if (strcasecmp($heading, $target_heading) === 0) {
         $section_index = $index;
         break;
@@ -75,21 +142,18 @@ foreach ($rows as $index => $row) {
 }
 
 if ($section_index === null) {
-    echo "FAIL no content block titled \"{$target_heading}\" on #{$post_id}\n";
+    echo "FAIL no block titled \"{$target_heading}\" on #{$post_id}\n";
     exit(1);
 }
 
-$before_html = (string) ($rows[$section_index]['content'] ?? '');
+$existing = $rows[$section_index];
+$links = [];
 $linked = [];
 $missing = [];
-$paragraphs = [];
 
-foreach ($label_to_slug as $label => $slug) {
-    // Prefer unique labels; Personality disorders alias shares the slug.
-    if ($label === 'Personality disorders') {
-        continue;
-    }
-
+foreach ($cards_def as $card) {
+    $slug = $card['slug'];
+    $title = $card['title'];
     $url = function_exists('matrix_mental_health_condition_url')
         ? matrix_mental_health_condition_url($slug)
         : home_url('/mental-health/' . $slug . '/');
@@ -102,33 +166,53 @@ foreach ($label_to_slug as $label => $slug) {
         'fields' => 'ids',
     ]);
 
-    if ($exists === []) {
-        $missing[] = "{$label} → /mental-health/{$slug}/ (no publish CPT)";
-        // Keep label as plain text rather than a dead link.
-        $paragraphs[] = '<p>' . esc_html($label) . '</p>';
-        continue;
+    $image_url = $image_url_for($card['image']);
+    if ($image_url === '') {
+        $missing[] = "{$title}: no image for {$card['image']}";
     }
 
-    $linked[] = "{$label} → {$url}";
-    $paragraphs[] = '<p><a href="' . esc_url($url) . '">' . esc_html($label) . '</a></p>';
+    if ($exists === []) {
+        $missing[] = "{$title} → /mental-health/{$slug}/ (no publish CPT)";
+    }
+
+    $linked[] = "{$title} → {$url} | img=" . ($image_url !== '' ? 'yes' : 'no');
+
+    $links[] = [
+        'icon' => '',
+        'image_url' => $image_url,
+        'title' => $title,
+        'description' => '',
+        'link' => [
+            'title' => $title,
+            'url' => $url,
+            'target' => '',
+        ],
+        'card_tone' => $card['tone'],
+    ];
 }
 
-$after_html = implode("\n", $paragraphs);
+$grid = matrix_orlaith_about_links_grid_row($target_heading, $links, [
+    'bg_color' => '#FFFFFF',
+    'heading_color' => '#08284B',
+    'intro_color' => '#08284B',
+    'card_bg_color' => '#F1F8F9',
+    'columns' => '3',
+    'layout_style' => 'flush_image',
+    'allow_title_wrap' => 1,
+    'vertical_padding' => $existing['vertical_padding'] ?? 'default',
+    'padding_settings' => $existing['padding_settings'] ?? [],
+]);
 
-$rows[$section_index]['content'] = $after_html;
-// Misplaced leftover from an older anxiety-focused seed — not part of this list.
-$rows[$section_index]['primary_button'] = '';
-$rows[$section_index]['primary_button_variant'] = '';
+$rows[$section_index] = $grid;
 
 echo ($dry ? "DRY RUN\n" : "APPLY\n");
 echo "page=#{$post_id} " . get_permalink($post_id) . "\n";
 echo "section_index={$section_index}\n";
-echo "BEFORE:\n{$before_html}\n";
-echo "AFTER:\n{$after_html}\n";
+echo "layout=about_links_grid flush_image columns=3 cards=" . count($links) . "\n";
 echo "LINKS:\n" . implode("\n", $linked) . "\n";
 
 if ($missing !== []) {
-    echo "MISSING:\n" . implode("\n", $missing) . "\n";
+    echo "WARN:\n" . implode("\n", $missing) . "\n";
 }
 
 if ($dry) {
