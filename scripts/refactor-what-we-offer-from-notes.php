@@ -341,6 +341,9 @@ if ($dean_id > 0) {
                     'layout_style' => 'compact_row',
                     'columns' => '2',
                     'bg_color' => '#FBFAF7',
+                    // Top only so Adolescent can own the shared mid-gap.
+                    'vertical_padding' => 'no_bottom',
+                    'padding_settings' => [],
                 ]
             );
             $new[] = matrix_orlaith_about_links_grid_row(
@@ -351,6 +354,9 @@ if ($dean_id > 0) {
                     'layout_style' => 'compact_row',
                     'columns' => '2',
                     'bg_color' => '#F1F8F9',
+                    // Equal top/bottom — clears leftover asymmetric padding_settings.
+                    'vertical_padding' => 'default',
+                    'padding_settings' => [],
                 ]
             );
             continue;
