@@ -146,6 +146,7 @@ $page_rows = [
         'column_layout' => 'one_column',
         'background_type' => 'cream',
         'text_width' => 'constrained',
+        'vertical_padding' => 'medium',
     ],
 ];
 

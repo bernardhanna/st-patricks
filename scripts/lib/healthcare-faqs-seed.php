@@ -228,10 +228,7 @@ if (! function_exists('matrix_seed_hp_faqs_section_row')) {
             'open_item_background' => 'linear-gradient(-42.77deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
             'question_color' => '#1E244B',
             'answer_color' => '#08284B',
-            'padding_settings' => [
-                ['screen_size' => 'mob', 'padding_top' => '2', 'padding_bottom' => '2'],
-                ['screen_size' => 'lg', 'padding_top' => '4', 'padding_bottom' => '4'],
-            ],
+            'vertical_padding' => 'medium',
         ];
     }
 }
