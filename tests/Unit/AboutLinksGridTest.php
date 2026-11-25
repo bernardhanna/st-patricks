@@ -30,6 +30,8 @@ test('about links grid layout helpers resolve card partial and backgrounds', fun
     expect(matrix_get_about_links_grid_card_partial('flush_image'))
         ->toBe('template-parts/flexi/partials/about-links-grid-card-flush-image')
         ->and(matrix_get_about_links_grid_grid_class_names('flush_image', '3'))
+        ->toContain('sm:grid-cols-2')
+        ->and(matrix_get_about_links_grid_grid_class_names('flush_image', '3'))
         ->toContain('lg:grid-cols-3')
         ->and(matrix_get_about_links_grid_grid_class_names('image_feature', '2'))
         ->toContain('lg:grid-cols-2')

@@ -66,10 +66,10 @@ function matrix_get_about_links_grid_grid_class_names(string $layout_style, stri
 {
     $column_classes = [
         '2' => 'sm:grid-cols-2 lg:grid-cols-2',
-        '3' => 'lg:grid-cols-3',
-        '4' => 'lg:grid-cols-4',
+        '3' => 'sm:grid-cols-2 lg:grid-cols-3',
+        '4' => 'sm:grid-cols-2 lg:grid-cols-4',
     ];
-    $grid_columns = $column_classes[$columns] ?? 'lg:grid-cols-3';
+    $grid_columns = $column_classes[$columns] ?? 'sm:grid-cols-2 lg:grid-cols-3';
 
     return 'grid w-full grid-cols-1 gap-4 ' . $grid_columns . ' lg:gap-x-8 lg:gap-y-4';
 }
