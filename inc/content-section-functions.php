@@ -590,22 +590,36 @@ function matrix_get_editor_body_content_wrapper_class_names()
 }
 
 /**
- * Standard inner wrapper for flexi blocks after custom padding_settings removal.
+ * Standard inner wrapper for flexi blocks (shared max-width + horizontal gutter).
+ * Vertical spacing comes from the same presets as content / locations_grid.
  *
  * @param array<int, string> $extra
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
  */
-function matrix_get_flexi_section_wrapper_class_names(array $extra = []): string
-{
-    return implode(' ', array_unique(array_merge([
+function matrix_get_flexi_section_wrapper_class_names(
+    array $extra = [],
+    $vertical_padding = 'default',
+    $padding_settings = []
+): string {
+    $classes = [
         'mx-auto',
         'flex',
         'w-full',
         'max-w-[1018px]',
         'flex-col',
         'max-xl:px-5',
-        'py-12',
-        'lg:py-[100px]',
-    ], $extra)));
+    ];
+
+    $padding = matrix_get_shared_vertical_padding_classes(
+        is_string($vertical_padding) ? $vertical_padding : 'default',
+        is_array($padding_settings) ? $padding_settings : []
+    );
+
+    foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+        $classes[] = $class;
+    }
+
+    return implode(' ', array_unique(array_merge($classes, $extra)));
 }
 
 function matrix_resolve_section_vertical_padding($value = '')

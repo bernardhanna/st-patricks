@@ -327,6 +327,7 @@ $flexi_rows = [
         'posts_per_page' => count($rec_members),
         'section_background' => '#FFFFFF',
         'card_background_color' => '#FFFFFF',
+        'vertical_padding' => 'none',
     ],
     [
         'acf_fc_layout' => 'content',

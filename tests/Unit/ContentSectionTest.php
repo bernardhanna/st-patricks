@@ -123,7 +123,11 @@ test('flexi heading section ids slug the heading and fall back when empty', func
 test('flexi section wrapper keeps standard max width and padding', function () {
     expect(matrix_get_flexi_section_wrapper_class_names())->toContain('max-w-[1018px]')
         ->and(matrix_get_flexi_section_wrapper_class_names())->toContain('py-12')
-        ->and(matrix_get_flexi_section_wrapper_class_names(['lg:grid']))->toContain('lg:grid');
+        ->and(matrix_get_flexi_section_wrapper_class_names())->toContain('lg:py-[100px]')
+        ->and(matrix_get_flexi_section_wrapper_class_names(['lg:grid']))->toContain('lg:grid')
+        ->and(matrix_get_flexi_section_wrapper_class_names([], 'none'))->toContain('py-0')
+        ->and(matrix_get_flexi_section_wrapper_class_names([], 'none'))->not->toContain('lg:py-[100px]')
+        ->and(matrix_get_flexi_section_wrapper_class_names([], 'medium'))->toContain('lg:py-[60px]');
 });
 
 test('shared section vertical padding resolves default standard and bottom only modes', function () {

@@ -14,6 +14,8 @@ $posts_per_page = (int) get_sub_field('posts_per_page');
 $section_background = (string) get_sub_field('section_background');
 $card_background_color = (string) get_sub_field('card_background_color');
 $spokespeople_card_background_color = (string) get_sub_field('spokespeople_card_background_color');
+$vertical_padding = get_sub_field('vertical_padding');
+$padding_settings = get_sub_field('padding_settings');
 
 if ($heading === '') {
     $heading = 'Our Senior Management Team';
@@ -130,7 +132,11 @@ if ($layout_style === 'spokespeople_grid') {
     class="flex overflow-hidden relative"
     style="<?php echo esc_attr($section_background_style); ?>"
 >
-    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names()); ?>">
+    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names(
+        [],
+        is_string($vertical_padding) ? $vertical_padding : 'default',
+        is_array($padding_settings) ? $padding_settings : []
+    )); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#1E244B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
         >
