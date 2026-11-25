@@ -523,6 +523,22 @@ update_post_meta($page_id, '_matrix_migrate_old_path', 'research/spire');
 update_field('hero_content_blocks', [], $page_id);
 update_field('flexible_content_blocks', $flexi_rows, $page_id);
 
+// Content-gathering "Disable this block" flags survive update_field(); clear so all rows render.
+if (defined('MATRIX_EXPORT_DISABLED_BLOCKS_OPTION')) {
+    $disabled_map = get_option(MATRIX_EXPORT_DISABLED_BLOCKS_OPTION, []);
+
+    if (is_array($disabled_map) && isset($disabled_map[$page_id]['flexible_content_blocks'])) {
+        unset($disabled_map[$page_id]['flexible_content_blocks']);
+
+        if (isset($disabled_map[$page_id]) && $disabled_map[$page_id] === []) {
+            unset($disabled_map[$page_id]);
+        }
+
+        update_option(MATRIX_EXPORT_DISABLED_BLOCKS_OPTION, $disabled_map, false);
+        WP_CLI::log('Cleared matrix_export_disabled_blocks for SPIRE page.');
+    }
+}
+
 flush_rewrite_rules(false);
 
 WP_CLI::success(sprintf(
