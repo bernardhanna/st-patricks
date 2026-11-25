@@ -54,7 +54,7 @@ $intro_html = '<p>We provide inpatient care to adult service users in '
 
 $willow = matrix_orlaith_a(
     'service-users-and-visitors/your-care-with-willow-grove/your-stay-in-hospital-as-an-adolescent',
-    'Willow Grove'
+    'here'
 );
 $willow_html = '<p>Please note that inpatient care for adolescent service users is provided through Willow Grove Adolescent Unit. You can learn more about Willow Grove '
     . $willow
