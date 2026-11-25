@@ -408,6 +408,13 @@ if (! function_exists('matrix_orlaith_save_page')) {
         if ($hero_image > 0) {
             set_post_thumbnail($post_id, $hero_image);
         }
+        if ($builder) {
+            // Avoid classic post_content dumping above flexi layouts on page.php.
+            wp_update_post([
+                'ID' => $post_id,
+                'post_content' => '',
+            ]);
+        }
         if (class_exists('Matrix_Flexible_Pages')) {
             Matrix_Flexible_Pages::set_flexible_page($post_id, $builder);
         }

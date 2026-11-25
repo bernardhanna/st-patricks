@@ -17,7 +17,11 @@ $enable_breadcrumbs = get_field('enable_breadcrumbs', 'option'); // Returns true
     <?php
     if (have_posts()) :
         while (have_posts()) : the_post();
-            if (trim(get_the_content()) != '') : ?>
+            // Flexible builder pages own the layout; skip classic post_content so
+            // leftover editor HTML cannot dump above hero/flexi blocks.
+            $flexible_blocks = function_exists('get_field') ? get_field('flexible_content_blocks') : null;
+            $has_flexible_blocks = is_array($flexible_blocks) && $flexible_blocks !== [];
+            if (! $has_flexible_blocks && trim(get_the_content()) !== '') : ?>
                 <section class="bg-white">
                     <div class="<?php echo esc_attr(matrix_get_editor_body_content_wrapper_class_names()); ?>">
                         <?php
