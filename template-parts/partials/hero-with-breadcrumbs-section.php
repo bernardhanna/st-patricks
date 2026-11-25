@@ -36,7 +36,7 @@ extract($hero, EXTR_SKIP);
     <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_container_class_names()); ?>">
 
         <?php if ($layout_style === 'register_intro') { ?>
-            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names()); ?>">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names($vertical_padding ?? 'default', $padding_settings ?? [])); ?>">
                 <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_layout_class_names()); ?>">
                     <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_register_intro_text_column_class_names()); ?>">
                         <<?php echo esc_attr($heading_tag); ?>
@@ -90,7 +90,7 @@ extract($hero, EXTR_SKIP);
                 </div>
             </div>
         <?php } elseif ($layout_style === 'title_accent') { ?>
-            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names()); ?>">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names($vertical_padding ?? 'default', $padding_settings ?? [])); ?>">
                 <div class="flex flex-col gap-8 max-w-[1018px]">
                     <<?php echo esc_attr($heading_tag); ?>
                         id="<?php echo esc_attr($hero_heading_id); ?>"
@@ -113,7 +113,7 @@ extract($hero, EXTR_SKIP);
                 </div>
             </div>
         <?php } else { ?>
-            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max_width)); ?>">
+            <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max_width, $vertical_padding ?? 'default', $padding_settings ?? [])); ?>">
                 <?php if ($hero_image) { ?>
                 <div class="<?php echo esc_attr(matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($text_max_width)); ?>" style="border-color: <?php echo esc_attr($background_color); ?>;">
                     <?php

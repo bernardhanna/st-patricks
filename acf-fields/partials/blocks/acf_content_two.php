@@ -56,4 +56,6 @@ $content_two
         'default_value' => '#ffffff',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($content_two);
+
 return $content_two;

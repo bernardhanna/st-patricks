@@ -32,10 +32,10 @@ $vertical_padding = function_exists('matrix_get_locations_grid_vertical_padding_
     : 'py-12 lg:py-[100px]';
 $wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'pb-5', 'max-xl:px-5', 'max-w-[1018px]'];
 
-// "Find us" follows the hero. no_top zeroes the gap, which is tighter than other About Us sections.
-if ($heading === 'Find us') {
-    $vertical_padding = 'py-12 lg:py-[100px]';
-} else {
+// "Find us" historically omitted the extra pt-5 under the hero; keep that when
+// vertical_padding is empty/default so existing pages stay unchanged. Explicit
+// presets (no_bottom, medium, custom, etc.) always apply from ACF.
+if ($heading !== 'Find us') {
     $wrapper_classes[] = 'pt-5';
 }
 

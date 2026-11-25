@@ -46,7 +46,12 @@ if ($heading === '' && (! is_string($body) || trim(strip_tags($body)) === '') &&
 }
 
 $heading_id = $section_id . '-heading';
-$wrapper_classes = matrix_get_content_cta_wrapper_class_names($layout_style);
+$padding_settings = get_sub_field('padding_settings');
+$wrapper_classes = matrix_get_content_cta_wrapper_class_names(
+    $layout_style,
+    get_sub_field('vertical_padding'),
+    is_array($padding_settings) ? $padding_settings : []
+);
 $is_inverse = $color_scheme === 'inverse';
 $body_classes = $is_inverse
     ? '[&_p]:text-white/90 [&_a]:text-white [&_a]:underline hover:[&_a]:no-underline'

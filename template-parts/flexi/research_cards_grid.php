@@ -39,12 +39,22 @@ if ($cards === []) {
     return;
 }
 
-$wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-10', 'pb-10', 'max-xl:px-5'];
+$wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5'];
 
 
 $grid_classes = 'mt-8 grid grid-cols-1 xxs:grid-cols-2 gap-4 sm:gap-8 xl:mt-12 xl:grid-cols-4';
 $card_base_classes = 'group flex h-full flex-col gap-4 text-left';
 $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 lg:py-[100px]'
+    )
+    : 'py-12 lg:py-[100px]';
+
 ?>
 
 <section
@@ -53,7 +63,7 @@ $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visibl
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
+    <div class="<?php echo esc_attr($padding_classes); ?> <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
         <div class="w-full">
             <<?php echo esc_attr($heading_tag); ?>
                 class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"

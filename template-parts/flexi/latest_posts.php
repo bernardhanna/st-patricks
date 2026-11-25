@@ -54,13 +54,22 @@ if ($latest_posts_query->have_posts()) {
 }
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 pb-16 lg:py-[100px] lg:pb-[120px]'
+    )
+    : 'py-12 pb-16 lg:py-[100px] lg:pb-[120px]';
+
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="py-12 pb-16 lg:py-[100px] lg:pb-[120px] w-full max-w-[1018px] mx-auto max-xl:px-5">
+    <div class="<?php echo esc_attr($padding_classes); ?> w-full max-w-[1018px] mx-auto max-xl:px-5">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
             <div class="max-w-[680px]">
                 <<?php echo esc_attr($heading_tag); ?>

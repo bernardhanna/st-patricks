@@ -27,6 +27,11 @@ if ($open_panel_background === '') {
 $section_background_style = matrix_get_key_contact_info_background_style($section_background, '#FFFFFF');
 $closed_panel_background_style = matrix_get_key_contact_info_background_style($closed_panel_background, '#FBFAF7');
 $open_panel_background_style = matrix_get_key_contact_info_background_style($open_panel_background, 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)');
+$padding_settings = get_sub_field('padding_settings');
+$wrapper_classes = matrix_get_key_contact_info_wrapper_class_names(
+    get_sub_field('vertical_padding'),
+    is_array($padding_settings) ? $padding_settings : []
+);
 
 ?>
 
@@ -38,7 +43,7 @@ $open_panel_background_style = matrix_get_key_contact_info_background_style($ope
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-        class="<?php echo esc_attr(matrix_get_key_contact_info_wrapper_class_names()); ?>"
+        class="<?php echo esc_attr($wrapper_classes); ?>"
     >
         <div class="<?php echo esc_attr(matrix_get_key_contact_info_grid_class_names(count($columns))); ?>">
             <?php foreach ($columns as $column_index => $column) { ?>

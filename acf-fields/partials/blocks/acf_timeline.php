@@ -111,4 +111,6 @@ $timeline
             'default_value' => '#6FC9C0',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($timeline);
+
 return $timeline;

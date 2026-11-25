@@ -46,6 +46,11 @@ if (! in_array($heading_tag, $allowed_heading_tags, true)) {
 
 $heading_id = $section_id . '-heading';
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
+$padding_settings = get_sub_field('padding_settings');
+$wrapper_classes = matrix_get_contact_directory_wrapper_class_names(
+    get_sub_field('vertical_padding'),
+    is_array($padding_settings) ? $padding_settings : []
+);
 ?>
 
 <section
@@ -57,7 +62,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
 >
     <div
         x-data="{ activeIndex: <?php echo esc_attr((string) $initial_open_index); ?>, toggleItem(index) { this.activeIndex = this.activeIndex === index ? -1 : index; } }"
-        class="<?php echo esc_attr(matrix_get_contact_directory_wrapper_class_names()); ?>"
+        class="<?php echo esc_attr($wrapper_classes); ?>"
     >
         <div class="<?php echo esc_attr(matrix_get_contact_directory_grid_class_names()); ?>">
             <div class="<?php echo esc_attr(matrix_get_contact_directory_intro_column_class_names()); ?>">

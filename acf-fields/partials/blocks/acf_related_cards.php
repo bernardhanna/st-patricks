@@ -69,4 +69,6 @@ $related_cards
             'ui' => 1,
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($related_cards);
+
 return $related_cards;

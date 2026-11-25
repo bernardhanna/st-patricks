@@ -72,12 +72,21 @@ if (!in_array($heading_tag, $allowed_tags, true)) $heading_tag = 'h2';
 
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-24'
+    )
+    : 'py-24';
+
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="relative overflow-hidden"
          style="background: var(--StPatricks_Aux_DarkBG4, linear-gradient(278deg, #FAFBF6 3.24%, #F1F8F9 90.88%));">
 
-  <div class="px-6 py-24 mx-auto max-w-container">
+  <div class="px-6 mx-auto max-w-container <?php echo esc_attr($padding_classes); ?>">
     <div class="mx-auto max-w-7xl">
 
       <div class="flex flex-col gap-8 justify-between items-start xl:flex-row xl:items-center md:gap-12 lg:gap-16">

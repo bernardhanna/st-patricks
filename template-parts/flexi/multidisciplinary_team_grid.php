@@ -64,7 +64,11 @@ if (matrix_is_willow_grove_branded_page()) {
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names()); ?>">
+    <div class="<?php echo esc_attr(matrix_get_flexi_section_wrapper_class_names(
+        [],
+        is_string(get_sub_field('vertical_padding')) ? get_sub_field('vertical_padding') : 'default',
+        is_array(get_sub_field('padding_settings')) ? get_sub_field('padding_settings') : []
+    )); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] text-[#08284B] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
         >

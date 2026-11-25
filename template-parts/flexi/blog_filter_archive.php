@@ -34,7 +34,18 @@ if ($posts_per_page < 1) {
     $posts_per_page = (int) $defaults['posts_per_page'];
 }
 
-$wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'pt-5', 'pb-5', 'max-xl:px-5'];
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'pt-5 pb-5'
+    )
+    : 'pt-5 pb-5';
+$wrapper_classes = array_merge(
+    ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5'],
+    preg_split('/\s+/', $padding_classes, -1, PREG_SPLIT_NO_EMPTY) ?: []
+);
 
 
 $terms_args = [

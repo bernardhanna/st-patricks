@@ -86,4 +86,6 @@ $careers_archive
             'default_value' => $defaults['empty_state_message'],
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($careers_archive, ['add_design_tab' => true]);
+
 return $careers_archive;

@@ -27,13 +27,22 @@ $posts = $posts_query->posts;
 
 $total_slides = $posts_per_slide ? ceil(count($posts) / $posts_per_slide) : 0;
 ?>
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'pt-5 pb-24 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10'
+    )
+    : 'pt-5 pb-24 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10';
+
 <section
   id="<?php echo esc_attr($section_id); ?>"
   data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
   class="relative flex overflow-hidden"
   aria-label="Latest Stories"
 >
-  <div class="flex flex-col items-center pt-5 pb-24 mx-auto w-full max-w-container max-lg:px-5 max-md:pt-16 max-md:pb-16 max-sm:pt-10 max-sm:pb-10">
+  <div class="flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
 
     <!-- MOBILE/TABLET (< lg) — horizontal scroll with its own arrows & dots -->
     <div class="w-full lg:hidden">

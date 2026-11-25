@@ -78,4 +78,6 @@ $multidisciplinary_team_grid
             'default_value' => '#FFFFFF',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($multidisciplinary_team_grid);
+
 return $multidisciplinary_team_grid;

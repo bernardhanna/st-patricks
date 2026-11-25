@@ -62,4 +62,6 @@ $key_contact_info
             'default_value' => 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($key_contact_info);
+
 return $key_contact_info;

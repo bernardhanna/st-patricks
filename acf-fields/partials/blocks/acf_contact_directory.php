@@ -150,4 +150,6 @@ $contact_directory
             'default_value' => 'linear-gradient(-79.46deg, #F8F6F3 3.24%, #F5F6ED 90.88%)',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($contact_directory);
+
 return $contact_directory;

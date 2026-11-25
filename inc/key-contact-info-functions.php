@@ -19,20 +19,34 @@ function matrix_get_key_contact_info_background_style($background_value, $fallba
     return "background-color: {$resolved_value};";
 }
 
-function matrix_get_key_contact_info_wrapper_class_names()
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_key_contact_info_wrapper_class_names($vertical_padding = 'default', $padding_settings = [])
 {
-    return implode(' ', [
+    $classes = [
         'mx-auto',
         'flex',
         'w-full',
         'max-w-[1018px]',
         'flex-col',
         'px-5',
-        'pt-12',
         'lg:px-0',
-        'lg:pt-16',
-        'lg:pb-[100px]',
-    ]);
+    ];
+
+    $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+        ? matrix_flexi_resolve_vertical_padding_classes(
+            $vertical_padding,
+            is_array($padding_settings) ? $padding_settings : [],
+            'pt-12 lg:pt-16 lg:pb-[100px]'
+        )
+        : 'pt-12 lg:pt-16 lg:pb-[100px]';
+
+    foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+        $classes[] = $class;
+    }
+
+    return implode(' ', $classes);
 }
 
 function matrix_get_key_contact_info_grid_class_names(int $column_count = 3)

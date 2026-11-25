@@ -16,4 +16,6 @@ $wysiwyg
         'toolbar' => 'full',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($wysiwyg, ['add_design_tab' => true]);
+
 return $wysiwyg;

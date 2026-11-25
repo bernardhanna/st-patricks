@@ -99,6 +99,18 @@ get_template_part('template-parts/research-projects/archive', null, [
         ],
         'section_classes' => 'relative flex overflow-hidden w-full',
         'section_style' => 'background-color: ' . $background_color . ';',
+        'wrapper_classes' => trim(
+            'flex w-full max-w-[1018px] flex-col items-center mx-auto max-xl:px-5 '
+            . (
+                function_exists('matrix_flexi_resolve_vertical_padding_classes')
+                    ? matrix_flexi_resolve_vertical_padding_classes(
+                        get_sub_field('vertical_padding'),
+                        is_array(get_sub_field('padding_settings')) ? get_sub_field('padding_settings') : [],
+                        'py-12 lg:py-[100px]'
+                    )
+                    : 'py-12 lg:py-[100px]'
+            )
+        ),
     ],
     'hero_overrides' => [
         'hero_heading_text' => $heading,

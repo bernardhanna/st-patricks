@@ -24,4 +24,7 @@ matrix_render_hero_with_breadcrumbs([
     'aside_heading' => get_sub_field('aside_heading'),
     'text_max_width' => get_sub_field('text_max_width'),
     'heading_max_width' => get_sub_field('heading_max_width'),
+    // Empty/default keeps layout-specific hero padding unchanged.
+    'vertical_padding' => get_sub_field('vertical_padding'),
+    'padding_settings' => get_sub_field('padding_settings'),
 ], get_the_ID());

@@ -104,4 +104,6 @@ $inpatient_bed_vacancies
             'default_value' => '#6FC9C0',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($inpatient_bed_vacancies);
+
 return $inpatient_bed_vacancies;

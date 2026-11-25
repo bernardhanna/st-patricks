@@ -193,16 +193,57 @@ $content_accordion
         ])
         ->addSelect('vertical_padding', [
             'label' => 'Vertical Padding',
-            'instructions' => 'Use “Bottom only” when this block should sit flush against the section above on desktop.',
+            'instructions' => 'Legacy presets keep current pages unchanged. Shared options (top only, 60px, none, custom) match other flexi blocks.',
             'choices' => [
-                'default' => 'Top & bottom',
-                'bottom_only' => 'Bottom only (no top padding)',
-                'small_top_large_bottom' => 'Small top / large bottom (2rem top, 100px bottom)',
-                'top_50_bottom_100' => '50px top / 100px bottom',
-                'compact' => 'Compact (3rem top and bottom)',
+                'default' => 'Top & bottom (100px desktop)',
+                'no_bottom' => 'Top only (no bottom on desktop)',
+                'no_top' => 'Bottom only (no top on desktop)',
+                'medium' => 'Top & bottom (60px desktop)',
+                'none' => 'No padding',
+                'custom' => 'Custom (per breakpoint)',
+                'bottom_only' => 'Bottom only (legacy)',
+                'small_top_large_bottom' => 'Small top / large bottom (legacy)',
+                'top_50_bottom_100' => '50px top / 100px bottom (legacy)',
+                'compact' => 'Compact (legacy)',
             ],
             'default_value' => 'default',
             'ui' => 1,
-        ]);
+        ])
+        ->addRepeater('padding_settings', [
+            'label' => 'Custom Padding',
+            'instructions' => 'Only used when Vertical Padding is “Custom”. Enter rem values per breakpoint (e.g. 2 = 32px).',
+            'button_label' => 'Add Breakpoint',
+            'layout' => 'table',
+            'conditional_logic' => [[
+                [
+                    'field' => 'vertical_padding',
+                    'operator' => '==',
+                    'value' => 'custom',
+                ],
+            ]],
+        ])
+            ->addSelect('screen_size', [
+                'label' => 'Breakpoint',
+                'choices' => [
+                    'mob' => 'Mobile (mob)',
+                    'sm' => 'Small (sm)',
+                    'md' => 'Medium (md)',
+                    'lg' => 'Large (lg)',
+                    'xl' => 'Extra large (xl)',
+                ],
+                'default_value' => 'lg',
+                'ui' => 1,
+            ])
+            ->addNumber('padding_top', [
+                'label' => 'Top (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+            ->addNumber('padding_bottom', [
+                'label' => 'Bottom (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+        ->endRepeater();
 
 return $content_accordion;

@@ -123,4 +123,6 @@ $about
       'default_value'=>'solid-dark',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($about);
+
 return $about;

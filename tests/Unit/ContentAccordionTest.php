@@ -219,6 +219,22 @@ test('content accordion vertical padding supports default and bottom-only spacin
         ->toBe('py-12');
 });
 
+test('content accordion vertical padding supports shared presets without changing legacy defaults', function () {
+    expect(matrix_resolve_content_accordion_vertical_padding('no_bottom'))->toBe('no_bottom')
+        ->and(matrix_resolve_content_accordion_vertical_padding('medium'))->toBe('medium')
+        ->and(matrix_resolve_content_accordion_vertical_padding('none'))->toBe('none')
+        ->and(matrix_resolve_content_accordion_vertical_padding('custom'))->toBe('custom')
+        ->and(matrix_resolve_content_accordion_vertical_padding('no_top'))->toBe('no_top')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('no_bottom'))->toBe('py-12 xl:pt-[100px] xl:pb-0')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('medium'))->toBe('py-12 xl:py-[60px]')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('none'))->toBe('py-0')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('no_top'))->toBe('pt-0 pb-12 xl:pt-0 xl:pb-[100px]')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('custom', 'default', [
+            ['screen_size' => 'lg', 'padding_top' => 2, 'padding_bottom' => 0],
+        ]))->toContain('lg:pt-[2rem]')
+        ->and(matrix_get_content_accordion_vertical_padding_classes('custom', 'default', []))->toBe('py-12 xl:py-[100px]');
+});
+
 test('content accordion can show an optional section title', function () {
     expect(matrix_resolve_content_accordion_heading(null))->toBe('')
         ->and(matrix_resolve_content_accordion_heading(' FAQs '))->toBe('FAQs')

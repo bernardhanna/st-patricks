@@ -162,4 +162,6 @@ $story_slider
             'default_value' => 'rounded-md',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($story_slider);
+
 return $story_slider;

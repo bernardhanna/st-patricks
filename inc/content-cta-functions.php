@@ -50,13 +50,33 @@ function matrix_get_content_cta_background_image_overlay_style(string $overlay_c
     return matrix_get_content_background_image_overlay_style($overlay_color, $overlay_opacity);
 }
 
-function matrix_get_content_cta_wrapper_class_names(string $layout_style = 'default'): string
-{
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_content_cta_wrapper_class_names(
+    string $layout_style = 'default',
+    $vertical_padding = 'default',
+    $padding_settings = []
+): string {
     if (matrix_resolve_content_cta_layout_style($layout_style) === 'image_background') {
-        return 'relative z-[1] mx-auto flex w-full max-w-[1040px] flex-col gap-8 px-4 py-12 lg:px-0 lg:py-[100px]';
+        $base = ['relative', 'z-[1]', 'mx-auto', 'flex', 'w-full', 'max-w-[1040px]', 'flex-col', 'gap-8', 'px-4', 'lg:px-0'];
+    } else {
+        $base = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'max-xl:px-5', 'lg:gap-8'];
     }
 
-    return 'mx-auto flex w-full max-w-[1018px] flex-col gap-8 py-12 max-xl:px-5 lg:gap-8 lg:py-[100px]';
+    $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+        ? matrix_flexi_resolve_vertical_padding_classes(
+            $vertical_padding,
+            is_array($padding_settings) ? $padding_settings : [],
+            'py-12 lg:py-[100px]'
+        )
+        : 'py-12 lg:py-[100px]';
+
+    foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+        $base[] = $class;
+    }
+
+    return implode(' ', $base);
 }
 
 function matrix_get_content_cta_heading_class_names(string $layout_style, string $heading_class): string

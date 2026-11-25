@@ -43,4 +43,6 @@ $webinars_archive
             'default_value' => $defaults['empty_state_message'],
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($webinars_archive, ['add_design_tab' => true]);
+
 return $webinars_archive;

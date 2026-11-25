@@ -132,4 +132,6 @@ $about_us
             'default_value' => '#FFFFFF',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($about_us);
+
 return $about_us;

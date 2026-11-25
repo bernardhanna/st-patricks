@@ -65,8 +65,16 @@ function matrix_resolve_faq_layout_style($value)
  *
  * @return list<string>
  */
-function matrix_get_faq_section_wrapper_classes($layout_style = 'default', $show_heading = true): array
-{
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ * @return array<int, string>
+ */
+function matrix_get_faq_section_wrapper_classes(
+    $layout_style = 'default',
+    $show_heading = true,
+    $vertical_padding = 'default',
+    $padding_settings = []
+): array {
     $layout_style = matrix_resolve_faq_layout_style($layout_style);
     $show_heading = (bool) $show_heading;
 
@@ -90,6 +98,23 @@ function matrix_get_faq_section_wrapper_classes($layout_style = 'default', $show
         $classes[] = 'pb-12';
         $classes[] = $layout_style === 'page' ? 'xl:pt-0' : 'lg:pt-0';
         $classes[] = $desktop_bottom;
+    }
+
+    $value = is_string($vertical_padding) ? trim($vertical_padding) : '';
+    if ($value !== '' && $value !== 'default' && function_exists('matrix_flexi_resolve_vertical_padding_classes')) {
+        $classes = matrix_flexi_strip_vertical_padding_classes($classes);
+        foreach (preg_split(
+            '/\s+/',
+            matrix_flexi_resolve_vertical_padding_classes(
+                $value,
+                is_array($padding_settings) ? $padding_settings : [],
+                'py-12 lg:py-[100px]'
+            ),
+            -1,
+            PREG_SPLIT_NO_EMPTY
+        ) as $class) {
+            $classes[] = $class;
+        }
     }
 
     return $classes;

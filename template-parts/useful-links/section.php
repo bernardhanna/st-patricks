@@ -33,7 +33,7 @@ if ($links === []) {
 }
 
 if ($wrapper_classes === '') {
-    $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col max-xl:px-5';
+    $wrapper_classes = 'mx-auto flex w-full max-w-[1018px] flex-col max-xl:px-5 py-12 lg:py-[100px]';
 }
 
 $link_classes = $variant === 'search'
@@ -53,7 +53,7 @@ $grid_classes = $variant === 'search'
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($background_color); ?>;"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr($wrapper_classes); ?>">
+    <div class="<?php echo esc_attr($wrapper_classes); ?>">
         <<?php echo esc_attr($heading_tag); ?>
             class="font-primary text-[24px] font-semibold leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px]"
             style="color: <?php echo esc_attr($heading_color); ?>;"

@@ -130,6 +130,15 @@ test('flexi section wrapper keeps standard max width and padding', function () {
         ->and(matrix_get_flexi_section_wrapper_class_names([], 'medium'))->toContain('lg:py-[60px]');
 });
 
+test('flexi vertical padding resolver keeps empty and default appearance', function () {
+    expect(matrix_flexi_resolve_vertical_padding_classes('', [], 'pt-20 pb-20'))->toBe('pt-20 pb-20')
+        ->and(matrix_flexi_resolve_vertical_padding_classes('default', [], 'pt-20 pb-20'))->toBe('pt-20 pb-20')
+        ->and(matrix_flexi_resolve_vertical_padding_classes('medium'))->toContain('lg:py-[60px]')
+        ->and(matrix_flexi_resolve_vertical_padding_classes('no_bottom'))->toContain('lg:pb-0')
+        ->and(matrix_flexi_strip_vertical_padding_classes(['mx-auto', 'py-12', 'lg:py-[100px]', 'max-xl:px-5']))
+            ->toBe(['mx-auto', 'max-xl:px-5']);
+});
+
 test('shared section vertical padding resolves default standard and bottom only modes', function () {
     expect(matrix_resolve_section_vertical_padding('bottom_only'))->toBe('bottom_only')
         ->and(matrix_resolve_section_vertical_padding('standard'))->toBe('standard')

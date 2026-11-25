@@ -52,8 +52,14 @@ if ($answer_color === '') {
     $answer_color = '#08284B';
 }
 
+$padding_settings = get_sub_field('padding_settings');
 $wrapper_classes = function_exists('matrix_get_faq_section_wrapper_classes')
-    ? matrix_get_faq_section_wrapper_classes($layout_style, $show_heading)
+    ? matrix_get_faq_section_wrapper_classes(
+        $layout_style,
+        $show_heading,
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : []
+    )
     : (
         $layout_style === 'page'
             ? ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'mx-auto', 'px-5', 'py-12', 'xl:px-0', 'xl:py-[100px]']

@@ -60,6 +60,7 @@ $form = matrix_prepare_contact_form([
     'brevo_list_id' => get_sub_field('brevo_list_id'),
     'checkboxes' => $checkboxes,
     'vertical_padding' => get_sub_field('vertical_padding'),
+    'padding_settings' => get_sub_field('padding_settings'),
 ]);
 
 if (! in_array($form['form_style'], ['your_portal', 'mailing_list'], true)) {

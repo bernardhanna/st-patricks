@@ -32,7 +32,18 @@ if ($items === []) {
 $heading_id = $section_id . '-heading';
 $allowed_item_tags = ['h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p'];
 
-$wrapper_classes = ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'py-12', 'lg:py-[100px]', 'max-xl:px-5', 'max-w-[63.625rem]'];
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 lg:py-[100px]'
+    )
+    : 'py-12 lg:py-[100px]';
+$wrapper_classes = array_merge(
+    ['flex', 'flex-col', 'items-center', 'w-full', 'mx-auto', 'max-xl:px-5', 'max-w-[63.625rem]'],
+    preg_split('/\s+/', $padding_classes, -1, PREG_SPLIT_NO_EMPTY) ?: []
+);
 
 $render_timeline_card = static function (array $item, bool $include_mobile_date = false) use ($card_background_color, $allowed_item_tags) {
     $item_heading_tag = $item['item_heading_tag'];

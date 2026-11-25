@@ -232,13 +232,48 @@ function matrix_build_hero_image_split_stacked_image_gradient(
   );
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names($text_max_width = 'default')
-{
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names(
+  $text_max_width = 'default',
+  $vertical_padding = 'default',
+  $padding_settings = []
+) {
   if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
-    return matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names();
+    return matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names(
+      $vertical_padding,
+      $padding_settings
+    );
   }
 
-  return 'flex w-full flex-col max-xl:px-0 lg:grid lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_581px] lg:items-stretch';
+  $classes = [
+    'flex',
+    'w-full',
+    'flex-col',
+    'max-xl:px-0',
+    'lg:grid',
+    'lg:min-h-[320px]',
+    'lg:grid-cols-[minmax(0,1fr)_581px]',
+    'lg:items-stretch',
+  ];
+  $value = is_string($vertical_padding) ? trim($vertical_padding) : '';
+  if ($value !== '' && $value !== 'default' && function_exists('matrix_flexi_resolve_vertical_padding_classes')) {
+    foreach (preg_split(
+      '/\s+/',
+      matrix_flexi_resolve_vertical_padding_classes(
+        $value,
+        is_array($padding_settings) ? $padding_settings : [],
+        ''
+      ),
+      -1,
+      PREG_SPLIT_NO_EMPTY
+    ) as $class) {
+      $classes[] = $class;
+    }
+  }
+
+  return implode(' ', $classes);
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($text_max_width = 'default')
@@ -283,23 +318,61 @@ function matrix_get_hero_with_breadcrumbs_container_class_names()
   return 'mx-auto flex w-full max-w-[1280px] flex-col max-xl:px-0 lg:min-h-[320px]';
 }
 
-function matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names()
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_hero_with_breadcrumbs_title_accent_wrapper_class_names($vertical_padding = 'default', $padding_settings = [])
 {
-  return 'flex w-full flex-col justify-center px-5 py-12 lg:min-h-[320px] lg:px-[70px] lg:py-[100px]';
+  $classes = [
+    'flex',
+    'w-full',
+    'flex-col',
+    'justify-center',
+    'px-5',
+    'lg:min-h-[320px]',
+    'lg:px-[70px]',
+  ];
+  $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+      $vertical_padding,
+      is_array($padding_settings) ? $padding_settings : [],
+      'py-12 lg:py-[100px]'
+    )
+    : 'py-12 lg:py-[100px]';
+
+  foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+    $classes[] = $class;
+  }
+
+  return implode(' ', $classes);
 }
 
-function matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names()
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_hero_with_breadcrumbs_register_intro_wrapper_class_names($vertical_padding = 'default', $padding_settings = [])
 {
-    return implode(' ', [
+  $classes = [
     'w-full',
     'max-w-[1018px]',
     'px-4',
     'max-xl:mx-auto',
     'lg:px-0',
-    'py-12',
     'lg:min-h-[320px]',
-    'lg:py-[100px]',
-  ]);
+  ];
+  $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+      $vertical_padding,
+      is_array($padding_settings) ? $padding_settings : [],
+      'py-12 lg:py-[100px]'
+    )
+    : 'py-12 lg:py-[100px]';
+
+  foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+    $classes[] = $class;
+  }
+
+  return implode(' ', $classes);
 }
 
 function matrix_get_hero_with_breadcrumbs_register_intro_layout_class_names()
@@ -353,9 +426,30 @@ function matrix_get_hero_with_breadcrumbs_register_intro_button_class_names()
   return 'btn inline-flex h-10 w-full items-center justify-center gap-2 rounded-[6px] bg-[#024B79] px-3 text-[14px] font-medium leading-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 }
 
-function matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names()
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_hero_with_breadcrumbs_image_split_wide_container_class_names($vertical_padding = 'default', $padding_settings = [])
 {
-  return 'mx-auto flex w-full max-w-[1280px] flex-col py-16 max-xl:px-0';
+  $value = is_string($vertical_padding) ? trim($vertical_padding) : '';
+  if ($value === '' || $value === 'default') {
+    return 'mx-auto flex w-full max-w-[1280px] flex-col py-16 max-xl:px-0';
+  }
+
+  $classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1280px]', 'flex-col', 'max-xl:px-0'];
+  $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+      $value,
+      is_array($padding_settings) ? $padding_settings : [],
+      'py-16'
+    )
+    : 'py-16';
+
+  foreach (preg_split('/\s+/', $padding, -1, PREG_SPLIT_NO_EMPTY) as $class) {
+    $classes[] = $class;
+  }
+
+  return implode(' ', $classes);
 }
 
 function matrix_get_hero_with_breadcrumbs_image_split_heading_class_names(
@@ -638,6 +732,12 @@ function matrix_prepare_hero_with_breadcrumbs_view_model(array $config, $post_id
     'gradient_soft' => $gradient_vars['gradient_soft'],
     'gradient_clear' => $gradient_vars['gradient_clear'],
     'has_body_content' => matrix_hero_with_breadcrumbs_has_body_content($layout_style),
+    'vertical_padding' => is_string($config['vertical_padding'] ?? null)
+      ? trim((string) $config['vertical_padding'])
+      : 'default',
+    'padding_settings' => is_array($config['padding_settings'] ?? null)
+      ? $config['padding_settings']
+      : [],
   ];
 }
 

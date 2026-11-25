@@ -59,4 +59,6 @@ $stories
         'default_value' => '#08284B',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($stories);
+
 return $stories;

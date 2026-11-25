@@ -57,4 +57,6 @@ $latest_posts
             'default_value' => '#1E244B',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($latest_posts);
+
 return $latest_posts;

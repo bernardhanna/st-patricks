@@ -26,4 +26,6 @@ $cta
     ->addTrueFalse('min_full_screen', ['label' => 'Min Height Full Screen', 'default_value' => 0])
     ->addText('section_classes', ['label' => 'Extra Section Classes']);
 
+matrix_acf_append_shared_vertical_padding_fields($cta);
+
 return $cta;

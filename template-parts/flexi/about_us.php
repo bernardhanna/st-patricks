@@ -83,13 +83,22 @@ $cards = [
 $section_bg = get_sub_field('background_color') ?: '#FFFFFF';
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 lg:py-24'
+    )
+    : 'py-12 lg:py-24';
+
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative"
     style="background-color: <?php echo esc_attr($section_bg); ?>;"
 >
-    <div class="flex flex-col items-center w-full mx-auto max-w-container py-12 lg:py-24 max-lg:px-5 max-sm:px-6">
+    <div class="flex flex-col items-center w-full mx-auto max-w-container max-lg:px-5 max-sm:px-6 <?php echo esc_attr($padding_classes); ?>">
 
         <!-- Header Section -->
         <?php if (!empty($heading_text)) : ?>

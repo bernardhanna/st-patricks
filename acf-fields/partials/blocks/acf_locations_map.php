@@ -102,4 +102,6 @@ $locations_map
         'default_value' => '#FFFFFF',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($locations_map);
+
 return $locations_map;

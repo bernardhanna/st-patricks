@@ -127,11 +127,20 @@ if (function_exists('is_front_page') && is_front_page()) {
 
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 mob:py-[6rem]'
+    )
+    : 'py-12 mob:py-[6rem]';
+
 <section id="<?php echo esc_attr($section_id); ?>"
          data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
          class="flex relative"
          style="background-color: <?php echo esc_attr($background_color); ?>;">
-    <div class="flex flex-col items-center mx-auto w-full max-w-container_md p py-12 mob:py-[6rem] max-lg:px-5">
+    <div class="flex flex-col items-center mx-auto w-full max-w-container_md p max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
 
         <div class="flex flex-col gap-8 w-full lg:flex-row lg:items-center lg:justify-between lg:gap-10">
 

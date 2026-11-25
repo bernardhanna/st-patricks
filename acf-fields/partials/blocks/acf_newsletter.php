@@ -27,4 +27,6 @@ $newsletter_block
         'return_format' => 'value',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($newsletter_block, ['add_design_tab' => true]);
+
 return $newsletter_block;

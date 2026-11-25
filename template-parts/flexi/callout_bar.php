@@ -11,13 +11,22 @@ if ($message === '') {
 }
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-[10px]'
+    )
+    : 'py-[10px]';
+
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="relative flex overflow-hidden"
     style="background-color: #F1F8F9;"
 >
-    <div class="flex min-h-[48px] w-full max-w-[1280px] mx-auto items-center justify-center px-4 py-[10px] text-center">
+    <div class="flex min-h-[48px] w-full max-w-[1280px] mx-auto items-center justify-center px-4 text-center <?php echo esc_attr($padding_classes); ?>">
         <p class="font-primary text-[18px] font-semibold leading-[28px] text-black">
             <?php echo esc_html($message); ?>
         </p>

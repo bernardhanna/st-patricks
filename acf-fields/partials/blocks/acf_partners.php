@@ -55,4 +55,6 @@ $partners
       'default_value' => 1,
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($partners);
+
 return $partners;

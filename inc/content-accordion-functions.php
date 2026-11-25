@@ -290,29 +290,37 @@ function matrix_resolve_content_accordion_vertical_padding($value = '')
 {
     $value = trim((string) $value);
 
-    if ($value === 'bottom_only') {
-        return 'bottom_only';
-    }
+    $allowed = [
+        'bottom_only',
+        'small_top_large_bottom',
+        'top_50_bottom_100',
+        'compact',
+        'no_bottom',
+        'no_top',
+        'none',
+        'medium',
+        'custom',
+    ];
 
-    if ($value === 'small_top_large_bottom') {
-        return 'small_top_large_bottom';
-    }
-
-    if ($value === 'top_50_bottom_100') {
-        return 'top_50_bottom_100';
-    }
-
-    if ($value === 'compact') {
-        return 'compact';
+    if (in_array($value, $allowed, true)) {
+        return $value;
     }
 
     return 'default';
 }
 
-function matrix_get_content_accordion_vertical_padding_classes(string $vertical_padding = 'default', string $layout_style = 'default'): string
-{
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_content_accordion_vertical_padding_classes(
+    string $vertical_padding = 'default',
+    string $layout_style = 'default',
+    $padding_settings = []
+): string {
     $vertical_padding = matrix_resolve_content_accordion_vertical_padding($vertical_padding);
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
 
+    // Legacy presets — keep exact class output so saved content is unchanged.
     if ($vertical_padding === 'bottom_only') {
         return 'pt-0 pb-12 xl:pt-0 xl:pb-[100px]';
     }
@@ -327,6 +335,35 @@ function matrix_get_content_accordion_vertical_padding_classes(string $vertical_
 
     if ($vertical_padding === 'compact') {
         return 'py-12';
+    }
+
+    // Shared presets use accordion xl: desktop breakpoints for visual consistency.
+    if ($vertical_padding === 'none') {
+        return 'py-0';
+    }
+
+    if ($vertical_padding === 'medium') {
+        return 'py-12 xl:py-[60px]';
+    }
+
+    if ($vertical_padding === 'no_bottom') {
+        return 'py-12 xl:pt-[100px] xl:pb-0';
+    }
+
+    if ($vertical_padding === 'no_top') {
+        return 'pt-0 pb-12 xl:pt-0 xl:pb-[100px]';
+    }
+
+    if ($vertical_padding === 'custom') {
+        $custom = function_exists('matrix_build_breakpoint_padding_classes')
+            ? matrix_build_breakpoint_padding_classes($padding_settings)
+            : [];
+
+        if ($custom !== []) {
+            return implode(' ', $custom);
+        }
+
+        return 'py-12 xl:py-[100px]';
     }
 
     return 'py-12 xl:py-[100px]';

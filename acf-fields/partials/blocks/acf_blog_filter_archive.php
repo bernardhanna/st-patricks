@@ -119,4 +119,6 @@ $blog_filter_archive
             'default_value' => '#1E244B',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($blog_filter_archive);
+
 return $blog_filter_archive;

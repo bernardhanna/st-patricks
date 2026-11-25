@@ -39,6 +39,16 @@ if (! $has_visible_content) {
 
 $wrapper_classes = ['mx-auto', 'grid', 'w-full', 'max-w-[1018px]', 'grid-cols-1', 'gap-4', 'pt-5', 'pb-5', 'max-xl:px-5', 'lg:grid-cols-2'];
 
+
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-12 lg:py-[100px]'
+    )
+    : 'py-12 lg:py-[100px]';
+
 ?>
 
 <section
@@ -46,7 +56,7 @@ $wrapper_classes = ['mx-auto', 'grid', 'w-full', 'max-w-[1018px]', 'grid-cols-1'
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
     class="flex overflow-hidden relative bg-white"
 >
-    <div class="py-12 lg:py-[100px] <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
+    <div class="<?php echo esc_attr($padding_classes); ?> <?php echo esc_attr(implode(' ', $wrapper_classes)); ?>">
         <?php foreach ($cards as $card) { ?>
             <?php
             $has_button = matrix_referral_action_card_has_button($card);

@@ -166,4 +166,6 @@ $research_cards_grid
             'default_value' => $defaults['button_text_color'],
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($research_cards_grid);
+
 return $research_cards_grid;

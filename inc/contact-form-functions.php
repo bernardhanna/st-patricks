@@ -273,7 +273,8 @@ function matrix_prepare_contact_form($args = [])
         'submission_uid' => function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid('form-', true),
         'wrapper_classes' => trim((string) ($args['wrapper_classes'] ?? matrix_get_contact_form_section_wrapper_class_names(
             (string) ($args['vertical_padding'] ?? 'compact'),
-            $form_style
+            $form_style,
+            $args['padding_settings'] ?? []
         ))),
         'fields_wrapper_classes' => matrix_get_contact_form_fields_wrapper_class_names($form_style),
     ];
@@ -289,8 +290,14 @@ function matrix_get_contact_form_row_class_names()
     return 'portal-contact-form__row';
 }
 
-function matrix_get_contact_form_section_wrapper_class_names($vertical_padding = 'compact', $form_style = 'your_portal')
-{
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_contact_form_section_wrapper_class_names(
+    $vertical_padding = 'compact',
+    $form_style = 'your_portal',
+    $padding_settings = []
+) {
     $style = matrix_resolve_contact_form_style($form_style);
     $horizontal_padding = $style === 'mailing_list' ? 'px-4' : 'px-3';
 
@@ -304,7 +311,7 @@ function matrix_get_contact_form_section_wrapper_class_names($vertical_padding =
         'gap-8',
         $horizontal_padding,
         'lg:px-0',
-        matrix_get_contact_form_vertical_padding_classes($vertical_padding),
+        matrix_get_contact_form_vertical_padding_classes($vertical_padding, $padding_settings),
     ]));
 }
 
@@ -316,16 +323,20 @@ function matrix_resolve_contact_form_vertical_padding($value = null)
         return 'full';
     }
 
-    if ($value === 'bottom_only') {
-        return 'bottom_only';
+    if (in_array($value, ['bottom_only', 'no_bottom', 'no_top', 'none', 'medium', 'custom'], true)) {
+        return $value;
     }
 
     return 'compact';
 }
 
-function matrix_get_contact_form_vertical_padding_classes($vertical_padding = 'compact')
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_contact_form_vertical_padding_classes($vertical_padding = 'compact', $padding_settings = [])
 {
     $vertical_padding = matrix_resolve_contact_form_vertical_padding($vertical_padding);
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
 
     if ($vertical_padding === 'full') {
         return 'py-12 lg:py-[100px]';
@@ -333,6 +344,12 @@ function matrix_get_contact_form_vertical_padding_classes($vertical_padding = 'c
 
     if ($vertical_padding === 'bottom_only') {
         return 'pt-0 pb-6 lg:pt-0 lg:pb-[50px]';
+    }
+
+    if (in_array($vertical_padding, ['no_bottom', 'no_top', 'none', 'medium', 'custom'], true)
+        && function_exists('matrix_get_shared_vertical_padding_classes')
+    ) {
+        return matrix_get_shared_vertical_padding_classes($vertical_padding, $padding_settings);
     }
 
     return 'pt-8 pb-6 lg:pt-[72px] lg:pb-[50px]';

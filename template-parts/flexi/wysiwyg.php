@@ -1,4 +1,8 @@
 <?php
+$padding_settings = get_sub_field('padding_settings');
+$vertical_padding = get_sub_field('vertical_padding');
+$padding_settings = is_array($padding_settings) ? $padding_settings : [];
+
 $text_content = get_sub_field('text_content');
 $policy_sections = matrix_wysiwyg_should_use_policy_section_layout($text_content)
     ? matrix_prepare_policy_wysiwyg_sections($text_content)
@@ -21,7 +25,7 @@ $policy_sections = matrix_wysiwyg_should_use_policy_section_layout($text_content
       style="<?php echo esc_attr('background-color: ' . $background_color . ';'); ?>"
       aria-labelledby="<?php echo esc_attr($section_id . '-heading'); ?>"
     >
-      <div class="<?php echo esc_attr(matrix_get_content_wrapper_class_names()); ?>">
+      <div class="<?php echo esc_attr(matrix_get_content_wrapper_class_names($vertical_padding, $padding_settings)); ?>">
         <div class="<?php echo esc_attr(matrix_get_content_grid_class_names('match_text', 'one_column')); ?>">
           <article class="order-1 flex w-full flex-col gap-8">
             <header class="flex flex-col gap-8 w-full">
@@ -45,7 +49,7 @@ $policy_sections = matrix_wysiwyg_should_use_policy_section_layout($text_content
   <?php } ?>
 <?php } else { ?>
 <section class="flex overflow-hidden relative" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>">
-  <div class="py-12 lg:py-[100px] w-full mx-auto max-w-[1095px] flex flex-col md:flex-row-reverse items-center  max-lg:px-5  max-xxl:px-5">
+  <div class="<?php echo esc_attr(function_exists('matrix_flexi_resolve_vertical_padding_classes') ? matrix_flexi_resolve_vertical_padding_classes($vertical_padding, $padding_settings, 'py-12 lg:py-[100px]') : 'py-12 lg:py-[100px]'); ?> w-full mx-auto max-w-[1095px] flex flex-col md:flex-row-reverse items-center  max-lg:px-5  max-xxl:px-5">
       <div class="relative font-primary text-[16px] font-medium leading-[28px] text-[#08284B] [&_p:last-child]:mb-0 [&_ul]:mb-4 [&_ul]:list-none [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_li]:font-normal [&_a]:font-medium [&_a]:text-[#024B79] [&_a]:underline [&_a:hover]:no-underline">
         <?php if ($text_content): ?>
           <?= matrix_kses_rich_text($text_content); ?>

@@ -32,8 +32,17 @@ $wm_alt = $wm_logo['alt'] ?? '';
 $section_min = $min_full ? 'min-h-screen' : 'min-h-[14rem]';
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'py-16'
+    )
+    : 'py-16';
+
 <section class="relative overflow-hidden <?php echo esc_attr($section_min); ?> <?php echo esc_attr($extra_classes); ?>" data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>">
-  <div class=" flex items-center max-w-container mx-auto py-16">
+  <div class=" flex items-center max-w-container mx-auto <?php echo esc_attr($padding_classes); ?>">
 
     <!-- Polaroid -->
     <div class="flex-shrink-0">

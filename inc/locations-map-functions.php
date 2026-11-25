@@ -60,9 +60,20 @@ function matrix_get_locations_map_wrapper_class_names(): string
     ]);
 }
 
-function matrix_get_locations_map_header_wrapper_class_names(): string
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_locations_map_header_wrapper_class_names($vertical_padding = 'default', $padding_settings = []): string
 {
-    return matrix_get_locations_map_wrapper_class_names() . ' pb-0 pt-3.5 lg:pb-12 lg:pt-16';
+    $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+        ? matrix_flexi_resolve_vertical_padding_classes(
+            $vertical_padding,
+            is_array($padding_settings) ? $padding_settings : [],
+            'pb-0 pt-3.5 lg:pb-12 lg:pt-16'
+        )
+        : 'pb-0 pt-3.5 lg:pb-12 lg:pt-16';
+
+    return matrix_get_locations_map_wrapper_class_names() . ' ' . $padding;
 }
 
 function matrix_get_locations_map_header_class_names(): string

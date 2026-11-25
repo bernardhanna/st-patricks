@@ -53,9 +53,22 @@ function matrix_get_programmes_therapies_archive_defaults()
     ];
 }
 
-function matrix_get_programmes_therapies_archive_default_wrapper_classes()
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_programmes_therapies_archive_default_wrapper_classes($vertical_padding = 'default', $padding_settings = [])
 {
-    return 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]';
+    $base = preg_replace('/\s*(?:py|pt|pb|xl:py|xl:pt|xl:pb|lg:py|lg:pt|lg:pb)-\S+/', '', 'mx-auto flex w-full max-w-[1018px] flex-col px-5 py-12 xl:px-0 xl:py-[100px]');
+    $base = trim(preg_replace('/\s+/', ' ', (string) $base));
+    $padding = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+        ? matrix_flexi_resolve_vertical_padding_classes(
+            $vertical_padding,
+            is_array($padding_settings) ? $padding_settings : [],
+            'py-12 xl:py-[100px]'
+        )
+        : 'py-12 xl:py-[100px]';
+
+    return trim($base . ' ' . $padding);
 }
 
 function matrix_get_programmes_therapies_archive_delivery_options($defaults = null)

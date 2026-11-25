@@ -46,14 +46,22 @@ $section_background_style = matrix_get_content_accordion_background_style($secti
 $heading = function_exists('matrix_resolve_content_accordion_heading')
     ? matrix_resolve_content_accordion_heading(get_sub_field('heading'))
     : trim((string) get_sub_field('heading'));
+$padding_settings = get_sub_field('padding_settings');
 $vertical_padding = function_exists('matrix_resolve_content_accordion_vertical_padding')
     ? matrix_resolve_content_accordion_vertical_padding(get_sub_field('vertical_padding'))
     : 'default';
 $padding_classes = function_exists('matrix_get_content_accordion_vertical_padding_classes')
-    ? matrix_get_content_accordion_vertical_padding_classes($vertical_padding, $layout_style)
+    ? matrix_get_content_accordion_vertical_padding_classes(
+        $vertical_padding,
+        $layout_style,
+        is_array($padding_settings) ? $padding_settings : []
+    )
     : '';
 // Bottom-only padding sets pt-0. Keep a top gap on this section anyway.
-$section_extra_style = ($vertical_padding === 'bottom_only' && strcasecmp($heading, 'Crisis support') === 0)
+$section_extra_style = (
+    ($vertical_padding === 'bottom_only' || $vertical_padding === 'no_top')
+    && strcasecmp($heading, 'Crisis support') === 0
+)
     ? 'padding-top:4rem;'
     : '';
 $wrapper_classes = trim($layout_config['wrapper_classes'] . ($padding_classes !== '' ? ' ' . $padding_classes : ''));

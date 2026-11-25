@@ -774,3 +774,139 @@ function matrix_get_content_wrapper_class_names($vertical_padding = 'default', $
 
     return implode(' ', $classes);
 }
+
+/**
+ * Shared ACF select choices for flexi vertical padding.
+ *
+ * @return array<string, string>
+ */
+function matrix_get_shared_vertical_padding_acf_choices(): array
+{
+    return [
+        'default' => 'Top & bottom (100px desktop)',
+        'no_bottom' => 'Top only (no bottom on desktop)',
+        'no_top' => 'Bottom only (no top on desktop)',
+        'medium' => 'Top & bottom (60px desktop)',
+        'none' => 'No padding',
+        'custom' => 'Custom (per breakpoint)',
+    ];
+}
+
+/**
+ * Append shared vertical_padding + conditional padding_settings to a flexi FieldsBuilder.
+ *
+ * @param object $builder StoutLogic FieldsBuilder (or compatible chainable builder)
+ * @param array{
+ *   choices?: array<string, string>,
+ *   default_value?: string,
+ *   instructions?: string,
+ *   add_design_tab?: bool,
+ *   design_tab_name?: string,
+ *   design_tab_label?: string
+ * } $args
+ * @return object
+ */
+function matrix_acf_append_shared_vertical_padding_fields($builder, array $args = [])
+{
+    $choices = $args['choices'] ?? matrix_get_shared_vertical_padding_acf_choices();
+    $default_value = $args['default_value'] ?? 'default';
+    $instructions = $args['instructions'] ?? 'Use “Top only” when the next block should sit flush underneath, or “Bottom only” to remove top padding under the previous block. “None”, “60px”, and “Custom” are optional extras — existing choices are unchanged.';
+
+    if (! empty($args['add_design_tab'])) {
+        $builder->addTab($args['design_tab_name'] ?? 'Design', [
+            'label' => $args['design_tab_label'] ?? 'Design',
+        ]);
+    }
+
+    $builder
+        ->addSelect('vertical_padding', [
+            'label' => 'Vertical Padding',
+            'instructions' => $instructions,
+            'choices' => $choices,
+            'default_value' => $default_value,
+            'ui' => 1,
+        ])
+        ->addRepeater('padding_settings', [
+            'label' => 'Custom Padding',
+            'instructions' => 'Only used when Vertical Padding is “Custom”. Enter rem values per breakpoint (e.g. 2 = 32px).',
+            'button_label' => 'Add Breakpoint',
+            'layout' => 'table',
+            'conditional_logic' => [[
+                [
+                    'field' => 'vertical_padding',
+                    'operator' => '==',
+                    'value' => 'custom',
+                ],
+            ]],
+        ])
+            ->addSelect('screen_size', [
+                'label' => 'Breakpoint',
+                'choices' => [
+                    'mob' => 'Mobile (mob)',
+                    'sm' => 'Small (sm)',
+                    'md' => 'Medium (md)',
+                    'lg' => 'Large (lg)',
+                    'xl' => 'Extra large (xl)',
+                ],
+                'default_value' => 'lg',
+                'ui' => 1,
+            ])
+            ->addNumber('padding_top', [
+                'label' => 'Top (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+            ->addNumber('padding_bottom', [
+                'label' => 'Bottom (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+        ->endRepeater();
+
+    return $builder;
+}
+
+/**
+ * Resolve flexi padding classes without changing empty/default appearance.
+ *
+ * @param mixed $vertical_padding
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_flexi_resolve_vertical_padding_classes(
+    $vertical_padding = '',
+    $padding_settings = [],
+    string $default_classes = 'py-12 lg:py-[100px]'
+): string {
+    $value = is_string($vertical_padding) ? trim($vertical_padding) : '';
+
+    if ($value === '' || $value === 'default') {
+        return $default_classes;
+    }
+
+    if (in_array($value, ['no_bottom', 'no_top', 'none', 'medium', 'custom'], true)) {
+        return matrix_get_shared_vertical_padding_classes(
+            $value,
+            is_array($padding_settings) ? $padding_settings : []
+        );
+    }
+
+    return $default_classes;
+}
+
+/**
+ * Remove Tailwind vertical-padding utilities from a class list.
+ *
+ * @param array<int, string> $classes
+ * @return array<int, string>
+ */
+function matrix_flexi_strip_vertical_padding_classes(array $classes): array
+{
+    return array_values(array_filter($classes, static function ($class) {
+        $class = (string) $class;
+
+        return ! (bool) preg_match(
+            '/^(?:[a-z0-9]+:)*(?:pt|pb|py)-/',
+            $class
+        );
+    }));
+}

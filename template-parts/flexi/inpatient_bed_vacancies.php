@@ -71,7 +71,18 @@ if ($vacancy_items === []) {
 
 $heading_id = $section_id . '-heading';
 
-$wrapper_classes = ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'pt-5', 'pb-5', 'max-xl:px-5', 'lg:gap-8', 'lg:py-[100px]'];
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'pt-5 pb-5 lg:py-[100px]'
+    )
+    : 'pt-5 pb-5 lg:py-[100px]';
+$wrapper_classes = array_merge(
+    ['mx-auto', 'flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'gap-8', 'max-xl:px-5', 'lg:gap-8'],
+    preg_split('/\s+/', $padding_classes, -1, PREG_SPLIT_NO_EMPTY) ?: []
+);
 
 ?>
 

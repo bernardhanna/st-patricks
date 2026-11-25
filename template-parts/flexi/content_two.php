@@ -17,6 +17,15 @@ $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
 
 ?>
 
+$padding_settings = get_sub_field('padding_settings');
+$padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classes')
+    ? matrix_flexi_resolve_vertical_padding_classes(
+        get_sub_field('vertical_padding'),
+        is_array($padding_settings) ? $padding_settings : [],
+        'pt-24 pb-12 max-sm:pt-16 max-sm:pb-16'
+    )
+    : 'pt-24 pb-12 max-sm:pt-16 max-sm:pb-16';
+
 <section
     id="<?php echo esc_attr($section_id); ?>"
     data-matrix-block="<?php echo esc_attr(str_replace('_', '-', get_row_layout()) . '-' . get_row_index()); ?>"
@@ -24,7 +33,7 @@ $description_width_class = $hero_image ? 'w-[467px]' : 'w-full';
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
 >
-    <div class="flex flex-col items-center pt-24 pb-12 mx-auto w-full max-w-container max-lg:px-5 max-sm:pt-16 max-sm:pb-16">
+    <div class="flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
         <div class="flex flex-col gap-14 items-start max-w-full w-[1018px] max-md:px-5 max-md:py-0 max-md:w-[90%] max-sm:px-4 max-sm:py-0 max-sm:w-[95%]">
 
             <!-- Header Section -->

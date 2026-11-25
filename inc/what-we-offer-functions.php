@@ -147,8 +147,32 @@ function matrix_render_what_we_offer_service_rail(array $service): void
     <?php
 }
 
-function matrix_get_what_we_offer_section_padding_classes($vertical_padding = 'default')
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_what_we_offer_section_padding_classes($vertical_padding = 'default', $padding_settings = [])
 {
+    $value = trim((string) $vertical_padding);
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
+
+    if (in_array($value, ['no_bottom', 'no_top', 'none', 'medium', 'custom'], true)
+        && function_exists('matrix_get_shared_vertical_padding_classes')
+    ) {
+        if ($value === 'no_bottom') {
+            return 'py-12 lg:pt-24 lg:pb-0';
+        }
+
+        if ($value === 'no_top') {
+            return 'pt-0 pb-12 lg:pt-0 lg:pb-24';
+        }
+
+        if ($value === 'medium') {
+            return 'py-12 lg:py-[60px]';
+        }
+
+        return matrix_get_shared_vertical_padding_classes($value, $padding_settings);
+    }
+
     return matrix_get_section_vertical_padding_classes(
         matrix_resolve_section_vertical_padding($vertical_padding),
         'lg:py-24'

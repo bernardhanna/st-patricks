@@ -62,14 +62,55 @@ $contact_form
         ])
         ->addSelect('vertical_padding', [
             'label' => 'Vertical Padding',
-            'instructions' => 'Compact uses half the usual section spacing, with a little more padding at the top than the bottom.',
+            'instructions' => 'Compact / Full keep current form pages unchanged. Shared options match other flexi blocks.',
             'choices' => [
                 'compact' => 'Compact (more top than bottom)',
                 'full' => 'Full (100px top and bottom)',
+                'no_bottom' => 'Top only (no bottom on desktop)',
+                'no_top' => 'Bottom only (no top on desktop)',
+                'medium' => 'Top & bottom (60px desktop)',
+                'none' => 'No padding',
+                'custom' => 'Custom (per breakpoint)',
             ],
             'default_value' => 'compact',
             'ui' => 1,
         ])
+        ->addRepeater('padding_settings', [
+            'label' => 'Custom Padding',
+            'instructions' => 'Only used when Vertical Padding is “Custom”. Enter rem values per breakpoint (e.g. 2 = 32px).',
+            'button_label' => 'Add Breakpoint',
+            'layout' => 'table',
+            'conditional_logic' => [[
+                [
+                    'field' => 'vertical_padding',
+                    'operator' => '==',
+                    'value' => 'custom',
+                ],
+            ]],
+        ])
+            ->addSelect('screen_size', [
+                'label' => 'Breakpoint',
+                'choices' => [
+                    'mob' => 'Mobile (mob)',
+                    'sm' => 'Small (sm)',
+                    'md' => 'Medium (md)',
+                    'lg' => 'Large (lg)',
+                    'xl' => 'Extra large (xl)',
+                ],
+                'default_value' => 'lg',
+                'ui' => 1,
+            ])
+            ->addNumber('padding_top', [
+                'label' => 'Top (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+            ->addNumber('padding_bottom', [
+                'label' => 'Bottom (rem)',
+                'min' => 0,
+                'step' => 1,
+            ])
+        ->endRepeater()
         ->addText('submit_label', [
             'label' => 'Submit Button Label',
             'default_value' => $defaults['submit_label'],

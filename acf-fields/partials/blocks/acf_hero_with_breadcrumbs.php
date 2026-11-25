@@ -299,4 +299,6 @@ $hero_with_breadcrumbs
             ],
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($hero_with_breadcrumbs);
+
 return $hero_with_breadcrumbs;

@@ -67,4 +67,6 @@ $referral_action_cards
             'default_value' => '#E4F4D6',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($referral_action_cards);
+
 return $referral_action_cards;

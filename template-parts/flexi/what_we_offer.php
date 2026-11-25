@@ -11,8 +11,12 @@ $services       = get_sub_field('services');
 $main_image     = get_sub_field('main_image');
 $layout_style   = matrix_resolve_what_we_offer_layout_style(get_sub_field('layout_style'));
 $intro_text     = trim((string) get_sub_field('intro_text'));
-$vertical_padding = matrix_resolve_section_vertical_padding(get_sub_field('vertical_padding'));
-$section_padding_classes = matrix_get_what_we_offer_section_padding_classes($vertical_padding);
+$padding_settings = get_sub_field('padding_settings');
+$vertical_padding_raw = get_sub_field('vertical_padding');
+$section_padding_classes = matrix_get_what_we_offer_section_padding_classes(
+    $vertical_padding_raw,
+    is_array($padding_settings) ? $padding_settings : []
+);
 
 // Main image alt from media
 $main_image_alt = '';

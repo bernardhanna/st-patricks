@@ -151,7 +151,13 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 </svg>
 
 
-    <div class="flex relative flex-col items-center py-12 mx-auto w-full max-w-container_md lg:py-24 max-lg:px-5 max-sm:px-6">
+    <?php
+    $newsletter_padding_classes = trim((string) ($newsletter_args['padding_classes'] ?? ''));
+    if ($newsletter_padding_classes === '') {
+        $newsletter_padding_classes = 'py-12 lg:py-24';
+    }
+    ?>
+    <div class="flex relative flex-col items-center mx-auto w-full max-w-container_md max-lg:px-5 max-sm:px-6 <?php echo esc_attr($newsletter_padding_classes); ?>">
 
       <div class="relative z-10 w-full">
         <div class="flex flex-col gap-8 w-full lg:gap-10">

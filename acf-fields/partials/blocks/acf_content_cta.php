@@ -203,4 +203,6 @@ $content_cta
             'ui' => 1,
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($content_cta);
+
 return $content_cta;

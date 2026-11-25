@@ -217,15 +217,33 @@ function matrix_get_video_showcase_heading_wrap_width_class($layout_style, $vide
 
 function matrix_resolve_video_showcase_vertical_padding($vertical_padding)
 {
-    return matrix_resolve_section_vertical_padding($vertical_padding);
+    $value = trim((string) $vertical_padding);
+
+    if (in_array($value, ['standard', 'bottom_only', 'no_bottom', 'no_top', 'none', 'medium', 'custom'], true)) {
+        return $value;
+    }
+
+    return 'default';
 }
 
-function matrix_get_video_showcase_section_wrapper_class_names($vertical_padding = 'default')
+/**
+ * @param array<int, array<string, mixed>>|mixed $padding_settings
+ */
+function matrix_get_video_showcase_section_wrapper_class_names($vertical_padding = 'default', $padding_settings = [])
 {
-    $padding_classes = matrix_get_section_vertical_padding_classes(
-        matrix_resolve_video_showcase_vertical_padding($vertical_padding),
-        'lg:py-[100px]'
-    );
+    $vertical_padding = matrix_resolve_video_showcase_vertical_padding($vertical_padding);
+    $padding_settings = is_array($padding_settings) ? $padding_settings : [];
+
+    if (in_array($vertical_padding, ['no_bottom', 'no_top', 'none', 'medium', 'custom'], true)
+        && function_exists('matrix_get_shared_vertical_padding_classes')
+    ) {
+        $padding_classes = matrix_get_shared_vertical_padding_classes($vertical_padding, $padding_settings);
+    } else {
+        $padding_classes = matrix_get_section_vertical_padding_classes(
+            in_array($vertical_padding, ['standard', 'bottom_only'], true) ? $vertical_padding : 'default',
+            'lg:py-[100px]'
+        );
+    }
 
     return implode(' ', [
         'mx-auto',

@@ -61,4 +61,6 @@ $useful_links
             'default_value' => '#1E244B',
         ]);
 
+matrix_acf_append_shared_vertical_padding_fields($useful_links);
+
 return $useful_links;

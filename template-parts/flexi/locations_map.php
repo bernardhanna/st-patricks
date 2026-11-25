@@ -35,6 +35,11 @@ $has_directions_link = is_array($directions_link)
     && ! empty($directions_link['title']);
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
 $show_header = $heading !== '' || $show_intro || $has_directions_link;
+$padding_settings = get_sub_field('padding_settings');
+$header_wrapper_classes = matrix_get_locations_map_header_wrapper_class_names(
+    get_sub_field('vertical_padding'),
+    is_array($padding_settings) ? $padding_settings : []
+);
 ?>
 
 <section
@@ -47,7 +52,7 @@ $show_header = $heading !== '' || $show_intro || $has_directions_link;
     @matrix-location-focus.window="if ($event.detail.sectionId === '<?php echo esc_js($section_id); ?>') activeLocationId = $event.detail.locationId"
 >
     <?php if ($show_header) { ?>
-        <div class="<?php echo esc_attr(matrix_get_locations_map_header_wrapper_class_names()); ?>">
+        <div class="<?php echo esc_attr($header_wrapper_classes); ?>">
             <header class="<?php echo esc_attr(matrix_get_locations_map_header_class_names()); ?>">
                 <div class="<?php echo esc_attr(matrix_get_locations_map_header_title_row_class_names()); ?>">
                     <?php if ($heading !== '') { ?>

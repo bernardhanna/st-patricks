@@ -22,7 +22,11 @@ $section_id = $is_careers_landing_page
 $current_page_id = get_queried_object_id();
 $base_url = $current_page_id ? get_permalink($current_page_id) : '';
 
-$wrapper_classes = explode(' ', matrix_get_careers_archive_default_wrapper_classes());
+$padding_settings = get_sub_field('padding_settings');
+$wrapper_classes = explode(' ', matrix_get_careers_archive_default_wrapper_classes(
+    get_sub_field('vertical_padding'),
+    is_array($padding_settings) ? $padding_settings : []
+));
 
 
 $careers_archive = matrix_prepare_careers_archive([

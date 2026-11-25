@@ -88,9 +88,11 @@ $locations_grid
             'instructions' => 'Optional section CTA shown below the grid.',
             'return_format' => 'array',
         ])
+
+    ->addTab('Design', ['label' => 'Design'])
         ->addSelect('vertical_padding', [
             'label' => 'Vertical Padding',
-            'instructions' => 'Use “Bottom only” to sit flush under the previous section. “None”, “60px”, and “Custom” are optional extras — existing choices are unchanged.',
+            'instructions' => 'Use “Top only” when the next block should sit flush underneath, or “Bottom only” to remove top padding under the previous block. “None”, “60px”, and “Custom” are optional extras — existing choices are unchanged.',
             'choices' => [
                 'default' => 'Top & bottom (100px desktop)',
                 'no_bottom' => 'Top only (no bottom on desktop)',

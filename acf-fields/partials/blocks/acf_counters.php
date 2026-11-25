@@ -76,4 +76,6 @@ $counters
         'default_value' => '#0c4a6e',
     ]);
 
+matrix_acf_append_shared_vertical_padding_fields($counters);
+
 return $counters;
