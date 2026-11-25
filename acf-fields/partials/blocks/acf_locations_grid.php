@@ -132,12 +132,12 @@ $locations_grid
             ->addNumber('padding_top', [
                 'label' => 'Top (rem)',
                 'min' => 0,
-                'step' => 1,
+                'step' => 0.01,
             ])
             ->addNumber('padding_bottom', [
                 'label' => 'Bottom (rem)',
                 'min' => 0,
-                'step' => 1,
+                'step' => 0.01,
             ])
         ->endRepeater();
 
