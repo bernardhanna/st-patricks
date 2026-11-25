@@ -2,12 +2,22 @@
 
 function matrix_get_mailchimp_api_key()
 {
-    if (defined('MATRIX_MAILCHIMP_KEY') && MATRIX_MAILCHIMP_KEY) {
-        return trim((string) MATRIX_MAILCHIMP_KEY);
+    if (defined('MATRIX_MAILCHIMP_KEY') && is_string(MATRIX_MAILCHIMP_KEY) && trim(MATRIX_MAILCHIMP_KEY) !== '') {
+        return trim(MATRIX_MAILCHIMP_KEY);
     }
 
     if (function_exists('get_field')) {
-        return trim((string) get_field('mailchimp_api_key', 'option'));
+        $from_field = trim((string) get_field('mailchimp_api_key', 'option'));
+        if ($from_field !== '') {
+            return $from_field;
+        }
+    }
+
+    if (function_exists('get_option')) {
+        $from_option = get_option('options_mailchimp_api_key', '');
+        if (is_string($from_option) && trim($from_option) !== '') {
+            return trim($from_option);
+        }
     }
 
     return '';
@@ -153,10 +163,19 @@ function matrix_add_mailchimp_subscriber($email, array $merge_fields = [], $list
         : preg_replace('/[^a-zA-Z0-9_-]/', '', (string) $list_id);
 
     if ($api_key === '' || $dc === '') {
+        if (function_exists('error_log')) {
+            error_log('Newsletter subscribe blocked: Mailchimp API key is missing or has no datacenter suffix.');
+        }
+
+        $message = function_exists('get_field') ? (string) get_field('mailchimp_error_message', 'option') : '';
+        if ($message === '') {
+            $message = 'Sorry, something went wrong. Please try again.';
+        }
+
         return [
             'ok' => false,
             'code' => 500,
-            'message' => 'Missing Mailchimp API key.',
+            'message' => $message,
         ];
     }
 

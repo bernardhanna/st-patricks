@@ -354,7 +354,7 @@ function matrix_subscribe_brevo() {
 
   if ($provider === 'mailchimp') {
     if (! function_exists('matrix_add_mailchimp_subscriber')) {
-      wp_send_json_error(['message' => 'Missing Mailchimp API key.'], 500);
+      wp_send_json_error(['message' => 'Sorry, something went wrong. Please try again.'], 500);
     }
 
     $list_id = function_exists('matrix_resolve_subscribe_mailchimp_list_id')
