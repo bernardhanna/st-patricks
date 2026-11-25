@@ -37,7 +37,7 @@ try {
 $constant = (defined('MATRIX_MAILCHIMP_KEY') && is_string(MATRIX_MAILCHIMP_KEY))
     ? MATRIX_MAILCHIMP_KEY
     : '';
-$acf = function_exists('get_field') ? get_field('mailchimp_api_key', 'option') : null;
+$acf_value = function_exists('get_field') ? get_field('mailchimp_api_key', 'option') : null;
 $option = function_exists('get_option') ? get_option('options_mailchimp_api_key', '') : '';
 $resolved = function_exists('matrix_get_mailchimp_api_key') ? matrix_get_mailchimp_api_key() : '';
 
@@ -45,8 +45,8 @@ echo json_encode([
     'provider' => function_exists('matrix_get_newsletter_provider') ? matrix_get_newsletter_provider() : '',
     'constant_defined' => defined('MATRIX_MAILCHIMP_KEY'),
     'constant' => $describe($constant),
-    'acf' => $describe(is_string($acf) ? $acf : ''),
-    'acf_type' => gettype($acf),
+    'acf' => $describe(is_string($acf_value) ? $acf_value : ''),
+    'acf_type' => gettype($acf_value),
     'option' => $describe(is_string($option) ? $option : ''),
     'option_type' => gettype($option),
     'resolved' => $describe($resolved),
