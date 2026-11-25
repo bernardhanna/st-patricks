@@ -1951,6 +1951,12 @@ input:where([type='file']):focus {
 .min-h-\[10px\] {
   min-height: 10px;
 }
+.h-\[10px\] {
+  height: 10px;
+}
+.w-\[10px\] {
+  width: 10px;
+}
 .min-h-\[140px\] {
   min-height: 140px;
 }
@@ -7089,6 +7095,9 @@ input:where([type='file']):focus {
 }
 .pt-12 {
   padding-top: 3rem;
+}
+.pt-\[60px\] {
+  padding-top: 60px;
 }
 .pt-14 {
   padding-top: 3.5rem;
@@ -45574,6 +45583,13 @@ button[aria-label="Next stories"] {
   min-width: 2.75rem;
 }
 
+footer a.footer-social.h-8.w-8 {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
 /* Footer text links: underline on hover/focus only (not at rest). */
 footer a:not(.btn):not(.w-8) {
   text-decoration-line: none;
@@ -47032,5 +47048,101 @@ blockquote.right {
 }
 [data-content-cta-scheme='inverse'] .wp_editor a:hover {
   text-decoration-line: none;
+}
+
+.leading-\[1\.4\] {
+  line-height: 1.4;
+}
+@media not all and (min-width: 1100px) {
+  .max-lg\:h-4 {
+    height: 1rem;
+  }
+  .max-lg\:w-4 {
+    width: 1rem;
+  }
+  .max-lg\:h-6 {
+    height: 1.5rem;
+  }
+  .max-lg\:w-6 {
+    width: 1.5rem;
+  }
+  .max-lg\:gap-3 {
+    gap: 0.75rem;
+  }
+  .max-lg\:gap-4 {
+    gap: 1rem;
+  }
+  .max-lg\:h-\[18px\] {
+    height: 18px;
+  }
+  .max-lg\:w-\[18px\] {
+    width: 18px;
+  }
+  .max-lg\:h-3\.5 {
+    height: 0.875rem;
+  }
+  .max-lg\:w-3\.5 {
+    width: 0.875rem;
+  }
+  .max-lg\:rounded-md {
+    border-radius: 0.375rem;
+  }
+  .max-lg\:py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .max-lg\:font-primary {
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .max-lg\:font-medium {
+    font-weight: 500;
+  }
+  .max-lg\:font-semibold {
+    font-weight: 600;
+  }
+  .max-lg\:text-\[24px\] {
+    font-size: 24px;
+  }
+  .max-lg\:leading-\[22\.8px\] {
+    line-height: 22.8px;
+  }
+  .max-lg\:leading-\[28px\] {
+    line-height: 28px;
+  }
+  .max-lg\:tracking-\[-0\.005em\] {
+    letter-spacing: -0.005em;
+  }
+  .max-lg\:tracking-\[-0\.0075em\] {
+    letter-spacing: -0.0075em;
+  }
+}
+
+/* Mobile homepage: section titles 24px, card titles 20px. Desktop (1100px) stays as designed. */
+@media (max-width: 1099px) {
+  body.home #main-content h2:not(.spmhs-partners__title) {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  body.home #main-content h3:not(.spmhs-offer-title) {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .spmhs-story-nav {
+    width: 343px;
+    max-width: 100%;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-between;
+  }
+}
+
+.spmhs-story-nav button.h-8.w-8 {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
 }
 

@@ -90,7 +90,7 @@ if (!empty($services) && is_array($services)) {
                     class="inline-flex gap-2 items-center text-3xl font-semibold tracking-tight leading-tight transition-colors duration-200 text-indigo-950 hover:text-primary hover:underline btn max-sm:text-2xl w-fit"
                     aria-label="<?php echo esc_attr($heading_link['title']); ?>"
                 >
-                    <<?php echo esc_attr($heading_tag); ?> class="text-inherit font-inherit leading-inherit tracking-inherit">
+                    <<?php echo esc_attr($heading_tag); ?> class="spmhs-offer-title text-inherit font-inherit leading-inherit tracking-inherit max-lg:font-primary max-lg:font-semibold max-lg:text-[24px] max-lg:leading-[28px] max-lg:tracking-[-0.0075em]">
                         <?php echo esc_html($heading); ?>
                     </<?php echo esc_attr($heading_tag); ?>>
 
@@ -112,7 +112,7 @@ if (!empty($services) && is_array($services)) {
                     <?php endif; ?>
                 </a>
             <?php else : ?>
-                <<?php echo esc_attr($heading_tag); ?> class="text-3xl font-semibold tracking-tight leading-tight text-[#1E244B] max-sm:text-2xl">
+                <<?php echo esc_attr($heading_tag); ?> class="spmhs-offer-title font-primary text-3xl font-semibold tracking-tight leading-tight text-[#1E244B] max-lg:text-[24px] max-lg:font-semibold max-lg:leading-[28px] max-lg:tracking-[-0.0075em]">
                     <?php echo esc_html($heading); ?>
                 </<?php echo esc_attr($heading_tag); ?>>
             <?php endif; ?>
@@ -154,9 +154,9 @@ if (!empty($services) && is_array($services)) {
 
                                           <?php if ($service['show_icon']) : ?>
                                               <svg
-                                                  width="24" height="24" viewBox="0 0 24 24"
+                                                  width="18" height="18" viewBox="0 0 24 24"
                                                   fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                  class="w-6 h-6 transition-colors duration-200 text-[#001F33] group-hover:text-[#024B79]"
+                                                  class="h-6 w-6 max-lg:h-[18px] max-lg:w-[18px] shrink-0 transition-colors duration-200 text-[#001F33] group-hover:text-[#024B79]"
                                                   aria-hidden="true"
                                               >
                                                   <path
@@ -190,10 +190,10 @@ if (!empty($services) && is_array($services)) {
 
                 <!-- Main Image -->
                 <?php if ($main_image) : ?>
-                <aside class="flex-1 shrink w-full basis-0 min-h-[656px] min-w-60 tab:flex max-md:max-w-full max-tab:hidden">
+                <aside class="flex-1 shrink w-full basis-0 min-w-60 tab:flex max-md:max-w-full max-tab:hidden">
                     <?php echo wp_get_attachment_image($main_image, 'full', false, [
                         'alt'   => esc_attr($main_image_alt),
-                        'class' => 'object-contain flex-1 shrink w-full min-h-[656px] min-w-60 max-md:flex max-md:max-w-full',
+                        'class' => 'h-auto w-full rounded object-contain',
                     ]); ?>
                 </aside>
                 <?php endif; ?>
@@ -242,9 +242,9 @@ if (!empty($services) && is_array($services)) {
 
                                                 <?php if ($service['show_icon']) : ?>
                                                     <svg
-                                                        width="24" height="24" viewBox="0 0 24 24"
+                                                        width="18" height="18" viewBox="0 0 24 24"
                                                         fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-6 w-6 shrink-0 text-[#001F33] transition-colors duration-200 group-hover:text-[#024B79]"
+                                                        class="h-6 w-6 max-lg:h-[18px] max-lg:w-[18px] shrink-0 text-[#001F33] transition-colors duration-200 group-hover:text-[#024B79]"
                                                         aria-hidden="true"
                                                     >
                                                         <path

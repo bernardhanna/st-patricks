@@ -97,6 +97,13 @@ button[aria-label="Next stories"] {
   min-height: 2.75rem;
 }
 
+footer a.footer-social.h-8.w-8 {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
 /* Footer text links: underline on hover/focus only (not at rest). */
 footer a:not(.btn):not(.w-8) {
   text-decoration-line: none;
@@ -1340,5 +1347,34 @@ blockquote.right {
 
 [data-content-cta-scheme='inverse'] .wp_editor a {
   @apply text-white underline hover:no-underline;
+}
+
+/* Mobile homepage: section titles 24px, card titles 20px. Desktop (1100px) stays as designed. */
+@media (max-width: 1099px) {
+  body.home #main-content h2:not(.spmhs-partners__title) {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  body.home #main-content h3:not(.spmhs-offer-title) {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .spmhs-story-nav {
+    width: 343px;
+    max-width: 100%;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-between;
+  }
+}
+
+.spmhs-story-nav button.h-8.w-8 {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
 }
 

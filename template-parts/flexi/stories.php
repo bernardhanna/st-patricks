@@ -101,11 +101,11 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         </div>
 
         <!-- Mobile controls -->
-        <nav class="flex gap-6 justify-center items-center mb-4" aria-label="Stories navigation (mobile)">
+        <nav class="spmhs-story-nav mx-auto mb-4 flex w-full items-center justify-between" aria-label="Stories navigation (mobile)">
           <button
             type="button"
             id="<?php echo esc_attr($section_id); ?>-m-prev"
-            class="group flex justify-center items-center w-8 h-8 bg-white rounded-full border border-[#7ED0E0] transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33] disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group flex h-8 w-8 shrink-0 justify-center items-center bg-white rounded-full border border-[#7ED0E0] transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33] disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Previous story"
             title="Previous story"
           >
@@ -119,7 +119,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
           <button
             type="button"
             id="<?php echo esc_attr($section_id); ?>-m-next"
-            class="group flex justify-center items-center w-8 h-8 bg-white rounded-full border border-[#7ED0E0] transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33] disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group flex h-8 w-8 shrink-0 justify-center items-center bg-white rounded-full border border-[#7ED0E0] transition-colors hover:border-[#7ED0E0] hover:bg-[#001F33] active:border-[#7ED0E0] active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] focus:bg-[#001F33] disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Next story"
             title="Next story"
           >
@@ -209,7 +209,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
       </div>
 
       <?php if ($total_slides > 1): ?>
-        <nav class="flex gap-6 justify-center items-center pt-12 w-ful" aria-label="Stories navigation (desktop)">
+        <nav class="spmhs-story-nav flex gap-6 justify-center items-center pt-12 w-ful" aria-label="Stories navigation (desktop)">
           <button
             type="button"
             id="<?php echo esc_attr($section_id); ?>-d-prev"
@@ -226,7 +226,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
             <?php for ($dot = 0; $dot < $total_slides; $dot++): ?>
               <button
                 type="button"
-                class="w-2.5 h-2.5 min-h-[10px] min-w-[10px] rounded-full transition-colors duration-200 cursor-pointer"
+                class="h-[10px] w-[10px] rounded-full transition-colors duration-200 cursor-pointer"
                 data-slide="<?php echo esc_attr($dot); ?>"
                 role="tab"
                 aria-label="Go to slide <?php echo esc_attr($dot + 1); ?>"
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
       cards.forEach(function(_, idx){
         var b = document.createElement('button');
         b.type = 'button';
-        b.className = 'w-2.5 h-2.5 min-h-[10px] min-w-[10px] rounded-full transition-colors duration-200';
+        b.className = 'h-[10px] w-[10px] rounded-full transition-colors duration-200';
         b.setAttribute('role', 'tab');
         b.setAttribute('aria-label', 'Go to card ' + (idx + 1));
         b.dataset.index = idx;

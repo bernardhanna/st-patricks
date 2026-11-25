@@ -140,7 +140,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
               <<?php echo tag_escape($heading_tag); ?> class="text-[24px] text-[#1E244B] font-semibold not-italic leading-[28px] tracking-[-0.18px] lg:text-[30px] lg:leading-[36px] lg:tracking-[-0.225px] lg:max-w-[312px]">
                 <?php echo esc_html($heading_text); ?>
               </<?php echo tag_escape($heading_tag); ?>>
-              <div class="w-10 h-1 rounded-sm !bg-[#6FC9C0]" style="background-color: <?php echo esc_attr($accent_bar_color); ?>;"></div>
+              <div class="w-10 h-1 rounded-none !bg-[#6FC9C0]" style="background-color: <?php echo esc_attr($accent_bar_color); ?>;"></div>
             <?php endif; ?>
 
             <?php if (!empty($intro_text)): ?>
@@ -238,20 +238,20 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
 
           <!-- Navigation -->
           <?php if ($count > 1): ?>
-          <div class="flex gap-6 justify-between items-center w-full lg:w-auto lg:justify-center" data-controls>
-            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Previous story" data-prev>
+          <div class="spmhs-story-nav mx-auto flex w-full items-center justify-between lg:h-auto lg:w-auto lg:justify-center lg:gap-6" data-controls>
+            <button type="button" class="group h-8 w-8 shrink-0 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Previous story" data-prev>
               <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
                 <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
 
-            <div class="flex gap-4 items-center" data-dots>
+            <div class="flex gap-4 max-lg:gap-3 items-center" data-dots>
               <?php for ($i=0; $i<$count; $i++): ?>
-                <button type="button" class="w-3 h-3 rounded-full transition-colors duration-200" aria-label="Go to story <?php echo esc_attr($i+1); ?>" data-dot="<?php echo esc_attr($i); ?>"></button>
+                <button type="button" class="h-[10px] w-[10px] rounded-full transition-colors duration-200" aria-label="Go to story <?php echo esc_attr($i+1); ?>" data-dot="<?php echo esc_attr($i); ?>"></button>
               <?php endfor; ?>
             </div>
 
-            <button type="button" class="group w-8 h-8 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Next story" data-next>
+            <button type="button" class="group h-8 w-8 shrink-0 rounded-full border border-[#7ED0E0] bg-white flex items-center justify-center transition-colors hover:border-[#7ED0E0] lg:hover:bg-[#001F33] active:border-[#7ED0E0] lg:active:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] focus:border-[#7ED0E0] lg:focus:bg-[#001F33]" aria-label="Next story" data-next>
               <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
                 <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors lg:group-hover:stroke-white lg:group-active:stroke-white lg:group-focus:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>

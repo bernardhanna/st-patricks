@@ -61,10 +61,6 @@ if (function_exists('is_front_page') && is_front_page()) {
         margin: 0;
         padding-right: 32px;
         border-right: 1px solid #E5E7EB;
-        font-size: 18px;
-        line-height: 1.4;
-        font-weight: 600;
-        font-family: Inter, system-ui, sans-serif;
         color: var(--spmhs-navy);
     }
     .spmhs-partners__logos {
@@ -85,7 +81,7 @@ if (function_exists('is_front_page') && is_front_page()) {
     }
     @media (max-width: 860px) {
         .spmhs-partners { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: -36px; padding: 20px; }
-        .spmhs-partners__title { max-width: none; padding-right: 0; border-right: 0; font-size: 16px; }
+        .spmhs-partners__title { max-width: none; padding-right: 0; border-right: 0; }
         .spmhs-partners__logos { width: 100%; justify-content: space-between; gap: 12px; }
         .spmhs-partners__logos img { height: 32px; }
     }
@@ -93,7 +89,7 @@ if (function_exists('is_front_page') && is_front_page()) {
     <div class="spmhs-partners-band">
     <div class="spmhs-partners">
         <?php if ($heading_text !== '') { ?>
-            <<?php echo tag_escape($heading_tag); ?> class="spmhs-partners__title"><?php echo esc_html($heading_text); ?></<?php echo tag_escape($heading_tag); ?>>
+            <<?php echo tag_escape($heading_tag); ?> class="spmhs-partners__title font-primary text-[18px] font-semibold leading-[1.4] max-lg:font-medium max-lg:leading-[22.8px] max-lg:tracking-[-0.005em]"><?php echo esc_html($heading_text); ?></<?php echo tag_escape($heading_tag); ?>>
         <?php } ?>
         <?php if (!empty($partners) && is_array($partners)) { ?>
             <ul class="spmhs-partners__logos">
