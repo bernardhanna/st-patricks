@@ -101,6 +101,29 @@ if (! function_exists('matrix_external_link_rel')) {
     }
 }
 
+if (! function_exists('matrix_html_target_attrs')) {
+    /**
+     * Render target (+ rel when opening a new tab) attributes for an anchor.
+     */
+    function matrix_html_target_attrs(string $target = ''): string
+    {
+        $target = trim($target);
+
+        if ($target === '' || $target === '_self') {
+            return '';
+        }
+
+        $attrs = ' target="' . esc_attr($target) . '"';
+        $rel = matrix_external_link_rel($target);
+
+        if ($rel !== '') {
+            $attrs .= ' rel="' . esc_attr($rel) . '"';
+        }
+
+        return $attrs;
+    }
+}
+
 if (! function_exists('matrix_new_tab_announcement_html')) {
     /**
      * Visible-to-AT note Silktide expects on links that open a new tab.
@@ -1136,15 +1159,97 @@ if (! function_exists('matrix_filter_acf_link_target')) {
         }
 
         $value['target'] = matrix_normalize_link_target((string) $value['url'], (string) ($value['target'] ?? ''));
+        $rel = matrix_external_link_rel((string) $value['target']);
+
+        if ($rel !== '') {
+            $value['rel'] = $rel;
+        }
 
         return $value;
+    }
+}
+
+if (! function_exists('matrix_normalize_navi_menu_targets')) {
+    /**
+     * Force external / PDF Navi menu items to open in a new tab.
+     * Mutates items in place (objects) so mega-menu templates pick up target.
+     *
+     * @param mixed $items Navi collection, array of items, or a single item.
+     * @return mixed
+     */
+    function matrix_normalize_navi_menu_targets($items)
+    {
+        if ($items instanceof \Traversable && ! is_array($items)) {
+            foreach ($items as $item) {
+                matrix_normalize_navi_menu_targets($item);
+            }
+
+            return $items;
+        }
+
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                matrix_normalize_navi_menu_targets($item);
+            }
+
+            return $items;
+        }
+
+        if (! is_object($items)) {
+            return $items;
+        }
+
+        $url = (string) ($items->url ?? '');
+
+        if ($url !== '') {
+            $items->target = matrix_normalize_link_target($url, (string) ($items->target ?? ''));
+        }
+
+        if (! empty($items->children)) {
+            matrix_normalize_navi_menu_targets($items->children);
+        }
+
+        return $items;
+    }
+}
+
+if (! function_exists('matrix_filter_nav_menu_link_attributes')) {
+    /**
+     * @param array<string, string> $atts
+     * @param object                $item
+     * @return array<string, string>
+     */
+    function matrix_filter_nav_menu_link_attributes(array $atts, $item): array
+    {
+        $url = (string) ($atts['href'] ?? ($item->url ?? ''));
+
+        if ($url === '') {
+            return $atts;
+        }
+
+        $target = matrix_normalize_link_target($url, (string) ($atts['target'] ?? ($item->target ?? '')));
+        $atts['target'] = $target;
+
+        $rel = matrix_external_link_rel($target);
+
+        if ($rel !== '') {
+            $existing = trim((string) ($atts['rel'] ?? ''));
+            $parts = $existing !== '' ? preg_split('/\s+/', $existing) ?: [] : [];
+            $atts['rel'] = implode(' ', array_values(array_unique(array_merge($parts, preg_split('/\s+/', $rel) ?: []))));
+        }
+
+        return $atts;
     }
 }
 
 if (function_exists('add_filter')) {
     add_filter('the_content', 'matrix_filter_pipe_delimited_list_items_in_content', 14);
     add_filter('the_content', 'matrix_filter_external_links_in_content', 25);
+    // ACF WYSIWYG uses acf_the_content (not the_content) when formatted.
+    add_filter('acf_the_content', 'matrix_filter_external_links_in_content', 25);
+    add_filter('widget_text_content', 'matrix_filter_external_links_in_content', 25);
     add_filter('acf/format_value/type=link', 'matrix_filter_acf_link_target', 20);
+    add_filter('nav_menu_link_attributes', 'matrix_filter_nav_menu_link_attributes', 20, 2);
 }
 
 if (! function_exists('matrix_get_theme_path_redirect_map')) {

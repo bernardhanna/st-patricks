@@ -114,8 +114,10 @@ if ($vertical_padding === 'custom') {
                     }
 
                     $has_link = is_array($link) && ! empty($link['url']);
-                    $link_url = $has_link ? $link['url'] : '';
-                    $link_target = $has_link ? ($link['target'] ?: '_self') : '_self';
+                    $link_url = $has_link ? (string) $link['url'] : '';
+                    $link_target = $has_link && function_exists('matrix_normalize_link_target')
+                        ? matrix_normalize_link_target($link_url, (string) ($link['target'] ?? ''))
+                        : ($has_link ? ($link['target'] ?: '_self') : '_self');
                     $link_title = $has_link ? (string) ($link['title'] ?: $title) : $title;
                     if ($is_useful_links_heading && $link_title !== '' && function_exists('matrix_format_useful_link_title')) {
                         $link_title = matrix_format_useful_link_title($link_title);

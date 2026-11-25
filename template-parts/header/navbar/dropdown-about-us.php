@@ -92,7 +92,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                 <a
                                     href="<?php echo esc_url($child->url); ?>"
                                     class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(! empty($child->active))); ?>"
-                                    <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                    <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                     @mouseenter="activePanelIndex = -1"
                                 >
                                     <?php echo esc_html($child->label); ?>
@@ -134,7 +134,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                     <a
                                         href="<?php echo esc_url($child->url); ?>"
                                         class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
-                                        <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                        <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                     >
                                         <?php echo esc_html($child->label); ?>
                                     </a>
@@ -147,7 +147,7 @@ $section_id = 'about-us-mega-menu-' . $index;
                                         <a
                                             href="<?php echo esc_url($grandchild->url); ?>"
                                             class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(false)); ?>"
-                                            <?php if (! empty($grandchild->target)) : ?>target="<?php echo esc_attr($grandchild->target); ?>"<?php endif; ?>
+                                            <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($grandchild->target ?? '')) : ''; ?>
                                         >
                                             <?php echo esc_html($grandchild->label); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($grandchild->target ?? '')); ?>

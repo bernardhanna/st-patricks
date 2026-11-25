@@ -55,6 +55,80 @@ function matrix_starter_enqueue_scripts()
   wp_enqueue_script('matrix-starter', $app_js, ['jquery'], $js_version, true);
   wp_enqueue_style('matrix-starter', $app_css, [], $theme_version);
 
+  // Safety net: any leftover external / PDF anchors (widgets, embeds, hard-coded
+  // HTML) get target=_blank + rel=noopener noreferrer. PHP helpers cover content
+  // and ACF; this catches what those miss without forcing same-site links.
+  wp_add_inline_script(
+    'matrix-starter',
+    <<<'JS'
+(function () {
+  var internalHosts = ['stpatricks.ie'];
+  try {
+    var siteHost = (window.location.hostname || '').replace(/^www\./i, '').toLowerCase();
+    if (siteHost && internalHosts.indexOf(siteHost) === -1) {
+      internalHosts.push(siteHost);
+    }
+  } catch (e) {}
+
+  function isPdf(href) {
+    try {
+      return /\.pdf($|[?#])/i.test(new URL(href, window.location.href).pathname);
+    } catch (err) {
+      return /\.pdf($|[?#])/i.test(href || '');
+    }
+  }
+
+  function isExternal(href) {
+    if (!href || href.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/i.test(href)) {
+      return false;
+    }
+    try {
+      var url = new URL(href, window.location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        return false;
+      }
+      var host = (url.hostname || '').replace(/^www\./i, '').toLowerCase();
+      return host !== '' && internalHosts.indexOf(host) === -1;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function enhance(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('a[href]').forEach(function (anchor) {
+      var href = anchor.getAttribute('href') || '';
+      if (!isExternal(href) && !isPdf(href)) {
+        return;
+      }
+      if (anchor.getAttribute('target') !== '_blank') {
+        anchor.setAttribute('target', '_blank');
+      }
+      var relParts = (anchor.getAttribute('rel') || '').split(/\s+/).filter(Boolean);
+      ['noopener', 'noreferrer'].forEach(function (token) {
+        if (relParts.indexOf(token) === -1) {
+          relParts.push(token);
+        }
+      });
+      anchor.setAttribute('rel', relParts.join(' '));
+    });
+  }
+
+  function run() {
+    enhance(document);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+JS
+    ,
+    'after'
+  );
+
   // --- ✅ Alpine.js (CDN) + Intersect plugin ---
   wp_enqueue_script(
     'alpine-intersect',

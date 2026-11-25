@@ -67,6 +67,48 @@ test('matrix_normalize_acf_link forces external acf links to open in a new tab',
     ]);
 });
 
+test('matrix_filter_acf_link_target sets target and rel for external urls', function () {
+    $value = matrix_filter_acf_link_target([
+        'title' => 'External',
+        'url' => 'https://example.com/page',
+        'target' => '',
+    ]);
+
+    expect($value['target'])->toBe('_blank')
+        ->and($value['rel'])->toBe('noopener noreferrer');
+});
+
+test('matrix_normalize_navi_menu_targets forces external menu urls to _blank', function () {
+    $child = (object) [
+        'label' => 'Partner',
+        'url' => 'https://www.walkinmyshoes.ie/',
+        'target' => '',
+        'children' => [],
+    ];
+    $item = (object) [
+        'label' => 'About',
+        'url' => '/about-us/',
+        'target' => '',
+        'children' => [$child],
+    ];
+
+    matrix_normalize_navi_menu_targets([$item]);
+
+    expect($item->target)->toBe('_self')
+        ->and($child->target)->toBe('_blank');
+});
+
+test('matrix_filter_nav_menu_link_attributes adds target blank for external hrefs', function () {
+    $atts = matrix_filter_nav_menu_link_attributes(
+        ['href' => 'https://example.com/docs'],
+        (object) ['url' => 'https://example.com/docs', 'target' => '']
+    );
+
+    expect($atts['target'])->toBe('_blank')
+        ->and($atts['rel'])->toContain('noopener')
+        ->and($atts['rel'])->toContain('noreferrer');
+});
+
 test('matrix_link_newsletter_subtext_click_here links plain newsletter click here text', function () {
     expect(function_exists('matrix_link_newsletter_subtext_click_here'))->toBeTrue();
 

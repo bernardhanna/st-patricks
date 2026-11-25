@@ -61,13 +61,19 @@ function matrix_mobile_nav_normalize_items($items): array
 
     foreach ($items as $item) {
         $label = matrix_mobile_nav_val($item, ['label', 'title', 'name', 'post_title'], '');
-        $url = matrix_mobile_nav_val($item, ['url', 'link', 'permalink', 'guid'], '');
+        $url = (string) matrix_mobile_nav_val($item, ['url', 'link', 'permalink', 'guid'], '');
+        $target = (string) matrix_mobile_nav_val($item, ['target'], '');
         $active = (bool) matrix_mobile_nav_val($item, ['active', 'current', 'is_current'], false);
         $children = matrix_mobile_nav_val($item, ['children', 'items', 'submenu', 'child_items'], []);
 
+        if ($url !== '' && function_exists('matrix_normalize_link_target')) {
+            $target = matrix_normalize_link_target($url, $target);
+        }
+
         $normalized[] = [
             'label' => (string) $label,
-            'url' => (string) $url,
+            'url' => $url,
+            'target' => $target !== '' ? $target : '_self',
             'active' => $active,
             'children' => matrix_mobile_nav_normalize_items($children),
         ];
@@ -298,11 +304,15 @@ $nav_slide_config = [
                                     <div class="flex items-center justify-between gap-3 px-5 py-4">
                                         <a
                                             :href="item.url"
+                                            :target="item.target || '_self'"
+                                            :rel="item.target === '_blank' ? 'noopener noreferrer' : null"
                                             class="min-w-0 flex-1 text-base leading-6 text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                                             :class="depth === 0 ? 'font-semibold' : 'font-medium'"
-                                            x-text="item.label"
                                             @click="close()"
-                                        ></a>
+                                        >
+                                            <span x-text="item.label"></span>
+                                            <span class="sr-only" x-text="item.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
+                                        </a>
                                         <button
                                             type="button"
                                             class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#08284B] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
@@ -318,11 +328,14 @@ $nav_slide_config = [
                                 <template x-if="!(item.children && item.children.length)">
                                     <a
                                         :href="item.url"
+                                        :target="item.target || '_self'"
+                                        :rel="item.target === '_blank' ? 'noopener noreferrer' : null"
                                         class="flex items-center justify-between gap-3 px-5 py-4 text-base font-medium leading-6 text-[#08284B] transition-colors hover:bg-white hover:text-[#024B79] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
                                         :class="item.active ? 'bg-white font-semibold text-[#024B79]' : ''"
                                         @click="close()"
                                     >
                                         <span x-text="item.label"></span>
+                                        <span class="sr-only" x-text="item.target === '_blank' ? ' (opens in a new tab)' : ''"></span>
                                     </a>
                                 </template>
                             </li>

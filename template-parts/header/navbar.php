@@ -33,6 +33,9 @@ if (! empty($nav_settings['dropdown_images'])) {
 
 use Log1x\Navi\Navi;
 $primary_navigation = Navi::make()->build('primary');
+if (function_exists('matrix_normalize_navi_menu_targets') && $primary_navigation->isNotEmpty()) {
+    matrix_normalize_navi_menu_targets($primary_navigation->toArray());
+}
 ?>
 
 <!-- Alpine store (once) -->
@@ -367,6 +370,7 @@ document.addEventListener('alpine:init', () => {
             class="flex gap-1 items-center px-1.5 py-1 text-sm font-semibold leading-5 whitespace-nowrap rounded text-[#08284B] hover:text-[#024B79] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary cursor-pointer xl:px-2"
             role="menuitem"
             aria-haspopup="<?php echo $item->children ? 'true' : 'false'; ?>"
+            <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($item->target ?? '')) : ''; ?>
             <?php if ($item->children) : ?>
               @mouseenter="$store.navMega.open('<?php echo esc_attr($mega_menu_key); ?>')"
               :aria-expanded="$store.navMega.activeKey === '<?php echo esc_attr($mega_menu_key); ?>' ? 'true' : 'false'"
@@ -374,7 +378,7 @@ document.addEventListener('alpine:init', () => {
               aria-expanded="false"
             <?php endif; ?>
           >
-            <span><?php echo esc_html($item->label); ?></span>
+            <span><?php echo esc_html($item->label); ?><?php echo function_exists('matrix_new_tab_announcement_html') ? matrix_new_tab_announcement_html((string) ($item->target ?? '')) : ''; ?></span>
 
             <?php if ($item->children) : ?>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" class="mt-0.5">

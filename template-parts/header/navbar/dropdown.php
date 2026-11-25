@@ -87,7 +87,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                                     aria-controls="tier3-<?php echo $index; ?>-<?php echo $child_index; ?>"
                                                     @mouseenter="activeTier3Index = <?php echo $child_index; ?>"
                                                     @focus="activeTier3Index = <?php echo $child_index; ?>"
-                                                    <?php if (!empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                                    <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                                 >
                                                     <span><?php echo esc_html($child->label); ?></span>
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -98,7 +98,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                                 <a
                                                     href="<?php echo esc_url($child->url); ?>"
                                                     class="inline-flex items-center text-[16px] font-medium leading-6 transition-colors <?php echo $is_active_child ? 'text-[#024B79] underline underline-offset-2' : 'text-[#0F2419] hover:text-[#024B79]'; ?>"
-                                                    <?php if (!empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                                    <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                                     @mouseenter="activeTier3Index = null"
                                                 >
                                                     <?php echo esc_html($child->label); ?>
@@ -129,7 +129,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                             <a
                                                 href="<?php echo esc_url($child->url); ?>"
                                                 class="inline-flex text-[#1E244B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
-                                                <?php if (!empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                                <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                             >
                                                 <?php echo esc_html($child->label); ?>
                                             </a>
@@ -140,7 +140,7 @@ $img_title = is_array($img) && !empty($img['title']) ? $img['title'] : $img_alt;
                                                     <a
                                                         href="<?php echo esc_url($grandchild->url); ?>"
                                                         class="inline-flex items-center text-[16px] font-medium leading-6 text-[#0F2419] transition-colors hover:text-[#024B79]"
-                                                        <?php if (!empty($grandchild->target)) : ?>target="<?php echo esc_attr($grandchild->target); ?>"<?php endif; ?>
+                                                        <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($grandchild->target ?? '')) : ''; ?>
                                                     >
                                                         <?php echo esc_html($grandchild->label); ?>
                                                         <?php echo matrix_new_tab_announcement_html((string) ($grandchild->target ?? '')); ?>

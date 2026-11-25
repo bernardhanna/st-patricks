@@ -265,7 +265,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                             <a
                                                 href="<?php echo esc_url($child->url); ?>"
                                                 class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(! empty($child->active))); ?>"
-                                                <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                                <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                             >
                                                 <?php echo esc_html($child->label); ?>
                                                 <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
@@ -282,7 +282,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                             <a
                                                 href="<?php echo esc_url($child->url); ?>"
                                                 class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(! empty($child->active))); ?>"
-                                                <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                                <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                             >
                                                 <?php echo esc_html($child->label); ?>
                                                 <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
@@ -298,7 +298,7 @@ if (! function_exists('matrix_render_nav_mega_menu')) {
                                         <a
                                             href="<?php echo esc_url($child->url); ?>"
                                             class="<?php echo esc_attr(matrix_get_nav_mega_menu_link_class_names(! empty($child->active))); ?>"
-                                            <?php if (! empty($child->target)) : ?>target="<?php echo esc_attr($child->target); ?>"<?php endif; ?>
+                                            <?php echo function_exists('matrix_html_target_attrs') ? matrix_html_target_attrs((string) ($child->target ?? '')) : ''; ?>
                                         >
                                             <?php echo esc_html($child->label); ?>
                                             <?php echo matrix_new_tab_announcement_html((string) ($child->target ?? '')); ?>
