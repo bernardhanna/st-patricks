@@ -10,8 +10,16 @@ $callout_bar
     ->addTab('Content', ['label' => 'Content'])
         ->addText('message', [
             'label' => 'Message',
-            'instructions' => 'Single line of centered notice text for the bar.',
+            'instructions' => 'Centered notice text for the bar. Basic HTML links are allowed.',
             'default_value' => 'SPMHS is a registered charity (Registered Charity Number (RCN): 20000370).',
+        ])
+        ->addSelect('bar_style', [
+            'label' => 'Bar style',
+            'choices' => [
+                'default' => 'Default (light teal)',
+                'navy' => 'Navy',
+            ],
+            'default_value' => 'default',
         ]);
 
 matrix_acf_append_shared_vertical_padding_fields($callout_bar, ['add_design_tab' => true]);

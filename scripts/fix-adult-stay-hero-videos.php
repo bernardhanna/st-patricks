@@ -56,9 +56,6 @@ $willow = matrix_orlaith_a(
     'service-users-and-visitors/your-care-with-willow-grove/your-stay-in-hospital-as-an-adolescent',
     'Willow Grove Adolescent Unit'
 );
-$willow_html = '<p>Please note that inpatient care for adolescent service users is provided through '
-    . $willow
-    . '.</p>';
 
 $slides = [];
 $feed = wp_remote_get(
@@ -117,17 +114,18 @@ $intro_row = matrix_orlaith_content_row(
     'white',
     0,
     'image_left',
-    ['vertical_padding' => 'bottom_only']
+    ['vertical_padding' => 'no_bottom']
 );
 
-$willow_row = matrix_orlaith_content_row(
-    '',
-    $willow_html,
-    'cream',
-    0,
-    'image_left',
-    ['vertical_padding' => 'default']
-);
+$willow_message = 'Please note that inpatient care for adolescent service users is provided through '
+    . $willow
+    . '.';
+$willow_row = [
+    'acf_fc_layout' => 'callout_bar',
+    'message' => $willow_message,
+    'bar_style' => 'navy',
+    'vertical_padding' => 'none',
+];
 
 // Drop any previous injects from a re-run (match by heading / telltale copy).
 $cleaned = [];
@@ -139,6 +137,7 @@ foreach ($rows as $row) {
     $heading = trim((string) ($row['heading'] ?? ''));
     $content = (string) ($row['content'] ?? '');
     $intro = (string) ($row['intro'] ?? '');
+    $message = (string) ($row['message'] ?? '');
 
     if ($layout === 'video_showcase' && (
         $heading === 'Videos about our inpatient services'
@@ -151,6 +150,10 @@ foreach ($rows as $row) {
         str_contains($content, 'We provide inpatient care to adult service users')
         || str_contains($content, 'inpatient care for adolescent service users is provided through Willow Grove')
     )) {
+        continue;
+    }
+
+    if ($layout === 'callout_bar' && str_contains($message, 'inpatient care for adolescent service users')) {
         continue;
     }
 
@@ -171,6 +174,25 @@ $rows = array_merge(
     [$intro_row, $video_row, $willow_row],
     $tail
 );
+
+// Tighten content → accordion pairs: drop bottom padding on the intro content block.
+for ($i = 0, $count = count($rows); $i < $count - 1; $i++) {
+    $current = $rows[$i] ?? null;
+    $next = $rows[$i + 1] ?? null;
+    if (! is_array($current) || ! is_array($next)) {
+        continue;
+    }
+    if (($current['acf_fc_layout'] ?? '') !== 'content') {
+        continue;
+    }
+    if (($next['acf_fc_layout'] ?? '') !== 'content_accordion') {
+        continue;
+    }
+    $rows[$i]['vertical_padding'] = 'no_bottom';
+    if (($rows[$i + 1]['vertical_padding'] ?? '') === '' || ($rows[$i + 1]['vertical_padding'] ?? '') === 'default') {
+        $rows[$i + 1]['vertical_padding'] = 'bottom_only';
+    }
+}
 
 matrix_orlaith_save_page($post_id, $rows, true, 0);
 
