@@ -125,7 +125,6 @@ $willow_callout = [
     'acf_fc_layout' => 'callout_bar',
     'message' => $willow_message,
     'bar_style' => 'navy',
-    'vertical_padding' => 'none',
 ];
 $willow_content_fallback = matrix_orlaith_content_row(
     '',
@@ -201,7 +200,13 @@ $tighten_pairs = static function (array $rows): array {
         if (($next['acf_fc_layout'] ?? '') !== 'content_accordion') {
             continue;
         }
-        $rows[$i]['vertical_padding'] = 'no_bottom';
+        // Keep normal top spacing, kill the large bottom gap above the accordion
+        // on both mobile and desktop (shared no_bottom only zeros pb from lg up).
+        $rows[$i]['vertical_padding'] = 'custom';
+        $rows[$i]['padding_settings'] = [
+            ['screen_size' => 'mob', 'padding_top' => '3', 'padding_bottom' => '0'],
+            ['screen_size' => 'lg', 'padding_top' => '6.25', 'padding_bottom' => '0'],
+        ];
         $next_pad = (string) ($rows[$i + 1]['vertical_padding'] ?? '');
         if ($next_pad === '' || $next_pad === 'default') {
             $rows[$i + 1]['vertical_padding'] = 'bottom_only';
