@@ -190,7 +190,7 @@ $location_cards = [
         ],
     ],
     [
-        'title' => 'Dean Clinic Galway (optional)',
+        'title' => 'Dean Clinic Galway',
         'image' => matrix_seed_build_image_field($location_image_ids[3], 'Dean Clinic Galway'),
         'link' => [
             'title' => 'Dean Clinic Galway',
@@ -199,18 +199,13 @@ $location_cards = [
         ],
     ],
     [
-        'title' => 'Dean Clinic Lucan (optional)',
+        'title' => 'Dean Clinic Lucan',
         'image' => matrix_seed_build_image_field($location_image_ids[3], 'Dean Clinic Lucan'),
         'link' => [
             'title' => 'Dean Clinic Lucan',
             'url' => $locations_url,
             'target' => '',
         ],
-    ],
-    [
-        'title' => 'Name of the hospital - no link, clinics are optional',
-        'image' => matrix_seed_build_image_field($location_image_ids[3], 'Hospital location'),
-        'link' => '',
     ],
 ];
 

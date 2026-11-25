@@ -133,7 +133,6 @@ $figma = [
     'location_1' => 'https://www.figma.com/api/mcp/asset/328749de-8648-4edb-a82f-c5a63736894b',
     'location_2' => 'https://www.figma.com/api/mcp/asset/b079693d-baf1-48a6-9aec-ecf1bebe3752',
     'location_3' => 'https://www.figma.com/api/mcp/asset/02247baf-10fa-439c-beab-2a3a66d70a3f',
-    'location_4' => 'https://www.figma.com/api/mcp/asset/02247baf-10fa-439c-beab-2a3a66d70a3f',
 ];
 
 $video_poster_id = matrix_seed_resolve_image($figma['video'], 'refer-adult-inpatient-video-2888-5019', 'Refer adult inpatient care video');
@@ -142,7 +141,6 @@ $location_image_ids = [
     matrix_seed_resolve_image($figma['location_1'], 'refer-adult-inpatient-location-willow-grove-2888-5019', 'Willow Grove Adolescent Unit'),
     matrix_seed_resolve_image($figma['location_2'], 'refer-adult-inpatient-location-spuh-2888-5019', 'St Patricks University Hospital'),
     matrix_seed_resolve_image($figma['location_3'], 'refer-adult-inpatient-location-lucan-2888-5019', 'St Patricks Hospital Lucan'),
-    matrix_seed_resolve_image($figma['location_4'], 'refer-adult-inpatient-location-dean-2888-5019', 'Dean Clinic'),
 ];
 
 $hero_copy = 'St Patrick\'s Mental Health Services provides specialist inpatient mental healthcare for adults. Use the options below to refer a patient via Healthlink or by completing our adult referral form.';
@@ -188,29 +186,6 @@ $location_cards = [
             'url' => $locations_url,
             'target' => '',
         ],
-    ],
-    [
-        'title' => 'Dean Clinic Galway (optional)',
-        'image' => matrix_seed_build_image_field($location_image_ids[3], 'Dean Clinic Galway'),
-        'link' => [
-            'title' => 'Dean Clinic Galway',
-            'url' => $locations_url,
-            'target' => '',
-        ],
-    ],
-    [
-        'title' => 'Dean Clinic Lucan (optional)',
-        'image' => matrix_seed_build_image_field($location_image_ids[3], 'Dean Clinic Lucan'),
-        'link' => [
-            'title' => 'Dean Clinic Lucan',
-            'url' => $locations_url,
-            'target' => '',
-        ],
-    ],
-    [
-        'title' => 'Name of the hospital - no link, clinics are optional',
-        'image' => matrix_seed_build_image_field($location_image_ids[3], 'Hospital location'),
-        'link' => '',
     ],
 ];
 
