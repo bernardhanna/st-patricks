@@ -171,13 +171,20 @@ foreach ($results['forms'] as $form) {
 
     if ($kind === 'contact_form') {
         $to = trim((string) ($form['recipient_email'] ?? ''));
-        if ($to === '' || ! is_email($to)) {
-            $add('fail', 'contact_recipient', 'Missing/invalid recipient_email.', [
+        $admin = sanitize_email((string) get_option('admin_email'));
+        if ($to !== '' && is_email($to)) {
+            $add('pass', 'contact_recipient', 'Recipient configured: ' . $to, [
+                'form' => $label,
+                'style' => $form['style'] ?? '',
+            ]);
+        } elseif ($admin !== '') {
+            // Theme_Forms falls back to admin_email when _cfg_to is empty.
+            $add('fail', 'contact_recipient', 'No recipient_email set; submissions fall back to admin_email (' . $admin . '). Set a dedicated inbox.', [
                 'form' => $label,
                 'style' => $form['style'] ?? '',
             ]);
         } else {
-            $add('pass', 'contact_recipient', 'Recipient configured: ' . $to, [
+            $add('fail', 'contact_recipient', 'Missing recipient_email and admin_email.', [
                 'form' => $label,
                 'style' => $form['style'] ?? '',
             ]);
