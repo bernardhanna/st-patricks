@@ -547,17 +547,17 @@ function matrix_get_content_button_class_names($variant = 'filled', $color_schem
 
     if ($is_inverse) {
         if ($variant === 'outline') {
-            return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white/80 bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+            return 'btn inline-flex h-10 w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white/80 bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
         }
 
-        return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+        return 'btn inline-flex h-10 w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-white bg-transparent px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
     }
 
     if ($variant === 'outline') {
-        return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-transparent px-3 text-[14px] font-medium leading-[24px] text-[#024B79] hover:bg-[#024B79]/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+        return 'btn inline-flex h-10 w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-transparent px-3 text-[14px] font-medium leading-[24px] text-[#024B79] hover:bg-[#024B79]/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
     }
 
-    return 'btn inline-flex h-[36px] w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-[#013a5f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
+    return 'btn inline-flex h-10 w-fit items-center justify-center whitespace-nowrap rounded-[6px] border border-[#024B79] bg-[#024B79] px-3 text-[14px] font-medium leading-[24px] text-white hover:bg-[#013a5f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 }
 
 function matrix_get_content_document_link_class_names($color_scheme = 'default')

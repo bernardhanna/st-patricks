@@ -210,7 +210,7 @@ $show_slide_meta = $initial_caption !== '' || $slides_have_cta;
                         <?php for ($i = 0; $i < $slide_count; $i++) { ?>
                             <button
                                 type="button"
-                                class="w-3 h-3 rounded-full transition-colors duration-200"
+                                class="h-[10px] w-[10px] rounded-full transition-colors duration-200"
                                 aria-label="<?php echo esc_attr('Go to video ' . ($i + 1)); ?>"
                                 data-dot="<?php echo esc_attr($i); ?>"
                             ></button>

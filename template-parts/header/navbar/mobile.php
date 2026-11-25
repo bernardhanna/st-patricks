@@ -132,15 +132,16 @@ $nav_slide_config = [
 
     <button
         type="button"
-        class="relative z-[130] hamburger <?php echo esc_attr($hamburger_style); ?>"
-        :class="{ 'is-active': open }"
+        class="spmhs-burger relative z-[130] inline-flex h-8 w-8 shrink-0 items-center justify-center border-0 bg-transparent p-0 text-[#08284B]"
         x-show="!open"
         @click="toggle"
         :aria-expanded="open ? 'true' : 'false'"
         aria-controls="mobile-nav-panel"
         aria-label="Menu"
     >
-        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M5 8H27M5 16H27M5 24H27" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
     </button>
 
     <div

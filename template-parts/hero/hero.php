@@ -166,7 +166,7 @@ $hero_img_title = isset($hero_image['title']) && $hero_image['title'] !== '' ? $
             $active = ($i === $pager_active);
             $dot_classes = $active ? 'bg-secondary' : 'bg-primary';
           ?>
-            <button class="w-2.5 h-2.5 rounded-full transition-colors <?php echo esc_attr($dot_classes); ?>" aria-label="Go to slide <?php echo esc_attr($i); ?>"></button>
+            <button class="h-[10px] w-[10px] rounded-full transition-colors <?php echo esc_attr($dot_classes); ?>" aria-label="Go to slide <?php echo esc_attr($i); ?>"></button>
           <?php endfor; ?>
         </div>
 

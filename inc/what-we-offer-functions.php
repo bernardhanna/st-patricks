@@ -124,7 +124,7 @@ function matrix_render_what_we_offer_service_rail(array $service): void
         : htmlspecialchars($accent_color, ENT_QUOTES, 'UTF-8');
     ?>
     <div
-        class="relative h-[140px] w-[40px] shrink-0 overflow-hidden rounded-[4px]"
+        class="relative h-[140px] w-11 shrink-0 overflow-hidden rounded-[4px]"
         aria-hidden="true"
     >
         <div
@@ -136,7 +136,7 @@ function matrix_render_what_we_offer_service_rail(array $service): void
             </div>
         </div>
         <div
-            class="absolute left-0 top-full h-[140px] w-[40px] rounded-[4px] transition-transform duration-300 group-hover:-translate-y-full"
+            class="absolute left-0 top-full h-[140px] w-11 rounded-[4px] transition-transform duration-300 group-hover:-translate-y-full"
             style="background-color: <?php echo $safe_accent; ?>;"
         >
             <div class="pointer-events-none absolute left-1/2 top-[10px] z-[1] h-8 w-8 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">

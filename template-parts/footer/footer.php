@@ -116,7 +116,7 @@ $footer_social_icons = [
 // ====== MOBILE FOOTER (lg and below) ======
 ?>
 <footer class="px-4 lg:hidden bg-[#F1F8F9] pt-section" role="contentinfo" aria-label="Site footer (mobile)">
-  <div class="pt-12 mx-auto max-w-7xl">
+  <div class="pt-[60px] mx-auto max-w-7xl">
     <?php if (!empty($mobile_footer_logo['url'])): ?>
       <img src="<?php echo esc_url($mobile_footer_logo['url']); ?>"
            alt="<?php echo esc_attr($mobile_footer_logo['alt'] ?? get_bloginfo('name')); ?>"
@@ -210,7 +210,7 @@ $footer_social_icons = [
           if (! matrix_is_meaningful_outbound_url((string) $url)) {
             continue;
           } ?>
-          <a href="<?php echo esc_url($url); ?>" target="<?php echo esc_attr($target); ?>" <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?> class="flex shrink-0 justify-center items-center w-8 h-8 p-0 bg-sky-200 rounded-full hover:bg-opacity-80" aria-label="<?php echo esc_attr(ucfirst($platform) . ($target === '_blank' ? ' (opens in a new tab)' : '')); ?>">
+          <a href="<?php echo esc_url($url); ?>" target="<?php echo esc_attr($target); ?>" <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?> class="footer-social flex shrink-0 justify-center items-center h-8 w-8 p-0 bg-sky-200 rounded-full hover:bg-opacity-80" aria-label="<?php echo esc_attr(ucfirst($platform) . ($target === '_blank' ? ' (opens in a new tab)' : '')); ?>">
             <?php echo $footer_social_icons[$platform] ?? ''; ?>
           </a>
         <?php endforeach; endif; ?>
@@ -331,7 +331,7 @@ $footer_social_icons = [
             </div>
         <?php endif; ?>
 
-        <div class="flex flex-col items-center w-full mx-auto max-w-[1300px] pt-12 pb-5 max-lg:px-5">
+        <div class="flex flex-col items-center w-full mx-auto max-w-[1300px] pt-[60px] pb-5 max-lg:px-5">
             <div class="w-full max-xxl:px-5">
 
                 <!-- Top navigation area as GRID -->
@@ -543,7 +543,7 @@ $footer_social_icons = [
                                            target="<?php echo esc_attr($target); ?>"
                                            <?php echo $target === '_blank' ? 'rel="noopener noreferrer"' : ''; ?>
                                            aria-label="<?php echo esc_attr(ucfirst($platform) . ($target === '_blank' ? ' (opens in a new tab)' : '')); ?>"
-                                           class="flex shrink-0 justify-center items-center w-8 h-8 p-0 bg-sky-200 rounded-[32px] btn hover:bg-opacity-80 focus:bg-opacity-80">
+                                           class="footer-social flex shrink-0 justify-center items-center h-8 w-8 p-0 bg-sky-200 rounded-full btn hover:bg-opacity-80 focus:bg-opacity-80">
                                             <?php echo $icons[$platform] ?? ''; ?>
                                         </a>
                                     <?php endforeach; ?>

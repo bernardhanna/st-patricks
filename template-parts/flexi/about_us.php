@@ -139,6 +139,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                             'max-w-full',
                             'w-full',
                             'rounded-lg',
+                            'max-lg:rounded-md',
                             'border',
                             'transition-all',
                             'duration-300',
@@ -154,7 +155,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                             <a
                                 href="<?php echo esc_url($link['url']); ?>"
                                 target="<?php echo esc_attr($link['target'] ?? '_self'); ?>"
-                                class="flex h-full flex-col rounded-lg p-6 max-md:px-5 max-sm:min-h-[164px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
+                                class="flex h-full flex-col rounded-lg max-lg:rounded-md p-6 max-md:px-5 max-sm:min-h-[164px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                                 aria-label="<?php echo esc_attr($link['title'] ?: $card['title']); ?>"
                             >
                                 <?php if (!empty($card['title'])) : ?>
@@ -176,7 +177,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                                 </div>
                             </a>
                         <?php else : ?>
-                            <div class="flex h-full flex-col rounded-lg p-6 max-md:px-5 max-sm:min-h-[164px]">
+                            <div class="flex h-full flex-col rounded-lg max-lg:rounded-md p-6 max-md:px-5 max-sm:min-h-[164px]">
                                 <?php if (!empty($card['title'])) : ?>
                                     <h3 class="mental-health-card__title text-2xl font-semibold tracking-normal leading-8 text-[#1E244B] transition-colors duration-300">
                                         <?php echo esc_html($card['title']); ?>
@@ -202,7 +203,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
 
                 <!-- Center Image -->
                 <?php if (!empty($main_image_url)) : ?>
-                <div class="about-us-media relative hidden h-full min-h-0 overflow-hidden rounded-lg lg:block">
+                <div class="about-us-media relative hidden h-full min-h-0 overflow-hidden rounded lg:block">
                     <img
                         src="<?php echo esc_url($main_image_url); ?>"
                         alt="<?php echo esc_attr($main_image_alt); ?>"
@@ -232,6 +233,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                             'max-w-full',
                             'w-full',
                             'rounded-lg',
+                            'max-lg:rounded-md',
                             'border',
                             'transition-all',
                             'duration-300',
@@ -247,7 +249,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                             <a
                                 href="<?php echo esc_url($link['url']); ?>"
                                 target="<?php echo esc_attr($link['target'] ?? '_self'); ?>"
-                                class="flex h-full flex-col rounded-lg p-6 max-md:px-5 max-sm:min-h-[164px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
+                                class="flex h-full flex-col rounded-lg max-lg:rounded-md p-6 max-md:px-5 max-sm:min-h-[164px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                                 aria-label="<?php echo esc_attr($link['title'] ?: $card['title']); ?>"
                             >
                                 <?php if (!empty($card['title'])) : ?>
@@ -269,7 +271,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                                 </div>
                             </a>
                         <?php else : ?>
-                            <div class="flex h-full flex-col rounded-lg p-6 max-md:px-5 max-sm:min-h-[164px]">
+                            <div class="flex h-full flex-col rounded-lg max-lg:rounded-md p-6 max-md:px-5 max-sm:min-h-[164px]">
                                 <?php if (!empty($card['title'])) : ?>
                                     <h3 class="mental-health-card__title text-2xl font-semibold tracking-normal leading-8 text-[#1E244B] transition-colors duration-300">
                                         <?php echo esc_html($card['title']); ?>
@@ -299,7 +301,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                 <a
                     href="<?php echo esc_url($view_more_link['url']); ?>"
                     target="<?php echo esc_attr($view_more_link['target'] ?? '_self'); ?>"
-                    class="flex gap-2.5 justify-center items-center self-start px-3 mt-9 text-sm font-medium leading-6 whitespace-nowrap rounded-lg border border-[#024B79] transition-colors duration-200 btn min-h-9 text-[#08284B] w-fit hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
+                    class="flex gap-2.5 justify-center items-center self-start px-3 mt-9 text-sm font-medium leading-6 whitespace-nowrap rounded-md border border-[#024B79] transition-colors duration-200 btn min-h-9 text-[#08284B] w-fit hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-dark"
                     aria-label="<?php echo esc_attr($view_more_link['title'] ?: 'View more mental health conditions'); ?>"
                 >
                     <span class="self-stretch my-auto text-[#08284B]">

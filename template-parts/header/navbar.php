@@ -328,7 +328,7 @@ document.addEventListener('alpine:init', () => {
 
   <!-- WHITE BAR -->
   <nav
-  class="box-border flex overflow-visible relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-md:p-5 max-sm:p-4 lg:px-5 max-w-container"
+  class="spmhs-main-nav box-border flex overflow-visible relative justify-between items-center p-6 mx-auto w-full bg-white shadow-x font-primary max-lg:px-4 max-lg:py-3 lg:px-5 max-w-container"
   aria-label="Main navigation"
   @mouseenter="$store.navMega.cancelClose()"
 >
