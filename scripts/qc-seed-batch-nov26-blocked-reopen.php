@@ -112,9 +112,9 @@ if (! $training) {
         }
     }
 
+    $training_html = '';
     if (! $has_body && $national) {
         $nflex = get_field('flexible_content_blocks', $national->ID);
-        $training_html = '';
         if (is_array($nflex)) {
             foreach ($nflex as $row) {
                 if (($row['acf_fc_layout'] ?? '') !== 'content') {
@@ -127,29 +127,32 @@ if (! $training) {
                 break;
             }
         }
+    }
 
-        if ($training_html !== '') {
-            if (! is_array($tflex)) {
-                $tflex = [];
-            }
-            // Keep existing hero/video; append a content block.
-            $tflex[] = [
-                'acf_fc_layout' => 'content',
-                'heading' => '',
-                'heading_tag' => 'h2',
-                'accent_position' => 'below_heading',
-                'intro_text' => '',
-                'content' => $training_html,
-            ];
-            update_field('flexible_content_blocks', $tflex, $training->ID);
-            $log[] = "DONE training-centre #{$training->ID} body copied from national-centre";
-        } else {
-            $log[] = 'WARN national-centre has no Training Centre content block to copy';
+    // Fallback when National Centre no longer has a separate Training Centre block.
+    if (! $has_body && $training_html === '') {
+        $training_html = '<p>St Patrick’s Mental Health Services is establishing a dedicated Training Centre to advance the skills and competencies of those working in the mental healthcare sector.</p>'
+            . '<p>We will expand our training for mental health professionals through the Training Centre. We will also further develop comprehensive continuing professional development (CPD) programmes for people working in mental healthcare and the organisations providing mental health services.</p>'
+            . '<p>Our Training Centre will strengthen our existing training partnerships, while also creating new opportunities for the skills development of mental health professionals throughout Ireland.</p>';
+        $log[] = 'NOTE using fallback Training Centre body copy';
+    }
+
+    if (! $has_body && $training_html !== '') {
+        if (! is_array($tflex)) {
+            $tflex = [];
         }
-    } else {
-        $log[] = $has_body
-            ? "OK training-centre #{$training->ID} already has body"
-            : "SKIP training-centre body (no national source)";
+        $tflex[] = [
+            'acf_fc_layout' => 'content',
+            'heading' => '',
+            'heading_tag' => 'h2',
+            'accent_position' => 'below_heading',
+            'intro_text' => '',
+            'content' => $training_html,
+        ];
+        update_field('flexible_content_blocks', $tflex, $training->ID);
+        $log[] = "DONE training-centre #{$training->ID} body written";
+    } elseif ($has_body) {
+        $log[] = "OK training-centre #{$training->ID} already has body";
     }
 }
 
