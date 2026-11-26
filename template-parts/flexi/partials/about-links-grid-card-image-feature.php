@@ -54,17 +54,17 @@ if ($description === '' && ! $allow_title_wrap) {
         <?php } ?>
     >
         <?php if ($image_url !== '' || $icon_url !== '') { ?>
-            <div class="relative h-[180px] w-full shrink-0 overflow-hidden rounded-lg lg:h-[129px]">
+            <div class="relative h-[180px] w-full shrink-0 overflow-hidden rounded lg:h-[129px]">
                 <?php if ($image_url !== '') { ?>
                     <img
                         src="<?php echo esc_url($image_url); ?>"
                         alt=""
-                        class="absolute inset-0 h-full w-full rounded-lg object-cover"
+                        class="absolute inset-0 h-full w-full rounded object-cover object-[center_20%]"
                         loading="lazy"
                         decoding="async"
                     >
                 <?php } else { ?>
-                    <div class="flex h-full w-full items-center justify-center rounded-lg bg-white/40">
+                    <div class="flex h-full w-full items-center justify-center rounded bg-white/40">
                         <img
                             src="<?php echo esc_url($icon_url); ?>"
                             alt="<?php echo esc_attr($icon_alt); ?>"

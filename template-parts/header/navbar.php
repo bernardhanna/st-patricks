@@ -55,6 +55,24 @@ function matrixSyncNavMegaPointer() {
   }
 }
 
+function matrixSyncMobileNavChrome(open) {
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (typeof jQuery === 'undefined' || !jQuery.fn || !jQuery.fn.slick) {
+    return;
+  }
+  jQuery('.hero-slider-container.slick-initialized').each(function () {
+    if (open) {
+      jQuery(this).slick('slickPause');
+      return;
+    }
+    var sliderId = this.getAttribute('data-slider-id') || '';
+    var userPaused = sliderId && document.querySelector('#' + sliderId + ' .slider-pause.is-paused');
+    if (!userPaused) {
+      jQuery(this).slick('slickPlay');
+    }
+  });
+}
+
 function matrixDismissOpenNavOnScroll() {
   if (typeof Alpine !== 'undefined' && typeof Alpine.store === 'function') {
     var mega = Alpine.store('navMega');
@@ -317,7 +335,7 @@ document.addEventListener('alpine:init', () => {
   id="site-nav"
   x-data="navbarSearch()"
   x-init="window.addEventListener('resize', () => { if (window.innerWidth < 1280) { closeSearch() } if (window.innerWidth >= 1280) { $store.nav.open = false } })"
-  x-effect="$store.nav.open ? document.body.style.overflow = 'hidden' : document.body.style.overflow = ''"
+  x-effect="matrixSyncMobileNavChrome($store.nav.open)"
   class="overflow-visible bg-white"
   @matrix-nav-scroll-dismiss.window="searchOpen && closeSearch()"
   @open-navbar-search="openSearch()"
@@ -434,15 +452,15 @@ document.addEventListener('alpine:init', () => {
       >
         <button
           type="button"
-          class="flex items-center justify-center w-[31px] h-[31px] p-1.5 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+          class="flex items-center justify-center w-[31px] h-[31px] p-0 rounded-[15.5px] hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
           @click.prevent="toggleSearch()"
           :aria-expanded="searchOpen ? 'true' : 'false'"
           aria-controls="navbar-search-panel"
           aria-label="Open search"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M20.9999 21L16.6499 16.65" stroke="#001F33" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg width="31" height="31" viewBox="0 0 31 31" fill="none" aria-hidden="true">
+            <path d="M22.5 14.5C22.5 18.9183 18.9183 22.5 14.5 22.5C10.0817 22.5 6.5 18.9183 6.5 14.5C6.5 10.0817 10.0817 6.5 14.5 6.5C18.9183 6.5 22.5 10.0817 22.5 14.5Z" stroke="#08284B" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M24.5 24.5L20.15 20.15" stroke="#08284B" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
 

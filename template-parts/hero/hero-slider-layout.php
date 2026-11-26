@@ -205,7 +205,7 @@
         opacity: .07;
     }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__title { font-size: 31px; line-height: 1.15; margin-bottom: 14px; }
-    #<?php echo esc_attr($section_id); ?> .spmhs-hero__intro { font-size: 16px; margin-bottom: 24px; }
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__intro { font-size: 18px; margin-bottom: 24px; }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__actions { flex-direction: column; gap: 12px; margin-bottom: 16px; }
     #<?php echo esc_attr($section_id); ?> .spmhs-btn { width: 100%; }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__call { text-align: center; }

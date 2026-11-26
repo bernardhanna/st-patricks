@@ -107,6 +107,7 @@ $wrapper_classes = matrix_get_content_wrapper_class_names(
 
 
 $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></div>';
+$is_responsible_reporting = strcasecmp($heading, 'Responsible Reporting') === 0;
 ?>
 
 <section
@@ -220,12 +221,12 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
             </article>
 
             <?php if ($image) { ?>
-                <div class="spmhs-content-media <?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout)); ?>">
+                <div class="spmhs-content-media <?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout) . ($is_responsible_reporting ? ' max-md:order-4' : '')); ?>">
                     <figure class="<?php echo esc_attr(matrix_get_content_image_figure_class_names($image_height_mode, $column_layout)); ?>">
                         <?php
                         echo wp_get_attachment_image($image, 'full', false, [
                             'alt' => esc_attr($image_alt),
-                            'class' => matrix_get_content_image_class_names($image_height_mode, $column_layout),
+                            'class' => str_replace('rounded-[8px]', 'rounded-lg', matrix_get_content_image_class_names($image_height_mode, $column_layout)),
                             'loading' => 'lazy',
                         ]);
                         ?>

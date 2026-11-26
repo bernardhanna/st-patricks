@@ -67,7 +67,7 @@ function matrix_get_about_links_grid_grid_class_names(string $layout_style, stri
     $column_classes = [
         '2' => 'sm:grid-cols-2 lg:grid-cols-2',
         '3' => 'sm:grid-cols-2 lg:grid-cols-3',
-        '4' => 'sm:grid-cols-2 lg:grid-cols-4',
+        '4' => 'xs:grid-cols-2 lg:grid-cols-4',
     ];
     $grid_columns = $column_classes[$columns] ?? 'sm:grid-cols-2 lg:grid-cols-3';
 
