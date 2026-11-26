@@ -1286,7 +1286,7 @@ if (! function_exists('matrix_get_theme_path_redirect_map')) {
             'new-hospital' => '/about-us/our-present-and-future/new-hospital/',
             'advocacy-centre' => '/about-us/our-present-and-future/advocacy-centre/',
             'academic-institute' => '/about-us/our-present-and-future/academic-institute/',
-            'traning-centre' => '/about-us/our-present-and-future/traning-centre/',
+            'traning-centre' => '/about-us/our-present-and-future/training-centre/',
             'extending-and-enhancing-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',
             'about-us/extending-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',
             'extending-our-services' => '/about-us/our-present-and-future/extending-and-enhancing-our-services/',

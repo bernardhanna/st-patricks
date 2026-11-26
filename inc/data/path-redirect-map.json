@@ -23,9 +23,8 @@
     "advocacy-centre": "/about-us/our-present-and-future/national-centre/",
     "about-us/our-present-and-future/academic-institute": "/about-us/our-present-and-future/national-centre/",
     "academic-institute": "/about-us/our-present-and-future/national-centre/",
-    "about-us/our-present-and-future/traning-centre": "/about-us/our-present-and-future/national-centre/",
-    "about-us/our-present-and-future/training-centre": "/about-us/our-present-and-future/national-centre/",
-    "traning-centre": "/about-us/our-present-and-future/national-centre/",
+    "about-us/our-present-and-future/traning-centre": "/about-us/our-present-and-future/training-centre/",
+    "traning-centre": "/about-us/our-present-and-future/training-centre/",
     "bipolar-disorder": "/mental-health/bipolar-disorder/",
     "care-treatment/addiction-and-dual-diagnosis": "/service-users-and-visitors/about-mental-health/addiction-and-dual-diagnosis/",
     "care-treatment/anxiety-disorders-programme": "/programmes-therapies/anxiety-disorders-programme/",
@@ -381,5 +380,6 @@
     "about-us/policies-and-publications/clinical-governance": "/about-us/",
     "/about-us/policies-and-publications/clinical-governance": "/about-us/",
     "information-centre": "/service-users-and-visitors/about-mental-health/",
-    "/information-centre": "/service-users-and-visitors/about-mental-health/"
+    "/information-centre": "/service-users-and-visitors/about-mental-health/",
+    "/about-us/our-present-and-future/traning-centre": "/about-us/our-present-and-future/training-centre/"
 }
