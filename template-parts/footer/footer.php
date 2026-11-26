@@ -116,7 +116,7 @@ $footer_social_icons = [
 // ====== MOBILE FOOTER (lg and below) ======
 ?>
 <footer class="px-4 lg:hidden bg-[#F1F8F9] pt-section" role="contentinfo" aria-label="Site footer (mobile)">
-  <div class="pt-[60px] mx-auto max-w-7xl">
+  <div class="pt-12 mx-auto max-w-7xl">
     <?php if (!empty($mobile_footer_logo['url'])): ?>
       <img src="<?php echo esc_url($mobile_footer_logo['url']); ?>"
            alt="<?php echo esc_attr($mobile_footer_logo['alt'] ?? get_bloginfo('name')); ?>"

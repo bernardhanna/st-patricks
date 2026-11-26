@@ -136,9 +136,9 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
 
     <div class="<?php echo esc_attr($wrapper_classes . ($uses_background_image ? ' relative z-[1]' : '')); ?>"<?php echo $wrapper_style !== '' ? ' style="' . esc_attr($wrapper_style) . '"' : ''; ?>>
         <div class="<?php echo esc_attr(matrix_get_content_grid_class_names($image_height_mode, $column_layout, $layout_style)); ?>">
-            <article class="<?php echo esc_attr($content_column_class); ?> order-1 flex w-full flex-col gap-8">
+            <article class="<?php echo esc_attr($content_column_class); ?> <?php echo $image ? 'spmhs-content-split' : ''; ?> order-1 flex w-full flex-col gap-8">
                 <?php if ($show_heading) { ?>
-                    <header class="flex flex-col gap-8 w-full">
+                    <header class="spmhs-content-heading flex flex-col gap-8 w-full">
                         <?php if ($accent_position === 'above_heading') { ?>
                             <?php echo $accent_markup; ?>
                         <?php } ?>
@@ -156,6 +156,7 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                     </header>
                 <?php } ?>
 
+                <div class="spmhs-content-body flex w-full flex-col gap-8">
                 <?php if ($has_intro) { ?>
                     <div class="<?php echo esc_attr(matrix_get_content_rich_text_wrapper_class_names('bold', $text_max_width_classes, $color_scheme)); ?>">
                         <?php echo matrix_kses_rich_text($intro_text); ?>
@@ -215,10 +216,11 @@ $accent_markup = '<div class="h-[4px] w-10 bg-[#6FC9C0]" aria-hidden="true"></di
                         <?php } ?>
                     </div>
                 <?php } ?>
+                </div>
             </article>
 
             <?php if ($image) { ?>
-                <div class="<?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout)); ?>">
+                <div class="spmhs-content-media <?php echo esc_attr(matrix_get_content_image_wrapper_class_names($image_column_class, $image_height_mode, $column_layout)); ?>">
                     <figure class="<?php echo esc_attr(matrix_get_content_image_figure_class_names($image_height_mode, $column_layout)); ?>">
                         <?php
                         echo wp_get_attachment_image($image, 'full', false, [

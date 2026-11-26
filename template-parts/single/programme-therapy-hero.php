@@ -41,7 +41,7 @@ $intro = matrix_get_programmes_therapies_intro();
                     <?php echo esc_html($intro); ?>
                 </a>
             <?php } elseif ($intro !== '') { ?>
-                <p class="max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">
+                <p class="spmhs-page-intro max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">
                     <?php echo esc_html($intro); ?>
                 </p>
             <?php } ?>

@@ -126,9 +126,9 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
     ? matrix_flexi_resolve_vertical_padding_classes(
         get_sub_field('vertical_padding'),
         is_array($padding_settings) ? $padding_settings : [],
-        'py-12 mob:py-[6rem]'
+        'py-12 lg:py-[6rem]'
     )
-    : 'py-12 mob:py-[6rem]';
+    : 'py-12 lg:py-[6rem]';
 
 ?>
 

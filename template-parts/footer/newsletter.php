@@ -70,7 +70,7 @@ if ($show_brand_heading) {
 }
 $left_heading_tag = $show_brand_heading ? 'h3' : $heading_tag;
 $left_heading_class = $left_heading_tag === 'h3'
-  ? 'text-white text-left font-bold text-[44px] leading-none tracking-[-0.576px]'
+  ? 'spmhs-newsletter-title text-white text-left font-bold text-[44px] leading-none tracking-[-0.576px]'
   : 'text-white text-left font-bold text-[44px] leading-tight tracking-[-0.576px]';
 $healthcare_newsletter_url = home_url('/campaigns/subscribe-to-our-gp-enewsletter/');
 $gp_note_text = trim((string) get_field('newsletter_gp_note', 'option'));
@@ -191,7 +191,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
             </div>
 
           <!-- Newsletter Form -->
-          <div class="flex flex-col gap-3 justify-end items-start w-full">
+          <div class="spmhs-newsletter-fields flex flex-col gap-3 justify-end items-start w-full">
             <div class="flex flex-col gap-3 items-stretch w-full">
               <!-- Full Name -->
               <div class="flex flex-col flex-1 min-w-0 gap-1.5 items-start w-full">
@@ -257,7 +257,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <?php if ($link_healthcare_signup): ?>
               <!-- GP e-newsletter (after the general sign-up fields, before the privacy checkbox) -->
-              <p class="spmhs-newsletter-copy w-full text-xs md:text-sm font-medium leading-5 text-white">
+              <p class="spmhs-newsletter-fineprint spmhs-newsletter-copy w-full text-xs md:text-sm font-medium leading-5 text-white">
                 <?php echo esc_html($gp_note_text); ?>
                 <a href="<?php echo esc_url($healthcare_newsletter_url); ?>" class="text-[#C6ECF4] underline underline-offset-2">here</a>.
               </p>
@@ -265,7 +265,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
 
             <!-- Terms -->
             <?php if ($require_tc): ?>
-              <div class="flex gap-3 w-full min-h-[38px]">
+              <div class="spmhs-newsletter-consent-row flex gap-3 w-full min-h-[38px]">
                 <div class="flex flex-1 gap-3">
                   <input
                     id="<?php echo esc_attr($section_id); ?>-terms"
@@ -278,7 +278,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
                       form="<?php echo esc_attr($section_id); ?>-form"
                     <?php endif; ?>
                   />
-                  <label for="<?php echo esc_attr($section_id); ?>-terms" class="spmhs-newsletter-copy flex-1 text-xs font-medium leading-4 text-white cursor-pointer">
+                  <label for="<?php echo esc_attr($section_id); ?>-terms" class="spmhs-newsletter-consent spmhs-newsletter-copy flex-1 text-xs font-medium leading-4 text-white cursor-pointer">
                     <?php echo esc_html($terms_prefix); ?>
                     <a href="<?php echo $terms_href; ?>" class="text-[12px] font-medium leading-4 text-[#C6ECF4] underline underline-offset-2" target="<?php echo $terms_target; ?>"><?php echo $terms_title; ?></a>
                     &
@@ -289,7 +289,7 @@ $nonce_brevo = wp_create_nonce('matrix_brevo_subscribe');
             <?php endif; ?>
 
             <!-- Live status for screen readers / inline messages -->
-            <div id="<?php echo esc_attr($section_id); ?>-status" class="mt-2 text-sm text-white/90" aria-live="polite"></div>
+            <div id="<?php echo esc_attr($section_id); ?>-status" class="spmhs-newsletter-status mt-2 text-sm text-white/90" aria-live="polite"></div>
           </div>
 
           <!-- Hidden forms for submit handlers -->

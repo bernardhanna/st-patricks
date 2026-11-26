@@ -144,6 +144,7 @@ $nav_slide_config = [
         </svg>
     </button>
 
+    <template x-teleport="body">
     <div
         id="mobile-nav-panel"
         x-show="open"
@@ -152,7 +153,8 @@ $nav_slide_config = [
         x-transition:enter-end="translate-x-0"
         x-transition:leave="transition transform ease-in duration-200"
         x-transition:leave-end="translate-x-full"
-        class="fixed inset-0 z-[140] flex w-full flex-col font-primary"
+        class="fixed inset-0 z-[140] flex w-full flex-col bg-[#F1F8F9] font-primary"
+        style="height: 100dvh;"
         role="dialog"
         aria-modal="true"
         aria-label="Mobile navigation"
@@ -186,6 +188,10 @@ $nav_slide_config = [
         <div class="flex min-h-0 flex-1 flex-col bg-[#F1F8F9]">
             <template x-if="enableSearch && depth === 0">
                 <div class="shrink-0 border-b border-[#E2E8F0] bg-[#F1F8F9] px-5 py-4">
+                    <div
+                        class="overflow-hidden rounded-[6px] border border-[#E2E8F0] bg-white"
+                        :class="(searchFocused && query.trim().length < 2) || query.trim().length >= 2 ? 'shadow-md' : ''"
+                    >
                     <form role="search" class="relative" @submit.prevent="submitSearch()">
                         <label for="mobile-nav-search-input" class="sr-only">Search by keyword, symptom, or page</label>
                         <input
@@ -194,7 +200,7 @@ $nav_slide_config = [
                             x-model="query"
                             type="search"
                             placeholder="Search by keyword, symptom, or page"
-                            class="w-full rounded-[6px] border border-[#E2E8F0] bg-white py-3 pl-4 pr-12 text-base text-[#08284B] placeholder:text-[#64748B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#024B79]"
+                            class="w-full border-0 bg-white py-3 pl-4 pr-12 text-sm leading-5 text-[#08284B] placeholder:text-[#64748B] focus:outline-none focus:ring-0"
                             @focus="searchFocused = true"
                             @blur="handleSearchBlur()"
                             @input="handleQueryChange()"
@@ -204,9 +210,9 @@ $nav_slide_config = [
                             class="absolute right-3 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded text-[#08284B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#024B79]"
                             aria-label="Search"
                         >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M20.9999 21L16.6499 16.65" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M18.5 11C18.5 15.4183 14.9183 19 10.5 19C6.08172 19 2.5 15.4183 2.5 11C2.5 6.58172 6.08172 3 10.5 3C14.9183 3 18.5 6.58172 18.5 11Z" stroke="#1E244B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.4999 21L16.1499 16.65" stroke="#1E244B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
                     </form>
@@ -214,17 +220,17 @@ $nav_slide_config = [
                     <div
                         x-show="searchFocused && query.trim().length < 2"
                         x-transition.opacity
-                        class="mt-2 overflow-hidden rounded-[6px] border border-[#E2E8F0] bg-white"
+                        class="border-t border-[#E2E8F0]"
                         x-cloak
                     >
                         <ul class="m-0 list-none p-0" role="list">
                             <template x-for="faq in faqLinks" :key="faq.title">
-                                <li class="border-b border-[#E2E8F0] last:border-b-0">
+                                <li>
                                     <a
                                         :href="faq.url"
                                         :target="faq.target || '_self'"
                                         :rel="faq.target === '_blank' ? 'noopener noreferrer' : null"
-                                        class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
+                                        class="flex items-center justify-between gap-3 py-3 pl-8 pr-4 text-sm font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
                                         @click="close()"
                                         @mousedown.prevent
                                     >
@@ -244,17 +250,17 @@ $nav_slide_config = [
                     <div
                         x-show="query.trim().length >= 2"
                         x-transition.opacity
-                        class="mt-2 overflow-hidden rounded-[6px] border border-[#E2E8F0] bg-white"
+                        class="border-t border-[#E2E8F0]"
                         x-cloak
                     >
-                        <div x-show="loading" class="px-4 py-4 text-sm text-[#64748B]">Searching...</div>
-                        <div x-show="!loading && error" class="px-4 py-4 text-sm text-red-600" x-text="error"></div>
+                        <div x-show="loading" class="py-3 pl-8 pr-4 text-sm text-[#64748B]">Searching...</div>
+                        <div x-show="!loading && error" class="py-3 pl-8 pr-4 text-sm text-red-600" x-text="error"></div>
                         <ul x-show="!loading && !error && results.length" class="m-0 list-none p-0" role="list">
                             <template x-for="item in results" :key="item.id + '-' + item.subtype">
-                                <li class="border-b border-[#E2E8F0] last:border-b-0">
+                                <li>
                                     <a
                                         :href="item.url"
-                                        class="flex items-center justify-between gap-3 px-4 py-4 text-base font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
+                                        class="flex items-center justify-between gap-3 py-3 pl-8 pr-4 text-sm font-medium text-[#08284B] transition-colors hover:bg-[#F1F8F9] focus-visible:bg-[#F1F8F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
                                         @click="close()"
                                     >
                                         <span x-text="item.title"></span>
@@ -265,9 +271,10 @@ $nav_slide_config = [
                                 </li>
                             </template>
                         </ul>
-                        <div x-show="!loading && !error && !results.length" class="px-4 py-4 text-sm text-[#64748B]">
+                        <div x-show="!loading && !error && !results.length" class="py-3 pl-8 pr-4 text-sm text-[#64748B]">
                             No results found. Try a different keyword.
                         </div>
+                    </div>
                     </div>
                 </div>
             </template>
@@ -280,7 +287,7 @@ $nav_slide_config = [
             >
                 <button
                     type="button"
-                    class="inline-flex items-center gap-2 text-base font-semibold text-[#024B79] transition-colors hover:text-[#08284B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                    class="inline-flex items-center gap-2 text-lg font-semibold text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                     aria-label="Back"
                     :aria-label="parentTitle || 'Back'"
                     @click="back()"
@@ -302,7 +309,7 @@ $nav_slide_config = [
                         <template x-for="(item, i) in level" :key="i">
                             <li class="border-b border-[#E2E8F0] last:border-b-0">
                                 <template x-if="item.children && item.children.length">
-                                    <div class="flex items-center justify-between gap-3 px-5 py-4">
+                                    <div class="flex items-center justify-between gap-3 py-4" :class="idx > 0 ? 'pr-5' : 'px-5'" :style="idx > 0 ? 'padding-left: calc(1.25rem + 24px)' : null">
                                         <a
                                             :href="item.url"
                                             :target="item.target || '_self'"
@@ -316,7 +323,7 @@ $nav_slide_config = [
                                         </a>
                                         <button
                                             type="button"
-                                            class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] text-[#08284B] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center text-[#08284B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                                             @click.prevent="forward(item.children, item.label)"
                                             :aria-label="'Open ' + item.label + ' submenu'"
                                         >
@@ -331,8 +338,9 @@ $nav_slide_config = [
                                         :href="item.url"
                                         :target="item.target || '_self'"
                                         :rel="item.target === '_blank' ? 'noopener noreferrer' : null"
-                                        class="flex items-center justify-between gap-3 px-5 py-4 text-base font-medium leading-6 text-[#08284B] transition-colors hover:bg-white hover:text-[#024B79] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
-                                        :class="item.active ? 'bg-white font-semibold text-[#024B79]' : ''"
+                                        class="flex items-center justify-between gap-3 py-4 text-base font-medium leading-6 text-[#08284B] transition-colors hover:bg-white hover:text-[#024B79] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#024B79]"
+                                        :class="[idx > 0 ? 'pr-5' : 'px-5', item.active ? 'bg-white font-semibold text-[#024B79]' : '']"
+                                        :style="idx > 0 ? 'padding-left: calc(1.25rem + 24px)' : null"
                                         @click="close()"
                                     >
                                         <span x-text="item.label"></span>
@@ -346,13 +354,13 @@ $nav_slide_config = [
             </div>
         </div>
 
-        <div class="shrink-0 border-t border-[#E2E8F0] bg-white">
+        <div class="shrink-0 bg-[#F1F8F9]">
             <?php if ((is_array($topbar_phone) && ! empty($topbar_phone['url']) && ! empty($topbar_phone['title'])) || (is_array($contact_email) && ! empty($contact_email['url']) && ! empty($contact_email['title']))) : ?>
                 <div class="space-y-3 px-5 pb-4 pt-5">
                     <?php if (is_array($topbar_phone) && ! empty($topbar_phone['url']) && ! empty($topbar_phone['title'])) : ?>
                         <a
                             href="<?php echo esc_url($topbar_phone['url']); ?>"
-                            class="flex items-center gap-3 text-sm font-medium leading-5 text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                            class="flex items-center gap-3 text-base font-medium leading-6 text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                             @click="close()"
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0 text-[#024B79]">
@@ -365,7 +373,7 @@ $nav_slide_config = [
                     <?php if (is_array($contact_email) && ! empty($contact_email['url']) && ! empty($contact_email['title'])) : ?>
                         <a
                             href="<?php echo esc_url($contact_email['url']); ?>"
-                            class="flex items-center gap-3 text-sm font-medium leading-5 text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
+                            class="flex items-center gap-3 text-base font-medium leading-6 text-[#08284B] transition-colors hover:text-[#024B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#024B79]"
                             @click="close()"
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="shrink-0 text-[#024B79]">
@@ -403,6 +411,7 @@ $nav_slide_config = [
             </div>
         </div>
     </div>
+    </template>
 </div>
 
 <script>

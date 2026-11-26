@@ -125,11 +125,11 @@ if (!empty($services) && is_array($services)) {
 
         <?php if ($layout_style === 'image_feature') : ?>
             <!-- Main Content Grid -->
-            <div class="flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
+            <div class="spmhs-offer-feature flex flex-wrap justify-between items-start gap-10 mt-16 w-full  max-w-[1018px] max-md:mt-10">
 
               <!-- Services Container -->
               <?php if ($service_rows !== []) : ?>
-                  <div class="grid flex-1 grid-cols-1 gap-x-10 gap-y-10 shrink basis-0 min-w-60 max-md:max-w-full md:grid-cols-2 tab:grid-cols-1">
+                  <div class="spmhs-offer-services grid flex-1 grid-cols-1 gap-x-10 gap-y-10 shrink basis-0 min-w-60 max-md:max-w-full md:grid-cols-2 tab:grid-cols-1">
                       <?php foreach ($service_rows as $service) : ?>
                       <article class="w-full">
                           <?php if ($service['has_link']) : ?>
@@ -190,7 +190,7 @@ if (!empty($services) && is_array($services)) {
 
                 <!-- Main Image -->
                 <?php if ($main_image) : ?>
-                <aside class="flex-1 shrink w-full basis-0 min-w-60 tab:flex max-md:max-w-full max-tab:hidden">
+                <aside class="spmhs-offer-media flex-1 shrink w-full basis-0 min-w-60 tab:flex max-md:max-w-full">
                     <?php echo wp_get_attachment_image($main_image, 'full', false, [
                         'alt'   => esc_attr($main_image_alt),
                         'class' => 'h-auto w-full rounded object-contain',
