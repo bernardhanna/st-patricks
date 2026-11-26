@@ -203,7 +203,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
 
                 <!-- Center Image -->
                 <?php if (!empty($main_image_url)) : ?>
-                <div class="about-us-media relative hidden h-full min-h-0 overflow-hidden rounded lg:block">
+                <div class="about-us-media relative h-full min-h-0 overflow-hidden rounded">
                     <img
                         src="<?php echo esc_url($main_image_url); ?>"
                         alt="<?php echo esc_attr($main_image_alt); ?>"
@@ -338,6 +338,21 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
     #<?php echo esc_attr($section_id); ?> .mental-health-card--interactive:hover .mental-health-card__title,
     #<?php echo esc_attr($section_id); ?> .mental-health-card--interactive:focus-within .mental-health-card__title {
         color: #024b79;
+    }
+
+    @media (max-width: 1099px) {
+        #<?php echo esc_attr($section_id); ?> .about-us-media {
+            display: block;
+            order: 3;
+            grid-column: 1 / -1;
+            height: auto;
+        }
+
+        #<?php echo esc_attr($section_id); ?> .about-us-media img {
+            height: auto;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+        }
     }
 
     @media (min-width: 1085px) {

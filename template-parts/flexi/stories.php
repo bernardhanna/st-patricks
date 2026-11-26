@@ -43,7 +43,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
   class="relative flex overflow-hidden"
   aria-label="Latest Stories"
 >
-  <div class="flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
+  <div class="spmhs-stories-pad flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
 
     <!-- MOBILE/TABLET (< lg) — horizontal scroll with its own arrows & dots -->
     <div class="w-full lg:hidden">

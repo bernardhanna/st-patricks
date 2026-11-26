@@ -33,8 +33,8 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
     style="background-color: <?php echo esc_attr($background_color); ?>;"
     aria-labelledby="<?php echo esc_attr($section_id); ?>-heading"
 >
-    <div class="flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
-        <div class="flex flex-col gap-14 items-start max-w-full w-[1018px] max-md:px-5 max-md:py-0 max-md:w-[90%] max-sm:px-4 max-sm:py-0 max-sm:w-[95%]">
+    <div class="spmhs-news-events flex flex-col items-center mx-auto w-full max-w-container max-lg:px-5 <?php echo esc_attr($padding_classes); ?>">
+        <div class="flex flex-col gap-14 items-start max-w-full w-[1018px] max-md:w-full max-md:py-0 max-sm:py-0">
 
             <!-- Header Section -->
             <div class="flex gap-5 justify-between items-center w-full max-md:flex-col max-md:gap-10 max-md:items-start max-sm:gap-8">
@@ -54,7 +54,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
                     </header>
 
                     <?php if (!empty($description)): ?>
-                        <div class="max-w-full text-base font-medium leading-7 text-[#08284B] <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:text-sm max-sm:leading-6 wp_editor">
+                        <div class="max-w-full text-base font-medium leading-7 text-[#08284B] <?php echo esc_attr($description_width_class); ?> max-md:w-full max-md:text-base max-md:leading-7 max-sm:leading-6 wp_editor">
                             <?php echo matrix_kses_rich_text($description); ?>
                         </div>
                     <?php endif; ?>

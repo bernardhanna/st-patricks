@@ -31,7 +31,7 @@ $intro = matrix_get_blog_post_intro();
             </p>
 
             <?php if ($intro !== '') { ?>
-                <p class="max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">
+                <p class="spmhs-page-intro max-w-[800px] font-primary text-[18px] font-normal leading-[28px] text-[#08284B]">
                     <?php echo esc_html($intro); ?>
                 </p>
             <?php } ?>

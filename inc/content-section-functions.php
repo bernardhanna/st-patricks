@@ -739,7 +739,7 @@ function matrix_get_shared_vertical_padding_classes(string $vertical_padding = '
     }
 
     if ($vertical_padding === 'no_bottom') {
-        return 'py-12 lg:pt-[100px] lg:pb-0';
+        return 'pt-12 pb-0 lg:pt-[100px] lg:pb-0';
     }
 
     if ($vertical_padding === 'no_top') {
