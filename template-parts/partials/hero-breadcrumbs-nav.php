@@ -45,7 +45,10 @@ $nav_class = $align_with_hero
                     >
                         <?php echo esc_html($title); ?>
                     </a>
-                    <svg class="shrink-0" width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <svg class="spmhs-breadcrumb-chevron spmhs-breadcrumb-chevron--mobile shrink-0" width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M3.33331 6.66666L6.66665 9.99999L3.33331 13.3333" stroke="#08284B" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <svg class="spmhs-breadcrumb-chevron spmhs-breadcrumb-chevron--desktop shrink-0" width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M4 1L8 6L4 11" stroke="#08284B" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </li>

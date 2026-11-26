@@ -421,13 +421,6 @@ function navSlide(config) {
     const enableSearch = config.enableSearch !== false;
 
     return {
-        init() {
-            window.addEventListener('matrix-nav-scroll-dismiss', () => {
-                if (this.open) {
-                    this.close();
-                }
-            });
-        },
         get open() {
             return Alpine.store('nav').open;
         },

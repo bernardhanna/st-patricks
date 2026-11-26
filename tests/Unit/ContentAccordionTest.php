@@ -146,11 +146,10 @@ test('content accordion directions fallback icons use centered car and bus artwo
     $car_icon = matrix_get_content_accordion_icon_svg('car');
     $bus_icon = matrix_get_content_accordion_icon_svg('bus');
 
-    expect($car_icon)->toContain('cx="7.5" cy="16.5"')
-        ->and($car_icon)->toContain('cx="16.5" cy="16.5"')
-        ->and($bus_icon)->toContain('x="7" y="5.5" width="10" height="11"')
-        ->and($bus_icon)->toContain('cx="8.5" cy="17.5"')
-        ->and($bus_icon)->toContain('cx="15.5" cy="17.5"');
+    expect($car_icon)->toContain('M28 32H18M38 32H44')
+        ->and($car_icon)->toContain('viewBox="0 0 48 48"')
+        ->and($bus_icon)->toContain('M38 34H42')
+        ->and($bus_icon)->toContain('M28 34H18');
 });
 
 test('content accordion falls back to the first item when none are flagged open', function () {

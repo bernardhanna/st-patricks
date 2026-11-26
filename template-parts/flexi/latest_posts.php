@@ -97,7 +97,7 @@ $padding_classes = function_exists('matrix_flexi_resolve_vertical_padding_classe
         </div>
 
         <?php if ($latest_post_cards !== []) { ?>
-            <div class="grid grid-cols-1 xxs:grid-cols-2 gap-x-8 gap-y-12 mt-12 lg:mt-16 lg:grid-cols-3 lg:gap-y-16">
+            <div class="grid grid-cols-1 <?php echo is_page('media-queries') ? 'min-[360px]:grid-cols-2' : 'xxs:grid-cols-2'; ?> gap-x-8 gap-y-12 mt-12 lg:mt-16 lg:grid-cols-3 lg:gap-y-16">
                 <?php foreach ($latest_post_cards as $card) { ?>
                     <a
                         href="<?php echo esc_url($card['permalink']); ?>"

@@ -38,11 +38,11 @@ if ($wrapper_classes === '') {
 
 $link_classes = $variant === 'search'
     ? 'group inline-flex min-h-11 items-center no-underline text-[20px] font-semibold leading-[32px] tracking-[-0.12px] transition-colors duration-200 hover:!text-[#024B79] hover:underline hover:underline-offset-2 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]'
-    : 'group flex min-h-11 w-full items-center justify-between gap-4 border-b border-[rgba(30,36,75,0.15)] pb-4 text-[22px] font-semibold leading-[30px] tracking-[-0.14px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79] lg:text-[20px] lg:leading-[28px]';
+    : 'group flex min-h-11 w-full items-center gap-2 border-b border-[rgba(30,36,75,0.15)] pb-4 font-primary text-[20px] font-semibold leading-[32px] tracking-[-0.12px] no-underline transition-colors duration-200 hover:!text-[#024B79] hover:border-[#024B79] focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-[#024B79]';
 
 $grid_classes = $variant === 'search'
     ? 'mt-8 grid grid-cols-1 gap-y-4 lg:mt-8 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-4'
-    : 'mt-8 grid grid-cols-1 gap-x-10 gap-y-6 lg:mt-12 lg:grid-cols-3 lg:gap-y-8';
+    : 'mt-8 grid grid-cols-1 gap-x-10 gap-y-6 max-md:gap-4 lg:mt-12 lg:grid-cols-3 lg:gap-y-8';
 ?>
 
 <section
@@ -74,7 +74,7 @@ $grid_classes = $variant === 'search'
                         rel="noopener noreferrer"
                     <?php } ?>
                 >
-                    <span class="min-w-0 flex-1 break-words transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
+                    <span class="min-w-0 break-words transition-colors duration-200 group-hover:text-[#024B79]"><?php echo esc_html($link['title']); ?></span>
                     <?php if ($link['target'] === '_blank') { ?>
                         <span class="sr-only"> (opens in a new tab)</span>
                     <?php } ?>
@@ -86,8 +86,8 @@ $grid_classes = $variant === 'search'
                         </span>
                     <?php } else { ?>
                         <span class="shrink-0 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                <path d="M6 3L12 9L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </span>
                     <?php } ?>

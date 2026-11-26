@@ -115,8 +115,8 @@ if ($team_items === []) {
 $section_background_style = matrix_get_team_member_section_background_style($section_background, '#FBFAF7');
 $card_surface_color = $layout_style === 'spokespeople_grid' ? $spokespeople_card_background_color : $card_background_color;
 $grid_classes = $layout_style === 'spokespeople_grid'
-    ? 'grid grid-cols-2 gap-4 mob:gap-5 lg:grid-cols-3 lg:gap-8'
-    : 'grid grid-cols-2 gap-4 mob:gap-5 lg:grid-cols-3 lg:gap-8';
+    ? 'grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 mob:gap-5 lg:grid-cols-3 lg:gap-8'
+    : 'grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 mob:gap-5 lg:grid-cols-3 lg:gap-8';
 $card_content_classes = 'flex flex-1 p-3 mob:p-4 lg:p-6';
 
 if ($layout_style === 'spokespeople_grid') {
