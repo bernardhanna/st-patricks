@@ -67,3 +67,9 @@ test('what we offer vertical padding supports standard and bottom only modes', f
         ->and(matrix_get_what_we_offer_section_padding_classes('standard'))->toBe('py-12')
         ->and(matrix_get_what_we_offer_section_padding_classes('bottom_only'))->toBe('pt-0 pb-12 lg:pt-0 lg:pb-24');
 });
+
+test('what we offer heading underline uses static title spacing', function () {
+    $template = file_get_contents(dirname(__DIR__, 2) . '/template-parts/flexi/what_we_offer.php');
+
+    expect($template)->toContain('class="mt-4 h-[4px] w-10 bg-[#6FC9C0]"');
+});
