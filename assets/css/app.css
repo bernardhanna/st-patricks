@@ -1600,3 +1600,48 @@ body.home .spmhs-newsletter-title {
   }
 }
 
+/* 1800px and up: one content width, with side space, so the sections line up. */
+@media (min-width: 1800px) {
+  :root {
+    --spmhs-gutter: clamp(144px, 8vw, 280px);
+    --spmhs-wide: calc(100vw - 2 * var(--spmhs-gutter));
+  }
+
+  .max-w-container,
+  .max-w-container_md,
+  .max-w-\[1280px\],
+  .max-w-\[1018px\],
+  .max-w-\[1300px\],
+  .max-w-7xl,
+  #site-nav .max-w-\[1440px\] {
+    max-width: var(--spmhs-wide);
+  }
+
+  .w-\[1018px\] {
+    width: min(var(--spmhs-wide), 100%);
+  }
+
+  .spmhs-counters-pad,
+  .spmhs-counters-pad .max-w-\[1200px\] {
+    width: min(var(--spmhs-wide), 100%);
+    max-width: var(--spmhs-wide);
+  }
+
+  .spmhs-recovery-pad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #site-nav .max-w-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  nav.hero-breadcrumb-nav,
+  .hero-with-breadcrumbs-copy,
+  .lg\:px-\[70px\] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
