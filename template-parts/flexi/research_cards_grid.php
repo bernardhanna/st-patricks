@@ -42,7 +42,7 @@ if ($cards === []) {
 $wrapper_classes = ['flex', 'w-full', 'max-w-[1018px]', 'flex-col', 'items-center', 'mx-auto', 'max-xl:px-5'];
 
 
-$grid_classes = 'mt-8 grid grid-cols-1 xxs:grid-cols-2 gap-4 sm:gap-8 xl:mt-12 xl:grid-cols-4';
+$grid_classes = 'mt-8 grid grid-cols-1 xs:grid-cols-2 gap-4 gap-y-12 sm:gap-8 xl:mt-12 xl:grid-cols-4';
 $card_base_classes = 'group flex h-full flex-col gap-4 text-left';
 $linked_card_classes = $card_base_classes . ' focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#024B79]';
 

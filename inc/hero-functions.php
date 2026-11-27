@@ -279,10 +279,10 @@ function matrix_get_hero_with_breadcrumbs_image_split_grid_class_names(
 function matrix_get_hero_with_breadcrumbs_image_split_image_column_class_names($text_max_width = 'default')
 {
   if (matrix_resolve_hero_with_breadcrumbs_text_max_width($text_max_width) === 'wide') {
-    return 'spmhs-hero-split-media relative order-2 mt-8 h-[240px] w-full overflow-hidden lg:mt-10 lg:h-[320px]';
+    return 'spmhs-hero-split-media relative order-2 mt-8 h-[240px] w-full overflow-hidden max-md:aspect-[4/3] max-md:h-auto lg:mt-10 lg:h-[320px]';
   }
 
-  return 'spmhs-hero-split-media relative order-1 h-[280px] w-full min-h-[280px] overflow-hidden lg:order-2 lg:h-full lg:min-h-[320px] lg:self-stretch lg:border-l-2';
+  return 'spmhs-hero-split-media relative order-1 h-[280px] w-full min-h-[280px] overflow-hidden max-md:aspect-[4/3] max-md:h-auto lg:order-2 lg:h-full lg:min-h-[320px] lg:self-stretch lg:border-l-2';
 }
 
 function matrix_resolve_hero_with_breadcrumbs_text_max_width($value)
