@@ -845,7 +845,7 @@ if ($suas !== []) {
 }
 
 // ---------------------------------------------------------------------------
-// 16. Fax referrals — ensure published (redirect map unshadow handled in theme commit)
+// 16. Fax referrals — ensure published; fix legacy RAS URL (redirect map too)
 // ---------------------------------------------------------------------------
 $fax = get_posts([
     'name' => 'closure-of-fax-referrals',
@@ -865,6 +865,19 @@ if ($fax !== []) {
         }
     } else {
         $log('OK fax already publish #' . $id . ' (remove path-redirect-map entry if still shadowed)');
+    }
+
+    $content = (string) get_post_field('post_content', $id);
+    $hp_url = trailingslashit(home_url('/healthcare-professionals'));
+    $next = preg_replace(
+        '#href=(["\'])(?:https?://[^/\'"]+)?/gps-referrals/referrals-admissions[^"\']*\1#iu',
+        'href="' . esc_url($hp_url) . '"',
+        $content
+    ) ?? $content;
+    if ($next !== $content) {
+        $save_post($id, 'fax RAS link → healthcare-professionals', $next);
+    } else {
+        $log('SKIP fax: RAS link already ok or missing');
     }
 }
 
