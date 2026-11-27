@@ -182,6 +182,11 @@
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel { padding-top: 48px; padding-right: 48px; padding-bottom: 64px; }
     #<?php echo esc_attr($section_id); ?> .spmhs-hero__title { font-size: 38px; }
 }
+@media (min-width: 1800px) {
+    #<?php echo esc_attr($section_id); ?> .spmhs-hero__panel {
+        padding-left: var(--spmhs-gutter, 144px);
+    }
+}
 @media (max-width: 860px) {
     #<?php echo esc_attr($section_id); ?> .hero-slider-container:not(.slick-initialized),
     #<?php echo esc_attr($section_id); ?> .slick-list,

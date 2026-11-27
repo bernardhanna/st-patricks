@@ -206,5 +206,12 @@ extract($hero, EXTR_SKIP);
     padding-left: 66px;
   }
 }
+@media (min-width: 1800px) {
+  nav.hero-breadcrumb-nav,
+  .hero-with-breadcrumbs-copy {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 </style>
 <?php } ?>
