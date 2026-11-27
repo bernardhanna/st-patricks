@@ -93,7 +93,7 @@ $current_page = max(1, (int) ($pagination['current'] ?? $state['paged']));
 $total_pages = max(1, (int) ($pagination['total'] ?? (($query instanceof WP_Query) ? $query->max_num_pages : 1)));
 $chip_scroll_classes = matrix_get_blog_filter_archive_horizontal_scroll_class_names();
 $chip_group_classes = matrix_get_blog_filter_archive_horizontal_scroll_inner_class_names();
-$grid_classes = matrix_get_filter_archive_card_grid_class_names();
+$grid_classes = matrix_get_filter_archive_card_grid_class_names() . ' max-lg:gap-4';
 $search_input_id = 'blog-filter-archive-search-' . wp_rand(1000, 999999);
 $has_posts = $query instanceof WP_Query && $query->have_posts();
 ?>
@@ -231,46 +231,15 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
             <?php } ?>
 
             <div class="<?php echo esc_attr($show_heading && $heading !== '' ? 'mt-8 ' : ''); ?>flex flex-col gap-6">
-                <div class="flex flex-col gap-3">
-                    <div
-                        class="flex items-center justify-end gap-2"
-                        x-show="canScrollLeft || canScrollRight"
-                        x-cloak
-                        role="group"
-                        aria-label="Scroll filters"
+                <div class="flex min-w-0 flex-col gap-2 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
+                    <p
+                        class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
+                        style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
                     >
-                        <button
-                            type="button"
-                            class="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:cursor-not-allowed disabled:opacity-40"
-                            aria-label="Scroll filters left"
-                            :disabled="! canScrollLeft"
-                            @click="scrollChips('prev')"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                        <button
-                            type="button"
-                            class="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:cursor-not-allowed disabled:opacity-40"
-                            aria-label="Scroll filters right"
-                            :disabled="! canScrollRight"
-                            @click="scrollChips('next')"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
-                                <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
+                        <?php echo esc_html($filter_label); ?>
+                    </p>
 
-                    <div class="flex min-w-0 flex-col gap-4 lg:flex-1 lg:flex-row lg:items-center lg:gap-6">
-                        <p
-                            class="shrink-0 font-primary text-[16px] font-medium leading-[28px]"
-                            style="color: <?php echo esc_attr($colors['filter_label']); ?>;"
-                        >
-                            <?php echo esc_html($filter_label); ?>
-                        </p>
-
+                    <div class="flex min-w-0 flex-1 items-center gap-2">
                         <div
                             x-ref="chipScroll"
                             class="<?php echo esc_attr($chip_scroll_classes); ?>"
@@ -303,6 +272,37 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                 <?php } ?>
                             </div>
                         </div>
+
+                        <div
+                            class="flex shrink-0 items-center gap-2"
+                            x-show="canScrollLeft || canScrollRight"
+                            x-cloak
+                            role="group"
+                            aria-label="Scroll filters"
+                        >
+                            <button
+                                type="button"
+                                class="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:cursor-not-allowed disabled:opacity-40"
+                                aria-label="Scroll filters left"
+                                :disabled="! canScrollLeft"
+                                @click="scrollChips('prev')"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                    <path d="M6.08301 0.750081L0.749674 6.08342L6.08301 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                class="group flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#7ED0E0] bg-white transition-opacity hover:bg-[#001F33] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7ED0E0] disabled:cursor-not-allowed disabled:opacity-40"
+                                aria-label="Scroll filters right"
+                                :disabled="! canScrollRight"
+                                @click="scrollChips('next')"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="13" viewBox="0 0 7 13" fill="none" aria-hidden="true">
+                                    <path d="M0.916992 0.750081L6.25033 6.08342L0.916992 11.4167" class="stroke-[#020617] transition-colors group-hover:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -310,7 +310,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                     x-ref="form"
                     method="get"
                     action="<?php echo esc_url($base_url); ?>"
-                    class="flex w-full max-w-[384px] items-center gap-2"
+                    class="flex w-full max-w-[384px] max-lg:order-first max-lg:max-w-none items-center gap-2"
                     @submit="$refs.pageInput.value = 1"
                 >
                     <input type="hidden" name="blog_category" x-ref="categoryInput" :value="category" />
@@ -371,7 +371,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                         }
                         ?>
                         <article
-                            class="flex h-full flex-col overflow-hidden rounded-[8px]"
+                            class="flex h-full flex-col overflow-hidden rounded-[8px] max-lg:rounded"
                             style="background-color: <?php echo esc_attr($colors['card_background']); ?>;"
                         >
                             <div class="block overflow-hidden">
@@ -389,7 +389,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                 <?php } ?>
                             </div>
 
-                            <div class="flex flex-col flex-1 p-5 lg:p-6">
+                            <div class="flex flex-col flex-1 max-md:gap-[10px] p-5 max-md:p-3 lg:p-6">
                                 <?php if ($primary_category_name !== '') { ?>
                                     <?php
                                     $category_badge_colors = matrix_get_blog_post_category_badge_colors(
@@ -397,7 +397,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                         $primary_category ? $primary_category->slug : ''
                                     );
                                     ?>
-                                    <div class="mb-4">
+                                    <div class="mb-4 max-md:mb-0">
                                         <span
                                             class="inline-flex h-[30px] w-fit items-center justify-center rounded-full px-4 font-primary text-[14px] font-medium leading-[24px]"
                                             style="background-color: <?php echo esc_attr($category_badge_colors['background']); ?>; color: <?php echo esc_attr($category_badge_colors['text']); ?>;"
@@ -425,7 +425,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
                                 </h3>
 
                                 <p
-                                    class="<?php echo esc_attr(matrix_get_filter_archive_card_date_class_names()); ?>"
+                                    class="<?php echo esc_attr(matrix_get_filter_archive_card_date_class_names() . ' max-md:mt-0'); ?>"
                                     style="color: <?php echo esc_attr($colors['card_meta']); ?>;"
                                 >
                                     <time datetime="<?php echo esc_attr(get_the_date('c', $post_id)); ?>">
@@ -435,7 +435,7 @@ $has_posts = $query instanceof WP_Query && $query->have_posts();
 
                                 <?php if ($excerpt !== '') { ?>
                                     <p
-                                        class="<?php echo esc_attr(matrix_get_filter_archive_card_excerpt_class_names()); ?>"
+                                        class="<?php echo esc_attr(matrix_get_filter_archive_card_excerpt_class_names() . ' max-md:mt-0'); ?>"
                                         style="color: <?php echo esc_attr($colors['card_excerpt']); ?>;"
                                     >
                                         <?php echo esc_html($excerpt); ?>

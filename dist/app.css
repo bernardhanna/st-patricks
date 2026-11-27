@@ -9437,6 +9437,10 @@ input:where([type='file']):focus {
 }
 @media not all and (min-width: 1100px) {
 
+  .max-lg\:order-first {
+    order: -9999;
+  }
+
   .max-lg\:left-1\/2 {
     left: 50%;
   }
@@ -9542,8 +9546,16 @@ input:where([type='file']):focus {
     margin-bottom: 0px;
   }
 
+  .max-md\:mt-0 {
+    margin-top: 0px;
+  }
+
   .max-md\:mb-2\.5 {
     margin-bottom: 0.625rem;
+  }
+
+  .max-md\:mt-8 {
+    margin-top: 2rem;
   }
 
   .max-md\:mt-10 {
@@ -9576,6 +9588,18 @@ input:where([type='file']):focus {
 
   .max-md\:h-auto {
     height: auto;
+  }
+
+  .max-md\:h-8 {
+    height: 2rem;
+  }
+
+  .max-md\:w-8 {
+    width: 2rem;
+  }
+
+  .max-md\:aspect-\[4\/3\] {
+    aspect-ratio: 4/3;
   }
 
   .max-md\:w-40 {
@@ -9642,6 +9666,10 @@ input:where([type='file']):focus {
     gap: 1rem;
   }
 
+  .max-md\:gap-\[10px\] {
+    gap: 10px;
+  }
+
   .max-md\:gap-5 {
     gap: 1.25rem;
   }
@@ -9665,6 +9693,10 @@ input:where([type='file']):focus {
   .max-md\:border-b-\[\#D6DFE4\] {
     --tw-border-opacity: 1;
     border-bottom-color: rgb(214 223 228 / var(--tw-border-opacity, 1));
+  }
+
+  .max-md\:p-3 {
+    padding: 0.75rem;
   }
 
   .max-md\:p-5 {
@@ -47083,6 +47115,10 @@ blockquote.right {
   .max-lg\:gap-4 {
     gap: 1rem;
   }
+
+  .max-lg\:rounded {
+    border-radius: 0.25rem;
+  }
   .max-lg\:h-\[18px\] {
     height: 18px;
   }
@@ -47339,6 +47375,35 @@ body.home .spmhs-newsletter-title {
 @media (min-width: 360px) and (max-width: 1099px) {
   .min-\[360px\]\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  button.w-8.h-8[aria-label="Scroll filters left"],
+  button.w-8.h-8[aria-label="Scroll filters right"] {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    min-height: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  button.w-8.h-8[aria-label="Scroll filters left"],
+  button.w-8.h-8[aria-label="Scroll filters right"] {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  nav[aria-label="Archive pagination"] a:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #7ED0E0;
+    outline-offset: 2px;
   }
 }
 
